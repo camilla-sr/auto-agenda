@@ -9,9 +9,7 @@ public class Funcionario {
     private int idFuncionario;
     private String nomeFuncionario;
 <<<<<<< HEAD
-    
-    
-    
+
 =======
 
     public void cadastrarFuncionario(String nomeFuncionario) {
