@@ -6,6 +6,8 @@ public class Funcionario {
     private int idFuncionario;
     private String nomeFuncionario;
     
+    
+    
 // -------------- GETTERS E SETTERS --------------
     public int getIdFuncionario() {
         return idFuncionario;

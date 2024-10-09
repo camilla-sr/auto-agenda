@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="AutoAgenda">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/AutoAgenda.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

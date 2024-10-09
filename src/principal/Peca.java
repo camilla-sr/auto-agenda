@@ -4,15 +4,16 @@ import dao.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Peca {    
+public class Peca {
+    final Conexao conn = new Conexao();
     private int idPeca;
     private String descricaoPeca;
     private int qntdPeca;
     private char tipoProduto = 'P';
     
     // Métodos Principais
-    public void cadastrarPeça(String descricaoPeca, int qntdPeca){
-        Conexao conn = new Conexao();
+    public void cadastrarPeca(String descricaoPeca, int qntdPeca){
+//        Conexao conn = new Conexao();
         
         String sqlInserir = "INSERT into peca (tipo_produto, desc_peca, qntd_peca)"
                 + "VALUES ('"+tipoProduto+"', '"+descricaoPeca+"', "+qntdPeca+")";
@@ -25,17 +26,31 @@ public class Peca {
         }
     }
     
+    public void editarPeca(int idPeca, String novaDescricao, int novaQntd){
+//        Conexao conn = new Conexao();
+        String sqlEdit = "UPDATE peca set desc_peca = '"+novaDescricao+"', qntd_peca = "+novaQntd+" where id_peca = "+idPeca+"";
+        
+        boolean resposta = conn.executar(sqlEdit);
+        if(resposta == true){
+            System.out.println("Pe?a Editada");
+        }else{
+            System.out.println("Algo deu errado");
+        }
+    }
+    
     public void listarPecas(){
-        Conexao conn = new Conexao();
+//        Conexao conn = new Conexao();
         String sqlConsulta = "SELECT * from peca";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         
         try {
             while (lista.next()) {
+                int id = lista.getInt("id_peca");
                 String tipoProduto = lista.getString("tipo_produto");
                 String descricaoPeca = lista.getString("desc_peca");
                 int quantidade = lista.getInt("qntd_peca");
 
+                System.out.println("ID: " + id);
                 System.out.println("Tipo do Produto: " + tipoProduto);
                 System.out.println("Descrição da Peça: " + descricaoPeca);
                 System.out.println("Quantidade: " + quantidade);
@@ -53,8 +68,22 @@ public class Peca {
 
     
     
+// -------------- MÉTODOS DE APOIO- --------------    
     
-    
+    public void validaID(int id){
+        try{
+            String sql = "SELECT id_peca from peca where id_peca = "+id+"";
+            ResultSet retorno = conn.executarConsulta(sql);
+
+            int row = 0;
+            if (retorno != null && retorno.next()) {
+                row = retorno.getInt("id_peca");
+                System.out.println(row);
+            }
+        }catch(SQLException e){
+            System.out.println("Algo deu errado" + e.getMessage());
+        }
+    }
     
 // -------------- GETTERS E SETTERS --------------
     
