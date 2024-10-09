@@ -11,7 +11,7 @@ public class Peca {
     private int qntdPeca;
     private char tipoProduto = 'P';
     
-    // Métodos Principais
+    // Mï¿½todos Principais
     public void cadastrarPeca(String descricaoPeca, int qntdPeca){
 //        Conexao conn = new Conexao();
         
@@ -20,7 +20,7 @@ public class Peca {
         
         boolean resposta = conn.executar(sqlInserir);
         if(resposta == true){
-            System.out.println("Peça inserida");
+            System.out.println("Peï¿½a inserida");
         }else{
             System.out.println("Algo deu errado");
         }
@@ -32,7 +32,7 @@ public class Peca {
         
         boolean resposta = conn.executar(sqlEdit);
         if(resposta == true){
-            System.out.println("Peça Editada");
+            System.out.println("Pe?a Editada");
         }else{
             System.out.println("Algo deu errado");
         }
@@ -52,7 +52,7 @@ public class Peca {
 
                 System.out.println("ID: " + id);
                 System.out.println("Tipo do Produto: " + tipoProduto);
-                System.out.println("Descrição da Peça: " + descricaoPeca);
+                System.out.println("Descriï¿½ï¿½o da Peï¿½a: " + descricaoPeca);
                 System.out.println("Quantidade: " + quantidade);
                 System.out.println("---------------------------");
             }
@@ -68,7 +68,7 @@ public class Peca {
 
     
     
-// -------------- MÉTODOS DE APOIO- --------------    
+// -------------- Mï¿½TODOS DE APOIO- --------------    
     // !!!!!
     public void validaID(int id){
         try{

@@ -8,6 +8,11 @@ public class Funcionario {
 
     private int idFuncionario;
     private String nomeFuncionario;
+<<<<<<< HEAD
+    
+    
+    
+=======
 
     public void cadastrarFuncionario(String nomeFuncionario) {
         Conexao conn = new Conexao();
@@ -44,6 +49,7 @@ public class Funcionario {
         }
     }
 
+>>>>>>> 19b0b566bcd8d09403fe783d56bda2aec8544874
 // -------------- GETTERS E SETTERS --------------
     public int getIdFuncionario() {
         return idFuncionario;

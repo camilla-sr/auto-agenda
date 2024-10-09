@@ -9,11 +9,20 @@ public class App {
 
         Peca pc = new Peca();
         TipoServico ts = new TipoServico();
+<<<<<<< HEAD
+        Estoque etq = new Estoque();
+        Lote lt = new Lote();
+        
+=======
         Funcionario funci = new Funcionario();
         Funcionamento f = new Funcionamento();
+<<<<<<< HEAD
         Estoque e = new Estoque();
         
 //        e.contadorPecas();
+=======
+>>>>>>> 19b0b566bcd8d09403fe783d56bda2aec8544874
+>>>>>>> 0df0540aec1cf4cd4647decd7d57dd2e31fe7d2d
 
         Scanner sc = new Scanner(System.in, "utf8");
         Scanner num = new Scanner(System.in);
@@ -32,6 +41,26 @@ public class App {
 //        pc.editarPeca(id_peca, novaDescricao, nova_qntd);
 //        pc.listarPecas();
 
+<<<<<<< HEAD
+        lt.listarLote();
+        
+
+//        System.out.println("Digite o tipo de serviço");
+//        String tipoServico = sc.nextLine();
+//
+//        ts.cadastrarTipoServico(tipoServico);
+//        ts.listarTiposServico();
+//
+//
+//        System.out.println("Insira a primeira peça");
+//
+//        System.out.println("\nInsira descrição da peça");
+//        String descricao = sc.nextLine();
+//
+//        System.out.println("Insira a quantidade da peça");
+//        int qntd = num.nextInt();
+//
+=======
 //        System.out.println("Novo horário de funcionamento");
 //        System.out.println("Insira o dia referente");
 //        String dia = sc.nextLine();
@@ -58,6 +87,7 @@ public class App {
 //        System.out.println("Insira a quantidade da peça");
 //        int qntd = num.nextInt();
 //        
+>>>>>>> 19b0b566bcd8d09403fe783d56bda2aec8544874
 //        pc.cadastrarPeça(descricao, qntd);
 //        pc.listarPecas();
     }

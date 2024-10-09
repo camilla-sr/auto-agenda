@@ -4,6 +4,10 @@ import dao.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
 public class Estoque {
     private String produto;
     private int qntdProduto;
@@ -22,9 +26,9 @@ public class Estoque {
                 qntd = lista.getInt("qntd_produto");
                 
                 if(tip_produto.equals("P")){
-                    nomeProduto = "Peças ";
+                    nomeProduto = "Peï¿½as ";
                 }else if(tip_produto.equals("G")){
-                    nomeProduto = "Garrafas de Óleo ";
+                    nomeProduto = "Garrafas de ï¿½leo ";
                 }
             System.out.println(nomeProduto + "----> " + qntd);
             }
@@ -75,9 +79,11 @@ public class Estoque {
     public void setProduto(String produto) {
         this.produto = produto;
     }
+
     public int getQntdProduto() {
         return qntdProduto;
     }
+
     public void setQntdProduto(int qntdProduto) {
         this.qntdProduto = qntdProduto;
     }
