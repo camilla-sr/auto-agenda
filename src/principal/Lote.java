@@ -8,7 +8,7 @@ public class Lote {
     private String dataVencimento;
     private String tipoOleo;
     private int qntdGarrafa;
-    private char tipoProduto;
+    private char tipoProduto;    
     
 // -------------- GETTERS E SETTERS --------------
     
