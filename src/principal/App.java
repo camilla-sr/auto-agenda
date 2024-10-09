@@ -7,9 +7,17 @@ public class App {
         // em primeiro momento, main criada para testes com banco
         
         Peca pc = new Peca();
+        TipoServico ts = new TipoServico();
         
         Scanner sc = new Scanner(System.in, "utf8");
         Scanner num = new Scanner(System.in);
+        
+        System.out.println("Digite o tipo de serviço");
+        String tipoServico = sc.nextLine();
+        
+        ts.cadastrarTipoServico(tipoServico);
+        ts.listarTiposServico();
+        
         
         System.out.println("Insira a primeira peça");
         
