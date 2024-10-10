@@ -9,7 +9,7 @@ public class Peca {
     private int idPeca;
     private String descricaoPeca;
     private int qntdPeca;
-    private char tipoProduto = 'P';
+    private String tipoProduto = "P";
     
     // Métodos Principais
     public void cadastrarPeca(String descricaoPeca, int qntdPeca){
@@ -102,10 +102,10 @@ public class Peca {
     public void setQntdPeca(int qntdPeca) {
         this.qntdPeca = qntdPeca;
     }
-    public char getTipoProduto() {
+    public String getTipoProduto() {
         return tipoProduto;
     }
-    public void setTipoProduto(char tipoProduto) {
+    public void setTipoProduto(String tipoProduto) {
         this.tipoProduto = tipoProduto;
     }
     
