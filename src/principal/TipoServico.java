@@ -5,13 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TipoServico {
-
+    final Conexao conn = new Conexao();
     private int idServico;
     private String descricaoServico;
 
     public void cadastrarTipoServico(String descricaoServico) {
-        Conexao conn = new Conexao();
-
         String sqlInserir = "INSERT INTO tipo_servico (descricao_servico) VALUES ('" + descricaoServico + "')";
 
         boolean resposta = conn.executar(sqlInserir);
@@ -23,7 +21,6 @@ public class TipoServico {
     }
 
     public void listarTiposServico() {
-        Conexao conn = new Conexao();
         String sqlConsulta = "SELECT * FROM tipo_servico order by descricao_servico";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 

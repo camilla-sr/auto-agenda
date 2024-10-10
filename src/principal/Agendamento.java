@@ -3,6 +3,7 @@ package principal;
 import dao.Conexao;
 
 public class Agendamento {
+    final Conexao conn = new Conexao();
     private int idAgendamento;
     private int servico;
     private int funcionamento;

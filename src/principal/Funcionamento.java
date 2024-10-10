@@ -5,13 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Funcionamento {
-
+    final Conexao conn = new Conexao();
     private int idFuncionamento;
     private String diaFuncionamento;
     private String horaFuncionamento;
 
     public void cadastrarFuncionamento(String diaFuncionamento, String horaFuncionamento) {
-        Conexao conn = new Conexao();
         String sqlInserir = "INSERT INTO funcionamento (dia_funcionamento, horario_funcionamento) VALUES ('" + diaFuncionamento + "', '" + horaFuncionamento + "')";
 
         boolean resposta = conn.executar(sqlInserir);
@@ -24,7 +23,6 @@ public class Funcionamento {
 
     // Método para listar todos os horários de funcionamento do banco de dados
     public void listarFuncionamentos() {
-        Conexao conn = new Conexao();
         String sqlConsulta = "SELECT * FROM funcionamento";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 

@@ -4,17 +4,13 @@ import dao.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-
 public class Estoque {
+    final Conexao conn = new Conexao();
     private String produto;
     private int qntdProduto;
     private int qntdTotal;
 
     public void listarProdutos() {
-        Conexao conn = new Conexao();
         String sqlConsulta = "SELECT  produto, sum(qntd_produto) as qntd_produto from estoque group by produto";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         String nomeProduto = "";
@@ -26,9 +22,9 @@ public class Estoque {
                 qntd = lista.getInt("qntd_produto");
                 
                 if(tip_produto.equals("P")){
-                    nomeProduto = "Peï¿½as ";
+                    nomeProduto = "Peças ";
                 }else if(tip_produto.equals("G")){
-                    nomeProduto = "Garrafas de ï¿½leo ";
+                    nomeProduto = "Garrafas de Óleo ";
                 }
             System.out.println(nomeProduto + "----> " + qntd);
             }
@@ -39,8 +35,6 @@ public class Estoque {
     }
 
     public int contadorOleo() {
-        Conexao conn = new Conexao();
-
         String sqlConsulta = "SELECT SUM(qntd_garrafa) as total from lote";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
 
@@ -56,8 +50,6 @@ public class Estoque {
     }
 
     public int contadorPecas() {
-        Conexao conn = new Conexao();
-
         String sqlConsulta = "SELECT SUM(qntd_peca) as total from peca";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
 
@@ -79,11 +71,9 @@ public class Estoque {
     public void setProduto(String produto) {
         this.produto = produto;
     }
-
     public int getQntdProduto() {
         return qntdProduto;
     }
-
     public void setQntdProduto(int qntdProduto) {
         this.qntdProduto = qntdProduto;
     }

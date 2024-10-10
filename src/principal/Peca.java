@@ -11,35 +11,32 @@ public class Peca {
     private int qntdPeca;
     private char tipoProduto = 'P';
     
-    // Mï¿½todos Principais
+    // Métodos Principais
     public void cadastrarPeca(String descricaoPeca, int qntdPeca){
-//        Conexao conn = new Conexao();
         
         String sqlInserir = "INSERT into peca (tipo_produto, desc_peca, qntd_peca)"
                 + "VALUES ('"+tipoProduto+"', '"+descricaoPeca+"', "+qntdPeca+")";
         
         boolean resposta = conn.executar(sqlInserir);
         if(resposta == true){
-            System.out.println("Peï¿½a inserida");
+            System.out.println("Peça inserida");
         }else{
             System.out.println("Algo deu errado");
         }
     }
     
     public void editarPeca(int idPeca, String novaDescricao, int novaQntd){
-//        Conexao conn = new Conexao();
         String sqlEdit = "UPDATE peca set desc_peca = '"+novaDescricao+"', qntd_peca = "+novaQntd+" where id_peca = "+idPeca+"";
         
         boolean resposta = conn.executar(sqlEdit);
         if(resposta == true){
-            System.out.println("Pe?a Editada");
+            System.out.println("Peça Editada");
         }else{
             System.out.println("Algo deu errado");
         }
     }
     
     public void listarPecas(){
-//        Conexao conn = new Conexao();
         String sqlConsulta = "SELECT * from peca";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         
@@ -52,7 +49,7 @@ public class Peca {
 
                 System.out.println("ID: " + id);
                 System.out.println("Tipo do Produto: " + tipoProduto);
-                System.out.println("Descriï¿½ï¿½o da Peï¿½a: " + descricaoPeca);
+                System.out.println("Peça: " + descricaoPeca);
                 System.out.println("Quantidade: " + quantidade);
                 System.out.println("---------------------------");
             }
