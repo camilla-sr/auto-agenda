@@ -6,8 +6,7 @@ public class Agendamento {
     final Conexao conn = new Conexao();
     private int idAgendamento;
     private int servico;
-    private int funcionamento;
-    private int funcionarioResponsavel;
+    private int funcionario;
     private String dataCadastro;
     private String dataPrevisaoEntrega;
     private String dataConclusao;
@@ -26,17 +25,11 @@ public class Agendamento {
     public void setServico(int servico) {
         this.servico = servico;
     }
-    public int getFuncionamento() {
-        return funcionamento;
-    }
-    public void setFuncionamento(int funcionamento) {
-        this.funcionamento = funcionamento;
-    }
     public int getFuncionarioResponsavel() {
-        return funcionarioResponsavel;
+        return funcionario;
     }
-    public void setFuncionarioResponsavel(int funcionarioResponsavel) {
-        this.funcionarioResponsavel = funcionarioResponsavel;
+    public void setFuncionarioResponsavel(int funcionario) {
+        this.funcionario = funcionario;
     }
     public String getDataCadastro() {
         return dataCadastro;

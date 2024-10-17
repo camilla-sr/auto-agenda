@@ -6,9 +6,14 @@ import java.sql.SQLException;
 
 public class Estoque {
     final Conexao conn = new Conexao();
-    private String produto;
+    private int idEstoque;
+    private int produto;
+    private int Nomeproduto;    //campo vai armazenar o nome da peça com inner join
+    private int lote;
+    private int descricaoOleo;  //campo vai armazenar qual o óleo com inner join
     private int qntdProduto;
     private int qntdTotal;
+    private String dataUltimaAtualizacao;
 
     public void listarProdutos() {
         String sqlConsulta = "SELECT  produto, sum(qntd_produto) as qntd_produto from estoque group by produto";
@@ -34,7 +39,7 @@ public class Estoque {
         }
     }
 
-    private int contadorOleo() {
+    public int contadorOleo() {
         String sqlConsulta = "SELECT SUM(qntd_garrafa) as total from lote";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
 
@@ -49,7 +54,7 @@ public class Estoque {
         return row;
     }
 
-    private int contadorPecas() {
+    public int contadorPecas() {
         String sqlConsulta = "SELECT SUM(qntd_peca) as total from peca";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
 
@@ -65,11 +70,35 @@ public class Estoque {
     }
 
 // -------------- GETTERS E SETTERS --------------
-    public String getProduto() {
+    public int getIdEstoque() {
+        return idEstoque;
+    }
+    public void setIdEstoque(int idEstoque) {
+        this.idEstoque = idEstoque;
+    }
+    public int getProduto() {
         return produto;
     }
-    public void setProduto(String produto) {
+    public void setProduto(int produto) {
         this.produto = produto;
+    }
+    public int getNomeproduto() {
+        return Nomeproduto;
+    }
+    public void setNomeproduto(int Nomeproduto) {
+        this.Nomeproduto = Nomeproduto;
+    }
+    public int getLote() {
+        return lote;
+    }
+    public void setLote(int lote) {
+        this.lote = lote;
+    }
+    public int getDescricaoOleo() {
+        return descricaoOleo;
+    }
+    public void setDescricaoOleo(int descricaoOleo) {
+        this.descricaoOleo = descricaoOleo;
     }
     public int getQntdProduto() {
         return qntdProduto;
@@ -82,6 +111,12 @@ public class Estoque {
     }
     public void setQntdTotal(int qntdTotal) {
         this.qntdTotal = qntdTotal;
+    }
+    public String getDataUltimaAtualizacao() {
+        return dataUltimaAtualizacao;
+    }
+    public void SetdataUltimaAtualizacao(String dataUltimaAtualizacao) {
+        this.dataUltimaAtualizacao = dataUltimaAtualizacao;
     }
 // -----------------------------------------------
 }

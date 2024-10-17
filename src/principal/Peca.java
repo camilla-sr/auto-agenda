@@ -9,13 +9,12 @@ public class Peca {
     private int idPeca;
     private String descricaoPeca;
     private int qntdPeca;
-    private String tipoProduto = "P";
     
     // Métodos Principais
     public void cadastrarPeca(String descricaoPeca, int qntdPeca){
         
         String sqlInserir = "INSERT into peca (tipo_produto, desc_peca, qntd_peca)"
-                + "VALUES ('"+tipoProduto+"', '"+descricaoPeca+"', "+qntdPeca+")";
+                + "VALUES ('"+descricaoPeca+"', "+qntdPeca+")";
         
         boolean resposta = conn.executar(sqlInserir);
         if(resposta == true){
@@ -101,12 +100,6 @@ public class Peca {
     }
     public void setQntdPeca(int qntdPeca) {
         this.qntdPeca = qntdPeca;
-    }
-    public String getTipoProduto() {
-        return tipoProduto;
-    }
-    public void setTipoProduto(String tipoProduto) {
-        this.tipoProduto = tipoProduto;
     }
     
 // -----------------------------------------------

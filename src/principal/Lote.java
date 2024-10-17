@@ -10,13 +10,12 @@ public class Lote {
     private String dataVencimento;
     private String tipoOleo;
     private int qntdGarrafa;
-    private String tipoProduto;
     
-    public void cadastrarLote(int codLote, String tipoProduto, String tipoOleo, int qntdGarrafa){
+    public void cadastrarLote(){
         Conexao conn = new Conexao();
 
         String sqlInserir = "INSERT into lote(cod_lote, tipo_produto, tipo_oleo, qntd_garrafa)"
-                + "VALUES ("+codLote+", "+tipoProduto+", "+tipoOleo+", "+qntdGarrafa+")";
+                + "VALUES ("+codLote+", "+tipoOleo+", "+qntdGarrafa+")";
 
         boolean resposta = conn.executar(sqlInserir);
         if (resposta == true) {
@@ -26,9 +25,9 @@ public class Lote {
         }
     }
     
-    public void editarLote(int codLote, String tipoOleo, int qntdGarrafa){
+    public void editarLote(int codLote, String tipoOleo, int qntdGarrafa, String tipoProduto){
         Conexao conn = new Conexao();
-        String sqlEdit = "UPDATE lote set tipo_oleo = "+tipoOleo+" where cod_lote = "+codLote+"";
+        String sqlEdit = "UPDATE lote set tipo_produto = '"+tipoProduto+"', tipo_oleo = "+tipoOleo+" where cod_lote = "+codLote+"";
         
         boolean resposta = conn.executar(sqlEdit);
         if(resposta == true){
@@ -50,7 +49,7 @@ public class Lote {
                 int qntdGarrafa = lista.getInt("qntd_garrafa");
                 String tipoOleo = lista.getString("tipo_oleo");
 
-                System.out.println("Código do lote: " + cod);
+                System.out.println("Cï¿½digo do lote: " + cod);
                 System.out.println("Tipo do Produto: " + tipoProduto);
                 System.out.println("Quantidade de garrafas: " + qntdGarrafa);
                 System.out.println("Tipo de Óleo: " + tipoOleo);
@@ -97,12 +96,6 @@ public class Lote {
     }
     public void setQntdGarrafa(int qntdGarrafa) {
         this.qntdGarrafa = qntdGarrafa;
-    }
-    public String getTipoProduto() {
-        return tipoProduto;
-    }
-    public void setTipoProduto(String tipoProduto) {
-        this.tipoProduto = tipoProduto;
     }
     
 // -----------------------------------------------
