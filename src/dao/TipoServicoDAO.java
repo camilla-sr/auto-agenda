@@ -1,10 +1,10 @@
-package principal;
+package dao;
 
-import dao.Conexao;
+import include.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TipoServico {
+public class TipoServicoDAO {
     final Conexao conn = new Conexao();
     private int idServico;
     private String descricaoServico;

@@ -1,10 +1,10 @@
-package principal;
+package dao;
 
-import dao.Conexao;
+import include.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Peca {
+public class PecaDAO {
     final Conexao conn = new Conexao();
     private int idPeca;
     private String descricaoPeca;
@@ -64,7 +64,7 @@ public class Peca {
 
     
     
-// -------------- Mï¿½TODOS DE APOIO- --------------    
+// -------------- MÉTODOS DE APOIO- --------------    
     // !!!!!
     public void validaID(int id){
         try{

@@ -1,10 +1,10 @@
-package principal;
+package dao;
 
-import dao.Conexao;
+import include.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Funcionario {
+public class FuncionarioDAO {
     final Conexao conn = new Conexao();
     private int idFuncionario;
     private String nomeFuncionario;

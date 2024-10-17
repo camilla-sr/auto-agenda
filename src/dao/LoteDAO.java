@@ -1,10 +1,10 @@
-package principal;
+package dao;
 
-import dao.Conexao;
+import include.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Lote {
+public class LoteDAO {
     private int codLote;
     private String dataCompra;
     private String dataVencimento;

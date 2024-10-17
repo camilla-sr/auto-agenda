@@ -1,8 +1,8 @@
-package principal;
+package dao;
 
-import dao.Conexao;
+import include.Conexao;
 
-public class Agendamento {
+public class AgendamentoDAO {
     final Conexao conn = new Conexao();
     private int idAgendamento;
     private int servico;
