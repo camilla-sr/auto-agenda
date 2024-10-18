@@ -27,7 +27,7 @@ qntd_garrafa int(2) default 0
 );
 
 create table estoque(			#tabela auxiliar para quantificar estoque
-id_produto int unsigned auto_increment primary key,
+id_estoque int unsigned auto_increment primary key,
 fk_produto int unsigned,
 fk_lote int unsigned,
 qntd_produto int(3) default 0,
@@ -35,13 +35,6 @@ qntd_total int(4) default 0,
 data_ultima_atualizacao datetime,
 constraint foreign key (fk_produto) references peca(id_peca),
 constraint foreign key (fk_lote) references lote(cod_lote)
-);
-
-create table aux_prod_usados(       #tabela de conexão entre as duas tabelas 
-id_produto_usado int unsigned auto_increment primary key,
-fk_produto int not null,
-fk_agendamento int,
-qntd_usada int default 0
 );
   
 create table cliente(
@@ -57,7 +50,6 @@ id_agendamento int unsigned auto_increment primary key,
 fk_cliente int unsigned,
 fk_servico int unsigned,
 fk_funcionario int unsigned,
-fk_produto_utilizado int unsigned,
 data_cadastro date,		#quando o agendamento foi cadastrado no sistema
 data_previsao_entrega date,		#precisão de quando será concluído o serviço
 data_conclusao date,		#data de conclusão de fato, baixa do agendamento no sistema
@@ -65,6 +57,14 @@ status_agendamento char(1) default 'A',
 observacao text default '',
 constraint foreign key (fk_cliente) references cliente(id_cliente),
 constraint foreign key (fk_servico) references tipo_servico(id_servico),
-constraint foreign key (fk_funcionario) references funcionario(id_funcionario),
-constraint foreign key (fk_produto_utilizado) references aux_prod_usados(id_produto_usado)
+constraint foreign key (fk_funcionario) references funcionario(id_funcionario)
+);
+
+create table aux_prod_usados(       #tabela de conexão entre as duas tabelas 
+id_produto_usado int unsigned auto_increment primary key,
+fk_estoque int unsigned,
+fk_agendamento int unsigned,
+qntd_usada int default 0,
+constraint foreign key (fk_estoque) references estoque(id_estoque),
+constraint foreign key (fk_agendamento) references agendamento(id_agendamento)
 );
