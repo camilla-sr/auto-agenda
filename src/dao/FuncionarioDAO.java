@@ -23,9 +23,9 @@ public class FuncionarioDAO {
 // Método para listar todos os funcionários do banco de dados
     public void listarFuncionarios() {
         String sqlConsulta = "SELECT * FROM funcionario order by nome_funcionario";
-        ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
             System.out.println("\nFuncionários");
             while (lista.next()) {
                 int idFuncionario = lista.getInt("id_funcionario");
@@ -41,20 +41,19 @@ public class FuncionarioDAO {
             conn.desconectar();
         }
     }
+    
+    public void editarFuncionario(int idFuncionario, String novoNome){
+        String sql = "SELECT * FROM funcionario where id_funcionario = " + idFuncionario;
+        
+        ResultSet resposta = conn.executarConsulta(sql);
+    }
 
-// -------------- GETTERS E SETTERS --------------
-    public int getIdFuncionario() {
-        return idFuncionario;
+
+// -------------- MÉTODOS DE APOIO --------------    
+
+    private void validaID(int idFuncionario){
+        
     }
-    public void setIdFuncionario(int idFuncionario) {
-        this.idFuncionario = idFuncionario;
-    }
-    public String getNomeFuncionario() {
-        return nomeFuncionario;
-    }
-    public void setNomeFuncionario(String nomeFuncionario) {
-        this.nomeFuncionario = nomeFuncionario;
-    }
+    
 // -----------------------------------------------
-
 }

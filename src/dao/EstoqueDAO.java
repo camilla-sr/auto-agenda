@@ -38,7 +38,9 @@ public class EstoqueDAO {
             System.out.println("Algo deu errado: " + e.getMessage());
         }
     }
+    
 
+    // -------------- MÉTODOS DE APOIO --------------
     public int contadorOleo() {
         String sqlConsulta = "SELECT SUM(qntd_garrafa) as total from lote";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
@@ -68,55 +70,6 @@ public class EstoqueDAO {
         }
         return row;
     }
-
-// -------------- GETTERS E SETTERS --------------
-    public int getIdEstoque() {
-        return idEstoque;
-    }
-    public void setIdEstoque(int idEstoque) {
-        this.idEstoque = idEstoque;
-    }
-    public int getProduto() {
-        return produto;
-    }
-    public void setProduto(int produto) {
-        this.produto = produto;
-    }
-    public int getNomeproduto() {
-        return Nomeproduto;
-    }
-    public void setNomeproduto(int Nomeproduto) {
-        this.Nomeproduto = Nomeproduto;
-    }
-    public int getLote() {
-        return lote;
-    }
-    public void setLote(int lote) {
-        this.lote = lote;
-    }
-    public int getDescricaoOleo() {
-        return descricaoOleo;
-    }
-    public void setDescricaoOleo(int descricaoOleo) {
-        this.descricaoOleo = descricaoOleo;
-    }
-    public int getQntdProduto() {
-        return qntdProduto;
-    }
-    public void setQntdProduto(int qntdProduto) {
-        this.qntdProduto = qntdProduto;
-    }
-    public int getQntdTotal() {
-        return qntdTotal;
-    }
-    public void setQntdTotal(int qntdTotal) {
-        this.qntdTotal = qntdTotal;
-    }
-    public String getDataUltimaAtualizacao() {
-        return dataUltimaAtualizacao;
-    }
-    public void SetdataUltimaAtualizacao(String dataUltimaAtualizacao) {
-        this.dataUltimaAtualizacao = dataUltimaAtualizacao;
-    }
+    
 // -----------------------------------------------
 }
