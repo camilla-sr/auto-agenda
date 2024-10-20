@@ -36,6 +36,17 @@ Referência à entidade Estoque no banco de dados, seu intuito é mostrar os val
     - [X]  contadorOleo()  
 - [X]  Getters e Setters;
 
+### Auxiliar Produtos Usados
+Referência à entidade auxiliar Auxiliar Produtos Usados, que tem por finalidade indicar os produtos usados no serviço agendado **após a finalizaçao do agendamento no sistema**, por produtos entende-se peças e/ou garrafas de óleo. Essa tabela vai relacionar as Peças e Garrafas de Óleo com o agendamento finalizado indicando as quantidades gastas
+
+- [ ]  registarUsosInsumo();
+- [ ]  listarUsos();
+- [ ]  editarUso();
+- [ ]  apagarUso();
+- Métodos de Apoio:
+    - [ ]  validarID()
+- [ ]  Getters e Setters;
+
 ### Cliente
 Referência à entidade Cliente no banco de dados, vai ser utilizada para guardar as informações básicas dos clientes que receberão o atendimento na oficina somente para referência dos funcionários, uma vez que os cliente **não terão** acesso ao sistema.
 
