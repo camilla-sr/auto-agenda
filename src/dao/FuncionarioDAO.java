@@ -18,6 +18,7 @@ public class FuncionarioDAO {
         } else {
             System.out.println("Algo deu errado ao inserir o funcionário.");
         }
+        conn.desconectar();
     }
 
 // Método para listar todos os funcionários do banco de dados
@@ -54,6 +55,7 @@ public class FuncionarioDAO {
                 System.out.println("Algo deu errado");
             }
         }
+        conn.desconectar();
     }
 
     public void apagarFuncionario(int idFuncionario) {
@@ -72,7 +74,8 @@ public class FuncionarioDAO {
         conn.desconectar();
     }
 
-// -------------- MÉTODOS DE APOIO --------------    
+// -------------- MÉTODOS DE APOIO --------------
+    
     private int validaID(int idFuncionario) {
         int resposta = 0;
         try {

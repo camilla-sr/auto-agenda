@@ -5,54 +5,66 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoteDAO {
-    private int codLote;
+    final Conexao conn = new Conexao();
+    private String codLote;
     private String dataCompra;
     private String dataVencimento;
     private String tipoOleo;
     private int qntdGarrafa;
-    
-    public void cadastrarLote(){
-        Conexao conn = new Conexao();
 
-        String sqlInserir = "INSERT into lote(cod_lote, tipo_produto, tipo_oleo, qntd_garrafa)"
-                + "VALUES ("+codLote+", "+tipoOleo+", "+qntdGarrafa+")";
+    public void cadastrarLote(String codLote, String dataCompra, String dataVencimento, int qntdGarrafa, String tipoOleo) {
+        int loteValido = validaCOD(codLote);
 
-        boolean resposta = conn.executar(sqlInserir);
-        if (resposta == true) {
-            System.out.println("Lote cadastrado");
+        if (loteValido == 1) {
+            System.out.println("Lote já cadastrado");
         } else {
-            System.out.println("Algo deu errado");
+            String sqlInserir = "INSERT into lote(cod_lote, data_compra, data_vencimento, und_lote, tipo_oleo) VALUES ('"
+            +codLote+"', '"+dataCompra+"', '"+dataVencimento+"', "+qntdGarrafa+", '"+tipoOleo+"')";
+            
+            boolean resposta = conn.executar(sqlInserir);
+            if (resposta == true) {
+                System.out.println("Lote cadastrado");
+            } else {
+                System.out.println("Algo deu errado");
+            }
         }
+        conn.desconectar();
     }
-    
-    public void editarLote(int codLote, String tipoOleo, int qntdGarrafa, String tipoProduto){
-        Conexao conn = new Conexao();
-        String sqlEdit = "UPDATE lote set tipo_produto = '"+tipoProduto+"', tipo_oleo = "+tipoOleo+" where cod_lote = "+codLote+"";
-        
-        boolean resposta = conn.executar(sqlEdit);
-        if(resposta == true){
-            System.out.println("Lote Editado");
-        }else{
-            System.out.println("Algo deu errado");
+
+    public void editarLote(String codLote, String dataCompra, String dataVencimento, int qntdGarrafa, String tipoOleo) {
+        int loteValido = validaCOD(codLote);
+        if (loteValido == 2) {
+            System.out.println("Lote não encontrado");
+        } else {
+            String sqlEdit = "UPDATE lote set data_compra = '"+dataCompra+"', data_vencimento = '"+dataVencimento
+                    +"', und_lote = "+qntdGarrafa+", tipo_oleo = '"+tipoOleo+"' where cod_lote = '"+codLote+"'";
+            
+            boolean resposta = conn.executar(sqlEdit);
+            if (resposta == true) {
+                System.out.println("Lote Editado");
+            } else {
+                System.out.println("Algo deu errado");
+            }
         }
+        conn.desconectar();
     }
-  
-     public void listarLote(){
-        Conexao conn = new Conexao();
+
+    public void listarLote() {
         String sqlConsulta = "SELECT * from lote";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        
         try {
             while (lista.next()) {
-                int cod = lista.getInt("cod_lote");
-                String tipoProduto = lista.getString("tipo_produto");
-                int qntdGarrafa = lista.getInt("qntd_garrafa");
-                String tipoOleo = lista.getString("tipo_oleo");
+                setCodLote(lista.getString("cod_lote"));
+                setDataCompra(lista.getString("data_compra"));
+                setDataVencimento(lista.getString("data_vencimento"));
+                setQntdGarrafa(lista.getInt("und_lote"));
+                setTipoOleo(lista.getString("tipo_oleo"));
 
-                System.out.println("Cï¿½digo do lote: " + cod);
-                System.out.println("Tipo do Produto: " + tipoProduto);
-                System.out.println("Quantidade de garrafas: " + qntdGarrafa);
-                System.out.println("Tipo de Óleo: " + tipoOleo);
+                System.out.println("Código do lote: \t\t" + getCodLote());
+                System.out.println("Data da Compra: \t\t" + getDataCompra());
+                System.out.println("Data de Vencimento: \t\t" + getDataVencimento());
+                System.out.println("Quantidade de garrafas: \t" + getQntdGarrafa());
+                System.out.println("Tipo de Óleo: \t\t\t" + getTipoOleo());
                 System.out.println("---------------------------");
             }
             lista.close();
@@ -62,12 +74,48 @@ public class LoteDAO {
             conn.desconectar();
         }
     }
-     
-     // -------------- GETTERS E SETTERS --------------
-    public int getCodLote() {
+
+    public void apagarLote(String codLote) {
+        int loteValido = validaCOD(codLote);
+        if (loteValido == 2) {
+            System.out.println("Lote não encontrado na base");
+        } else {
+            String sqlDel = "DELETE from lote where cod_lote = '"+codLote+"'";
+            boolean resposta = conn.executar(sqlDel);
+            if (resposta == true) {
+                System.out.println("Lote deletado");
+            } else {
+                System.out.println("Algo deu errado");
+            }
+        }
+        conn.desconectar();
+    }
+    
+    // -------------- MÉTODOS DE APOIO --------------
+    
+    private int validaCOD(String codLote) {
+        int resposta = 0;
+        try {
+            String sql = "SELECT * from lote where cod_lote = '"+ codLote +"'";
+            ResultSet retorno = conn.executarConsulta(sql);
+            if (retorno != null && retorno.next()) {
+                resposta = 1;
+            } else {
+                resposta = 2;
+            }
+        } catch (SQLException e) {
+            System.out.println("Algo deu errado" + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+        return resposta;
+    }
+
+    // -------------- GETTERS E SETTERS --------------
+    public String getCodLote() {
         return codLote;
     }
-    public void setCodLote(int codLote) {
+    public void setCodLote(String codLote) {
         this.codLote = codLote;
     }
     public String getDataCompra() {
