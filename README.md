@@ -47,6 +47,19 @@ Referência à entidade auxiliar Auxiliar Produtos Usados, que tem por finalidad
     - [ ]  validarID()
 - [ ]  Getters e Setters;
 
+### Agendamento
+Referência à entidade Agendamento no banco de dados que irá armazenar as informações referentes aos serviços agendados para outro dia. Aqui será identificado o cliente que o receberá, o funcionário responsável por realizar o serviço e informações básicas sobre o automóvel. **Essa tabela não irá armazenar valores pois não há controle de OS no sistema** 
+
+- [ ]  cadastrarAgendamento();
+- [ ]  listarAgendamentos();
+- [ ]  editarAgendamento();
+- [ ]  apagarAgendamento();
+- [ ]  atualizarStatus();
+- [ ]  registarProdutosUsados();
+- Métodos de Apoio:
+    - [ ]  validarID()
+- [ ]  Getters e Setters;
+
 ### Cliente
 Referência à entidade Cliente no banco de dados, vai ser utilizada para guardar as informações básicas dos clientes que receberão o atendimento na oficina somente para referência dos funcionários, uma vez que os cliente **não terão** acesso ao sistema.
 
