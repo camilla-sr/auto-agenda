@@ -1,9 +1,8 @@
-> Atualizado pela última vez em 17/10
+> Atualizado pela última vez em 18/10
 
 # Classes
 
 ### Peças
-
 Referência à entidade Peca no banco de dados que irá armazenar todas as peças e ferramentas da oficina para informatizar o controle de estoque, atualmente feito por memória dos funcionários
 
 - [X]  cadastrarPeca();
@@ -25,14 +24,8 @@ Referência à entidade Funcionario no banco de dados que irá armazenar somente
     - [ ]  validarID();
 - [X]  Getters e Setters;
 
-### Funcionamento
-Referência à entidade Funcionamento no banco de dados com o único obejtivo de registrar os dias e horários de funcionamento da oficina. Será utilizado para que o sistema barre sozinho agendamentos em dias e/ou horários em que a oficina não está operando
-
-- [X]  cadastrarFuncionamento();
-- [X]  listarFuncionamento();
-- [ ]  editarFuncionamento();
-- [ ]  apagarFuncionamento();
-- [X]  Getters e Setters;
+### ~~Funcionamento~~
+~~Referência à entidade Funcionamento no banco de dados com o único obejtivo de registrar os dias e horários de funcionamento da oficina. Será utilizado para que o sistema barre sozinho agendamentos em dias e/ou horários em que a oficina não está operando~~
 
 ### Estoque
 Referência à entidade Estoque no banco de dados, seu intuito é mostrar os valores somados das entidades Peça e Lote, que irá armazenar informações das garras de óleo comercializados e utilizados na oficina
@@ -41,6 +34,41 @@ Referência à entidade Estoque no banco de dados, seu intuito é mostrar os val
 - Métodos de Apoio:
     - [X]  contadorPecas()
     - [X]  contadorOleo()  
+- [X]  Getters e Setters;
+
+### Cliente
+Referência à entidade Cliente no banco de dados, vai ser utilizada para guardar as informações básicas dos clientes que receberão o atendimento na oficina somente para referência dos funcionários, uma vez que os cliente **não terão** acesso ao sistema.
+
+- [ ]  cadastrarCliente();
+- [ ]  listarClientes();
+- [ ]  editarCliente();
+- [ ]  apagarCliente();
+- Métodos de Apoio:
+    - [ ]  validarID()  
+- [ ]  Getters e Setters;
+
+### Lote
+Referência à entidade Lote no bando de dados, ao contrário do que o nome sugere, será usada para armazenar as informações das garrafas de óleo automotivo. Foi necessária essa criação esses óleos possuem data de validade e finalidades diferentes, além de serem compradas em lotes.Por essa razão, a tabela não possui intenção de identificar as unidades especificamente, esse é o motivo de não haver um ID nem um auto_increment no banco.
+
+- [X]  cadastrarLote();
+- [X]  listarLote();
+- [X]  editarLote();
+- [ ]  apagarLote();
+- Métodos de Apoio:
+    - [X]  contadorPecas()
+    - [X]  contadorOleo()  
+- [X]  Getters e Setters;
+
+
+### Tipo de Serviço
+Referência à entidade Tipo Serviço no banco de dados, será utilizada para referenciar qual o serviço agendado para um determinado cliente, descreverá como funciona o serviço somente. Não haverá vínculo de valores, pois seria uma informação inútil para o sistema como ele está hoje, uma vez que não há controle de OS (Ordem de Serviço)
+
+- [X]  cadastrarTipoServico();
+- [X]  listarTiposServico();
+- [ ]  editarTipoServico();
+- [ ]  apagarTipoServico();
+- Métodos de Apoio:
+    - [ ]  validarID() 
 - [X]  Getters e Setters;
 
 ---
@@ -74,3 +102,6 @@ Referência à entidade Estoque no banco de dados, seu intuito é mostrar os val
 
 - A entidade e classe para funcionamento, que seria utilizada para comparar os dias da semana no momento do agendamento, foi descartada
     - Razão: é possível validar a informação sem a necessidade de salvar dados no banco, isso será tratado no código agora
+
+- Tinha retirado todos os getters e setters pois não estávamos utilizando adequadamente, mas implementei novamente
+    - Razão: obrigatório na documentação, mas eu não tinha visto
