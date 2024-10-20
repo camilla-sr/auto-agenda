@@ -45,7 +45,7 @@ Referência à entidade Cliente no banco de dados, vai ser utilizada para guarda
 - [ ]  apagarCliente();
 - Métodos de Apoio:
     - [ ]  validarID()  
-- [ ]  Getters e Setters;
+- [X]  Getters e Setters;
 
 ### Lote
 Referência à entidade Lote no bando de dados, ao contrário do que o nome sugere, será usada para armazenar as informações das garrafas de óleo automotivo. Foi necessária essa criação esses óleos possuem data de validade e finalidades diferentes, além de serem compradas em lotes.Por essa razão, a tabela não possui intenção de identificar as unidades especificamente, esse é o motivo de não haver um ID nem um auto_increment no banco.
