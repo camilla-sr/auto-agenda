@@ -13,15 +13,15 @@ Referência à entidade Peca no banco de dados que irá armazenar todas as peça
     - [X]  validarID();
 - [X]  Getters e Setters;
 
-### Funcionários
+### Funcionário
 Referência à entidade Funcionario no banco de dados que irá armazenar somente os nomes dos funcionários para identificá-los como responsáveis nos agendamentos
 
 - [X]  cadastrarFuncionario();
 - [X]  listarFuncionario();
-- [ ]  editarFuncionario();
-- [ ]  apagarFuncionario();
-- [ ]  Métodos de apoio:
-    - [ ]  validarID();
+- [X]  editarFuncionario();
+- [X]  apagarFuncionario();
+- [X]  Métodos de apoio:
+    - [X]  validarID();
 - [X]  Getters e Setters;
 
 ### ~~Funcionamento~~
