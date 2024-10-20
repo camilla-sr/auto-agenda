@@ -12,4 +12,43 @@ public class AgendamentoDAO {
     private String dataConclusao;
 
     
+    
+    // -------------- GETTERS E SETTERS --------------
+    public int getIdAgendamento() {
+        return idAgendamento;
+    }
+    public void setIdAgendamento(int idAgendamento) {
+        this.idAgendamento = idAgendamento;
+    }
+    public int getServico() {
+        return servico;
+    }
+    public void setServico(int servico) {
+        this.servico = servico;
+    }
+    public int getFuncionario() {
+        return funcionario;
+    }
+    public void setFuncionario(int funcionario) {
+        this.funcionario = funcionario;
+    }
+    public String getDataCadastro() {
+        return dataCadastro;
+    }
+    public void setDataCadastro(String dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+    public String getDataPrevisaoEntrega() {
+        return dataPrevisaoEntrega;
+    }
+    public void setDataPrevisaoEntrega(String dataPrevisaoEntrega) {
+        this.dataPrevisaoEntrega = dataPrevisaoEntrega;
+    }
+    public String getDataConclusao() {
+        return dataConclusao;
+    }
+    public void setDataConclusao(String dataConclusao) {
+        this.dataConclusao = dataConclusao;
+    }
+// ------------------------------------------------    
 }

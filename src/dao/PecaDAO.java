@@ -62,8 +62,6 @@ public class PecaDAO {
             
     }
 
-    
-    
 // -------------- MÉTODOS DE APOIO- --------------    
     // !!!!!
     public void validaID(int id){
@@ -80,6 +78,25 @@ public class PecaDAO {
             System.out.println("Algo deu errado" + e.getMessage());
         }
     }
-    
-// -----------------------------------------------
+
+// -------------- GETTERS E SETTERS --------------
+    public int getIdPeca() {
+        return idPeca;
+    }
+    public void setIdPeca(int idPeca) {
+        this.idPeca = idPeca;
+    }
+    public String getDescricaoPeca() {
+        return descricaoPeca;
+    }
+    public void setDescricaoPeca(String descricaoPeca) {
+        this.descricaoPeca = descricaoPeca;
+    }
+    public int getQntdPeca() {
+        return qntdPeca;
+    }
+    public void setQntdPeca(int qntdPeca) {
+        this.qntdPeca = qntdPeca;
+    }
+    // -----------------------------------------------
 }
