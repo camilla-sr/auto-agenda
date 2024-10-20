@@ -8,8 +8,8 @@ Referência à entidade Peca no banco de dados que irá armazenar todas as peça
 - [X]  cadastrarPeca();
 - [X]  listarPecas();
 - [X]  editarPeca();
-- [ ]  apagarPeca();
-- [ ]  Métodos de apoio:
+- [X]  apagarPeca();
+- [X]  Métodos de apoio:
     - [X]  validarID();
 - [X]  Getters e Setters;
 
@@ -77,7 +77,7 @@ Referência à entidade Lote no bando de dados, ao contrário do que o nome suge
 - [X]  cadastrarLote();
 - [X]  listarLote();
 - [X]  editarLote();
-- [ ]  apagarLote();
+- [X]  apagarLote();
 - Métodos de Apoio:
     - [X]  contadorPecas()
     - [X]  contadorOleo()  
