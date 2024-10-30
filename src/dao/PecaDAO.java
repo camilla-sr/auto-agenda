@@ -35,7 +35,7 @@ public class PecaDAO {
 
             boolean resposta = conn.executar(sqlEdit);
             if (resposta == true) {
-                System.out.println("Peça Editada");
+                System.out.println("Peça editada");
             } else {
                 System.out.println("Algo deu errado");
             }
@@ -69,10 +69,11 @@ public class PecaDAO {
     
     public void apagarPeca(int idPeca) {
         int pecaValida = validaID(idPeca);
+        
         if (pecaValida == 2) {
             System.out.println("Peça não encontrada na base");
         } else {
-            String sqlDel = "DELETE from peca where id_peca = " + idPeca;
+            String sqlDel = "DELETE from peca where id_peca = " + idPeca + "";
             boolean resposta = conn.executar(sqlDel);
             if (resposta == true) {
                 System.out.println("Peça deletada");
@@ -83,11 +84,11 @@ public class PecaDAO {
         conn.desconectar();
     }
 
-// -------------- MÉTODOS DE APOIO- --------------    
+// -------------- MÉTODOS DE APOIO ---------------    
     private int validaID(int id) {
         int resposta = 0;
         try {
-            String sql = "SELECT * from peca where id_peca = " + id;
+            String sql = "SELECT * from peca where id_peca = " + id + "";
             ResultSet retorno = conn.executarConsulta(sql);
             if (retorno != null && retorno.next()) {
                 resposta = 1;
