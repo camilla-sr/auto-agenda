@@ -42,6 +42,62 @@ public class TipoServicoDAO {
         }
     }
     
+        public void editarTipoServico(int idServico, String novaDescricao) {
+        int servicoValido = validaID(idServico);
+
+        if (servicoValido == 2) {
+            System.out.println("Tipo de Serviço não encontrado na base");
+        } else {
+            String sqlEdit = "UPDATE tipo_servico set desc_servico = '" + novaDescricao
+                    + " where id_servico = " + idServico + "";
+
+            boolean resposta = conn.executar(sqlEdit);
+            if (resposta == true) {
+                System.out.println("Tipo editado");
+            } else {
+                System.out.println("Algo deu errado");
+            }
+        }
+        conn.desconectar();
+    }
+        
+    public void apagarPeca(int idServico) {
+        int servicoValido = validaID(idServico);
+        
+        if (servicoValido == 2) {
+            System.out.println("Peça não encontrada na base");
+        } else {
+            String sqlDel = "DELETE from tipo_servico where id_servico = " + idServico + "";
+            boolean resposta = conn.executar(sqlDel);
+            if (resposta == true) {
+                System.out.println("Serviço deletado");
+            } else {
+                System.out.println("Algo deu errado");
+            }
+        }
+        conn.desconectar();
+    }
+    
+        
+    // -------------- MÉTODOS DE APOIO ---------------    
+    private int validaID(int id) {
+        int resposta = 0;
+        try {
+            String sql = "SELECT * from tipo_servico where id_servico = " + id + "";
+            ResultSet retorno = conn.executarConsulta(sql);
+            if (retorno != null && retorno.next()) {
+                resposta = 1;
+            } else {
+                resposta = 2;
+            }
+        } catch (SQLException e) {
+            System.out.println("Algo deu errado" + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+        return resposta;
+    }
+        
     // -------------- GETTERS E SETTERS --------------
 
     public int getIdServico() {

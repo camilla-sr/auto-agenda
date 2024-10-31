@@ -2,6 +2,7 @@ package principal;
 
 import java.util.Scanner;
 import dao.AgendamentoDAO;
+import dao.AuxiliarProdutosUsadosDAO;
 import dao.ClienteDAO;
 import dao.EstoqueDAO;
 import dao.FuncionarioDAO;
@@ -26,8 +27,9 @@ public class App {
         LoteDAO         lt = new LoteDAO();
         PecaDAO         pc = new PecaDAO();
         TipoServicoDAO  ts = new TipoServicoDAO();
+        AuxiliarProdutosUsadosDAO aux = new AuxiliarProdutosUsadosDAO();
 
         //chame os métodos para testes no espaço abaixo
-        
+        aux.listarVinculos();
     }
 }
