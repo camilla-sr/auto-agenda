@@ -5,46 +5,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ClienteDAO {
-
     final Conexao conn = new Conexao();
-    private int idCliente;
-    private String nomeCliente;
-    private String whatsappCliente;
-    private String modeloCarro;
-    private String anoCarro;
 
     //Métodos Principais
-    public void cadastrarCliente(String nomeCliente, String whatsappCliente, String modeloCarro, String anoCarro) {
+    public boolean cadastrarCliente(String nomeCliente, String whatsappCliente, String modeloCarro, String anoCarro) {
+        boolean resposta = false;
+        
         String sqlInserir = "INSERT into cliente (nome_cliente, whatsapp_cliente, modelo_carro, ano_carro)"
                 + "VALUES ('" + nomeCliente + "', '" + whatsappCliente + "', '" + modeloCarro + "', '" + anoCarro + "')";
 
-        boolean resposta = conn.executar(sqlInserir);
+        resposta = conn.executar(sqlInserir);
         if (resposta == true) {
-            System.out.println("Cliente inserido");
+            conn.desconectar();
+            return true;
         } else {
-            System.out.println("Algo deu errado");
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
-    public void editarCliente(int idCliente, String novoNomeCliente, String novoWhatsappCliente, String novoModeloCarro, String novoAnoCarro) {
-        int clienteValida = validaID(idCliente);
+    public boolean editarCliente(int idCliente, String novoNomeCliente, String novoWhatsappCliente, String novoModeloCarro, String novoAnoCarro) {
+        boolean resposta = false;
 
-        if (clienteValida == 2) {
-            System.out.println("Cliente não encontrado na base");
+        String sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "', whatsapp_cliente = '" + novoWhatsappCliente
+                + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro
+                + "' WHERE id_cliente = " + idCliente + "";
+
+        resposta = conn.executar(sqlEdit);
+
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
         } else {
-            String sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "', whatsapp_cliente = '" + novoWhatsappCliente
-                    + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro
-                    + "' WHERE id_cliente = " + idCliente + "";
-
-            boolean resposta = conn.executar(sqlEdit);
-            if (resposta == true) {
-                System.out.println("Cliente editado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
     public void listarCliente() {
@@ -75,25 +70,22 @@ public class ClienteDAO {
         }
     }
 
-    public void apagarCliente() {
-        int clienteValida = validaID(idCliente);
+    public boolean apagarCliente(int idCliente) {
+        boolean resposta = false;
 
-        if (clienteValida == 2) {
-            System.out.println("Cliente não encontrado na base");
+        String sqlDel = "DELETE from cliente WHERE id_cliente = " + idCliente + "";
+        resposta = conn.executar(sqlDel);
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
         } else {
-            String sqlDel = "DELETE from cliente WHERE id_cliente = " + idCliente + "";
-            boolean resposta = conn.executar(sqlDel);
-            if (resposta == true) {
-                System.out.println("Cliente deletado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
 // -------------- MÉTODO DE APOIO ---------------- 
-    private int validaID(int id) {
+    public int validaID(int id) {
         int resposta = 0;
         try {
             String sql = "SELECT * from cliente WHERE id_cliente = " + id + "";
@@ -110,46 +102,4 @@ public class ClienteDAO {
         }
         return resposta;
     }
-
-// -------------- GETTERS E SETTERS --------------
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public String getNomeCliente() {
-        return nomeCliente;
-    }
-
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
-    }
-
-    public String getWhatsappCliente() {
-        return whatsappCliente;
-    }
-
-    public void setWhatsappCliente(String whatsappCliente) {
-        this.whatsappCliente = whatsappCliente;
-    }
-
-    public String getModeloCarro() {
-        return modeloCarro;
-    }
-
-    public void setModeloCarro(String modeloCarro) {
-        this.modeloCarro = modeloCarro;
-    }
-
-    public String getAnoCarro() {
-        return anoCarro;
-    }
-
-    public void setAnoCarro(String anoCarro) {
-        this.anoCarro = anoCarro;
-    }
-// ------------------------------------------------
 }

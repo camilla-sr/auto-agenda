@@ -6,41 +6,48 @@ import java.sql.SQLException;
 
 public class PecaDAO {
     final Conexao conn = new Conexao();
-    private int idPeca;
-    private String descricaoPeca;
-    private int qntdPeca;
 
     // Métodos Principais
-    public void cadastrarPeca(String descricaoPeca, int qntdPeca) {
+    public boolean cadastrarPeca(String descricaoPeca, int qntdPeca) {
         String sqlInserir = "INSERT into peca (desc_peca, qntd_peca)"
                 + "VALUES ('" + descricaoPeca + "', " + qntdPeca + ")";
 
         boolean resposta = conn.executar(sqlInserir);
         if (resposta == true) {
-            System.out.println("Peça inserida");
+            conn.desconectar();
+            return true;
         } else {
-            System.out.println("Algo deu errado");
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
-    public void editarPeca(int idPeca, String novaDescricao, int novaQntd) {
-        int pecaValida = validaID(idPeca);
+    public boolean editarPeca(int idPeca, String novaDescricao, int novaQntd) {
+        String sqlEdit = ""; // inicializo a variável da query
 
-        if (pecaValida == 2) {
-            System.out.println("Peça não encontrada na base");
-        } else {
-            String sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao
-                    + "', qntd_peca = " + novaQntd + " where id_peca = " + idPeca + "";
-
-            boolean resposta = conn.executar(sqlEdit);
-            if (resposta == true) {
-                System.out.println("Peça editada");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+        // testo o que será editado
+        if(novaDescricao != "" && novaQntd == 0){
+            sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao + "'";
         }
-        conn.desconectar();
+        if(novaQntd != 0 && novaDescricao == ""){
+            sqlEdit = "UPDATE peca set qntd_peca = " + novaQntd;
+        }
+        if(novaDescricao != "" && novaQntd != 0){
+            sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao;
+        }
+        
+        sqlEdit = sqlEdit + " where id_peca = " + idPeca + "";
+        boolean resposta = false;
+
+        resposta = conn.executar(sqlEdit);
+
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 
     public void listarPecas() {
@@ -66,26 +73,23 @@ public class PecaDAO {
             conn.desconectar();
         }
     }
-    
-    public void apagarPeca(int idPeca) {
-        int pecaValida = validaID(idPeca);
-        
-        if (pecaValida == 2) {
-            System.out.println("Peça não encontrada na base");
+
+    public boolean apagarPeca(int idPeca) {
+        boolean resposta = false;
+        String sqlDel = "DELETE from peca where id_peca = " + idPeca + "";
+        resposta = conn.executar(sqlDel);
+
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
         } else {
-            String sqlDel = "DELETE from peca where id_peca = " + idPeca + "";
-            boolean resposta = conn.executar(sqlDel);
-            if (resposta == true) {
-                System.out.println("Peça deletada");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
 // -------------- MÉTODOS DE APOIO ---------------    
-    private int validaID(int id) {
+    public int validaID(int id) {
         int resposta = 0;
         try {
             String sql = "SELECT * from peca where id_peca = " + id + "";
@@ -102,25 +106,4 @@ public class PecaDAO {
         }
         return resposta;
     }
-
-// -------------- GETTERS E SETTERS --------------
-    public int getIdPeca() {
-        return idPeca;
-    }
-    public void setIdPeca(int idPeca) {
-        this.idPeca = idPeca;
-    }
-    public String getDescricaoPeca() {
-        return descricaoPeca;
-    }
-    public void setDescricaoPeca(String descricaoPeca) {
-        this.descricaoPeca = descricaoPeca;
-    }
-    public int getQntdPeca() {
-        return qntdPeca;
-    }
-    public void setQntdPeca(int qntdPeca) {
-        this.qntdPeca = qntdPeca;
-    }
-    // -----------------------------------------------
 }
