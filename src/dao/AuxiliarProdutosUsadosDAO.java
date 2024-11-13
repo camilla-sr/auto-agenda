@@ -12,7 +12,7 @@ public class AuxiliarProdutosUsadosDAO {
     private int qntdUsada;
 
     // -------------- MÉTODOS PRINCIPAIS ---------------
-    public void cadastrarAuxiliar(int estoque, int agendamento, int qndUsada) {
+    public void cadastrarVinculo(int estoque, int agendamento, int qndUsada) {
         String sqlInserir = "INSERT into aux_prod_usados (fk_estoque, fk_agendamento, qntd_usada)"
                 + "VALUES ("+ estoque +", "+ agendamento +", "+ qntdUsada +")";
 
@@ -25,7 +25,7 @@ public class AuxiliarProdutosUsadosDAO {
         conn.desconectar();
     }
     
-    public void editarPeca(int idProdutoUsado, int estoque, int agendamento) {
+    public void editarVinculo(int idProdutoUsado, int estoque, int agendamento) {
         int auxiliarValido = validaID(idProdutoUsado);
 
         if (auxiliarValido == 2) {

@@ -30,6 +30,6 @@ public class App {
         AuxiliarProdutosUsadosDAO aux = new AuxiliarProdutosUsadosDAO();
 
         //chame os métodos para testes no espaço abaixo
-        aux.listarVinculos();
+        
     }
 }

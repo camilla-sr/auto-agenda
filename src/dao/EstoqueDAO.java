@@ -41,7 +41,7 @@ public class EstoqueDAO {
     
 
     // -------------- MÉTODOS DE APOIO --------------
-    public int contadorOleo() {
+    private int contadorOleo() {
         String sqlConsulta = "SELECT SUM(qntd_garrafa) as total from lote";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
 
@@ -56,7 +56,7 @@ public class EstoqueDAO {
         return row;
     }
 
-    public int contadorPecas() {
+    private int contadorPecas() {
         String sqlConsulta = "SELECT SUM(qntd_peca) as total from peca";
         ResultSet valorTotal = conn.executarConsulta(sqlConsulta);
 

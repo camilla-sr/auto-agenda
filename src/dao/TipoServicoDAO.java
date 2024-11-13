@@ -61,7 +61,7 @@ public class TipoServicoDAO {
         conn.desconectar();
     }
         
-    public void apagarPeca(int idServico) {
+    public void apagarTipoServico(int idServico) {
         int servicoValido = validaID(idServico);
         
         if (servicoValido == 2) {

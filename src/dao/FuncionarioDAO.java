@@ -26,7 +26,7 @@ public class FuncionarioDAO {
         String sqlConsulta = "SELECT * FROM funcionario order by nome_funcionario";
         try {
             ResultSet lista = conn.executarConsulta(sqlConsulta);
-            System.out.println("\nFuncionários");
+            System.out.println("\n\t**Funcionários**");
             while (lista.next()) {
                 int idFuncionario = lista.getInt("id_funcionario");
                 String nomeFuncionario = lista.getString("nome_funcionario");
