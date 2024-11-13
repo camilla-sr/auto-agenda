@@ -5,7 +5,6 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Cliente {
-
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
