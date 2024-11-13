@@ -26,13 +26,38 @@ public class ClienteDAO {
 
     public boolean editarCliente(int idCliente, String novoNomeCliente, String novoWhatsappCliente, String novoModeloCarro, String novoAnoCarro) {
         boolean resposta = false;
-
-        String sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "', whatsapp_cliente = '" + novoWhatsappCliente
-                + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro
-                + "' WHERE id_cliente = " + idCliente + "";
-
+        String sqlEdit = "";
+        
+        // Muda o nome do cliente
+        if(novoNomeCliente != null && novoWhatsappCliente == null && novoModeloCarro == null && novoAnoCarro == null){
+            sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "'";
+        }
+        
+        //Muda o whatsapp do cliente
+        if(novoWhatsappCliente != null && novoNomeCliente == null && novoModeloCarro == null && novoAnoCarro == null){
+            sqlEdit = "UPDATE cliente set whatsapp_cliente = '" + novoWhatsappCliente + "'";            
+        }
+        
+        // Muda o modelo do carro
+        if(novoModeloCarro != null && novoNomeCliente == null && novoWhatsappCliente == null && novoAnoCarro == null){
+            sqlEdit = "UPDATE cliente set modelo_carro = '" + novoModeloCarro + "'";                        
+        }
+        
+        //Muda o ano do carro
+        if(novoAnoCarro != null && novoNomeCliente == null && novoWhatsappCliente == null && novoModeloCarro == null){
+            sqlEdit = "UPDATE cliente set ano_carro = " + novoAnoCarro;                        
+        }
+        
+        // Muda tudo
+        if(novoAnoCarro != null && novoNomeCliente != null && novoWhatsappCliente != null && novoModeloCarro != null){
+            sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "', whatsapp_cliente = '" + novoWhatsappCliente
+                    + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro;                        
+        }
+        
+        sqlEdit = sqlEdit + " WHERE id_cliente = " + idCliente + "";
+                
+        System.out.println(sqlEdit);
         resposta = conn.executar(sqlEdit);
-
         if (resposta == true) {
             conn.desconectar();
             return true;

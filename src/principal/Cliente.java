@@ -21,6 +21,8 @@ public class Cliente {
     public void addCliente() {
         boolean cad = false;
 
+        System.out.println("Cadastrando novo cliente");
+
         System.out.print("Nome do Cliente: ");
         setNomeCliente(sc.nextLine());
 
@@ -45,7 +47,7 @@ public class Cliente {
         boolean ed = false;
 
         while (numeroValidado == null) {
-            System.out.print("Digite o código da peça que deseja editar: ");
+            System.out.print("Digite o id do cliente que deseja editar: ");
             String clienteID = sc.nextLine();
 
             // Valida se a entrada é numérica
@@ -63,56 +65,56 @@ public class Cliente {
             }
         }
 
-        System.out.println("O que você deseja editar?");
-        System.out.println("1. Nome do Cliente\t2. WhatsApp do Cliente"
-                + "\n3. Modelo do Carro\t4. Ano do Carro\t5. Todos os campos\n0. Voltar");
+        System.out.print("1. Nome do Cliente\t2. WhatsApp do Cliente"
+                + "\n3. Modelo do Carro\t4. Ano do Carro\t\t5. Todos os campos\n0. Voltar");
+        System.out.print("\n\nO que você deseja editar?  >>>>");
 
         int opcaoEdicao = num.nextInt();
-        num.nextLine(); // Consome nova linha após o número
 
         switch (opcaoEdicao) {
             case 1:
-                System.out.print("Digite o novo nome do cliente: ");
+                System.out.print("Nome: ");
                 setNomeCliente(sc.nextLine());
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), null, null, null);
                 break;
 
             case 2:
-                System.out.print("Digite o novo WhatsApp do cliente: ");
+                System.out.print("WhatsApp: ");
                 setWhatsappCliente(sc.nextLine());
                 ed = cl.editarCliente(getIdCliente(), null, getWhatsappCliente(), null, null);
                 break;
 
             case 3:
-                System.out.print("Digite o novo modelo do carro: ");
+                System.out.print("Modelo do carro: ");
                 setModeloCarro(sc.nextLine());
                 ed = cl.editarCliente(getIdCliente(), null, null, getModeloCarro(), null);
                 break;
 
             case 4:
-                System.out.print("Digite o novo ano do carro: ");
+                System.out.print("Ano do carro: ");
                 setAnoCarro(sc.nextLine());
                 ed = cl.editarCliente(getIdCliente(), null, null, null, getAnoCarro());
                 break;
 
             case 5:
-                System.out.print("Digite o novo nome do cliente: ");
+                System.out.print("Nome: ");
                 setNomeCliente(sc.nextLine());
 
-                System.out.print("Digite o novo WhatsApp do cliente: ");
+                System.out.print("WhatsApp: ");
                 setWhatsappCliente(sc.nextLine());
 
-                System.out.print("Digite o novo modelo do carro: ");
+                System.out.print("Modelo do Carro: ");
                 setModeloCarro(sc.nextLine());
 
-                System.out.print("Digite o novo ano do carro: ");
+                System.out.print("Ano do Carro: ");
                 setAnoCarro(sc.nextLine());
 
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
                 break;
 
             case 0:
-                return;
+                edCliente();
+                break;
 
             default:
                 System.out.println("Opção inválida. Tente novamente.");
@@ -132,28 +134,43 @@ public class Cliente {
 
     public void delCliente() {
         boolean del = false;
+        String clienteID = "";
 
-        System.out.print("Digite o ID do cliente que deseja excluir: ");
-        int clienteID = num.nextInt();
-        setIdCliente(clienteID);
+        // Loop para validar a entrada numérica e a existência no banco
+        while (numeroValidado == null || !validarCliente()) {
+            System.out.print("Digite o ID do cliente: ");
+            clienteID = sc.nextLine();
 
-        while (!validarCliente()) {
-            System.out.println("Cliente não encontrado. Tente novamente.");
-            clienteID = num.nextInt();
-            setIdCliente(clienteID);
+            // Tenta validar se a entrada é numérica
+            numeroValidado = h.isNumeric(clienteID);
+
+            if (numeroValidado == null) {
+                System.out.println("ID inválido. Digite apenas números.");
+            } else {
+                // com o o ID numérico, verifica no banco
+                setIdCliente(numeroValidado);
+                if (!validarCliente()) {
+                    System.out.println("Cliente não encontrado. Tente novamente.");
+                    numeroValidado = null;
+                }
+            }
         }
-
+        
         del = cl.apagarCliente(getIdCliente());
         if (del == false) {
-            System.out.println("Erro ao excluir o cliente.");
+            System.out.println("Erro ao apagar a cliente.");
         } else {
-            System.out.println("Cliente excluído com sucesso.");
+            System.out.println("Cadastro excluído.");
         }
     }
 
 // -------------- MÉTODOS DE APOIO --------------
     public boolean validarCliente() {
-        return cl.validaID(getIdCliente()) == 1;
+        if (cl.validaID(getIdCliente()) == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // -------------- GETTERS E SETTERS --------------

@@ -41,19 +41,19 @@ public class Interface {
 
         switch (opcao) {
             case 1:
-                System.out.println("Cadastros");
+                System.out.println("\nCadastros");
                 cadastrar();
                 break;
             case 2:
-                System.out.println("Editar");
+                System.out.println("\nEditar");
                 editar();
                 break;
             case 3:
-                System.out.println("Apagar");
+                System.out.println("\nApagar");
                 apagar();
                 break;
             case 4:
-                System.out.println("Consultas");
+                System.out.println("\nConsultas");
                 consultar();
                 break;
 //            case 5:
@@ -67,9 +67,9 @@ public class Interface {
     }
 
     public void cadastrar() {
-        System.out.println("1. Peças\t2. Lotes de Óleo\n3. Clientes\t"
-                + "4. Serviços\t5. Agendamento\t6. Funionários\n"
-                + "0. Voltar");
+        System.out.print("1. Peças\t2. Lotes de Óleo\t3. Clientes\n"
+                + "4. Serviços\t5. Agendamento\t\t6. Funionários\n"
+                + "0. Voltar\n >>>>>  ");
         int tela = num.nextInt();
 
         switch (tela) {
@@ -110,8 +110,8 @@ public class Interface {
     }
 
     public void editar() {
-        System.out.println("1. Peças\t 2. Lote de Óleo\t\t 3. Cliente"
-                + "\n0. Voltar");
+        System.out.print("1. Peças\t 2. Lote de Óleo\t 3. Cliente"
+                + "\n0. Voltar\n >>>>>  ");
         int tela = num.nextInt();
 
         switch (tela) {
@@ -156,7 +156,8 @@ public class Interface {
     }
 
     public void apagar() {
-        System.out.println("1. Peças\t 2. Lote de Óleo\t\t 3.Cliente");
+        System.out.print("1. Peças\t 2. Lote de Óleo\t 3.Cliente"
+                + "\n 0. Voltar\n>>>>>  ");
         int tela = num.nextInt();
 
         switch (tela) {
@@ -201,8 +202,8 @@ public class Interface {
     }
 
     public void consultar() {
-        System.out.println("1. Peças\t 2. Lotes de Óleo\t\t 3. Clientes"
-                + "\n0. Voltar");
+        System.out.print("1. Peças\t 2. Lotes de Óleo\t 3. Clientes"
+                + "\n0. Voltar\n >>>>> ");
         int tela = num.nextInt();
 
         switch (tela) {
