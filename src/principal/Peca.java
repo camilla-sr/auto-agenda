@@ -5,6 +5,7 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Peca {
+
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -43,25 +44,33 @@ public class Peca {
 
     public void edPeca() {
         boolean ed = false;
-        System.out.print("Digite o código da peça que deseja editar: ");
-        String pecaID = sc.nextLine();
 
-        numeroValidado = h.isNumeric(pecaID);
+        while (numeroValidado == null) {
+            System.out.print("Digite o id da peça: ");
+            String pecaID = sc.nextLine();
 
-        if (numeroValidado == null) {
-            System.out.println("Digite apenas números.");
-        }
+            // Valida se a entrada é numérica
+            numeroValidado = h.isNumeric(pecaID);
 
-        // Verifica se o código da peça é válido usando o método validarPeca
-        setIdPeca(numeroValidado);
-        if (validarPeca() == false) {
-            System.out.println("Código da peça inválido. Tente novamente.");
-            edPeca();
+            if (numeroValidado == null) {
+                System.out.println("Apenas números.");
+            } else {
+                // Definindo o ID da peça e verificando a existência
+                setIdPeca(numeroValidado);
+                System.out.println("Verificando ID: " + numeroValidado); // Depuração
+
+                if (!validarPeca()) {
+                    System.out.println("ID não encontrado.");
+                    numeroValidado = null;  // Redefine para continuar o loop
+                } else {
+                    System.out.println("ID válido encontrado."); // Depuração
+                }
+            }
         }
 
         // Pergunta ao usuário o que ele deseja editar
-        System.out.println("O que você deseja editar?");
-        System.out.println("1. Apenas a descrição\t2. Apenas a quantidade\t3. Os dois");
+        System.out.print("\n\n1. Apenas a descrição\t2. Apenas a quantidade\t3. Os dois");
+        System.out.print("\nO que você deseja editar? >>>>>  ");
         int opcaoEdicao = num.nextInt();
 
         switch (opcaoEdicao) {
@@ -74,6 +83,7 @@ public class Peca {
                 break;
 
             case 2:
+                numeroValidado = null;
                 // Se o usuário escolher editar apenas a quantidade
                 while (numeroValidado == null) {
                     System.out.print("Informe a nova quantidade: ");
@@ -85,7 +95,6 @@ public class Peca {
                         System.out.println("Quantidade inválida. Digite novamente.");
                     }
                 }
-                setDescricaoPeca("");
                 setQntdPeca(numeroValidado);
                 ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
                 break;
@@ -134,7 +143,7 @@ public class Peca {
         while (numeroValidado == null) {
             System.out.print("Digite o código da peça que deseja editar: ");
             String pecaID = sc.nextLine();
-            
+
             // atualizo minha variável para testar outra vez
             numeroValidado = h.isNumeric(pecaID);
 

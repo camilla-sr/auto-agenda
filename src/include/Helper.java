@@ -1,7 +1,6 @@
 package include;
 
 public class Helper {
-
     /*função para validar todas as entradas numéricas,
     para impedir que o sistema quebre caso a entrada não seja
     válida */

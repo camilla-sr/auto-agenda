@@ -26,13 +26,13 @@ public class PecaDAO {
         String sqlEdit = ""; // inicializo a variável da query
 
         // testo o que será editado
-        if(novaDescricao != "" && novaQntd == 0){
+        if((novaDescricao != "" || novaDescricao != null) && novaQntd == 0){
             sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao + "'";
         }
-        if(novaQntd != 0 && novaDescricao == ""){
+        if(novaQntd != 0 && (novaDescricao == "" || novaDescricao == null)){
             sqlEdit = "UPDATE peca set qntd_peca = " + novaQntd;
         }
-        if(novaDescricao != "" && novaQntd != 0){
+        if((novaDescricao != "" || novaDescricao != null) && novaQntd != 0){
             sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao;
         }
         
