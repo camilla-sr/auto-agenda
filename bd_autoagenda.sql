@@ -4,7 +4,7 @@ use auto_agenda;
 create table cliente (
   id_cliente int(10) unsigned auto_increment primary key,
   nome_cliente varchar(80) not null,
-  whatsapp_cliente int(11) not null,
+  whatsapp_cliente varchar(15) not null,
   modelo_carro varchar(30) not null,
   ano_carro int(4) default 0
 );
@@ -53,7 +53,7 @@ create table agendamento (
   data_previsao_entrega date default null,
   data_conclusao date default null,
   status_agendamento char(1) default 'A',
-  observacao text default '',
+  observacao text default null,
   foreign key  (fk_cliente) references cliente (id_cliente),
   foreign key (fk_servico) references tipo_servico (id_servico),
   foreign key (fk_funcionario) references funcionario (id_funcionario)
