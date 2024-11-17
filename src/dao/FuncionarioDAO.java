@@ -6,27 +6,26 @@ import java.sql.SQLException;
 
 public class FuncionarioDAO {
     final Conexao conn = new Conexao();
-    private int idFuncionario;
-    private String nomeFuncionario;
 
-    public void cadastrarFuncionario(String nomeFuncionario) {
+    public boolean cadastrarFuncionario(String nomeFuncionario) {
         String sqlInserir = "INSERT INTO funcionario (nome_funcionario) VALUES ('" + nomeFuncionario + "')";
 
         boolean resposta = conn.executar(sqlInserir);
-        if (resposta) {
-            System.out.println("Funcionário inserido com sucesso.");
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
         } else {
-            System.out.println("Algo deu errado ao inserir o funcionário.");
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
 // Método para listar todos os funcionários do banco de dados
     public void listarFuncionarios() {
         String sqlConsulta = "SELECT * FROM funcionario order by nome_funcionario";
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        System.out.println("\n\tListando Funcionários");
         try {
-            ResultSet lista = conn.executarConsulta(sqlConsulta);
-            System.out.println("\n\t**Funcionários**");
             while (lista.next()) {
                 int idFuncionario = lista.getInt("id_funcionario");
                 String nomeFuncionario = lista.getString("nome_funcionario");
@@ -42,41 +41,46 @@ public class FuncionarioDAO {
         }
     }
 
-    public void editarFuncionario(int idFuncionario, String novoNome) {
+    public boolean editarFuncionario(int idFuncionario, String novoNome) {
+        boolean resposta = false;
         int funcionarioValido = validaID(idFuncionario);
+
         if (funcionarioValido == 2) {
             System.out.println("Funcionário não encontrado na base");
         } else {
             String sqlEdit = "UPDATE funcionario set nome_funcionario = '" + novoNome + "' where id_funcionario = " + idFuncionario + "";
-            boolean resposta = conn.executar(sqlEdit);
-            if (resposta == true) {
-                System.out.println("Funcionário editado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            resposta = conn.executar(sqlEdit);
         }
-        conn.desconectar();
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 
-    public void apagarFuncionario(int idFuncionario) {
+    public boolean apagarFuncionario(int idFuncionario) {
+        boolean resposta = false;
         int funcionarioValido = validaID(idFuncionario);
+
         if (funcionarioValido == 2) {
             System.out.println("Funcionário não encontrado na base");
         } else {
             String sqlDel = "DELETE from funcionario where id_funcionario = " + idFuncionario;
-            boolean resposta = conn.executar(sqlDel);
-            if (resposta == true) {
-                System.out.println("Funcionário deletado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            resposta = conn.executar(sqlDel);
         }
-        conn.desconectar();
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 
 // -------------- MÉTODOS DE APOIO --------------
-    
-    private int validaID(int idFuncionario) {
+    public int validaID(int idFuncionario) {
         int resposta = 0;
         try {
             String sql = "SELECT * from funcionario where id_funcionario = " + idFuncionario;
@@ -94,18 +98,23 @@ public class FuncionarioDAO {
         return resposta;
     }
 
-// -------------- GETTERS E SETTERS --------------
-    public int getIdFuncionario() {
-        return idFuncionario;
+    public void listaEdicao() {
+        String sqlConsulta = "SELECT * from funcionario";
+        System.out.println("\nID | FUNCIONÁRIO");
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+
+        try {
+            while (lista.next()) {
+                int id = lista.getInt("id_funcionario");
+                String nomeFuncionario = lista.getString("nome_funcionario");
+
+                System.out.printf("%d. %s \n", id, nomeFuncionario);
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
     }
-    public void setIdFuncionario(int idFuncionario) {
-        this.idFuncionario = idFuncionario;
-    }
-    public String getNomeFuncionario() {
-        return nomeFuncionario;
-    }
-    public void setNomeFuncionario(String nomeFuncionario) {
-        this.nomeFuncionario = nomeFuncionario;
-    }
-// ------------------------------------------------
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import principal.Agendamento;
 import principal.Cliente;
-//import principal.Funcionario;
+import principal.Funcionario;
 import principal.Lote;
 import principal.Peca;
 import principal.TipoServico;
@@ -23,7 +23,7 @@ public class Interface {
     
     // INTERFACE PENDENTE
     Agendamento ag = new Agendamento();
-//    Funcionario f = new Funcionario();
+    Funcionario f = new Funcionario();
 
     // ------------------------------------------------
     public void inicio() {
@@ -97,11 +97,11 @@ public class Interface {
 //                System.out.println("\n");
 //                inicio();
 //                break;
-//            case 6:
-//                f.addFuncionario();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 6:
+                f.addFuncionario();
+                System.out.println("\n");
+                inicio();
+                break;
             case 0:
                 inicio();
                 break;
@@ -110,7 +110,7 @@ public class Interface {
 
     public void editar() {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3. Cliente"
-                + "\n4. Tipo Serviço"
+                + "\n4. Tipo Serviço  6. Funcionário "
                 + "\n0. Voltar\n >>>>>  ");
         int tela = num.nextInt();
 
@@ -140,11 +140,11 @@ public class Interface {
 //                System.out.println("\n");
 //                inicio();
 //                break;
-//            case 6:
-//                f.edFuncionario();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 6:
+                f.edFuncionario();
+                System.out.println("\n");
+                inicio();
+                break;
             case 0:
                 inicio();
                 break;
@@ -157,8 +157,8 @@ public class Interface {
 
     public void apagar() {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3.Cliente"
-                + "\n4. Tipo Serviço"
-                + "\n 0. Voltar\n>>>>>  ");
+                + "\n4. Tipo Serviço  6. Funcionário"
+                + "\n0. Voltar\n>>>>>  ");
         int tela = num.nextInt();
 
         switch (tela) {
@@ -187,11 +187,11 @@ public class Interface {
 //                System.out.println("\n");
 //                inicio();
 //                break;
-//            case 6:
-//                f.delFuncionario();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 6:
+                f.delFuncionario();
+                System.out.println("\n");
+                inicio();
+                break;
             case 0:
                 inicio();
                 break;
@@ -204,7 +204,7 @@ public class Interface {
 
     public void consultar() {
         System.out.print("1. Peças\t 2. Lotes de Óleo\t 3. Clientes"
-                + "\n4. Serviço"
+                + "\n4. Serviço \t 6.Funcionário"
                 + "\n0. Voltar\n >>>>> ");
         int tela = num.nextInt();
 
@@ -233,11 +233,11 @@ public class Interface {
 //                System.out.println("\n");
 //                inicio();
 //                break;
-//            case 6:
-//                f.consFuncionario();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 6:
+                f.consFuncionario();
+                System.out.println("\n");
+                inicio();
+                break;
             case 0:
                 inicio();
                 break;
@@ -265,7 +265,7 @@ public class Interface {
 
     // método para abrir pergunta antes de continuar o fluxo do sistema
     private void prosseguir() {
-        System.out.println("\n\nPressione qualquer tecla para continuar");
+        System.out.println("\nPressione ENTER para continuar");
         try {
             System.in.read();
             inicio();

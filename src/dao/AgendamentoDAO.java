@@ -5,14 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AgendamentoDAO {
-
     final Conexao conn = new Conexao();
-    private int idAgendamento;
-    private int servico;
-    private int funcionario;
-    private String dataCadastro;
-    private String dataPrevisaoEntrega;
-    private String dataConclusao;
 
     // Métodos Principais
     public void cadastrarAgendamento(int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String dataConclusao) {
@@ -97,7 +90,7 @@ public class AgendamentoDAO {
         conn.desconectar();
     }
 
-    public void atualizarStatus(int idAgendamento, String novoEstado){
+    public void atualizarStatus(int idAgendamento, String novoEstado) {
         int agendamentoValida = validaID(idAgendamento);
 
         if (agendamentoValida == 2) {
@@ -105,14 +98,14 @@ public class AgendamentoDAO {
         } else {
             String sql = "UPDATE agendamento set status_agendamento = " + novoEstado + "";
             boolean resposta = conn.executar(sql);
-            if(resposta == true){
+            if (resposta == true) {
                 System.out.println("Status atualizado");
-            }else{
+            } else {
                 System.out.println("Algo deu errado");
             }
         }
     }
-    
+
     // -------------- MÉTODOS DE APOIO ---------------
     private int validaID(int id) {
         int resposta = 0;
@@ -132,7 +125,7 @@ public class AgendamentoDAO {
         return resposta;
     }
 
-    private boolean cadastrarProdutoUsado(int idAgendamento, int idEstoque, int qntdUsada){
+    private boolean cadastrarProdutoUsado(int idAgendamento, int idEstoque, int qntdUsada) {
         boolean insertSecundario = false;
         int agendamentoValida = validaID(idAgendamento);
 
@@ -140,55 +133,16 @@ public class AgendamentoDAO {
             System.out.println("Agendamento não encontrado");
         } else {
             // aqui será incluído na lógica as listas de produtos para que o usuário as insira aqui
-            
+
             String sql = "INSERT into aux_prod_usados(fk_estoque, fk_agendamento, qntd_usada)"
-                    + "values ("+idAgendamento+", "+idEstoque+", "+qntdUsada+")";
+                    + "values (" + idAgendamento + ", " + idEstoque + ", " + qntdUsada + ")";
             boolean resposta = conn.executar(sql);
-            if(resposta == true){
+            if (resposta == true) {
                 insertSecundario = true;
-            }else{
+            } else {
                 insertSecundario = false;
             }
         }
         return insertSecundario;
     }
-    
-    // -------------- GETTERS E SETTERS --------------
-    public int getIdAgendamento() {
-        return idAgendamento;
-    }
-    public void setIdAgendamento(int idAgendamento) {
-        this.idAgendamento = idAgendamento;
-    }
-    public int getServico() {
-        return servico;
-    }
-    public void setServico(int servico) {
-        this.servico = servico;
-    }
-    public int getFuncionario() {
-        return funcionario;
-    }
-    public void setFuncionario(int funcionario) {
-        this.funcionario = funcionario;
-    }
-    public String getDataCadastro() {
-        return dataCadastro;
-    }
-    public void setDataCadastro(String dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-    public String getDataPrevisaoEntrega() {
-        return dataPrevisaoEntrega;
-    }
-    public void setDataPrevisaoEntrega(String dataPrevisaoEntrega) {
-        this.dataPrevisaoEntrega = dataPrevisaoEntrega;
-    }
-    public String getDataConclusao() {
-        return dataConclusao;
-    }
-    public void setDataConclusao(String dataConclusao) {
-        this.dataConclusao = dataConclusao;
-    }
-// ------------------------------------------------    
 }

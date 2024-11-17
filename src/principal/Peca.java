@@ -5,7 +5,6 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Peca {
-
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -17,19 +16,19 @@ public class Peca {
     private int qntdPeca;
 
     public void addPeca() {
-        System.out.print("Digite o nome da peça:  ");
+        System.out.print("Nome da peça:  ");
         setDescricaoPeca(sc.nextLine());
-        Integer numeroValidado = null;
+        numeroValidado = null;
 
         while (numeroValidado == null) {
-            System.out.print("Informe a quantidade: ");
+            System.out.print("Quantidade: ");
             String qntd = sc.nextLine();
 
             // atualizo minha variável para testar outra vez
             numeroValidado = h.isNumeric(qntd);
 
             if (numeroValidado == null) {
-                System.out.println("Quantidade inválida. Digite novamente.");
+                System.out.println("Digite apenas números.");
             }
         }
 
@@ -43,8 +42,10 @@ public class Peca {
     }
 
     public void edPeca() {
+        numeroValidado = null; // Reinicializa a variável
         boolean ed = false;
 
+        pc.listaEdicao();
         while (numeroValidado == null) {
             System.out.print("Digite o id da peça: ");
             String pecaID = sc.nextLine();
@@ -55,15 +56,14 @@ public class Peca {
             if (numeroValidado == null) {
                 System.out.println("Apenas números.");
             } else {
-                // Definindo o ID da peça e verificando a existência
+                // Define o ID da peça e verifica a existência
                 setIdPeca(numeroValidado);
-                System.out.println("Verificando ID: " + numeroValidado); // Depuração
 
                 if (!validarPeca()) {
                     System.out.println("ID não encontrado.");
-                    numeroValidado = null;  // Redefine para continuar o loop
+                    numeroValidado = null; // Redefine para continuar o loop
                 } else {
-                    System.out.println("ID válido encontrado."); // Depuração
+                    System.out.println("ID válido encontrado.");
                 }
             }
         }
@@ -75,7 +75,6 @@ public class Peca {
 
         switch (opcaoEdicao) {
             case 1:
-                // Se o usuário escolher editar apenas a descrição
                 System.out.print("Digite a nova descrição da peça: ");
                 setDescricaoPeca(sc.nextLine());
                 setQntdPeca(0);
@@ -83,8 +82,7 @@ public class Peca {
                 break;
 
             case 2:
-                numeroValidado = null;
-                // Se o usuário escolher editar apenas a quantidade
+                numeroValidado = null; // Reinicializa para validar a quantidade
                 while (numeroValidado == null) {
                     System.out.print("Informe a nova quantidade: ");
                     String qntd = sc.nextLine();
@@ -100,7 +98,6 @@ public class Peca {
                 break;
 
             case 3:
-                // Se o usuário escolher editar ambos
                 System.out.print("Digite a nova descrição da peça: ");
                 setDescricaoPeca(sc.nextLine());
 
@@ -109,7 +106,6 @@ public class Peca {
                     System.out.print("Informe a nova quantidade: ");
                     String qntd = sc.nextLine();
 
-                    // Atualiza a variável para testar a entrada novamente
                     numeroValidado = h.isNumeric(qntd);
 
                     if (numeroValidado == null) {
@@ -125,7 +121,7 @@ public class Peca {
                 edPeca();
         }
 
-        if (ed == false) {
+        if (!ed) {
             System.out.println("Erro ao editar a peça.");
         } else {
             System.out.println("Edição realizada com sucesso.");
@@ -138,8 +134,9 @@ public class Peca {
 
     public void delPeca() {
         boolean del = false;
-        Integer numeroValidado = null;
+        numeroValidado = null;
 
+        pc.listaEdicao();
         while (numeroValidado == null) {
             System.out.print("Digite o código da peça que deseja editar: ");
             String pecaID = sc.nextLine();
@@ -148,7 +145,7 @@ public class Peca {
             numeroValidado = h.isNumeric(pecaID);
 
             if (numeroValidado == null) {
-                System.out.println("ID inválido. Digite novamente.");
+                System.out.println("Digite apenas números.");
             }
         }
 
@@ -156,6 +153,7 @@ public class Peca {
         setIdPeca(numeroValidado);
         if (!validarPeca()) {
             System.out.println("ID não encontrado. Tente novamente.");
+            numeroValidado = null;  // Redefine para continuar o loop
         }
 
         del = pc.apagarPeca(getIdPeca());
@@ -179,23 +177,18 @@ public class Peca {
     public int getIdPeca() {
         return idPeca;
     }
-
     public void setIdPeca(int idPeca) {
         this.idPeca = idPeca;
     }
-
     public String getDescricaoPeca() {
         return descricaoPeca;
     }
-
     public void setDescricaoPeca(String descricaoPeca) {
         this.descricaoPeca = descricaoPeca;
     }
-
     public int getQntdPeca() {
         return qntdPeca;
     }
-
     public void setQntdPeca(int qntdPeca) {
         this.qntdPeca = qntdPeca;
     }

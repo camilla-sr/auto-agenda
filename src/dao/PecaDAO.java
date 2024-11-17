@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PecaDAO {
+
     final Conexao conn = new Conexao();
 
     // Métodos Principais
@@ -26,16 +27,21 @@ public class PecaDAO {
         String sqlEdit = ""; // inicializo a variável da query
 
         // testo o que será editado
-        if((novaDescricao != "" || novaDescricao != null) && novaQntd == 0){
-            sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao + "'";
+        // Mudo a descrição da peça
+        if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd == 0) {
+            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "'";
         }
-        if(novaQntd != 0 && (novaDescricao == "" || novaDescricao == null)){
-            sqlEdit = "UPDATE peca set qntd_peca = " + novaQntd;
+
+        // Muda apenas a quantidade
+        if (novaQntd != 0 && (novaDescricao == null || novaDescricao.isEmpty())) {
+            sqlEdit = "UPDATE peca SET qntd_peca = " + novaQntd;
         }
-        if((novaDescricao != "" || novaDescricao != null) && novaQntd != 0){
-            sqlEdit = "UPDATE peca set desc_peca = '" + novaDescricao;
+
+        // Muda ambos
+        if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd != 0) {
+            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "', qntd_peca = " + novaQntd;
         }
-        
+
         sqlEdit = sqlEdit + " where id_peca = " + idPeca + "";
         boolean resposta = false;
 
@@ -105,5 +111,26 @@ public class PecaDAO {
             conn.desconectar();
         }
         return resposta;
+    }
+
+    public void listaEdicao() {
+        String sqlConsulta = "SELECT * from peca";
+        System.out.println("\nID | DESCRIÇÃO | QUANTIDADE");
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+
+        try {
+            while (lista.next()) {
+                int id = lista.getInt("id_peca");
+                String descricaoPeca = lista.getString("desc_peca");
+                int quantidade = lista.getInt("qntd_peca");
+
+                System.out.printf("%d. %s  \t-  \t%d\n", id, descricaoPeca, quantidade);
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
     }
 }
