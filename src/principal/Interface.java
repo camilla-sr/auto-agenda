@@ -2,16 +2,8 @@ package principal;
 
 import java.io.IOException;
 import java.util.Scanner;
-import principal.Agendamento;
-import principal.Cliente;
-import principal.Funcionario;
-import principal.Lote;
-import principal.Peca;
-import principal.TipoServico;
 
 public class Interface {
-    //adicionei um utf8 para eliminar os erros de caracteres quebrados
-    Scanner sc = new Scanner(System.in, "utf8");
     Scanner num = new Scanner(System.in);
     
     //chamada dos métodos principais
@@ -99,12 +91,12 @@ public class Interface {
             case 6:
                 f.addFuncionario();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 7:
                 ts.addServico();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 0:
                 inicio();
@@ -142,12 +134,12 @@ public class Interface {
 //            case 5:
 //                ag.edAgendamento();
 //                System.out.println("\n");
-//                inicio();
+//                prosseguir();
 //                break;
             case 6:
                 f.edFuncionario();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 0:
                 inicio();
@@ -189,12 +181,12 @@ public class Interface {
             case 5:
                 ag.delAgendamento();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 6:
                 f.delFuncionario();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 0:
                 inicio();
@@ -235,12 +227,12 @@ public class Interface {
             case 5:
                 ag.consAgendamento();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 6:
                 f.consFuncionario();
                 System.out.println("\n");
-                inicio();
+                prosseguir();
                 break;
             case 0:
                 inicio();

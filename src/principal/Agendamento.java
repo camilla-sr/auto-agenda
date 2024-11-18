@@ -20,7 +20,7 @@ public class Agendamento {
     private String status;
     private String observacao;
 
-    LocalDate hoje = LocalDate.now();
+    LocalDate hoje = LocalDate.now();  //retorna data atual com base no servidor
 
     Integer numeroValidado = null;
     AgendamentoDAO ag = new AgendamentoDAO();

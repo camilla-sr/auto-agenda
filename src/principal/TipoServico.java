@@ -8,7 +8,6 @@ public class TipoServico {
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
-    Scanner num = new Scanner(System.in);
     TipoServicoDAO ts = new TipoServicoDAO();
 
     private int idServico;
@@ -16,7 +15,6 @@ public class TipoServico {
 
     public void addServico() {
         boolean cad = false;
-
         System.out.println("Cadastrando novo serviço");
 
         System.out.print("Serviço: ");
@@ -41,7 +39,7 @@ public class TipoServico {
             numeroValidado = h.isNumeric(clienteID);
 
             if (numeroValidado == null) {
-                System.out.println("ID inválido. Digite novamente.");
+                System.out.println("Apenas números!.");
             } else {
                 // Verifica se o cliente existe no banco de dados
                 setIdServico(numeroValidado);
@@ -53,7 +51,7 @@ public class TipoServico {
         }
         
         if (ed == false) {
-            System.out.println("Erro ao editar o cliente.");
+            System.out.println("Erro ao editar o serviço.");
         } else {
             System.out.println("Edição realizada com sucesso.");
         }
@@ -69,14 +67,14 @@ public class TipoServico {
 
         // Loop para validar a entrada numérica e a existência no banco
         while (numeroValidado == null || !validarServico()) {
-            System.out.print("Digite o ID do cliente: ");
+            System.out.print("Digite o ID do serviço: ");
             clienteID = sc.nextLine();
 
             // Tenta validar se a entrada é numérica
             numeroValidado = h.isNumeric(clienteID);
 
             if (numeroValidado == null) {
-                System.out.println("ID inválido. Digite apenas números.");
+                System.out.println("Apenas números!");
             } else {
                 // com o o ID numérico, verifica no banco
                 setIdServico(numeroValidado);

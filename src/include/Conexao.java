@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 public class Conexao {
-
     public Connection conn = null;
     public Statement stnt = null;
     public ResultSet resultset = null;
