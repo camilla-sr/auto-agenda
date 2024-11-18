@@ -43,9 +43,9 @@ public class FuncionarioDAO {
 
     public boolean editarFuncionario(int idFuncionario, String novoNome) {
         boolean resposta = false;
-        int funcionarioValido = validaID(idFuncionario);
+        boolean funcionarioValido = validaID(idFuncionario);
 
-        if (funcionarioValido == 2) {
+        if (!funcionarioValido) {
             System.out.println("Funcionário não encontrado na base");
         } else {
             String sqlEdit = "UPDATE funcionario set nome_funcionario = '" + novoNome + "' where id_funcionario = " + idFuncionario + "";
@@ -62,9 +62,9 @@ public class FuncionarioDAO {
 
     public boolean apagarFuncionario(int idFuncionario) {
         boolean resposta = false;
-        int funcionarioValido = validaID(idFuncionario);
+        boolean funcionarioValido = validaID(idFuncionario);
 
-        if (funcionarioValido == 2) {
+        if (!funcionarioValido) {
             System.out.println("Funcionário não encontrado na base");
         } else {
             String sqlDel = "DELETE from funcionario where id_funcionario = " + idFuncionario;
@@ -80,15 +80,15 @@ public class FuncionarioDAO {
     }
 
 // -------------- MÉTODOS DE APOIO --------------
-    public int validaID(int idFuncionario) {
-        int resposta = 0;
+    public boolean validaID(int idFuncionario) {
+        boolean resposta = false;
         try {
             String sql = "SELECT * from funcionario where id_funcionario = " + idFuncionario;
             ResultSet retorno = conn.executarConsulta(sql);
             if (retorno != null && retorno.next()) {
-                resposta = 1;
+                resposta = true;
             } else {
-                resposta = 2;
+                resposta = false;
             }
         } catch (SQLException e) {
             System.out.println("Algo deu errado" + e.getMessage());

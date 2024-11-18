@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PecaDAO {
-
     final Conexao conn = new Conexao();
 
     // Métodos Principais

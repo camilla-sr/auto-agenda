@@ -3,28 +3,31 @@ package dao;
 import include.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import include.Helper;
 
 public class AgendamentoDAO {
     final Conexao conn = new Conexao();
+    Helper h = new Helper();
 
     // Métodos Principais
-    public void cadastrarAgendamento(int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String dataConclusao) {
-        String sqlInserir = "INSERT into agendamento (id_servico, id_funcionario, String data_cadastro, data_previsao_entrega, data_conclusao_servico)"
-                + "VALUES (" + servico + ", " + funcionario + ", '" + dataCadastro + "', '" + dataPrevisaoEntrega + "', '" + dataConclusao + "')";
-
+    public boolean cadastrarAgendamento(int cliente, int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String observacao) {
+        String sqlInserir = "INSERT into agendamento (fk_cliente, fk_servico, fk_funcionario, data_cadastro, data_previsao_entrega, data_conclusao, status_agendamento, observacao)"
+                + "VALUES (" + cliente + "," + servico + ", " + funcionario + ", '" + dataCadastro + "', "
+                + "'" + dataPrevisaoEntrega + "', '', 'A', '" + observacao + "')";
         boolean resposta = conn.executar(sqlInserir);
         if (resposta == true) {
-            System.out.println("Agendamento inserido");
+            conn.desconectar();
+            return true;
         } else {
-            System.out.println("Algo deu errado");
+            conn.desconectar();
+            return false;
         }
-        conn.desconectar();
     }
 
     public void editarAgendamento(int idAgendamento, int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String dataConclusao) {
-        int agendamentoValida = validaID(idAgendamento);
+        boolean agendamentoValida = validaID(idAgendamento);
 
-        if (agendamentoValida == 2) {
+        if (agendamentoValida) {
             System.out.println("Agendamento não encontrado");
         } else {
             String sqlEdit = "UPDATE agendamento set id_servico = " + servico + ", id_funcionario = " + funcionario + ", data_cadastro = "
@@ -73,49 +76,54 @@ public class AgendamentoDAO {
         }
     }
 
-    public void apagarAgendamento(int idAgendamento) {
-        int agendamentoValida = validaID(idAgendamento);
+    public boolean apagarAgendamento(int idAgendamento) {
+        boolean resposta = false;
+        boolean agendamentoValida = validaID(idAgendamento);
 
-        if (agendamentoValida == 2) {
+        if (!agendamentoValida ) {
             System.out.println("Agendamento não encontrado");
         } else {
             String sqlDel = "DELETE from agendamento WHERE id_agendamento = " + idAgendamento + "";
-            boolean resposta = conn.executar(sqlDel);
-            if (resposta == true) {
-                System.out.println("Agendamento deletado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            resposta = conn.executar(sqlDel);
         }
-        conn.desconectar();
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 
-    public void atualizarStatus(int idAgendamento, String novoEstado) {
-        int agendamentoValida = validaID(idAgendamento);
+    public boolean atualizarStatus(int idAgendamento, String novoEstado) {
+        boolean resposta = false;
+        boolean agendamentoValida = validaID(idAgendamento);
 
-        if (agendamentoValida == 2) {
+        if (!agendamentoValida) {
             System.out.println("Agendamento não encontrado");
         } else {
             String sql = "UPDATE agendamento set status_agendamento = " + novoEstado + "";
-            boolean resposta = conn.executar(sql);
-            if (resposta == true) {
-                System.out.println("Status atualizado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            resposta = conn.executar(sql);
+        }
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
         }
     }
 
     // -------------- MÉTODOS DE APOIO ---------------
-    private int validaID(int id) {
-        int resposta = 0;
+    public boolean validaID(int id) {
+        boolean resposta = false;
         try {
             String sql = "SELECT * from agendamento WHERE id_agendamento = " + id + "";
             ResultSet retorno = conn.executarConsulta(sql);
             if (retorno != null && retorno.next()) {
-                resposta = 1;
+                resposta = true;
             } else {
-                resposta = 2;
+                resposta = false;
             }
         } catch (SQLException e) {
             System.out.println("Algo deu errado" + e.getMessage());
@@ -127,9 +135,9 @@ public class AgendamentoDAO {
 
     private boolean cadastrarProdutoUsado(int idAgendamento, int idEstoque, int qntdUsada) {
         boolean insertSecundario = false;
-        int agendamentoValida = validaID(idAgendamento);
+        boolean agendamentoValida = validaID(idAgendamento);
 
-        if (agendamentoValida == 2) {
+        if (agendamentoValida) {
             System.out.println("Agendamento não encontrado");
         } else {
             // aqui será incluído na lógica as listas de produtos para que o usuário as insira aqui
@@ -144,5 +152,33 @@ public class AgendamentoDAO {
             }
         }
         return insertSecundario;
+    }
+
+    public void listaEdicao() {
+        String sqlConsulta = "SELECT "
+            + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.status_agendamento\n"
+            + "from agendamento a join cliente cl on cl.id_cliente = a.fk_cliente\n"
+            + "join tipo_servico s on a.fk_servico = s.id_servico\n"
+            + "join funcionario f on a.fk_funcionario = f.id_funcionario;";
+
+        System.out.println("\nID | FINALIZADO POR | SERVIÇO | AGENDADO EM | STATUS");
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+
+        try {
+            while (lista.next()) {
+                String id = lista.getString("id_agendamento");
+                String funcionario = lista.getString("f.nome_funcionario");
+                String servico = lista.getString("s.desc_servico");
+                String dataCadastro = lista.getString("a.data_cadastro");
+                String statusAgendamento = lista.getString("a.status_agendamento");
+
+                System.out.printf("%d. %s  \t-%s \t%s \t%s\n", id, funcionario, servico, dataCadastro, statusAgendamento);
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
     }
 }

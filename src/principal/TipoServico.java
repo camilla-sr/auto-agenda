@@ -97,7 +97,7 @@ public class TipoServico {
 
 // -------------- MÉTODOS DE APOIO --------------
     public boolean validarServico() {
-        if (ts.validaID(getIdServico()) == 1) {
+        if (ts.validaID(getIdServico())) {
             return true;
         } else {
             return false;

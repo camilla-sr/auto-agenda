@@ -105,7 +105,7 @@ public class Funcionario {
 
 // -------------- MÉTODOS DE APOIO --------------
     public boolean validarFuncionario() {
-        if (f.validaID(getIdFuncionario()) == 1) {
+        if (f.validaID(getIdFuncionario())) {
             return true;
         } else {
             return false;

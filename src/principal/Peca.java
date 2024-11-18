@@ -80,7 +80,6 @@ public class Peca {
                 setQntdPeca(0);
                 ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
                 break;
-
             case 2:
                 numeroValidado = null; // Reinicializa para validar a quantidade
                 while (numeroValidado == null) {
@@ -96,7 +95,6 @@ public class Peca {
                 setQntdPeca(numeroValidado);
                 ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
                 break;
-
             case 3:
                 System.out.print("Digite a nova descrição da peça: ");
                 setDescricaoPeca(sc.nextLine());
@@ -120,7 +118,6 @@ public class Peca {
                 System.out.println("Opção inválida. Tente novamente.");
                 edPeca();
         }
-
         if (!ed) {
             System.out.println("Erro ao editar a peça.");
         } else {
@@ -148,14 +145,12 @@ public class Peca {
                 System.out.println("Digite apenas números.");
             }
         }
-
         // verifico se o id é válido no banco
         setIdPeca(numeroValidado);
         if (!validarPeca()) {
             System.out.println("ID não encontrado. Tente novamente.");
             numeroValidado = null;  // Redefine para continuar o loop
         }
-
         del = pc.apagarPeca(getIdPeca());
         if (del == false) {
             System.out.println("Erro ao apagar a peça.");

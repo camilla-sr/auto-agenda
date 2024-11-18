@@ -73,15 +73,15 @@ public class TipoServicoDAO {
     }
 
     // -------------- MÉTODOS DE APOIO ---------------    
-    public int validaID(int id) {
-        int resposta = 0;
+    public boolean validaID(int id) {
+        boolean resposta = false;
         try {
             String sql = "SELECT * from tipo_servico where id_servico = " + id + "";
             ResultSet retorno = conn.executarConsulta(sql);
             if (retorno != null && retorno.next()) {
-                resposta = 1;
+                resposta = true;
             } else {
-                resposta = 2;
+                resposta = false;
             }
         } catch (SQLException e) {
             System.out.println("Algo deu errado" + e.getMessage());
@@ -89,5 +89,25 @@ public class TipoServicoDAO {
             conn.desconectar();
         }
         return resposta;
+    }
+    
+    public void listaEdicao() {
+        String sqlConsulta = "SELECT * from tipo_servico";
+        
+        System.out.println("\nID | SERVIÇO");
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        try {
+            while (lista.next()) {
+                int id = lista.getInt("id_servico");
+                String servico = lista.getString("desc_servico");
+
+                System.out.printf("%d. %s\n", id, servico);
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
     }
 }

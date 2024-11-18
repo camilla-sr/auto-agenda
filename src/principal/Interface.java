@@ -67,8 +67,7 @@ public class Interface {
     public void cadastrar() {
         System.out.print("1. Peças\t2. Lotes de Óleo\t3. Clientes\n"
                 + "4. Serviços\t5. Agendamento\t\t6. Funcionários\n"
-                + "7. Tipo Serviço\n"
-                + "0. Voltar\n >>>>>  ");
+                + "\n0. Voltar\n >>>>>  ");
         int tela = num.nextInt();
 
         switch (tela) {
@@ -92,13 +91,18 @@ public class Interface {
                 System.out.println("\n");
                 prosseguir();
                 break;
-//            case 5:
-//                ag.addAgendamento();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 5:
+                ag.addAgendamento();
+                System.out.println("\n");
+                inicio();
+                break;
             case 6:
                 f.addFuncionario();
+                System.out.println("\n");
+                inicio();
+                break;
+            case 7:
+                ts.addServico();
                 System.out.println("\n");
                 inicio();
                 break;
@@ -110,7 +114,7 @@ public class Interface {
 
     public void editar() {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3. Cliente"
-                + "\n4. Tipo Serviço  6. Funcionário "
+                + "\n4. Tipo Serviço  5. Agendamento\t6. Funcionário "
                 + "\n0. Voltar\n >>>>>  ");
         int tela = num.nextInt();
 
@@ -157,7 +161,7 @@ public class Interface {
 
     public void apagar() {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3.Cliente"
-                + "\n4. Tipo Serviço  6. Funcionário"
+                + "\n4. Tipo Serviço  5. Agendamento\t6. Funcionário"
                 + "\n0. Voltar\n>>>>>  ");
         int tela = num.nextInt();
 
@@ -182,11 +186,11 @@ public class Interface {
                 System.out.println("\n");
                 prosseguir();
                 break;
-//            case 5:
-//                ag.delAgendamento();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 5:
+                ag.delAgendamento();
+                System.out.println("\n");
+                inicio();
+                break;
             case 6:
                 f.delFuncionario();
                 System.out.println("\n");
@@ -204,7 +208,7 @@ public class Interface {
 
     public void consultar() {
         System.out.print("1. Peças\t 2. Lotes de Óleo\t 3. Clientes"
-                + "\n4. Serviço \t 6.Funcionário"
+                + "\n4. Serviço \t 5. Agendamento \t 6.Funcionário"
                 + "\n0. Voltar\n >>>>> ");
         int tela = num.nextInt();
 
@@ -228,11 +232,11 @@ public class Interface {
                 System.out.println("\n");
                 prosseguir();
                 break;
-//            case 5:
-//                ag.consAgendamento();
-//                System.out.println("\n");
-//                inicio();
-//                break;
+            case 5:
+                ag.consAgendamento();
+                System.out.println("\n");
+                inicio();
+                break;
             case 6:
                 f.consFuncionario();
                 System.out.println("\n");

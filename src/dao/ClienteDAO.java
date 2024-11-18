@@ -110,15 +110,16 @@ public class ClienteDAO {
     }
 
 // -------------- MÉTODO DE APOIO ---------------- 
-    public int validaID(int id) {
-        int resposta = 0;
+    public boolean validaID(int id) {
+        boolean resposta = false;
         try {
             String sql = "SELECT * from cliente WHERE id_cliente = " + id + "";
             ResultSet retorno = conn.executarConsulta(sql);
             if (retorno != null && retorno.next()) {
-                resposta = 1;
+                resposta = true;
             } else {
-                resposta = 2;
+                System.out.println("ID inválido!");
+                resposta = false;
             }
         } catch (SQLException e) {
             System.out.println("Algo deu errado" + e.getMessage());
@@ -126,5 +127,25 @@ public class ClienteDAO {
             conn.desconectar();
         }
         return resposta;
+    }
+    
+    public void listaEdicao() {
+        String sqlConsulta = "SELECT * from cliente";
+        
+        System.out.println("\nID | CLIENTE");
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        try {
+            while (lista.next()) {
+                int id = lista.getInt("id_cliente");
+                String cliente = lista.getString("nome_cliente");
+
+                System.out.printf("%d. %s\n", id, cliente);
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
     }
 }
