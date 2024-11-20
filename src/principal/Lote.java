@@ -47,7 +47,7 @@ public class Lote {
 
         setQntdGarrafa(numeroValidado);
         cad = lt.cadastrarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
-        if (cad == false) {
+        if (cad == false) { 
             System.out.println("Algo deu errado");
         } else {
             System.out.println("Cadastro realizado");

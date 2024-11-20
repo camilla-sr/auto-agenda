@@ -31,7 +31,7 @@ public class TipoServicoDAO {
                 int idServico = lista.getInt("id_servico");
                 String descricaoServico = lista.getString("desc_servico");
 
-                System.out.println(descricaoServico);
+                System.out.printf("%d. %s \n", idServico, descricaoServico);
             }
             System.out.println("---------------------------");
 
@@ -46,7 +46,7 @@ public class TipoServicoDAO {
     public boolean editarTipoServico(int idServico, String novaDescricao) {
         boolean resposta = false;
         String sqlEdit = "UPDATE tipo_servico set desc_servico = '" + novaDescricao
-                + " where id_servico = " + idServico + "";
+                + "' where id_servico = " + idServico + "";
 
         resposta = conn.executar(sqlEdit);
         if (resposta == true) {

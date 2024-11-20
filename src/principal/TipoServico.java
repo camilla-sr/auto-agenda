@@ -29,14 +29,17 @@ public class TipoServico {
     }
 
     public void edServico() {
+        numeroValidado = null;
         boolean ed = false;
-
+        setIdServico(idServico);
+        
         while (numeroValidado == null) {
             System.out.print("Digite o id do serviço: ");
-            String clienteID = sc.nextLine();
+            String servicoID = sc.nextLine();
+            setIdServico(idServico);
 
             // Valida se a entrada é numérica
-            numeroValidado = h.isNumeric(clienteID);
+            numeroValidado = h.isNumeric(servicoID);
 
             if (numeroValidado == null) {
                 System.out.println("Apenas números!.");
@@ -46,11 +49,19 @@ public class TipoServico {
                 if (validarServico() == false) {
                     System.out.println("ID não encontrado. Tente novamente.");
                     numeroValidado = null;  // Redefine para continuar o loop
+                }else{
+                    System.out.println("ID encontrado.");
+                    System.out.print("\nDigite o novo nome do serviço: ");
+                    setDescricaoServico(sc.nextLine());
+                    
+                    ed = ts.editarTipoServico(getIdServico(), getDescricaoServico());
                 }
             }
         }
+ 
+            
         
-        if (ed == false) {
+        if (!ed) {
             System.out.println("Erro ao editar o serviço.");
         } else {
             System.out.println("Edição realizada com sucesso.");
@@ -63,15 +74,15 @@ public class TipoServico {
 
     public void delServico() {
         boolean del = false;
-        String clienteID = "";
-
+        numeroValidado = null;
+        
+        ts.listarTiposServico();
         // Loop para validar a entrada numérica e a existência no banco
-        while (numeroValidado == null || !validarServico()) {
+        while (numeroValidado == null || validarServico() == false) {
             System.out.print("Digite o ID do serviço: ");
-            clienteID = sc.nextLine();
-
+            String servicoID = sc.nextLine();
             // Tenta validar se a entrada é numérica
-            numeroValidado = h.isNumeric(clienteID);
+            numeroValidado = h.isNumeric(servicoID);
 
             if (numeroValidado == null) {
                 System.out.println("Apenas números!");
