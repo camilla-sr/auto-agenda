@@ -44,8 +44,10 @@ public class Cliente {
 
     public void edCliente() {
         boolean ed = false;
-
+        numeroValidado = null;
+        
         while (numeroValidado == null) {
+            cl.listarCliente();
             System.out.print("Digite o id do cliente que deseja editar: ");
             String clienteID = sc.nextLine();
 
@@ -133,8 +135,10 @@ public class Cliente {
 
     public void delCliente() {
         boolean del = false;
+        numeroValidado = null;
         String clienteID = "";
 
+        cl.listarCliente();
         // Loop para validar a entrada numérica e a existência no banco
         while (numeroValidado == null || !validarCliente()) {
             System.out.print("Digite o ID do cliente: ");
