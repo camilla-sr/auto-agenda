@@ -67,11 +67,12 @@ public class Lote {
             setCodLote(loteID);  // Atualiza o loteID antes da próxima validação
         }
 
-        System.out.println("O que você deseja editar?");
+       
         System.out.println("1. Tipo de óleo\t\t 2. Quantidade de garrafas"
                 + "\n3. Data de compra\t 4. Data de vencimento\t 5. Descrição e quantidade"
                 + "\n6. Data de compra e data de vencimento\t\t 7. Todos os campos\n0. Voltar");
-
+         System.out.print("O que você deseja editar? >>>>> ");
+       
         int opcaoEdicao = num.nextInt();
 
         switch (opcaoEdicao) {

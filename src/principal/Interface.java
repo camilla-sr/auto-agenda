@@ -2,33 +2,49 @@ package principal;
 
 import java.io.IOException;
 import java.util.Scanner;
+import include.Helper;
+import java.util.InputMismatchException;
 
 public class Interface {
+
+    Integer numeroValidado = null;
+    Helper h = new Helper();
     Scanner num = new Scanner(System.in);
-    
+    Scanner sc = new Scanner(System.in);
+
     //chamada dos métodos principais
     // INTERFACE CONCLUÍDA
     Lote lt = new Lote();
     Peca pc = new Peca();
     Cliente cl = new Cliente();
     TipoServico ts = new TipoServico();
-    
+
     // INTERFACE PENDENTE
     Agendamento ag = new Agendamento();
     Funcionario f = new Funcionario();
 
     // ------------------------------------------------
     public void inicio() {
-        System.out.println("\tBem-Vindo ao Auto Agenda");
-        System.out.println("1. Cadastrar Itens\t 2. Editar Itens\n"
-                + "3. Apagar Itens\t\t 4.Consultar Itens\n"
-                + "0. Sair");
+        int opcao;
+      
+        while(true){
+        try {
+            System.out.println("\tBem-Vindo ao Auto Agenda");
+            System.out.println("1. Cadastrar Itens\t 2. Editar Itens\n"
+                    + "3. Apagar Itens\t\t 4.Consultar Itens\n"
+                    + "0. Sair");
 
-        System.out.print("\nVocê pode navegar pelo sistema"
-                + " informando seus números correspondentes");
-        System.out.print("\n>>>>>  ");
-
-        int opcao = num.nextInt();
+            System.out.print("\nVocê pode navegar pelo sistema"
+                    + " informando seus números correspondentes");
+            System.out.print("\n>>>>>  ");
+            opcao = sc.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Digite apenas números!");
+            sc.nextLine(); // Limpa o buffer do Scanner
+            continue;
+        }
+    
+        
         switch (opcao) {
             case 1:
                 System.out.println("\nCadastros");
@@ -53,6 +69,10 @@ public class Interface {
             case 0:
                 System.exit(0);
                 break;
+            default:
+                System.out.println("Esse número não está nas opções");
+        }
+
         }
     }
 
