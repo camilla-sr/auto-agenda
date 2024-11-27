@@ -22,15 +22,33 @@ public class Lote {
 
         System.out.print("Código do lote:  ");
         setCodLote(sc.nextLine());
-
-        System.out.print("Data de compra (formato: dd/MM/yyyy): ");
-        String dataC = sc.nextLine();
-        setDataCompra(h.dataPadraoBanco(dataC));
-
-        System.out.print("Data de vencimento (formato: dd/MM/yyyy): ");
-        String dataV = sc.nextLine();
-        setDataVencimento(h.dataPadraoBanco(dataV));
-
+        
+        while(true){
+            System.out.print("Data de compra (formato: dd/MM/yyyy): ");
+            String dataC = sc.nextLine();
+            if(dataC != null && !dataC.isEmpty()){ 
+               String dataValidada = h.dataPadraoBanco(dataC);
+               
+               if(dataValidada != null){
+                   setDataCompra(dataValidada);
+                   break;
+               }
+            }
+        }
+        
+        while(true){
+            System.out.print("Data de vencimento (formato: dd/MM/yyyy): ");
+            String dataV = sc.nextLine();
+            if(dataV != null && !dataV.isEmpty()){
+                String dataValidada = h.dataPadraoBanco(dataV);
+                
+                if(dataValidada != null){
+                    setDataVencimento(dataValidada);
+                    break;
+                }
+            }
+        }
+        
         System.out.print("Tipo de óleo: ");
         setTipoOleo(sc.nextLine());
 
@@ -98,7 +116,7 @@ public class Lote {
                 setQntdGarrafa(numeroValidado);
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
                 break;
-
+                
             case 3:
                 // Editar apenas a data de compra
                 System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");

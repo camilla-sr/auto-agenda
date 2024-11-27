@@ -134,7 +134,7 @@ public class Peca {
         numeroValidado = null;
 
         pc.listaEdicao();
-        while (numeroValidado == null) {
+        while (numeroValidado == null || validarPeca() == false) {
             System.out.print("Digite o código da peça que deseja editar: ");
             String pecaID = sc.nextLine();
 
@@ -143,13 +143,14 @@ public class Peca {
 
             if (numeroValidado == null) {
                 System.out.println("Digite apenas números.");
+            }else{
+                // verifico se o id é válido no banco
+                setIdPeca(numeroValidado);
+                if (!validarPeca()) {
+                    System.out.println("ID não encontrado. Tente novamente.");
+                    numeroValidado = null;  // Redefine para continuar o loop
+                }
             }
-        }
-        // verifico se o id é válido no banco
-        setIdPeca(numeroValidado);
-        if (!validarPeca()) {
-            System.out.println("ID não encontrado. Tente novamente.");
-            numeroValidado = null;  // Redefine para continuar o loop
         }
         del = pc.apagarPeca(getIdPeca());
         if (del == false) {

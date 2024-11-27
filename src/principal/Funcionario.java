@@ -99,7 +99,7 @@ public class Funcionario {
         if (del == false) {
             System.out.println("Erro ao apagar funcionário.");
         } else {
-            System.out.println("Peça excluída.");
+            System.out.println("Funcionário excluído");
         }
     }
 
