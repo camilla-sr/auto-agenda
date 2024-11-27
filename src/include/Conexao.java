@@ -54,7 +54,7 @@ public class Conexao {
     public ResultSet executarConsulta(String sql) {
         conectar();
         try {
-            PreparedStatement stmt = conn.prepareStatement(sql); // Corrigido para usar PreparedStatement
+            PreparedStatement stmt = conn.prepareStatement(sql); 
 
             resultset = stmt.executeQuery(); // Executa a consulta
         } catch (SQLException e) {
