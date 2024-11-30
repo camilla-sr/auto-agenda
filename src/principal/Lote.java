@@ -22,33 +22,29 @@ public class Lote {
 
         System.out.print("Código do lote:  ");
         setCodLote(sc.nextLine());
-        
+
         while(true){
             System.out.print("Data de compra (formato: dd/MM/yyyy): ");
             String dataC = sc.nextLine();
-            if(dataC != null && !dataC.isEmpty()){ 
-               String dataValidada = h.dataPadraoBanco(dataC);
-               
-               if(dataValidada != null){
-                   setDataCompra(dataValidada);
-                   break;
-               }
+
+            String dataValida = h.dataPadraoBanco(dataC);
+            if(dataValida != null){
+                setDataCompra(dataValida);
+                break;
             }
         }
-        
-        while(true){
+
+        while(true){ 
             System.out.print("Data de vencimento (formato: dd/MM/yyyy): ");
             String dataV = sc.nextLine();
-            if(dataV != null && !dataV.isEmpty()){
-                String dataValidada = h.dataPadraoBanco(dataV);
-                
-                if(dataValidada != null){
-                    setDataVencimento(dataValidada);
-                    break;
-                }
+        
+            String dataValida = h.dataPadraoBanco(dataV);
+            if (dataValida != null) {
+                setDataVencimento(dataValida);
+                break;
             }
         }
-        
+
         System.out.print("Tipo de óleo: ");
         setTipoOleo(sc.nextLine());
 
@@ -65,7 +61,7 @@ public class Lote {
 
         setQntdGarrafa(numeroValidado);
         cad = lt.cadastrarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
-        if (cad == false) { 
+        if (cad == false) {
             System.out.println("Algo deu errado");
         } else {
             System.out.println("Cadastro realizado");
@@ -74,6 +70,8 @@ public class Lote {
 
     public void edLote() {
         boolean ed = false;
+        
+        lt.listaEdicao();
         System.out.print("Digite o código do lote que deseja editar: ");
         String loteID = sc.nextLine();
         setCodLote(loteID);  // Define o loteID no objeto para a primeira chamada de validação
@@ -85,12 +83,11 @@ public class Lote {
             setCodLote(loteID);  // Atualiza o loteID antes da próxima validação
         }
 
-       
         System.out.println("1. Tipo de óleo\t\t 2. Quantidade de garrafas"
                 + "\n3. Data de compra\t 4. Data de vencimento\t 5. Descrição e quantidade"
                 + "\n6. Data de compra e data de vencimento\t\t 7. Todos os campos\n0. Voltar");
-         System.out.print("O que você deseja editar? >>>>> ");
-       
+        System.out.print("O que você deseja editar? >>>>> ");
+
         int opcaoEdicao = num.nextInt();
 
         switch (opcaoEdicao) {
@@ -103,8 +100,8 @@ public class Lote {
                 break;
 
             case 2:
-                // Editar apenas a quantidade de garrafas
-                while (numeroValidado == null) {
+                // Editar apenas a quantidade de garrafa
+                while (numeroValidado == null){
                     System.out.print("Informe a nova quantidade de garrafas: ");
                     String qntd = sc.nextLine();
                     numeroValidado = h.isNumeric(qntd);
@@ -116,20 +113,36 @@ public class Lote {
                 setQntdGarrafa(numeroValidado);
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
                 break;
-                
+
             case 3:
-                // Editar apenas a data de compra
-                System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
-                String novaDataCompra = sc.nextLine();
-                setDataCompra(h.dataPadraoBanco(novaDataCompra));
+                // Editar apenas a data de compra com validação
+                while(true){
+                    System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
+                    String novaDataCompra = sc.nextLine();
+
+                    String dataValida = h.dataPadraoBanco(novaDataCompra);
+                    
+                    if(dataValida != null){
+                        setDataCompra(dataValida);
+                        break; // Sai do loop se a data for válida
+                    }
+                }
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
                 break;
-
+                
             case 4:
-                // Editar apenas a data de vencimento
-                System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
-                String novaDataVencimento = sc.nextLine();
-                setDataVencimento(h.dataPadraoBanco(novaDataVencimento));
+                // Editar apenas a data de vencimento com validação
+                while(true){
+                    System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
+                    String novaDataVencimento = sc.nextLine();
+
+                    String dataValida = h.dataPadraoBanco(novaDataVencimento);
+                    
+                    if(dataValida != null){
+                        setDataVencimento(dataValida);
+                        break; // Sai do loop se a data for válida    
+                    }
+                }
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
                 break;
 
@@ -152,17 +165,32 @@ public class Lote {
                 break;
 
             case 6:
-                // Editar ambas as datas
-                System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
-                novaDataCompra = sc.nextLine();
-                setDataCompra(h.dataPadraoBanco(novaDataCompra));
+                // Editar ambas as datas com validação
+                while(true){
+                    System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
+                    String novaDataCompra = sc.nextLine();
 
-                System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
-                novaDataVencimento = sc.nextLine();
-                setDataVencimento(h.dataPadraoBanco(novaDataVencimento));
+                    String dataValida = h.dataPadraoBanco(novaDataCompra);
+                    
+                    if(dataValida != null){
+                        setDataCompra(dataValida);
+                        break; // Sai do loop se a data for válida
+                    }
+                }
 
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
-                break;
+                 while(true){
+                    System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
+                    String novaDataVencimento = sc.nextLine();
+
+                    String dataValida = h.dataPadraoBanco(novaDataVencimento);
+                    
+                    if(dataValida != null){
+                        setDataVencimento(novaDataVencimento);
+                        break; // Sai do loop se a data for válida    
+                    }
+                }
+            ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+            break;
 
             case 7:
                 // Editar todos os campos
@@ -180,14 +208,29 @@ public class Lote {
                 }
                 setQntdGarrafa(numeroValidado);
 
-                System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
-                novaDataCompra = sc.nextLine();
-                setDataCompra(h.dataPadraoBanco(novaDataCompra));
+                while(true){
+                    System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
+                    String novaDataCompra = sc.nextLine();
 
-                System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
-                novaDataVencimento = sc.nextLine();
-                setDataVencimento(h.dataPadraoBanco(novaDataVencimento));
+                    String dataValida = h.dataPadraoBanco(novaDataCompra);
+                    
+                    if(dataValida != null){
+                        setDataCompra(dataValida);
+                        break; // Sai do loop se a data for válida
+                    }
+                }
 
+                 while(true){
+                    System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
+                    String novaDataVencimento = sc.nextLine();
+
+                    String dataValida = h.dataPadraoBanco(novaDataVencimento);
+                    
+                    if(dataValida != null){
+                        setDataVencimento(novaDataVencimento);
+                        break; // Sai do loop se a data for válida    
+                    }
+                }
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
                 break;
 
@@ -211,6 +254,8 @@ public class Lote {
 
     public void delLote() {
         boolean del = false;
+        
+        lt.listaEdicao();
         System.out.print("Digite o código do lote que deseja editar: ");
         String loteID = sc.nextLine();
         setCodLote(loteID);
