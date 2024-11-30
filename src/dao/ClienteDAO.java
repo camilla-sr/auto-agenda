@@ -118,7 +118,6 @@ public class ClienteDAO {
             if (retorno != null && retorno.next()) {
                 resposta = true;
             } else {
-                System.out.println("ID inválido!");
                 resposta = false;
             }
         } catch (SQLException e) {
