@@ -29,7 +29,7 @@ public class Agendamento {
     ClienteDAO cl = new ClienteDAO();
 
     Helper h = new Helper();
-    Scanner sc = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in, "utf8");
     Scanner num = new Scanner(System.in);
 
     public void addAgendamento() {
@@ -43,36 +43,51 @@ public class Agendamento {
         System.out.print("\n\tAgendamento de Serviços");
 
         //cliente / serviço / funcionário
-        cl.listaEdicao();
-        System.out.print("\nInforme o ID do cliente: ");
-        int clienteID = num.nextInt();
-        if (cl.validaID(clienteID)) {
-            setCliente(clienteID);
-        }
+        do {
+            cl.listaEdicao();
+            System.out.print("Informe o ID do cliente: ");
+            int clienteID = num.nextInt();
+            if (cl.validaID(clienteID)) {
+                setCliente(clienteID);
+                break; // Sai do loop se o ID for válido
+            } else {
+                System.out.println("\nID inválido. Tente novamente.");
+            }
+        } while (true);
 
-        ts.listaEdicao();
-        System.out.print("\nInforme o ID do serviço: ");
-        int servicoID = num.nextInt();
-        if (ts.validaID(servicoID)) {
-            setServico(servicoID);
-        }
+        do {
+            ts.listaEdicao();
+            System.out.print("Informe o ID do serviço: ");
+            int servicoID = num.nextInt();
+            if (ts.validaID(servicoID)) {
+                setServico(servicoID);
+                break;
+            } else {
+                System.out.println("\nID inválido. Tente novamente.");
+            }
+        } while (true);
 
-        f.listaEdicao();
-        System.out.print("\nInforme o ID do funcionário: ");
-        int funcionarioID = num.nextInt();
-        if (cl.validaID(funcionarioID)) {
-            setFuncionario(funcionarioID);
-        }
+        do {
+            f.listaEdicao();
+            System.out.print("Informe o ID do funcionário: ");
+            int funcionarioID = num.nextInt();
+            if (f.validaID(funcionarioID)) {
+                setFuncionario(funcionarioID);
+                break;
+            } else {
+                System.out.println("\nID inválido. Tente novamente.");
+            }
+        } while (true);
 
-        System.out.print("Agendar para: (formato: dd/MM/yyyy): ");
+        System.out.print("\nAgendar para: (formato: dd/MM/yyyy): ");
         String dataPrevisao = sc.nextLine();
         setDataPrevisaoEntrega(h.dataPadraoBanco(dataPrevisao));
 
-        System.out.print("Deseja fazer alguma observação?  1-SIM   2-NÃO\n");
+        System.out.print("\nDeseja fazer alguma observação?  1-SIM   2-NÃO\n");
         int escolha = num.nextInt();
-        if(escolha == 2){
+        if (escolha == 2) {
             setObservacao("");
-        }else{
+        } else {
             System.out.println("Digite a observação: \n");
             setObservacao(sc.nextLine());
         }
@@ -84,6 +99,10 @@ public class Agendamento {
         } else {
             System.out.println("Cadastro realizado");
         }
+    }
+
+    public void edAgendamento(){
+        
     }
     
     public void consAgendamento() {
@@ -121,7 +140,6 @@ public class Agendamento {
     }
 
     // -------------- MÉTODOS DE APOIO ---------------
-    
     public boolean validarAgendamento() {
         if (ag.validaID(getIdAgendamento())) {
             return true;
@@ -129,6 +147,7 @@ public class Agendamento {
             return false;
         }
     }
+
     // -------------- GETTERS E SETTERS --------------
     public int getIdAgendamento() {
         return idAgendamento;
