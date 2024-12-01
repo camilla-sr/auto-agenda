@@ -106,7 +106,7 @@ public class Interface {
 
     public void editar() {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3. Cliente"
-                + "\n4. Tipo Serviço  5. Agendamento\t\t6. Funcionário "
+                + "\n4. Tipo Serviço  5. Agendamento\t\t 6. Funcionário "
                 + "\n0. Voltar\n >>>>>  ");
         int tela = num.nextInt();
 
