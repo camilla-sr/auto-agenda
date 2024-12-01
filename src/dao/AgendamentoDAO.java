@@ -30,17 +30,17 @@ public class AgendamentoDAO {
 
         // Atualizar apenas o Cliente
         if (cliente != 0 && servico == 0 && funcionario == 0 && dataPrevisaoEntrega == null && obs == null) {
-            sqlEdit = "UPDATE agendamento SET id_cliente = " + cliente;
+            sqlEdit = "UPDATE agendamento SET fk_cliente = " + cliente;
         }
 
         // Atualizar apenas o Serviço
         if (servico != 0 && cliente == 0 && funcionario == 0 && dataPrevisaoEntrega == null && obs == null) {
-            sqlEdit = "UPDATE agendamento SET id_servico = " + servico;
+            sqlEdit = "UPDATE agendamento SET fk_servico = " + servico;
         }
 
         // Atualizar apenas o Funcionário
         if (funcionario != 0 && cliente == 0 && servico == 0 && dataPrevisaoEntrega == null && obs == null) {
-            sqlEdit = "UPDATE agendamento SET id_funcionario = " + funcionario;
+            sqlEdit = "UPDATE agendamento SET fk_funcionario = " + funcionario;
         }
 
         // Atualizar apenas a Data de Previsão de Entrega
@@ -204,13 +204,13 @@ public class AgendamentoDAO {
 
     public void listaEdicao() {
         String sqlConsulta = "SELECT "
-                + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.status_agendamento "
+                + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.status_agendamento "
                 + "FROM agendamento a "
                 + "JOIN cliente cl ON cl.id_cliente = a.fk_cliente "
                 + "JOIN tipo_servico s ON a.fk_servico = s.id_servico "
                 + "JOIN funcionario f ON a.fk_funcionario = f.id_funcionario;";
 
-        System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | STATUS");
+        System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | PREVISÃO DE CONCLUSÃO | STATUS");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
@@ -224,8 +224,9 @@ public class AgendamentoDAO {
                 String funcionario = lista.getString("f.nome_funcionario");
                 String servico = lista.getString("s.desc_servico");
                 String dataCadastro = h.dataPadraoBR(lista.getString("a.data_cadastro"));
+                String dataPrevisao = h.dataPadraoBR(lista.getString("a.data_previsao_entrega"));
 
-                System.out.printf("%d.  %s  | %s | %s | %s\n", id, funcionario, servico, dataCadastro, status);
+                System.out.printf("%d.  %s  | %s | %s | %s \t\t | %s\n", id, funcionario, servico, dataCadastro, dataPrevisao, status);
             }
             lista.close();
         } catch (SQLException e) {
