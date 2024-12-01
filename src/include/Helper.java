@@ -25,7 +25,7 @@ public class Helper {
     public String dataPadraoBR(String data) {
         String[] dataPartes = data.split("-"); //separo o dado obtido no input
         if (dataPartes.length == 3) {
-            return dataPartes[0] + "/" + dataPartes[1] + "/" + dataPartes[2];
+            return dataPartes[2] + "/" + dataPartes[1] + "/" + dataPartes[0];
         } else {
             System.out.println("Formato de data inválido");
             return null;

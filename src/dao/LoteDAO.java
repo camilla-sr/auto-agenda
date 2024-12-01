@@ -27,38 +27,44 @@ public class LoteDAO {
     public boolean editarLote(String codLote, String novaDataCompra, String novaDataVencimento, int novaQntdGarrafa, String novoTipoOleo) {
         String sqlEdit = "";  // Inicializo a variável da query
 
+        // TIPO ÓLEO
+        if (!novoTipoOleo.isEmpty() && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novaQntdGarrafa == 0) {
+            sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "'";
+        }
+        
+        // QUANTIDADE GARRAFAS
+        if (novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novoTipoOleo.isEmpty()) {
+            sqlEdit = "UPDATE lote SET und_lote = " + novaQntdGarrafa;
+        }
+        
         // DATA DA COMPRA
-        if ((novaDataCompra != "" || novaDataCompra != null) && (novaDataVencimento == "" || novaDataVencimento == null)
-                && novaQntdGarrafa == 0 && (novoTipoOleo == "" || novoTipoOleo == null)) {
+        if (!novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "'";
         }
 
         // DATA DO VENCIMENTO
-        if ((novaDataVencimento != "" || novaDataVencimento != null) && (novaDataCompra == "" || novaDataCompra == null)
-                && novaQntdGarrafa == 0 && (novoTipoOleo == "" || novoTipoOleo == null)) {
+        if (!novaDataVencimento.isEmpty() && novaDataCompra.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_vencimento = '" + novaDataVencimento + "'";
         }
-
-        // QUANTIDADE GARRAFAS
-        if (novaQntdGarrafa != 0 && (novaDataCompra == "" || novaDataCompra == null)
-                && (novaDataVencimento == "" || novaDataVencimento == null) && (novoTipoOleo == "" || novoTipoOleo == null)) {
-            sqlEdit = "UPDATE lote SET und_lote = " + novaQntdGarrafa;
+        
+        // TIPO ÓLEO E QUANTIDADE
+        if (!novoTipoOleo.isEmpty() && novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty()) {
+            sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "', und_lote = " + novaQntdGarrafa;
         }
-
-        // TIPO ÓLEO
-        if ((novoTipoOleo != "" || novoTipoOleo != null) && (novaDataCompra == "" || novaDataCompra == null)
-                && (novaDataVencimento == "" || novaDataVencimento == null) && novaQntdGarrafa == 0) {
-            sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "'";
+        
+        // DATAS DE COMPRA E VENCIMENTO
+        if (!novaDataVencimento.isEmpty() && !novaDataCompra.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
+            sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "', data_vencimento = '" + novaDataVencimento + "'";
         }
-
-        // Se o usuário modificou mais de um campo
-        if ((novaDataCompra != "" || novaDataCompra != null) && (novaDataVencimento != "" || novaDataVencimento != null)
-                && novaQntdGarrafa != 0 && (novoTipoOleo != "" || novoTipoOleo != null)) {
+        
+        // TODOS OS CAMPOS
+        if (!novaDataCompra.isEmpty() && !novaDataVencimento.isEmpty() && novaQntdGarrafa != 0 && !novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "', data_vencimento = '" + novaDataVencimento
                     + "', und_lote = " + novaQntdGarrafa + ", tipo_oleo = '" + novoTipoOleo + "'";
         }
 
         sqlEdit = sqlEdit + " WHERE cod_lote = '" + codLote + "'";
+        System.out.println("\n\n" + sqlEdit);
         // Executo a query de atualização no banco
         boolean resposta = conn.executar(sqlEdit);
 
@@ -74,16 +80,16 @@ public class LoteDAO {
 
     public void listarLote() {
         String sqlConsulta = "SELECT * from lote";
-        System.out.println("Listando Lotes");
+        System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         try {
             while (lista.next()) {
-                String dataCompra = lista.getString("data_compra");
-                String dataVenci = lista.getString("data_vencimento");
-
-                System.out.println("\nCódigo do lote: \t\t" + lista.getString("cod_lote"));
-                System.out.println("Data da Compra: \t\t" + h.dataPadraoBR(dataCompra));
-                System.out.println("Data de Vencimento: \t\t" + h.dataPadraoBR(dataVenci));
+                String dataCompra = h.dataPadraoBR(lista.getString("data_compra"));
+                String dataVenci = h.dataPadraoBR(lista.getString("data_vencimento"));
+                
+                System.out.println("Código do lote: \t\t" + lista.getString("cod_lote"));
+                System.out.println("Data da Compra: \t\t" + dataCompra);
+                System.out.println("Data de Vencimento: \t\t" + dataVenci);
                 System.out.println("Quantidade de garrafas: \t" + lista.getInt("und_lote"));
                 System.out.println("Tipo de Óleo: \t\t\t" + lista.getString("tipo_oleo"));
                 System.out.println("---------------------------");
