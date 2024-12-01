@@ -49,8 +49,6 @@ public class Funcionario {
                 if (!validarFuncionario()) {
                     System.out.println("ID não encontrado.");
                     numeroValidado = null; // Redefine para continuar o loop
-                } else {
-                    System.out.println("ID válido encontrado.");
                 }
             }
         }

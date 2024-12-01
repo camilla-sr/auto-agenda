@@ -46,14 +46,14 @@ public class Cliente {
         boolean ed = false;
         numeroValidado = null;
         
+        cl.listarCliente();
         while (numeroValidado == null) {
-            cl.listarCliente();
             System.out.print("Digite o id do cliente que deseja editar: ");
             String clienteID = sc.nextLine();
 
             // Valida se a entrada é numérica
             numeroValidado = h.isNumeric(clienteID);
-
+            
             if (numeroValidado == null) {
                 System.out.println("ID inválido. Digite novamente.");
             } else {
