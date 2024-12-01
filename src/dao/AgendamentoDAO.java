@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import include.Helper;
 
 public class AgendamentoDAO {
+
     final Conexao conn = new Conexao();
     Helper h = new Helper();
 
@@ -24,32 +25,63 @@ public class AgendamentoDAO {
         }
     }
 
-    public void editarAgendamento(int idAgendamento, int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String dataConclusao) {
-        boolean agendamentoValida = validaID(idAgendamento);
+    public boolean editarAgendamento(int idAgendamento, int cliente, int servico, int funcionario, String dataPrevisaoEntrega, String obs) {
+        String sqlEdit = ""; // Inicializo a variável da query
 
-        if (agendamentoValida) {
-            System.out.println("Agendamento não encontrado");
-        } else {
-            String sqlEdit = "UPDATE agendamento set id_servico = " + servico + ", id_funcionario = " + funcionario + ", data_cadastro = "
-                    + dataCadastro + ", data_previsao_entrega = " + dataPrevisaoEntrega + ", data_conclusao_servico = " + dataConclusao
-                    + " WHERE id_agendamento = " + idAgendamento + "";
-
-            boolean resposta = conn.executar(sqlEdit);
-            if (resposta == true) {
-                System.out.println("Agendamento editado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+        // Atualizar apenas o Cliente
+        if (cliente != 0 && servico == 0 && funcionario == 0 && dataPrevisaoEntrega == null && obs == null) {
+            sqlEdit = "UPDATE agendamento SET id_cliente = " + cliente;
         }
-        conn.desconectar();
+
+        // Atualizar apenas o Serviço
+        if (servico != 0 && cliente == 0 && funcionario == 0 && dataPrevisaoEntrega == null && obs == null) {
+            sqlEdit = "UPDATE agendamento SET id_servico = " + servico;
+        }
+
+        // Atualizar apenas o Funcionário
+        if (funcionario != 0 && cliente == 0 && servico == 0 && dataPrevisaoEntrega == null && obs == null) {
+            sqlEdit = "UPDATE agendamento SET id_funcionario = " + funcionario;
+        }
+
+        // Atualizar apenas a Data de Previsão de Entrega
+        if (dataPrevisaoEntrega != null && cliente == 0 && servico == 0 && funcionario == 0 && obs == null) {
+            sqlEdit = "UPDATE agendamento SET data_previsao_entrega = '" + dataPrevisaoEntrega + "'";
+        }
+
+        // Atualizar apenas a Observação
+        if (obs != null && cliente == 0 && servico == 0 && funcionario == 0 && dataPrevisaoEntrega == null) {
+            sqlEdit = "UPDATE agendamento SET observacao = '" + obs + "'";
+        }
+
+        // Atualizar todos os campos
+        if (cliente != 0 && servico != 0 && funcionario != 0 && dataPrevisaoEntrega != null && obs != null) {
+            sqlEdit = "UPDATE agendamento SET id_cliente = " + cliente + ", id_servico = " + servico
+                    + ", id_funcionario = " + funcionario + ", data_previsao_entrega = '" + dataPrevisaoEntrega
+                    + "', observacao = '" + obs + "'";
+        }
+
+        // Adicionar a cláusula WHERE
+        sqlEdit = sqlEdit + " WHERE id_agendamento = " + idAgendamento;
+
+        // Executar a query
+        boolean resposta = conn.executar(sqlEdit);
+
+        // Retornar resultado
+        if (resposta) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 
     public void listarAgendamento() {
-        String sqlConsulta = "SELECT a.id_agendamento, cl.nome_cliente, s.desc_servico, \n" +
-            "f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.data_conclusao, a.status_agendamento, a.observacao\n" +
-            "from agendamento a join cliente cl on cl.id_cliente = a.fk_cliente\n" +
-            "join tipo_servico s on a.fk_servico = s.id_servico\n" +
-            "join funcionario f on a.fk_funcionario = f.id_funcionario";
+        String sqlConsulta = "SELECT a.id_agendamento, cl.nome_cliente, s.desc_servico, \n"
+                + "f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.data_conclusao, a.status_agendamento, a.observacao\n"
+                + "from agendamento a join cliente cl on cl.id_cliente = a.fk_cliente\n"
+                + "join tipo_servico s on a.fk_servico = s.id_servico\n"
+                + "join funcionario f on a.fk_funcionario = f.id_funcionario";
         System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
@@ -63,17 +95,17 @@ public class AgendamentoDAO {
                 String dataConclusaoServico = lista.getString("a.data_conclusao");
                 String statusAgendamento = lista.getString("a.status_agendamento");
                 String observacao = lista.getString("a.observacao");
-                
+
                 String conclusao = "";
-                if(!dataConclusaoServico.equals("")){
+                if (!dataConclusaoServico.equals("")) {
                     conclusao = h.dataPadraoBR(dataConclusaoServico);
                 }
-                
+
                 String status = "";
-                if(statusAgendamento.equals("A")){
+                if (statusAgendamento.equals("A")) {
                     status = "Em aberto";
                 }
-                
+
                 System.out.println("ID: " + id);
                 System.out.println("ID do funcionário: \t" + idFuncionario);
                 System.out.println("Código do serviço: \t" + idServico);
@@ -96,7 +128,7 @@ public class AgendamentoDAO {
         boolean resposta = false;
         boolean agendamentoValida = validaID(idAgendamento);
 
-        if (!agendamentoValida ) {
+        if (!agendamentoValida) {
             System.out.println("Agendamento não encontrado");
         } else {
             String sqlDel = "DELETE from agendamento WHERE id_agendamento = " + idAgendamento + "";
@@ -172,11 +204,11 @@ public class AgendamentoDAO {
 
     public void listaEdicao() {
         String sqlConsulta = "SELECT "
-            + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.status_agendamento "
-            + "FROM agendamento a "
-            + "JOIN cliente cl ON cl.id_cliente = a.fk_cliente "
-            + "JOIN tipo_servico s ON a.fk_servico = s.id_servico "
-            + "JOIN funcionario f ON a.fk_funcionario = f.id_funcionario;";
+                + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.status_agendamento "
+                + "FROM agendamento a "
+                + "JOIN cliente cl ON cl.id_cliente = a.fk_cliente "
+                + "JOIN tipo_servico s ON a.fk_servico = s.id_servico "
+                + "JOIN funcionario f ON a.fk_funcionario = f.id_funcionario;";
 
         System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | STATUS");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
@@ -184,10 +216,10 @@ public class AgendamentoDAO {
         try {
             while (lista.next()) {
                 String status = "";
-                if(lista.getString("a.status_agendamento").equals("A")){
+                if (lista.getString("a.status_agendamento").equals("A")) {
                     status = "Em aberto";
                 }
-                
+
                 int id = lista.getInt("id_agendamento");
                 String funcionario = lista.getString("f.nome_funcionario");
                 String servico = lista.getString("s.desc_servico");

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Agendamento {
+
     private int idAgendamento;
     private int cliente;
     private int servico;
@@ -101,10 +102,182 @@ public class Agendamento {
         }
     }
 
-    public void edAgendamento(){
-        
+    public void edAgendamento() {
+        // começo retirando qualquer valor dentro dos atributos
+        setIdAgendamento(0);
+        setCliente(0);
+        setServico(0);
+        setFuncionario(0);
+        setDataPrevisaoEntrega(null);
+        setObservacao(null);
+
+        boolean ed = false;
+
+        ag.listaEdicao();
+        System.out.print("\nDigite o ID do agendamento: ");
+        int agenID = num.nextInt();
+        setIdAgendamento(agenID);  // Define o loteID no objeto para a primeira chamada de validação
+
+        // Repete até encontrar um lote válido
+        while (validarAgendamento() == false) {
+            System.out.println("Lote não encontrado. Tente novamente.");
+            agenID = num.nextInt();
+            setIdAgendamento(agenID);  // Atualiza o loteID antes da próxima validação
+        }
+
+        System.out.println("\n1. Cliente atendido \t2. Serviço a ser prestado \t3. Funcionário responsável"
+                + "\n4. Previsão de entrega\t 5. Observação \t6. Todos os campos"
+                + "\n0. Voltar");
+        System.out.print("O que você deseja editar? >>>>> ");
+        int opcaoEdicao = num.nextInt();
+        System.out.println("");
+
+        switch (opcaoEdicao) {
+            case 1:
+                // Editar apenas o cliente a ser atendido
+                cl.listaEdicao();
+                System.out.print("Novo cliente: ");
+                int novocliente = num.nextInt();
+
+                setCliente(novocliente);
+                ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(), getFuncionario(), getDataPrevisaoEntrega(), getObservacao());
+                break;
+
+            case 2:
+                // Editar apenas o tipo de serviço
+
+                ts.listaEdicao();
+                Integer servicoValidado = null;
+                while (servicoValidado == null) {
+                    System.out.print("Novo serviço: ");
+                    String novoServ = sc.nextLine();
+                    servicoValidado = h.isNumeric(novoServ);
+
+                    if (servicoValidado == null) {
+                        System.out.println("Apenas números");
+                    }
+                }
+                setServico(servicoValidado);
+                ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(), getFuncionario(), getDataPrevisaoEntrega(), getObservacao());
+                break;
+
+            case 3:
+                // Editar apenas funcionário
+
+                f.listaEdicao();
+                Integer funcionarioValidado = null;
+                while (funcionarioValidado == null) {
+                    System.out.print("Novo funcioário: ");
+                    String novoFunci = sc.nextLine();
+                    funcionarioValidado = h.isNumeric(novoFunci);
+
+                    if (funcionarioValidado == null) {
+                        System.out.println("Apenas números");
+                    }
+                }
+                setFuncionario(funcionarioValidado);
+                ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(), getFuncionario(), getDataPrevisaoEntrega(), getObservacao());
+                break;
+
+            case 4:
+                // Editar apenas a data de previsão de entrega
+                while (true) {
+                    System.out.print("Nova previsão de entrega (dd/MM/yyyy): ");
+                    String novaPrevisao = sc.nextLine();
+
+                    if (getDataPrevisaoEntrega() != null) {
+                        setDataPrevisaoEntrega(h.dataPadraoBanco(novaPrevisao));
+                        break; // Sai do loop se a data for válida    
+                    }
+                }
+                ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(), getFuncionario(), getDataPrevisaoEntrega(), getObservacao());
+                break;
+
+            case 5:
+                // Editar apenas a observação
+                System.out.print("Nova observação: ");
+                setObservacao(sc.nextLine());
+
+                while (getObservacao() == null) {
+                    System.out.print("Nova observação: ");
+                    setObservacao(sc.nextLine());
+                    break;
+                }
+                ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(), getFuncionario(), getDataPrevisaoEntrega(), getObservacao());
+                break;
+
+            case 6:
+                // Editar todos os campos
+                cl.listaEdicao();
+                System.out.print("Novo cliente: ");
+                int novoCliente = num.nextInt();
+                setCliente(novoCliente);
+
+                ts.listaEdicao();
+                Integer novoServicoValidado = null;
+                while (novoServicoValidado == null) {
+                    System.out.print("Novo serviço: ");
+                    String novoServico = sc.nextLine();
+                    novoServicoValidado = h.isNumeric(novoServico);
+
+                    if (novoServicoValidado == null) {
+                        System.out.println("Apenas números");
+                    }
+                }
+                setServico(novoServicoValidado);
+
+                f.listaEdicao();
+                Integer novoFuncionarioValidado = null;
+                while (novoFuncionarioValidado == null) {
+                    System.out.print("Novo funcionário: ");
+                    String novoFuncionario = sc.nextLine();
+                    novoFuncionarioValidado = h.isNumeric(novoFuncionario);
+
+                    if (novoFuncionarioValidado == null) {
+                        System.out.println("Apenas números");
+                    }
+                }
+                setFuncionario(novoFuncionarioValidado);
+
+                while (true) {
+                    System.out.print("Nova previsão de entrega (dd/MM/yyyy): ");
+                    String novaPrevisaoEntrega = sc.nextLine();
+
+                    String dataValidaPrevisao = h.dataPadraoBanco(novaPrevisaoEntrega);
+
+                    if (dataValidaPrevisao != null) {
+                        setDataPrevisaoEntrega(dataValidaPrevisao);
+                        break; // Sai do loop se a data for válida
+                    }
+                }
+
+                System.out.print("Nova observação: ");
+                setObservacao(sc.nextLine());
+
+                ed = ag.editarAgendamento(
+                        getIdAgendamento(),
+                        getCliente(),
+                        getServico(),
+                        getFuncionario(),
+                        getDataPrevisaoEntrega(),
+                        getObservacao()
+                );
+                break;
+
+            case 0:
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+                return;
+        }
+
+        if (ed == false) {
+            System.out.println("Erro ao editar o agendamento.");
+        } else {
+            System.out.println("Edição realizada com sucesso.");
+        }
     }
-    
+
     public void consAgendamento() {
         ag.listarAgendamento();
     }
@@ -152,54 +325,71 @@ public class Agendamento {
     public int getIdAgendamento() {
         return idAgendamento;
     }
+
     public void setIdAgendamento(int idAgendamento) {
         this.idAgendamento = idAgendamento;
     }
+
     public int getCliente() {
         return cliente;
     }
+
     public void setCliente(int cliente) {
         this.cliente = cliente;
     }
+
     public int getServico() {
         return servico;
     }
+
     public void setServico(int servico) {
         this.servico = servico;
     }
+
     public int getFuncionario() {
         return funcionario;
     }
+
     public void setFuncionario(int funcionario) {
         this.funcionario = funcionario;
     }
+
     public String getDataCadastro() {
         return dataCadastro;
     }
+
     public void setDataCadastro(String dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
+
     public String getDataPrevisaoEntrega() {
         return dataPrevisaoEntrega;
     }
+
     public void setDataPrevisaoEntrega(String dataPrevisaoEntrega) {
         this.dataPrevisaoEntrega = dataPrevisaoEntrega;
     }
+
     public String getDataConclusao() {
         return dataConclusao;
     }
+
     public void setDataConclusao(String dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
+
     public String getStatus() {
         return status;
     }
+
     public void setStatus(String status) {
         this.status = status;
     }
+
     public String getObservacao() {
         return observacao;
     }
+
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
