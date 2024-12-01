@@ -143,7 +143,7 @@ public class LoteDAO {
         try {
             while (lista.next()) {
                 String cod = lista.getString("cod_lote");
-                String dataCompra = lista.getString("data_compra");
+                String dataCompra = h.dataPadraoBR(lista.getString("data_compra")); 
                 String tipoOleo = lista.getString("tipo_oleo");
 
                 System.out.printf("%s |  %s  | %s\n", cod, tipoOleo, dataCompra);
