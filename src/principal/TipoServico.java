@@ -33,6 +33,7 @@ public class TipoServico {
         boolean ed = false;
         setIdServico(idServico);
         
+        ts.listarTiposServico();
         while (numeroValidado == null) {
             System.out.print("Digite o id do serviço: ");
             String servicoID = sc.nextLine();
@@ -50,7 +51,6 @@ public class TipoServico {
                     System.out.println("ID não encontrado. Tente novamente.");
                     numeroValidado = null;  // Redefine para continuar o loop
                 }else{
-                    System.out.println("ID encontrado.");
                     System.out.print("\nDigite o novo nome do serviço: ");
                     setDescricaoServico(sc.nextLine());
                     
