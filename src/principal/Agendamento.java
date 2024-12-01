@@ -80,9 +80,19 @@ public class Agendamento {
             }
         } while (true);
 
-        System.out.print("\nAgendar para: (formato: dd/MM/yyyy): ");
-        String dataPrevisao = sc.nextLine();
-        setDataPrevisaoEntrega(h.dataPadraoBanco(dataPrevisao));
+        while (true) {
+            System.out.print("Data de previsão para conclusão (dd/MM/yyyy): ");
+            String dataPrev = sc.nextLine();
+
+            String dataValidaP = h.dataPadraoBanco(dataPrev);
+
+            if (dataValidaP == null) {
+                System.out.println("Formato inválido. Tente novamente\n");
+            } else {
+                setDataPrevisaoEntrega(dataValidaP);
+                break; // Sai do loop se a data for válida
+            }
+        }
 
         System.out.print("\nDeseja fazer alguma observação?  1-SIM   2-NÃO\n");
         int escolha = num.nextInt();
@@ -226,11 +236,15 @@ public class Agendamento {
                 // Editar apenas a data de previsão de entrega
                 while (true) {
                     System.out.print("Nova previsão de entrega (dd/MM/yyyy): ");
-                    String novaPrevisao = sc.nextLine();
+                    String novaDataPrev = sc.nextLine();
 
-                    if (!novaPrevisao.isEmpty()) {
-                        setDataPrevisaoEntrega(h.dataPadraoBanco(novaPrevisao));
-                        break; // Sai do loop se a data for válida    
+                    String dataValidaP = h.dataPadraoBanco(novaDataPrev);
+
+                    if (dataValidaP == null) {
+                        System.out.println("Formato inválido. Tente novamente\n");
+                    } else {
+                        setDataPrevisaoEntrega(dataValidaP);
+                        break; // Sai do loop se a data for válida
                     }
                 }
                 ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(), getFuncionario(), getDataPrevisaoEntrega(), getObservacao());
