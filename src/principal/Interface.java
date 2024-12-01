@@ -1,19 +1,20 @@
 package principal;
 
+import include.Helper;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Interface {
-    Scanner num = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in);
+    Integer opcaoValida = null;
+    Integer telaValida = null;
+    Helper h = new Helper();
     
     //chamada dos métodos principais
-    // INTERFACE CONCLUÍDA
     Lote lt = new Lote();
     Peca pc = new Peca();
     Cliente cl = new Cliente();
     TipoServico ts = new TipoServico();
-    
-    // INTERFACE PENDENTE
     Agendamento ag = new Agendamento();
     Funcionario f = new Funcionario();
 
@@ -28,8 +29,16 @@ public class Interface {
                 + " informando seus números correspondentes");
         System.out.print("\n>>>>>  ");
 
-        int opcao = num.nextInt();
-        switch (opcao) {
+        
+        String opcao = sc.nextLine();
+        opcaoValida = h.isNumeric(opcao);
+        while(opcaoValida == null){
+            System.out.println("Opção inválida. Tente novamente\n");
+            prosseguir();
+            opcaoValida = null;
+        }
+        
+        switch (opcaoValida) {
             case 1:
                 System.out.println("\nCadastros");
                 cadastrar();
@@ -60,9 +69,16 @@ public class Interface {
         System.out.print("1. Peças\t2. Lotes de Óleo\t3. Clientes\n"
                 + "4. Serviços\t5. Agendamento\t\t6. Funcionários\n"
                 + "\n0. Voltar\n >>>>>  ");
-        int tela = num.nextInt();
+        
+        String tela = sc.nextLine();
+        telaValida = h.isNumeric(tela);
+        while(telaValida == null){
+            System.out.println("Opção inválida. Tente novamente\n");
+            prosseguir();
+            telaValida = null;
+        }
 
-        switch (tela) {
+        switch (telaValida) {
             case 1:
                 pc.addPeca();
                 System.out.println("\n");
@@ -108,9 +124,16 @@ public class Interface {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3. Cliente"
                 + "\n4. Tipo Serviço  5. Agendamento\t\t 6. Funcionário "
                 + "\n0. Voltar\n >>>>>  ");
-        int tela = num.nextInt();
+        
+        String tela = sc.nextLine();
+        telaValida = h.isNumeric(tela);
+        while(telaValida == null){
+            System.out.println("Opção inválida. Tente novamente\n");
+            prosseguir();
+            telaValida = null;
+        }
 
-        switch (tela) {
+        switch (telaValida) {
             case 1:
                 pc.edPeca();
                 System.out.println("\n");
@@ -155,9 +178,16 @@ public class Interface {
         System.out.print("1. Peças\t 2. Lote de Óleo\t 3.Cliente"
                 + "\n4. Tipo Serviço  5. Agendamento\t\t 6. Funcionário"
                 + "\n0. Voltar\n>>>>>  ");
-        int tela = num.nextInt();
+        
+        String tela = sc.nextLine();
+        telaValida = h.isNumeric(tela);
+        while(telaValida == null){
+            System.out.println("Opção inválida. Tente novamente\n");
+            prosseguir();
+            telaValida = null;
+        }
 
-        switch (tela) {
+        switch (telaValida) {
             case 1:
                 pc.delPeca();
                 System.out.println("\n");
@@ -202,9 +232,16 @@ public class Interface {
         System.out.print("1. Peças\t 2. Lotes de Óleo\t 3. Clientes"
                 + "\n4. Serviço \t 5. Agendamento \t 6.Funcionário"
                 + "\n0. Voltar\n >>>>> ");
-        int tela = num.nextInt();
+        
+        String tela = sc.nextLine();
+        telaValida = h.isNumeric(tela);
+        while(telaValida == null){
+            System.out.println("Opção inválida. Tente novamente\n");
+            prosseguir();
+            telaValida = null;
+        }
 
-        switch (tela) {
+        switch (telaValida) {
             case 1:
                 pc.consPeca();
                 prosseguir();
