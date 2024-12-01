@@ -21,7 +21,7 @@ public class Interface {
     public void inicio() {
         System.out.println("\tBem-Vindo ao Auto Agenda");
         System.out.println("1. Cadastrar Itens\t 2. Editar Itens\n"
-                + "3. Apagar Itens\t\t 4.Consultar Itens\n"
+                + "3. Apagar Itens\t\t 4. Consultar Itens\n"
                 + "0. Sair");
 
         System.out.print("\nVocê pode navegar pelo sistema"
