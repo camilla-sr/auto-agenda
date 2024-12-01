@@ -19,7 +19,7 @@ public class Lote {
 
     public void addLote() {
         boolean cad = false;
-
+        
         System.out.print("Código do lote:  ");
         setCodLote(sc.nextLine());
 
@@ -72,7 +72,7 @@ public class Lote {
         boolean ed = false;
         
         lt.listaEdicao();
-        System.out.print("Digite o código do lote que deseja editar: ");
+        System.out.print("\nDigite o código do lote que deseja editar: ");
         String loteID = sc.nextLine();
         setCodLote(loteID);  // Define o loteID no objeto para a primeira chamada de validação
 
@@ -82,13 +82,13 @@ public class Lote {
             loteID = sc.nextLine();
             setCodLote(loteID);  // Atualiza o loteID antes da próxima validação
         }
-
-        System.out.println("1. Tipo de óleo\t\t 2. Quantidade de garrafas"
+        
+        System.out.println("\n1. Tipo de óleo\t\t 2. Quantidade de garrafas"
                 + "\n3. Data de compra\t 4. Data de vencimento\t 5. Descrição e quantidade"
                 + "\n6. Data de compra e data de vencimento\t\t 7. Todos os campos\n0. Voltar");
         System.out.print("O que você deseja editar? >>>>> ");
-
         int opcaoEdicao = num.nextInt();
+        System.out.println("");
 
         switch (opcaoEdicao) {
             case 1:
@@ -212,10 +212,10 @@ public class Lote {
                     System.out.print("Informe a nova data de compra (dd/MM/yyyy): ");
                     String novaDataCompra = sc.nextLine();
 
-                    String dataValida = h.dataPadraoBanco(novaDataCompra);
+                    String dataValidaCompra = h.dataPadraoBanco(novaDataCompra);
                     
-                    if(dataValida != null){
-                        setDataCompra(dataValida);
+                    if(dataValidaCompra != null){
+                        setDataCompra(dataValidaCompra);
                         break; // Sai do loop se a data for válida
                     }
                 }
@@ -224,10 +224,10 @@ public class Lote {
                     System.out.print("Informe a nova data de vencimento (dd/MM/yyyy): ");
                     String novaDataVencimento = sc.nextLine();
 
-                    String dataValida = h.dataPadraoBanco(novaDataVencimento);
+                    String dataValidaVen = h.dataPadraoBanco(novaDataVencimento);
                     
-                    if(dataValida != null){
-                        setDataVencimento(novaDataVencimento);
+                    if(dataValidaVen != null){
+                        setDataVencimento(dataValidaVen);
                         break; // Sai do loop se a data for válida    
                     }
                 }

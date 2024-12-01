@@ -59,7 +59,6 @@ public class LoteDAO {
         }
 
         sqlEdit = sqlEdit + " WHERE cod_lote = '" + codLote + "'";
-
         // Executo a query de atualização no banco
         boolean resposta = conn.executar(sqlEdit);
 
@@ -141,7 +140,7 @@ public class LoteDAO {
                 String dataCompra = lista.getString("data_compra");
                 String tipoOleo = lista.getString("tipo_oleo");
 
-                System.out.printf("%s.  %s  | %s\n", cod, tipoOleo, dataCompra);
+                System.out.printf("%s |  %s  | %s\n", cod, tipoOleo, dataCompra);
             }
         } catch (SQLException e) {
             System.out.println("Erro ao processar resultado: " + e.getMessage());
