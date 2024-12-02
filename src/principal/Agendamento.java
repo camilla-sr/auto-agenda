@@ -59,10 +59,11 @@ public class Agendamento {
 
                 if (!clienteValido) {
                     System.out.println("Cliente não encontrado. Tente novamente.");
-                    clienteValidado = null; // Redefine para continuar o loop
+                    clienteValidado = null;       
+                }else{
+                    setCliente(clienteValidado);
                 }
             }
-            setCliente(clienteValidado);
         }
 
         ts.listaEdicao(); // Exibe a lista de tipos de serviço
@@ -84,9 +85,10 @@ public class Agendamento {
                 if (!servicoValido) {
                     System.out.println("Serviço não encontrado. Tente novamente.\n");
                     servicoValidado = null; // Redefine para continuar o loop
+                }else{
+                    setServico(servicoValidado);
                 }
             }
-            setServico(servicoValidado);
         }
 
         f.listaEdicao(); // Exibe a lista de funcionários
@@ -108,9 +110,10 @@ public class Agendamento {
                 if (!funcionarioValido) {
                     System.out.println("Funcionário não encontrado. Tente novamente.\n");
                     funcionarioValidado = null; // Redefine para continuar o loop
+                }else{
+                    setFuncionario(funcionarioValidado);
                 }
             }
-            setFuncionario(funcionarioValidado);
         }
 
         while (true) {
