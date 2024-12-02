@@ -36,7 +36,6 @@ public class Funcionario {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        f.listaEdicao();
         
         while (numeroValidado == null) {
             System.out.print("Digite o id do funcionário: ");
@@ -82,7 +81,7 @@ public class Funcionario {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        f.listaEdicao();
+        
         while (numeroValidado == null) {
             System.out.print("Digite o ID do funcionário: ");
             String funcionarioID = sc.nextLine();
