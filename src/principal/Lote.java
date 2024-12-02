@@ -77,7 +77,7 @@ public class Lote {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        lt.listaEdicao();
+
         System.out.print("\nDigite o código do lote que deseja editar: ");
         String loteID = sc.nextLine();
         setCodLote(loteID);  // Define o loteID no objeto para a primeira chamada de validação
@@ -266,7 +266,7 @@ public class Lote {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        lt.listaEdicao();
+
         System.out.print("\nCódigo do lote que será apagado: ");
         String loteID = sc.nextLine();
         setCodLote(loteID);

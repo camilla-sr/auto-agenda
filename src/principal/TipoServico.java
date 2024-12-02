@@ -37,7 +37,7 @@ public class TipoServico {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        ts.listaEdicao();
+
         while (numeroValidado == null) {
             System.out.print("Digite o id do serviço: ");
             String servicoID = sc.nextLine();
@@ -84,7 +84,7 @@ public class TipoServico {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        ts.listaEdicao();
+        
         // Loop para validar a entrada numérica e a existência no banco
         while (numeroValidado == null || validarServico() == false) {
             System.out.print("Digite o ID do serviço: ");

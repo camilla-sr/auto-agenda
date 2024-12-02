@@ -50,7 +50,7 @@ public class Cliente {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        cl.listarCliente();
+
         while (numeroValidado == null) {
             System.out.print("Digite o id do cliente que deseja editar: ");
             String clienteID = sc.nextLine();
@@ -145,7 +145,7 @@ public class Cliente {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        cl.listarCliente();
+
         // Loop para validar a entrada numérica e a existência no banco
         while (numeroValidado == null || !validarCliente()) {
             System.out.print("Digite o ID do cliente: ");

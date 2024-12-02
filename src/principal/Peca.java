@@ -50,7 +50,6 @@ public class Peca {
             return;
         }
         
-        pc.listaEdicao();
         while (numeroValidado == null) {
             System.out.print("Digite o id da peça: ");
             String pecaID = sc.nextLine();
@@ -142,7 +141,7 @@ public class Peca {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        pc.listaEdicao();
+        
         while (numeroValidado == null || validarPeca() == false) {
             System.out.print("Digite o código da peça que deseja editar: ");
             String pecaID = sc.nextLine();
