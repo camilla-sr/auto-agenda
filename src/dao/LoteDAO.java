@@ -64,7 +64,6 @@ public class LoteDAO {
         }
 
         sqlEdit = sqlEdit + " WHERE cod_lote = '" + codLote + "'";
-        System.out.println("\n\n" + sqlEdit);
         // Executo a query de atualização no banco
         boolean resposta = conn.executar(sqlEdit);
 

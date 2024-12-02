@@ -45,15 +45,7 @@ public class Agendamento {
             System.out.println("\t\tNão há clientes cadastrados para realizar agendamento");
             System.out.println("\t\t\tRetornando à interface inicial.");
             return;
-        }else if(f.listaEdicao() == 0){
-            System.out.println("\t\tNão há funcionários cadastrados para realizar agendamento");
-            System.out.println("\t\tRetornando à interface inicial.");
-            return;
-        }else if(ts.listaEdicao() == 0){
-            System.out.println("\t\tNão há serviços cadastrados para realizar agendamento");
-            System.out.println("\t\t\tRetornando à interface inicial.");
-            return;
-        }
+       }
        
        //cliente / serviço / funcionário
         Integer clienteValidado = null;
@@ -80,7 +72,12 @@ public class Agendamento {
             }
         }
 
-        ts.listaEdicao(); // Exibe a lista de tipos de serviço
+        if(ts.listaEdicao() == 0){
+            System.out.println("\t\tNão há serviços cadastrados para realizar agendamento");
+            System.out.println("\t\t\tRetornando à interface inicial.");
+            return;
+        }
+       
         Integer servicoValidado = null; // Reinicia a variável
 
         while (servicoValidado == null) {
@@ -105,7 +102,12 @@ public class Agendamento {
             }
         }
 
-        f.listaEdicao(); // Exibe a lista de funcionários
+        if(f.listaEdicao() == 0){
+            System.out.println("\t\tNão há funcionários cadastrados para realizar agendamento");
+            System.out.println("\t\tRetornando à interface inicial.");
+            return;
+        }
+        
         Integer funcionarioValidado = null; // Reinicia a variável
         
         while (funcionarioValidado == null) {
@@ -379,7 +381,7 @@ public class Agendamento {
                         setDataPrevisaoEntrega(dataValidaPrevisao);
                         break;
                     } else {
-                        System.out.println("Data inválida. Tente novamente.\n");
+                        System.out.println("Formato inválido. Tente novamente.\n");
                     }
                 }
 
@@ -422,18 +424,18 @@ public class Agendamento {
 
         while (agendamentoValidado == null) {
             System.out.print("Digite o ID do agendamento: ");
-            String agenda = sc.nextLine(); // Captura a entrada do tipo de serviço
-
+            String agenda = sc.nextLine(); // Captura a entrada do agendamento
+            
             // Valida se a entrada é numérica
             agendamentoValidado = h.isNumeric(agenda);
 
             if (agendamentoValidado == null) {
                 System.out.println("Apenas números.\n");
             } else {
-                // Verifica se o serviço é válido
-                boolean servicoValido = ts.validaID(agendamentoValidado); // Verifica se o ID do serviço é válido
+                // Verifica se o agendamento é válido
+                boolean agendamentoValido = ag.validaID(agendamentoValidado); // Verifica se o ID do agendamento é válido
 
-                if (!servicoValido) {
+                if (!agendamentoValido) {
                     System.out.println("Agendamento não encontrado. Tente novamente.\n");
                     agendamentoValidado = null; // Redefine para continuar o loop
                 }

@@ -51,12 +51,10 @@ public class ClienteDAO {
         // Muda tudo
         if(novoAnoCarro != null && novoNomeCliente != null && novoWhatsappCliente != null && novoModeloCarro != null){
             sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "', whatsapp_cliente = '" + novoWhatsappCliente
-                    + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro;                        
+                    + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro + "'";                        
         }
         
         sqlEdit = sqlEdit + " WHERE id_cliente = " + idCliente + "";
-                
-        System.out.println(sqlEdit);
         resposta = conn.executar(sqlEdit);
         if (resposta == true) {
             conn.desconectar();

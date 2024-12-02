@@ -14,7 +14,7 @@ public class AgendamentoDAO {
     public boolean cadastrarAgendamento(int cliente, int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String observacao) {
         String sqlInserir = "INSERT into agendamento (fk_cliente, fk_servico, fk_funcionario, data_cadastro, data_previsao_entrega, data_conclusao, status_agendamento, observacao)"
                 + "VALUES (" + cliente + "," + servico + ", " + funcionario + ", '" + dataCadastro + "', "
-                + "'" + dataPrevisaoEntrega + "', '', 'A', '" + observacao + "')";
+                + "'" + dataPrevisaoEntrega + "', null, 'A', '" + observacao + "')";
         boolean resposta = conn.executar(sqlInserir);
         if (resposta == true) {
             conn.desconectar();
@@ -98,7 +98,7 @@ public class AgendamentoDAO {
                     String observacao = lista.getString("a.observacao");
 
                     String conclusao = "";
-                    if (!dataConclusaoServico.equals("")) {
+                    if (dataConclusaoServico != null) {
                         conclusao = h.dataPadraoBR(dataConclusaoServico);
                     }
 

@@ -47,7 +47,7 @@ public class TipoServico {
             numeroValidado = h.isNumeric(servicoID);
 
             if (numeroValidado == null) {
-                System.out.println("Apenas números!.");
+                System.out.println("Apenas números!");
             } else {
                 // Verifica se o cliente existe no banco de dados
                 setIdServico(numeroValidado);

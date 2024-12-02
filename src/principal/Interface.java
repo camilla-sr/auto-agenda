@@ -70,7 +70,7 @@ public class Interface {
 
     public void cadastrar() {
         System.out.print("1. Peças\t2. Lotes de Óleo\t3. Clientes\n"
-                + "4. Serviços\t5. Agendamento\t\t6. Funcionários\n"
+                + "4. Serviços\t5. Agendamento\t\t6. Funcionários"
                 + "\n0. Voltar\n >>>>>  ");
 
         String tela = sc.nextLine();
@@ -182,7 +182,7 @@ public class Interface {
     }
 
     public void apagar() {
-        System.out.print("1. Peças\t 2. Lote de Óleo\t 3.Cliente"
+        System.out.print("1. Peças\t 2. Lote de Óleo\t 3. Cliente"
                 + "\n4. Tipo Serviço  5. Agendamento\t\t 6. Funcionário"
                 + "\n0. Voltar\n>>>>>  ");
 
