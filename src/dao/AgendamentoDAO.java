@@ -55,8 +55,8 @@ public class AgendamentoDAO {
 
         // Atualizar todos os campos
         if (cliente != 0 && servico != 0 && funcionario != 0 && dataPrevisaoEntrega != null && obs != null) {
-            sqlEdit = "UPDATE agendamento SET id_cliente = " + cliente + ", id_servico = " + servico
-                    + ", id_funcionario = " + funcionario + ", data_previsao_entrega = '" + dataPrevisaoEntrega
+            sqlEdit = "UPDATE agendamento SET fk_cliente = " + cliente + ", fk_servico = " + servico
+                    + ", fk_funcionario = " + funcionario + ", data_previsao_entrega = '" + dataPrevisaoEntrega
                     + "', observacao = '" + obs + "'";
         }
 

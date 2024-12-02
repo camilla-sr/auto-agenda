@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Agendamento {
-
     private int idAgendamento;
     private int cliente;
     private int servico;
@@ -23,7 +22,6 @@ public class Agendamento {
 
     LocalDate hoje = LocalDate.now();  //retorna data atual com base no servidor
 
-    Integer numeroValidado = null;
     AgendamentoDAO ag = new AgendamentoDAO();
     TipoServicoDAO ts = new TipoServicoDAO();
     FuncionarioDAO f = new FuncionarioDAO();
@@ -44,41 +42,76 @@ public class Agendamento {
         System.out.print("\n\tAgendamento de Serviços");
 
         //cliente / serviço / funcionário
-        do {
-            cl.listaEdicao();
-            System.out.print("Informe o ID do cliente: ");
-            int clienteID = num.nextInt();
-            if (cl.validaID(clienteID)) {
-                setCliente(clienteID);
-                break; // Sai do loop se o ID for válido
-            } else {
-                System.out.println("\nID inválido. Tente novamente.");
-            }
-        } while (true);
+        Integer clienteValidado = null;
+        cl.listaEdicao();
+        while (clienteValidado == null) {
+            System.out.print("Cliente: ");
+            String novocliente = sc.nextLine(); // Captura a entrada do cliente
 
-        do {
-            ts.listaEdicao();
-            System.out.print("Informe o ID do serviço: ");
-            int servicoID = num.nextInt();
-            if (ts.validaID(servicoID)) {
-                setServico(servicoID);
-                break;
-            } else {
-                System.out.println("\nID inválido. Tente novamente.");
-            }
-        } while (true);
+            // Valida se a entrada é numérica
+            clienteValidado = h.isNumeric(novocliente);
 
-        do {
-            f.listaEdicao();
-            System.out.print("Informe o ID do funcionário: ");
-            int funcionarioID = num.nextInt();
-            if (f.validaID(funcionarioID)) {
-                setFuncionario(funcionarioID);
-                break;
+            if (clienteValidado == null) {
+                System.out.println("Apenas números.\n");
             } else {
-                System.out.println("\nID inválido. Tente novamente.");
+                // Verifica se o cliente é válido
+                boolean clienteValido = cl.validaID(clienteValidado); // Verifica se o ID é válido
+
+                if (!clienteValido) {
+                    System.out.println("Cliente não encontrado. Tente novamente.");
+                    clienteValidado = null; // Redefine para continuar o loop
+                }
             }
-        } while (true);
+            setCliente(clienteValidado);
+        }
+
+        ts.listaEdicao(); // Exibe a lista de tipos de serviço
+        Integer servicoValidado = null; // Reinicia a variável
+
+        while (servicoValidado == null) {
+            System.out.print("Novo tipo de serviço: ");
+            String novoservico = sc.nextLine(); // Captura a entrada do tipo de serviço
+
+            // Valida se a entrada é numérica
+            servicoValidado = h.isNumeric(novoservico);
+
+            if (servicoValidado == null) {
+                System.out.println("Apenas números.\n");
+            } else {
+                // Verifica se o serviço é válido
+                boolean servicoValido = ts.validaID(servicoValidado); // Verifica se o ID do serviço é válido
+
+                if (!servicoValido) {
+                    System.out.println("Serviço não encontrado. Tente novamente.\n");
+                    servicoValidado = null; // Redefine para continuar o loop
+                }
+            }
+            setServico(servicoValidado);
+        }
+
+        f.listaEdicao(); // Exibe a lista de funcionários
+        Integer funcionarioValidado = null; // Reinicia a variável
+
+        while (funcionarioValidado == null) {
+            System.out.print("Novo funcionário: ");
+            String novoFuncionario = sc.nextLine(); // Captura a entrada do funcionário
+
+            // Valida se a entrada é numérica
+            funcionarioValidado = h.isNumeric(novoFuncionario);
+
+            if (funcionarioValidado == null) {
+                System.out.println("Apenas números.\n");
+            } else {
+                // Verifica se o funcionário é válido
+                boolean funcionarioValido = f.validaID(funcionarioValidado); // Verifica se o ID do funcionário é válido
+
+                if (!funcionarioValido) {
+                    System.out.println("Funcionário não encontrado. Tente novamente.\n");
+                    funcionarioValidado = null; // Redefine para continuar o loop
+                }
+            }
+            setFuncionario(funcionarioValidado);
+        }
 
         while (true) {
             System.out.print("Data de previsão para conclusão (dd/MM/yyyy): ");
@@ -122,12 +155,11 @@ public class Agendamento {
         setObservacao(null);
 
         boolean ed = false;
-        
         if (ag.listaEdicao() == 0) {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-        
+
         ag.listaEdicao();
         do {
             System.out.print("Digite o ID do agendamento: ");
