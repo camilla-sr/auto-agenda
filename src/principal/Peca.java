@@ -143,7 +143,7 @@ public class Peca {
         }
         
         while (numeroValidado == null || validarPeca() == false) {
-            System.out.print("Digite o código da peça que deseja editar: ");
+            System.out.print("Digite o código da peça: ");
             String pecaID = sc.nextLine();
 
             // atualizo minha variável para testar outra vez
