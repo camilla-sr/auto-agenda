@@ -31,8 +31,20 @@ public class Cliente {
         System.out.print("Modelo do Carro: ");
         setModeloCarro(sc.nextLine());
 
-        System.out.print("Ano do Carro: ");
-        setAnoCarro(sc.nextLine());
+        while (numeroValidado == null) {
+            System.out.print("Ano do carro: ");
+            anoCarro = sc.nextLine();
+
+            // Valida se a entrada é numérica
+            numeroValidado = h.isNumeric(anoCarro);
+
+            if (numeroValidado == null) {
+                System.out.println("Formato inválido. Tente novamente.");
+                numeroValidado = null;
+            }else{
+                setAnoCarro(anoCarro);
+            }
+        }
 
         cad = cl.cadastrarCliente(getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
         if (cad == false) {
@@ -102,8 +114,22 @@ public class Cliente {
                 break;
 
             case 4:
-                System.out.print("Ano do carro: ");
-                setAnoCarro(sc.nextLine());
+                numeroValidado = null;
+
+                while (numeroValidado == null) {
+                    System.out.print("Ano do carro: ");
+                    anoCarro = sc.nextLine();
+
+                    // Valida se a entrada é numérica
+                    numeroValidado = h.isNumeric(anoCarro);
+
+                    if (numeroValidado == null) {
+                        System.out.println("Formato inválido. Tente novamente.");
+                        numeroValidado = null;
+                    }
+                }
+
+                setAnoCarro(anoCarro); // Usa o valor validado
                 ed = cl.editarCliente(getIdCliente(), null, null, null, getAnoCarro());
                 break;
 
@@ -117,8 +143,20 @@ public class Cliente {
                 System.out.print("Modelo do Carro: ");
                 setModeloCarro(sc.nextLine());
 
-                System.out.print("Ano do Carro: ");
-                setAnoCarro(sc.nextLine());
+                while (numeroValidado == null) {
+                    System.out.print("Ano do carro: ");
+                    anoCarro = sc.nextLine();
+
+                    // Valida se a entrada é numérica
+                    numeroValidado = h.isNumeric(anoCarro);
+
+                    if (numeroValidado == null) {
+                        System.out.println("Formato inválido. Tente novamente.");
+                        numeroValidado = null;
+                    }else{
+                        setAnoCarro(anoCarro);
+                    }
+                }
              
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
                 break;
