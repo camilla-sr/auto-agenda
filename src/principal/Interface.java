@@ -237,7 +237,7 @@ public class Interface {
 
     public void consultar() {
         System.out.print("1. Peças\t 2. Lotes de Óleo\t 3. Clientes"
-                + "\n4. Serviço \t 5. Agendamento \t 6.Funcionário"
+                + "\n4. Serviço \t 5. Agendamento \t 6. Funcionário"
                 + "\n0. Voltar\n >>>>> ");
 
         String tela = sc.nextLine();
