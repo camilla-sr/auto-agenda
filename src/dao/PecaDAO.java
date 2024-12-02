@@ -125,6 +125,7 @@ public class PecaDAO {
                 int quantidade = lista.getInt("qntd_peca");
 
                 System.out.printf("%d. %s  \t-  \t%d\n", id, descricaoPeca, quantidade);
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {

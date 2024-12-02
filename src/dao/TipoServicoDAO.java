@@ -103,6 +103,7 @@ public class TipoServicoDAO {
                 String servico = lista.getString("desc_servico");
 
                 System.out.printf("%d. %s\n", id, servico);
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {

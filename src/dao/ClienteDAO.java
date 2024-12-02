@@ -140,6 +140,7 @@ public class ClienteDAO {
                 String cliente = lista.getString("nome_cliente");
 
                 System.out.printf("%d. %s\n", id, cliente);
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {

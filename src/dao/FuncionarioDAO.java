@@ -110,6 +110,7 @@ public class FuncionarioDAO {
                 String nomeFuncionario = lista.getString("nome_funcionario");
 
                 System.out.printf("%d. %s \n", id, nomeFuncionario);
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
