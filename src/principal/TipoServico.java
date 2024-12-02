@@ -106,7 +106,7 @@ public class TipoServico {
 
         del = ts.apagarTipoServico(getIdServico());
         if (del == false) {
-            System.out.println("Erro ao apagar o serviço.");
+            System.out.println("Dado em uso, não é possível excuir");
         } else {
             System.out.println("Cadastro excluído.");
         }

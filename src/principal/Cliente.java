@@ -168,7 +168,7 @@ public class Cliente {
         
         del = cl.apagarCliente(getIdCliente());
         if (del == false) {
-            System.out.println("Erro ao apagar a cliente.");
+            System.out.println("Dado em uso, não é possível excuir");
         } else {
             System.out.println("Cadastro excluído.");
         }

@@ -104,7 +104,7 @@ public class Funcionario {
 
         del = f.apagarFuncionario(getIdFuncionario());
         if (del == false) {
-            System.out.println("Erro ao apagar funcionário.");
+            System.out.println("Dado em uso, não é possível excuir");
         } else {
             System.out.println("Funcionário excluído");
         }

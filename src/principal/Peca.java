@@ -162,7 +162,7 @@ public class Peca {
         }
         del = pc.apagarPeca(getIdPeca());
         if (del == false) {
-            System.out.println("Erro ao apagar a peça.");
+            System.out.println("Dado em uso, não é possível excuir");
         } else {
             System.out.println("Peça excluída.");
         }

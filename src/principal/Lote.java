@@ -279,7 +279,7 @@ public class Lote {
 
         del = lt.apagarLote(getCodLote());
         if (del == false) {
-            System.out.println("Erro ao apagar o lote.");
+            System.out.println("Dado em uso, não é possível excuir");
         } else {
             System.out.println("Lote excluído com sucesso.");
         }
