@@ -98,10 +98,11 @@ public class FuncionarioDAO {
         return resposta;
     }
 
-    public void listaEdicao() {
+    public int listaEdicao() {
         String sqlConsulta = "SELECT * from funcionario";
         System.out.println("\nID | FUNCIONÁRIO");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -116,5 +117,6 @@ public class FuncionarioDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 }

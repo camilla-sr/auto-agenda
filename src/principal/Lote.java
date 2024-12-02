@@ -19,7 +19,6 @@ public class Lote {
 
     public void addLote() {
         boolean cad = false;
-        
         System.out.print("\nCódigo do lote:  ");
         setCodLote(sc.nextLine());
 
@@ -74,7 +73,10 @@ public class Lote {
         setTipoOleo("");
         
         boolean ed = false;
-        
+        if (lt.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
         lt.listaEdicao();
         System.out.print("\nDigite o código do lote que deseja editar: ");
         String loteID = sc.nextLine();
@@ -260,6 +262,10 @@ public class Lote {
     public void delLote() {
         boolean del = false;
         
+        if (lt.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
         lt.listaEdicao();
         System.out.print("\nCódigo do lote que será apagado: ");
         String loteID = sc.nextLine();

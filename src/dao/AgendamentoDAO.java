@@ -86,34 +86,39 @@ public class AgendamentoDAO {
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
-            while (lista.next()) {
-                int id = lista.getInt("id_agendamento");
-                String idFuncionario = lista.getString("f.nome_funcionario");
-                String idServico = lista.getString("s.desc_servico");
-                String dataCadastro = lista.getString("a.data_cadastro");
-                String dataPrevisaoEntrega = lista.getString("a.data_previsao_entrega");
-                String dataConclusaoServico = lista.getString("a.data_conclusao");
-                String statusAgendamento = lista.getString("a.status_agendamento");
-                String observacao = lista.getString("a.observacao");
+            if (lista.isBeforeFirst()) {
+                while (lista.next()) {
+                    int id = lista.getInt("id_agendamento");
+                    String idFuncionario = lista.getString("f.nome_funcionario");
+                    String idServico = lista.getString("s.desc_servico");
+                    String dataCadastro = lista.getString("a.data_cadastro");
+                    String dataPrevisaoEntrega = lista.getString("a.data_previsao_entrega");
+                    String dataConclusaoServico = lista.getString("a.data_conclusao");
+                    String statusAgendamento = lista.getString("a.status_agendamento");
+                    String observacao = lista.getString("a.observacao");
 
-                String conclusao = "";
-                if (!dataConclusaoServico.equals("")) {
-                    conclusao = h.dataPadraoBR(dataConclusaoServico);
+                    String conclusao = "";
+                    if (!dataConclusaoServico.equals("")) {
+                        conclusao = h.dataPadraoBR(dataConclusaoServico);
+                    }
+
+                    String status = "";
+                    if (statusAgendamento.equals("A")) {
+                        status = "Em aberto";
+                    }
+
+                    System.out.println("ID: " + id);
+                    System.out.println("ID do funcionário: \t" + idFuncionario);
+                    System.out.println("Código do serviço: \t" + idServico);
+                    System.out.println("Data de cadastro: \t" + h.dataPadraoBR(dataCadastro));
+                    System.out.println("Previsão de entrega: \t" + h.dataPadraoBR(dataPrevisaoEntrega));
+                    System.out.println("Conclusão do serviço: \t" + conclusao);
+                    System.out.println("Status do agendamento: \t" + status);
+                    System.out.println("Observações: \t\t" + observacao);
+                    System.out.println("---------------------------");
                 }
-
-                String status = "";
-                if (statusAgendamento.equals("A")) {
-                    status = "Em aberto";
-                }
-
-                System.out.println("ID: " + id);
-                System.out.println("ID do funcionário: \t" + idFuncionario);
-                System.out.println("Código do serviço: \t" + idServico);
-                System.out.println("Data de cadastro: \t" + h.dataPadraoBR(dataCadastro));
-                System.out.println("Previsão de entrega: \t" + h.dataPadraoBR(dataPrevisaoEntrega));
-                System.out.println("Conclusão do serviço: \t" + conclusao);
-                System.out.println("Status do agendamento: \t" + status);
-                System.out.println("Observações: \t\t" + observacao);
+            } else {
+                System.out.println("Nenhum resultado encontrado");
                 System.out.println("---------------------------");
             }
             lista.close();
@@ -127,7 +132,7 @@ public class AgendamentoDAO {
     public boolean apagarAgendamento(int idAgendamento) {
         boolean resposta = false;
 
-        // Desativar verificação de chave estrangeira
+        // desativo a verificação de chave estrangeira
         String sqlDisableFKCheck = "SET FOREIGN_KEY_CHECKS = 0";
         boolean desativarFK = conn.executar(sqlDisableFKCheck);
 
@@ -136,19 +141,17 @@ public class AgendamentoDAO {
             conn.desconectar();
             return false;
         }
-
-        // Excluir o agendamento
+        
         String sqlDel = "DELETE FROM agendamento WHERE id_agendamento = " + idAgendamento;
         resposta = conn.executar(sqlDel);
 
-        // Reativar verificação de chave estrangeira
+        // reativo verificação de chave estrangeira
         String sqlEnableFKCheck = "SET FOREIGN_KEY_CHECKS = 1";
         boolean reativarFK = conn.executar(sqlEnableFKCheck);
 
         if (!reativarFK) {
             System.out.println("Aviso: Não foi possível reativar a verificação de chave estrangeira. Verifique o estado do banco de dados.");
         }
-
         conn.desconectar();
         return resposta;
     }
@@ -212,7 +215,7 @@ public class AgendamentoDAO {
         return insertSecundario;
     }
 
-    public void listaEdicao() {
+    public int listaEdicao() {
         String sqlConsulta = "SELECT "
                 + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.status_agendamento "
                 + "FROM agendamento a "
@@ -222,6 +225,7 @@ public class AgendamentoDAO {
 
         System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | PREVISÃO DE CONCLUSÃO | STATUS");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -236,13 +240,17 @@ public class AgendamentoDAO {
                 String dataCadastro = h.dataPadraoBR(lista.getString("a.data_cadastro"));
                 String dataPrevisao = h.dataPadraoBR(lista.getString("a.data_previsao_entrega"));
 
-                System.out.printf("%d.  %s  | %s | %s | %s \t\t | %s\n", id, funcionario, servico, dataCadastro, dataPrevisao, status);
+                System.out.printf("%d.  %s  | %s | %s | %s \t\t | %s\n",
+                        id, funcionario, servico, dataCadastro, dataPrevisao, status);
+                contagem++;
             }
+
             lista.close();
         } catch (SQLException e) {
             System.out.println("Erro ao processar resultado: " + e.getMessage());
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 }

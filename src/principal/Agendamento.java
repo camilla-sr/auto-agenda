@@ -122,7 +122,12 @@ public class Agendamento {
         setObservacao(null);
 
         boolean ed = false;
-
+        
+        if (ag.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
+        
         ag.listaEdicao();
         do {
             System.out.print("Digite o ID do agendamento: ");
@@ -339,7 +344,7 @@ public class Agendamento {
                         getFuncionario(), getDataPrevisaoEntrega(), getObservacao()
                 );
                 break;
-                
+
             case 0:
                 break;
             default:
@@ -361,8 +366,13 @@ public class Agendamento {
     public void delAgendamento() {
         boolean del = false;
         Integer agendamentoValidado = null; // Reinicia a variável
-        ag.listaEdicao();
 
+        if (ag.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
+
+        ag.listaEdicao();
         while (agendamentoValidado == null) {
             System.out.print("Digite o ID do agendamento: ");
             String agenda = sc.nextLine(); // Captura a entrada do tipo de serviço
@@ -385,7 +395,6 @@ public class Agendamento {
 
         // verifico se o id é válido no banco
         setIdAgendamento(agendamentoValidado);
-        
         del = ag.apagarAgendamento(getIdAgendamento());
         if (del == false) {
             System.out.println("Erro ao apagar o agendamento.");

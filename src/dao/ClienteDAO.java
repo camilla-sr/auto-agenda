@@ -128,11 +128,12 @@ public class ClienteDAO {
         return resposta;
     }
     
-    public void listaEdicao() {
+    public int listaEdicao() {
         String sqlConsulta = "SELECT * from cliente";
         
         System.out.println("\nID | CLIENTE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
         try {
             while (lista.next()) {
                 int id = lista.getInt("id_cliente");
@@ -146,5 +147,6 @@ public class ClienteDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 }

@@ -46,6 +46,10 @@ public class Cliente {
         boolean ed = false;
         numeroValidado = null;
         
+        if (cl.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
         cl.listarCliente();
         while (numeroValidado == null) {
             System.out.print("Digite o id do cliente que deseja editar: ");
@@ -137,7 +141,10 @@ public class Cliente {
         boolean del = false;
         numeroValidado = null;
         String clienteID = "";
-
+        if (cl.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
         cl.listarCliente();
         // Loop para validar a entrada numérica e a existência no banco
         while (numeroValidado == null || !validarCliente()) {

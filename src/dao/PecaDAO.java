@@ -112,10 +112,11 @@ public class PecaDAO {
         return resposta;
     }
 
-    public void listaEdicao() {
+    public int listaEdicao() {
         String sqlConsulta = "SELECT * from peca";
         System.out.println("\nID | DESCRIÇÃO | QUANTIDADE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -131,5 +132,6 @@ public class PecaDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 }

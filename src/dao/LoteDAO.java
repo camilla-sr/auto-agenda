@@ -135,10 +135,11 @@ public class LoteDAO {
         return resposta;
     }
 
-    public void listaEdicao() {
+    public int listaEdicao() {
         String sqlConsulta = "SELECT * from lote";
         System.out.println("\nCÓDIGO | TIPO DE ÓLEO | DATA DA COMPRA");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -153,5 +154,6 @@ public class LoteDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 }

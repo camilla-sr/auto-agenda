@@ -31,8 +31,13 @@ public class Funcionario {
     public void edFuncionario() {
         numeroValidado = null;
         boolean ed = false;
-
+        
+        if (f.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
         f.listaEdicao();
+        
         while (numeroValidado == null) {
             System.out.print("Digite o id do funcionário: ");
             String funcionarioID = sc.nextLine();
@@ -72,7 +77,11 @@ public class Funcionario {
     public void delFuncionario() {
         boolean del = false;
         numeroValidado = null;
-
+        
+        if (f.listaEdicao() == 0) {
+            System.out.println("\t\t\tNenhum dado encontrado");
+            return;
+        }
         f.listaEdicao();
         while (numeroValidado == null) {
             System.out.print("Digite o ID do funcionário: ");

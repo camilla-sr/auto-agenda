@@ -91,11 +91,12 @@ public class TipoServicoDAO {
         return resposta;
     }
     
-    public void listaEdicao() {
+    public int listaEdicao() {
         String sqlConsulta = "SELECT * from tipo_servico";
         
         System.out.println("\nID | SERVIÇO");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
         try {
             while (lista.next()) {
                 int id = lista.getInt("id_servico");
@@ -109,5 +110,6 @@ public class TipoServicoDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 }
