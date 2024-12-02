@@ -77,6 +77,12 @@ public class Cliente {
         int opcaoEdicao = num.nextInt();
 
         switch (opcaoEdicao) {
+            case 0:
+                if(opcaoEdicao == 0){
+                    System.out.println("Operação cancelada");
+                    return;
+                }
+                break;
             case 1:
                 System.out.print("Nome: ");
                 setNomeCliente(sc.nextLine());
@@ -115,8 +121,6 @@ public class Cliente {
                 setAnoCarro(sc.nextLine());
              
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
-                break;
-            case 0:
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
