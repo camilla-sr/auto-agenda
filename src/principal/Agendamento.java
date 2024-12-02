@@ -43,7 +43,7 @@ public class Agendamento {
         
        if (cl.listaEdicao() == 0) {
             System.out.println("\t\tNão há clientes cadastrados para realizar agendamento");
-            System.out.println("\t\t\tRetornando à interface inicial.");
+            System.out.println("\t\t\tRetornando para o menu principal.");
             return;
        }
        
@@ -74,7 +74,7 @@ public class Agendamento {
 
         if(ts.listaEdicao() == 0){
             System.out.println("\t\tNão há serviços cadastrados para realizar agendamento");
-            System.out.println("\t\t\tRetornando à interface inicial.");
+            System.out.println("\t\t\tRetornando para o menu principal.");
             return;
         }
        
@@ -104,7 +104,7 @@ public class Agendamento {
 
         if(f.listaEdicao() == 0){
             System.out.println("\t\tNão há funcionários cadastrados para realizar agendamento");
-            System.out.println("\t\tRetornando à interface inicial.");
+            System.out.println("\t\tRetornando para o menu principal.");
             return;
         }
         

@@ -78,6 +78,12 @@ public class Peca {
         int opcaoEdicao = num.nextInt();
 
         switch (opcaoEdicao) {
+            case 0:
+                if(opcaoEdicao == 0){
+                    System.out.println("Operação cancelada");
+                    return;
+                }
+                break;
             case 1:
                 System.out.print("Digite a nova descrição da peça: ");
                 setDescricaoPeca(sc.nextLine());
@@ -116,8 +122,6 @@ public class Peca {
                 }
                 setQntdPeca(numeroValidado);
                 ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
-                break;
-            case 0:
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");

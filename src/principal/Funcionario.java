@@ -64,6 +64,12 @@ public class Funcionario {
         int opcaoEdicao = num.nextInt();
 
         switch (opcaoEdicao) {
+            case 0:
+                if(opcaoEdicao == 0){
+                    System.out.println("Operaçãoo cancelada");
+                    return;
+                }
+                break;
             case 1:
                 // Pergunta ao usuário o que ele deseja editar
                 System.out.print("Novo nome: ");
@@ -77,8 +83,9 @@ public class Funcionario {
                     System.out.println("Edição realizada com sucesso.");
                 }
                 break;
-            case 0:
-                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+                edFuncionario();
         }
     }
 
