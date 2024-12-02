@@ -73,7 +73,7 @@ public class Peca {
         }
 
         // Pergunta ao usuário o que ele deseja editar
-        System.out.print("\n\n1. Apenas a descrição\t2. Apenas a quantidade\t3. Os dois");
+        System.out.print("\n\n1. Apenas a descrição\t2. Apenas a quantidade\t3. Os dois\n0. Voltar");
         System.out.print("\nO que você deseja editar? >>>>>  ");
         int opcaoEdicao = num.nextInt();
 
@@ -117,7 +117,8 @@ public class Peca {
                 setQntdPeca(numeroValidado);
                 ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
                 break;
-
+            case 0:
+                break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
                 edPeca();

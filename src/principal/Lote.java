@@ -30,6 +30,8 @@ public class Lote {
             if(dataValida != null){
                 setDataCompra(dataValida);
                 break;
+            }else{
+                System.out.println("Formato inválido. Tente novamente\n");
             }
         }
         while(true){ 
@@ -40,6 +42,8 @@ public class Lote {
             if (dataValida != null) {
                 setDataVencimento(dataValida);
                 break;
+            }else{
+                System.out.println("Formato inválido. Tente novamente\n");
             }
         }
         System.out.print("Tipo de óleo: ");
@@ -132,6 +136,8 @@ public class Lote {
                     if(dataValida != null){
                         setDataCompra(dataValida);
                         break; // Sai do loop se a data for válida
+                    }else{
+                        System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
@@ -148,6 +154,8 @@ public class Lote {
                     if(dataValida != null){
                         setDataVencimento(dataValida);
                         break; // Sai do loop se a data for válida    
+                    }else{
+                        System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
@@ -182,6 +190,8 @@ public class Lote {
                     if(dataValidaC != null){
                         setDataCompra(dataValidaC);
                         break; // Sai do loop se a data for válida
+                    }else{
+                        System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
 
@@ -194,8 +204,10 @@ public class Lote {
                     if(dataValidaV != null){
                         setDataVencimento(dataValidaV);
                         break; // Sai do loop se a data for válida    
-                    }
+                    }else{
+                     System.out.println("Formato inválido. Tente novamente\n");
                 }
+            }
             ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
             break;
 
@@ -236,6 +248,8 @@ public class Lote {
                     if(dataValidaVen != null){
                         setDataVencimento(dataValidaVen);
                         break; // Sai do loop se a data for válida    
+                    }else{
+                        System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
                 ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());

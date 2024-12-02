@@ -8,6 +8,7 @@ public class Funcionario {
     Integer numeroValidado = null;
     FuncionarioDAO f = new FuncionarioDAO();
     Scanner sc = new Scanner(System.in, "utf8");
+    Scanner num = new Scanner(System.in);
     Helper h = new Helper();
 
     private int idFuncionario;
@@ -56,16 +57,28 @@ public class Funcionario {
                 }
             }
         }
+        
+        System.out.print("\n1. Editar nome do Funcionário\t0. Voltar");
+        System.out.print("\nComo você deseja prosseguir?  >>>>");
 
-        // Pergunta ao usuário o que ele deseja editar
-        System.out.print("Novo nome: ");
-        setNomeFuncionario(sc.nextLine());
+        int opcaoEdicao = num.nextInt();
 
-        ed = f.editarFuncionario(getIdFuncionario(), getNomeFuncionario());
-        if (!ed) {
-            System.out.println("Erro ao editar a peça.");
-        } else {
-            System.out.println("Edição realizada com sucesso.");
+        switch (opcaoEdicao) {
+            case 1:
+                // Pergunta ao usuário o que ele deseja editar
+                System.out.print("Novo nome: ");
+                setNomeFuncionario(sc.nextLine());
+
+                ed = f.editarFuncionario(getIdFuncionario(), getNomeFuncionario());
+                
+                if (!ed) {
+                    System.out.println("Erro ao editar a funcionário.");
+                } else {
+                    System.out.println("Edição realizada com sucesso.");
+                }
+                break;
+            case 0:
+                break;
         }
     }
 

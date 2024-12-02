@@ -26,7 +26,7 @@ public class Agendamento {
     TipoServicoDAO ts = new TipoServicoDAO();
     FuncionarioDAO f = new FuncionarioDAO();
     ClienteDAO cl = new ClienteDAO();
-
+    
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
     Scanner num = new Scanner(System.in);
@@ -40,10 +40,24 @@ public class Agendamento {
         setDataCadastro(dataFormatada);
 
         System.out.print("\n\tAgendamento de Serviços");
-
-        //cliente / serviço / funcionário
+        
+       if (cl.listaEdicao() == 0) {
+            System.out.println("\t\tNão há clientes cadastrados para realizar agendamento");
+            System.out.println("\t\t\tRetornando à interface inicial.");
+            return;
+        }else if(f.listaEdicao() == 0){
+            System.out.println("\t\tNão há funcionários cadastrados para realizar agendamento");
+            System.out.println("\t\tRetornando à interface inicial.");
+            return;
+        }else if(ts.listaEdicao() == 0){
+            System.out.println("\t\tNão há serviços cadastrados para realizar agendamento");
+            System.out.println("\t\t\tRetornando à interface inicial.");
+            return;
+        }
+       
+       //cliente / serviço / funcionário
         Integer clienteValidado = null;
-        cl.listaEdicao();
+         
         while (clienteValidado == null) {
             System.out.print("Cliente: ");
             String novocliente = sc.nextLine(); // Captura a entrada do cliente
@@ -93,7 +107,7 @@ public class Agendamento {
 
         f.listaEdicao(); // Exibe a lista de funcionários
         Integer funcionarioValidado = null; // Reinicia a variável
-
+        
         while (funcionarioValidado == null) {
             System.out.print("Novo funcionário: ");
             String novoFuncionario = sc.nextLine(); // Captura a entrada do funcionário

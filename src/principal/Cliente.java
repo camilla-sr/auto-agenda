@@ -116,11 +116,8 @@ public class Cliente {
 
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
                 break;
-
             case 0:
-                edCliente();
                 break;
-
             default:
                 System.out.println("Opção inválida. Tente novamente.");
                 return;
