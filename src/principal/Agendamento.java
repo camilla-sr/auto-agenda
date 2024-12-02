@@ -265,62 +265,81 @@ public class Agendamento {
 
             case 6:
                 // Editar todos os campos
-                cl.listaEdicao();
-                System.out.print("Novo cliente: ");
-                int novoCliente = num.nextInt();
-                setCliente(novoCliente);
 
+                cl.listaEdicao();
+                clienteValidado = null;
+                while (clienteValidado == null) {
+                    System.out.print("Novo cliente: ");
+                    String novoCliente = sc.nextLine();
+
+                    clienteValidado = h.isNumeric(novoCliente);
+                    if (clienteValidado == null) {
+                        System.out.println("Apenas números.\n");
+                    } else if (!cl.validaID(clienteValidado)) {
+                        System.out.println("Cliente não encontrado. Tente novamente.\n");
+                        clienteValidado = null;
+                    }
+                }
+                setCliente(clienteValidado);
+
+                // Validação do serviço
                 ts.listaEdicao();
-                Integer novoServicoValidado = null;
-                while (novoServicoValidado == null) {
+                servicoValidado = null;
+                while (servicoValidado == null) {
                     System.out.print("Novo serviço: ");
                     String novoServico = sc.nextLine();
-                    novoServicoValidado = h.isNumeric(novoServico);
 
-                    if (novoServicoValidado == null) {
-                        System.out.println("Apenas números");
+                    servicoValidado = h.isNumeric(novoServico);
+                    if (servicoValidado == null) {
+                        System.out.println("Apenas números.\n");
+                    } else if (!ts.validaID(servicoValidado)) {
+                        System.out.println("Serviço não encontrado. Tente novamente.\n");
+                        servicoValidado = null;
                     }
                 }
-                setServico(novoServicoValidado);
+                setServico(servicoValidado);
 
+                // Validação do funcionário
                 f.listaEdicao();
-                Integer novoFuncionarioValidado = null;
-                while (novoFuncionarioValidado == null) {
+                funcionarioValidado = null;
+                while (funcionarioValidado == null) {
                     System.out.print("Novo funcionário: ");
                     String novoFuncionario = sc.nextLine();
-                    novoFuncionarioValidado = h.isNumeric(novoFuncionario);
 
-                    if (novoFuncionarioValidado == null) {
-                        System.out.println("Apenas números");
+                    funcionarioValidado = h.isNumeric(novoFuncionario);
+                    if (funcionarioValidado == null) {
+                        System.out.println("Apenas números.\n");
+                    } else if (!f.validaID(funcionarioValidado)) {
+                        System.out.println("Funcionário não encontrado. Tente novamente.\n");
+                        funcionarioValidado = null;
                     }
                 }
-                setFuncionario(novoFuncionarioValidado);
+                setFuncionario(funcionarioValidado);
 
+                // Validação da data de previsão de entrega
                 while (true) {
                     System.out.print("Nova previsão de entrega (dd/MM/yyyy): ");
                     String novaPrevisaoEntrega = sc.nextLine();
 
                     String dataValidaPrevisao = h.dataPadraoBanco(novaPrevisaoEntrega);
-
                     if (dataValidaPrevisao != null) {
                         setDataPrevisaoEntrega(dataValidaPrevisao);
-                        break; // Sai do loop se a data for válida
+                        break;
+                    } else {
+                        System.out.println("Data inválida. Tente novamente.\n");
                     }
                 }
 
+                // Captura da nova observação
                 System.out.print("Nova observação: ");
                 setObservacao(sc.nextLine());
 
-                ed = ag.editarAgendamento(
-                        getIdAgendamento(),
-                        getCliente(),
-                        getServico(),
-                        getFuncionario(),
-                        getDataPrevisaoEntrega(),
-                        getObservacao()
+                // Edição no agendamento
+                ed = ag.editarAgendamento(getIdAgendamento(), getCliente(), getServico(),
+                        getFuncionario(), getDataPrevisaoEntrega(), getObservacao()
                 );
                 break;
-
+                
             case 0:
                 break;
             default:
@@ -341,26 +360,32 @@ public class Agendamento {
 
     public void delAgendamento() {
         boolean del = false;
-        numeroValidado = null;
-
+        Integer agendamentoValidado = null; // Reinicia a variável
         ag.listaEdicao();
-        while (numeroValidado == null) {
+
+        while (agendamentoValidado == null) {
             System.out.print("Digite o ID do agendamento: ");
-            String pecaID = sc.nextLine();
+            String agenda = sc.nextLine(); // Captura a entrada do tipo de serviço
 
-            // atualizo minha variável para testar outra vez
-            numeroValidado = h.isNumeric(pecaID);
+            // Valida se a entrada é numérica
+            agendamentoValidado = h.isNumeric(agenda);
 
-            if (numeroValidado == null) {
-                System.out.println("Digite apenas números.");
+            if (agendamentoValidado == null) {
+                System.out.println("Apenas números.\n");
+            } else {
+                // Verifica se o serviço é válido
+                boolean servicoValido = ts.validaID(agendamentoValidado); // Verifica se o ID do serviço é válido
+
+                if (!servicoValido) {
+                    System.out.println("Agendamento não encontrado. Tente novamente.\n");
+                    agendamentoValidado = null; // Redefine para continuar o loop
+                }
             }
         }
+
         // verifico se o id é válido no banco
-        setIdAgendamento(numeroValidado);
-        if (!validarAgendamento()) {
-            System.out.println("ID não encontrado. Tente novamente.");
-            numeroValidado = null;  // Redefine para continuar o loop
-        }
+        setIdAgendamento(agendamentoValidado);
+        
         del = ag.apagarAgendamento(getIdAgendamento());
         if (del == false) {
             System.out.println("Erro ao apagar o agendamento.");

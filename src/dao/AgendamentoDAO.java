@@ -126,21 +126,31 @@ public class AgendamentoDAO {
 
     public boolean apagarAgendamento(int idAgendamento) {
         boolean resposta = false;
-        boolean agendamentoValida = validaID(idAgendamento);
 
-        if (!agendamentoValida) {
-            System.out.println("Agendamento não encontrado");
-        } else {
-            String sqlDel = "DELETE from agendamento WHERE id_agendamento = " + idAgendamento + "";
-            resposta = conn.executar(sqlDel);
-        }
-        if (resposta == true) {
-            conn.desconectar();
-            return true;
-        } else {
+        // Desativar verificação de chave estrangeira
+        String sqlDisableFKCheck = "SET FOREIGN_KEY_CHECKS = 0";
+        boolean desativarFK = conn.executar(sqlDisableFKCheck);
+
+        if (!desativarFK) {
+            System.out.println("Permissão negada para desativar verificação de chave estrangeira.");
             conn.desconectar();
             return false;
         }
+
+        // Excluir o agendamento
+        String sqlDel = "DELETE FROM agendamento WHERE id_agendamento = " + idAgendamento;
+        resposta = conn.executar(sqlDel);
+
+        // Reativar verificação de chave estrangeira
+        String sqlEnableFKCheck = "SET FOREIGN_KEY_CHECKS = 1";
+        boolean reativarFK = conn.executar(sqlEnableFKCheck);
+
+        if (!reativarFK) {
+            System.out.println("Aviso: Não foi possível reativar a verificação de chave estrangeira. Verifique o estado do banco de dados.");
+        }
+
+        conn.desconectar();
+        return resposta;
     }
 
     public boolean atualizarStatus(int idAgendamento, String novoEstado) {
