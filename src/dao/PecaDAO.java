@@ -25,17 +25,14 @@ public class PecaDAO {
     public boolean editarPeca(int idPeca, String novaDescricao, int novaQntd) {
         String sqlEdit = ""; // inicializo a variável da query
 
-        // testo o que será editado
-        // Mudo a descrição da peça
+        // testo o que será editado e mudo a descrição da peça
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd == 0) {
             sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "'";
         }
-
         // Muda apenas a quantidade
         if (novaQntd != 0 && (novaDescricao == null || novaDescricao.isEmpty())) {
             sqlEdit = "UPDATE peca SET qntd_peca = " + novaQntd;
         }
-
         // Muda ambos
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd != 0) {
             sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "', qntd_peca = " + novaQntd;
@@ -45,7 +42,6 @@ public class PecaDAO {
         boolean resposta = false;
 
         resposta = conn.executar(sqlEdit);
-
         if (resposta == true) {
             conn.desconectar();
             return true;
@@ -55,11 +51,10 @@ public class PecaDAO {
         }
     }
 
-    public int listarPecas() {
+    public void listarPecas() {
         String sqlConsulta = "SELECT * from peca";
         System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -71,7 +66,6 @@ public class PecaDAO {
                 System.out.println("Peça: " + descricaoPeca);
                 System.out.println("Quantidade: " + quantidade);
                 System.out.println("---------------------------");
-                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -79,7 +73,6 @@ public class PecaDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 
     public boolean apagarPeca(int idPeca) {
@@ -134,5 +127,22 @@ public class PecaDAO {
         } finally {
             conn.desconectar();
         }
+    }
+
+    public int verificaRegistro(){
+        String sqlConsulta = "SELECT * from peca";
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
+        try {
+            while (lista.next()) {
+                contagem++;
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+        return contagem;
     }
 }

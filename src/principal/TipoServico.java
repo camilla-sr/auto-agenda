@@ -31,15 +31,14 @@ public class TipoServico {
     public void edServico() {
         numeroValidado = null;
         boolean ed = false;
-        setIdServico(idServico);
         
-        if (ts.listarTiposServico()== 0) {
+        if (ts.verificaRegistro() == 0) {
             System.out.println("\nNão há serviços cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
-       }else{           
+        }else{           
             ts.listaEdicao();
-       }
+        }
 
         while (numeroValidado == null) {
             System.out.print("Digite o id do serviço: ");
@@ -65,9 +64,6 @@ public class TipoServico {
                 }
             }
         }
- 
-            
-        
         if (!ed) {
             System.out.println("Erro ao editar o serviço.");
         } else {
@@ -83,7 +79,7 @@ public class TipoServico {
         boolean del = false;
         numeroValidado = null;
         
-        if (ts.listarTiposServico()== 0) {
+        if (ts.verificaRegistro()== 0) {
             System.out.println("\nNão há serviços cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -109,7 +105,6 @@ public class TipoServico {
                 }
             }
         }
-
         del = ts.apagarTipoServico(getIdServico());
         if (del == false) {
             System.out.println("Dado em uso, não é possível excuir");

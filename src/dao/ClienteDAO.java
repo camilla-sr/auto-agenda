@@ -65,11 +65,10 @@ public class ClienteDAO {
         }
     }
 
-    public int listarCliente() {
+    public void listarCliente() {
         String sqlConsulta = "SELECT * from cliente";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
-
+        
         try {
             while (lista.next()) {
                 System.out.println("---------------------------");
@@ -85,7 +84,6 @@ public class ClienteDAO {
                 System.out.println("Modelo do veículo: " + modelo);
                 System.out.println("Ano do veículo: " + ano);
                 System.out.println("---------------------------");
-                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -93,7 +91,6 @@ public class ClienteDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 
     public boolean apagarCliente(int idCliente) {
@@ -147,5 +144,22 @@ public class ClienteDAO {
         } finally {
             conn.desconectar();
         }
+    }
+    
+    public int verificaRegistro(){
+        String sqlConsulta = "SELECT * from cliente";  
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
+        try {
+            while (lista.next()) {
+                contagem++;
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+        return contagem;
     }
 }

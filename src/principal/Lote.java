@@ -59,7 +59,6 @@ public class Lote {
                 System.out.println("Quantidade inválida. Digite novamente.");
             }
         }
-
         setQntdGarrafa(numeroValidado);
         cad = lt.cadastrarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
         if (cad == false) {
@@ -77,7 +76,7 @@ public class Lote {
         setTipoOleo("");
 
         boolean ed = false;
-        if (lt.listarLote() == 0) {
+        if (lt.verificaRegistro() == 0) {
             System.out.println("\nNão há lotes de óleo cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -267,7 +266,6 @@ public class Lote {
                 System.out.println("Opção inválida. Tente novamente.");
                 return;
         }
-
         if (ed == false) {
             System.out.println("Erro ao editar o lote.");
         } else {
@@ -282,14 +280,13 @@ public class Lote {
     public void delLote() {
         boolean del = false;
 
-        if (lt.listarLote() == 0) {
+        if (lt.verificaRegistro() == 0) {
             System.out.println("\nNão há lotes de óleo cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
         } else {
             lt.listaEdicao();
         }
-        
         System.out.print("\nCódigo do lote que será apagado: ");
         String loteID = sc.nextLine();
         setCodLote(loteID);
@@ -299,7 +296,6 @@ public class Lote {
             String loteCod = sc.nextLine();
             setCodLote(loteCod);  // Atualiza o loteID antes da próxima validação
         }
-
         del = lt.apagarLote(getCodLote());
         if (del == false) {
             System.out.println("Dado em uso, não é possível excuir");

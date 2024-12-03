@@ -5,7 +5,6 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Cliente {
-
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -59,7 +58,7 @@ public class Cliente {
         boolean ed = false;
         numeroValidado = null;
 
-        if (cl.listarCliente() == 0) {
+        if (cl.verificaRegistro() == 0) {
             System.out.println("\nNão há clientes cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -184,7 +183,7 @@ public class Cliente {
         boolean del = false;
         numeroValidado = null;
         String clienteID = "";
-        if (cl.listarCliente() == 0) {
+        if (cl.verificaRegistro() == 0) {
             System.out.println("\nNão há clientes cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;

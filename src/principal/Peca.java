@@ -5,7 +5,6 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Peca {
-
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -56,7 +55,7 @@ public class Peca {
         numeroValidado = null; // Reinicializa a variável
         boolean ed = false;
 
-        if (pc.listarPecas() == 0) {
+        if (pc.verificaRegistro() == 0) {
             System.out.println("\nNão há peças cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -156,7 +155,7 @@ public class Peca {
         boolean del = false;
         numeroValidado = null;
 
-        if (pc.listarPecas() == 0) {
+        if (pc.verificaRegistro() == 0) {
             System.out.println("\nNão há peças cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -203,23 +202,18 @@ public class Peca {
     public int getIdPeca() {
         return idPeca;
     }
-
     public void setIdPeca(int idPeca) {
         this.idPeca = idPeca;
     }
-
     public String getDescricaoPeca() {
         return descricaoPeca;
     }
-
     public void setDescricaoPeca(String descricaoPeca) {
         this.descricaoPeca = descricaoPeca;
     }
-
     public int getQntdPeca() {
         return qntdPeca;
     }
-
     public void setQntdPeca(int qntdPeca) {
         this.qntdPeca = qntdPeca;
     }

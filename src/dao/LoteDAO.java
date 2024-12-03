@@ -31,43 +31,35 @@ public class LoteDAO {
         if (!novoTipoOleo.isEmpty() && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novaQntdGarrafa == 0) {
             sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "'";
         }
-        
         // QUANTIDADE GARRAFAS
         if (novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET und_lote = " + novaQntdGarrafa;
         }
-        
         // DATA DA COMPRA
         if (!novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "'";
         }
-
         // DATA DO VENCIMENTO
         if (!novaDataVencimento.isEmpty() && novaDataCompra.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_vencimento = '" + novaDataVencimento + "'";
         }
-        
         // TIPO ÓLEO E QUANTIDADE
         if (!novoTipoOleo.isEmpty() && novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty()) {
             sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "', und_lote = " + novaQntdGarrafa;
-        }
-        
+        }      
         // DATAS DE COMPRA E VENCIMENTO
         if (!novaDataVencimento.isEmpty() && !novaDataCompra.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "', data_vencimento = '" + novaDataVencimento + "'";
         }
-        
         // TODOS OS CAMPOS
         if (!novaDataCompra.isEmpty() && !novaDataVencimento.isEmpty() && novaQntdGarrafa != 0 && !novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "', data_vencimento = '" + novaDataVencimento
                     + "', und_lote = " + novaQntdGarrafa + ", tipo_oleo = '" + novoTipoOleo + "'";
         }
 
-        sqlEdit = sqlEdit + " WHERE cod_lote = '" + codLote + "'";
-        // Executo a query de atualização no banco
-        boolean resposta = conn.executar(sqlEdit);
+        sqlEdit = sqlEdit + " WHERE cod_lote = '" + codLote + "'";  // finalizo a variável com a query completa
 
-        // Retorno o resultado da operação
+        boolean resposta = conn.executar(sqlEdit);
         if (resposta) {
             conn.desconectar();
             return true;
@@ -77,11 +69,10 @@ public class LoteDAO {
         }
     }
 
-    public int listarLote() {
+    public void listarLote() {
         String sqlConsulta = "SELECT * from lote";
         System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
         try {
             while (lista.next()) {
                 String dataCompra = h.dataPadraoBR(lista.getString("data_compra"));
@@ -93,7 +84,6 @@ public class LoteDAO {
                 System.out.println("Quantidade de garrafas: \t" + lista.getInt("und_lote"));
                 System.out.println("Tipo de Óleo: \t\t\t" + lista.getString("tipo_oleo"));
                 System.out.println("---------------------------");
-                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -101,7 +91,6 @@ public class LoteDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 
     public boolean apagarLote(String codLote) {
@@ -154,5 +143,22 @@ public class LoteDAO {
         } finally {
             conn.desconectar();
         }
+    }
+    
+    public int verificaRegistro(){
+        String sqlConsulta = "SELECT * from lote";
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
+        try {
+            while (lista.next()) {
+                contagem++;
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+        return contagem;
     }
 }

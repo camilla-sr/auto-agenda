@@ -40,7 +40,7 @@ public class Agendamento {
         setDataCadastro(dataFormatada);
 
         System.out.print("\tAgendamento de Serviços\n");
-        if (cl.listarCliente() == 0) {
+        if (cl.verificaRegistro()== 0) {
             System.out.println("\nNão há clientes cadastrados para realizar agendamento");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -73,7 +73,7 @@ public class Agendamento {
             }
         }
 
-        if (ts.listarTiposServico() == 0) {
+        if (ts.verificaRegistro()== 0) {
             System.out.println("\nNão há serviços cadastrados para realizar agendamento");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -105,7 +105,7 @@ public class Agendamento {
             }
         }
 
-        if (f.listarFuncionarios() == 0) {
+        if (f.verificaRegistro() == 0) {
             System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -179,7 +179,7 @@ public class Agendamento {
         setObservacao(null);
 
         boolean ed = false;
-        if (ag.listaEdicao() == 0) {
+        if (ag.verificaRegistro() == 0) {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
@@ -209,7 +209,7 @@ public class Agendamento {
 
         switch (opcaoEdicao) {
             case 1:
-                if (cl.listarCliente() == 0) {
+                if (cl.verificaRegistro() == 0) {
                     System.out.println("\nNão há clientes cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -244,7 +244,7 @@ public class Agendamento {
                 break;
 
             case 2:
-                if (ts.listarTiposServico() == 0) {
+                if (ts.verificaRegistro() == 0) {
                     System.out.println("\nNão há serviços cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -279,7 +279,7 @@ public class Agendamento {
                 break;
 
             case 3:
-                if (f.listarFuncionarios()== 0) {
+                if (f.verificaRegistro()== 0) {
                     System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -346,7 +346,7 @@ public class Agendamento {
 
             case 6:
                 // Editar todos os campos
-                if (cl.listarCliente() == 0) {
+                if (cl.verificaRegistro() == 0) {
                     System.out.println("\nNão há clientes cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -370,7 +370,7 @@ public class Agendamento {
                 setCliente(clienteValidado);
 
                 // Validação do serviço
-                if (ts.listarTiposServico() == 0) {
+                if (ts.verificaRegistro() == 0) {
                     System.out.println("\nNão há serviços cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -393,7 +393,7 @@ public class Agendamento {
                 setServico(servicoValidado);
 
                 // Validação do funcionário
-                if (f.listarFuncionarios()== 0) {
+                if (f.verificaRegistro()== 0) {
                     System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -461,7 +461,7 @@ public class Agendamento {
         boolean del = false;
         Integer agendamentoValidado = null; // Reinicia a variável
 
-        if (ag.listaEdicao() == 0) {
+        if (ag.verificaRegistro() == 0) {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }

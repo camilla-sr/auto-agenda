@@ -33,7 +33,7 @@ public class Funcionario {
         numeroValidado = null;
         boolean ed = false;
         
-        if (f.listarFuncionarios()== 0) {
+        if (f.verificaRegistro()== 0) {
             System.out.println("\nNão há funcionários cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -100,7 +100,7 @@ public class Funcionario {
         boolean del = false;
         numeroValidado = null;
         
-        if (f.listarFuncionarios()== 0) {
+        if (f.verificaRegistro()== 0) {
             System.out.println("\nNão há funcionários cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;

@@ -20,19 +20,16 @@ public class FuncionarioDAO {
         }
     }
 
-// Método para listar todos os funcionários do banco de dados
-    public int listarFuncionarios() {
+    public void listarFuncionarios() {
         String sqlConsulta = "SELECT * FROM funcionario order by nome_funcionario";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         System.out.println("\n\tListando Funcionários");
-        int contagem = 0;
         try {
             while (lista.next()) {
                 int idFuncionario = lista.getInt("id_funcionario");
                 String nomeFuncionario = lista.getString("nome_funcionario");
 
                 System.out.println(nomeFuncionario);
-                contagem++;
             }
             System.out.println("---------------------------");
             lista.close();
@@ -41,7 +38,6 @@ public class FuncionarioDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 
     public boolean editarFuncionario(int idFuncionario, String novoNome) {
@@ -118,5 +114,22 @@ public class FuncionarioDAO {
         } finally {
             conn.desconectar();
         }
+    }
+    
+    public int verificaRegistro(){
+        String sqlConsulta = "SELECT * from funcionario";
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
+        try {
+            while (lista.next()) {
+                contagem++;
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+        return contagem;
     }
 }

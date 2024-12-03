@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import include.Helper;
 
 public class AgendamentoDAO {
-
     final Conexao conn = new Conexao();
     Helper h = new Helper();
 
@@ -32,41 +31,31 @@ public class AgendamentoDAO {
         if (cliente != 0 && servico == 0 && funcionario == 0 && dataPrevisaoEntrega == null && obs == null) {
             sqlEdit = "UPDATE agendamento SET fk_cliente = " + cliente;
         }
-
         // Atualizar apenas o Serviço
         if (servico != 0 && cliente == 0 && funcionario == 0 && dataPrevisaoEntrega == null && obs == null) {
             sqlEdit = "UPDATE agendamento SET fk_servico = " + servico;
         }
-
         // Atualizar apenas o Funcionário
         if (funcionario != 0 && cliente == 0 && servico == 0 && dataPrevisaoEntrega == null && obs == null) {
             sqlEdit = "UPDATE agendamento SET fk_funcionario = " + funcionario;
         }
-
         // Atualizar apenas a Data de Previsão de Entrega
         if (dataPrevisaoEntrega != null && cliente == 0 && servico == 0 && funcionario == 0 && obs == null) {
             sqlEdit = "UPDATE agendamento SET data_previsao_entrega = '" + dataPrevisaoEntrega + "'";
         }
-
         // Atualizar apenas a Observação
         if (obs != null && cliente == 0 && servico == 0 && funcionario == 0 && dataPrevisaoEntrega == null) {
             sqlEdit = "UPDATE agendamento SET observacao = '" + obs + "'";
         }
-
         // Atualizar todos os campos
         if (cliente != 0 && servico != 0 && funcionario != 0 && dataPrevisaoEntrega != null && obs != null) {
             sqlEdit = "UPDATE agendamento SET fk_cliente = " + cliente + ", fk_servico = " + servico
                     + ", fk_funcionario = " + funcionario + ", data_previsao_entrega = '" + dataPrevisaoEntrega
                     + "', observacao = '" + obs + "'";
         }
-
-        // Adicionar a cláusula WHERE
+        
         sqlEdit = sqlEdit + " WHERE id_agendamento = " + idAgendamento;
-
-        // Executar a query
         boolean resposta = conn.executar(sqlEdit);
-
-        // Retornar resultado
         if (resposta) {
             conn.desconectar();
             return true;
@@ -215,7 +204,7 @@ public class AgendamentoDAO {
         return insertSecundario;
     }
 
-    public int listaEdicao() {
+    public void listaEdicao() {
         String sqlConsulta = "SELECT "
                 + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.status_agendamento "
                 + "FROM agendamento a "
@@ -225,14 +214,9 @@ public class AgendamentoDAO {
 
         System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | PREVISÃO DE CONCLUSÃO | STATUS");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
-
+        String status = "";
         try {
             while (lista.next()) {
-                String status = "";
-                if (lista.getString("a.status_agendamento").equals("A")) {
-                    status = "Em aberto";
-                }
 
                 int id = lista.getInt("id_agendamento");
                 String funcionario = lista.getString("f.nome_funcionario");
@@ -242,9 +226,24 @@ public class AgendamentoDAO {
 
                 System.out.printf("%d.  %s  | %s | %s | %s \t\t | %s\n",
                         id, funcionario, servico, dataCadastro, dataPrevisao, status);
-                contagem++;
             }
 
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
+    }
+    
+    public int verificaRegistro(){
+        String sqlConsulta = "SELECT * from agendamento";
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
+        try {
+            while (lista.next()) {
+                contagem++;
+            }
             lista.close();
         } catch (SQLException e) {
             System.out.println("Erro ao processar resultado: " + e.getMessage());
