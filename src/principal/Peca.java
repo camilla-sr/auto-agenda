@@ -5,6 +5,7 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Peca {
+
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -16,8 +17,18 @@ public class Peca {
     private int qntdPeca;
 
     public void addPeca() {
-        System.out.print("Nome da peça:  ");
-        setDescricaoPeca(sc.nextLine());
+        System.out.println("\n\tCadastro de novas peças\n");
+        System.out.print("Nome da peça: ");
+        String peca = sc.nextLine();
+
+        while (peca.isEmpty()) {
+            System.out.println("Entrada vazia. Tente novamente\n");
+            System.out.print("Nome da peça: ");
+            peca = sc.nextLine();
+        }
+
+        // Define a descrição da peça após validar a entrada
+        setDescricaoPeca(peca);
         numeroValidado = null;
 
         while (numeroValidado == null) {
@@ -45,14 +56,14 @@ public class Peca {
         numeroValidado = null; // Reinicializa a variável
         boolean ed = false;
 
-        if (pc.listarPecas()== 0) {
+        if (pc.listarPecas() == 0) {
             System.out.println("\nNão há peças cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
-       }else{           
+        } else {
             pc.listaEdicao();
-       }
-        
+        }
+
         while (numeroValidado == null) {
             System.out.print("Digite o id da peça: ");
             String pecaID = sc.nextLine();
@@ -82,7 +93,7 @@ public class Peca {
 
         switch (opcaoEdicao) {
             case 0:
-                if(opcaoEdicao == 0){
+                if (opcaoEdicao == 0) {
                     System.out.println("Operação cancelada");
                     return;
                 }
@@ -144,15 +155,15 @@ public class Peca {
     public void delPeca() {
         boolean del = false;
         numeroValidado = null;
-        
-        if (pc.listarPecas()== 0) {
+
+        if (pc.listarPecas() == 0) {
             System.out.println("\nNão há peças cadastrados");
             System.out.println("Retornando para o menu principal.");
             return;
-       }else{           
+        } else {
             pc.listaEdicao();
         }
-        
+
         while (numeroValidado == null || validarPeca() == false) {
             System.out.print("Digite o código da peça: ");
             String pecaID = sc.nextLine();
@@ -162,7 +173,7 @@ public class Peca {
 
             if (numeroValidado == null) {
                 System.out.println("Digite apenas números.");
-            }else{
+            } else {
                 // verifico se o id é válido no banco
                 setIdPeca(numeroValidado);
                 if (!validarPeca()) {
@@ -192,18 +203,23 @@ public class Peca {
     public int getIdPeca() {
         return idPeca;
     }
+
     public void setIdPeca(int idPeca) {
         this.idPeca = idPeca;
     }
+
     public String getDescricaoPeca() {
         return descricaoPeca;
     }
+
     public void setDescricaoPeca(String descricaoPeca) {
         this.descricaoPeca = descricaoPeca;
     }
+
     public int getQntdPeca() {
         return qntdPeca;
     }
+
     public void setQntdPeca(int qntdPeca) {
         this.qntdPeca = qntdPeca;
     }
