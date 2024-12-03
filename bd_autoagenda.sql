@@ -37,8 +37,7 @@ create table estoque (
   id_estoque int(10) unsigned auto_increment primary key,
   fk_produto int(10) unsigned default null,
   fk_lote varchar(10) default null,
-  qntd_produto int(3) default 0,
-  qntd_total int(4) default 0,
+  quantidade int(3) default 0,
   data_ultima_atualizacao datetime default null,
   foreign key (fk_produto) references peca (id_peca),
   foreign key (fk_lote) references lote (cod_lote)
@@ -51,7 +50,7 @@ create table agendamento (
   fk_funcionario int(10) unsigned DEFAULT NULL,
   data_cadastro date default null,
   data_previsao_entrega date default null,
-  data_conclusao date default null,
+  data_conclusao_servico date default null,
   status_agendamento char(1) default 'A',
   observacao text default null,
   foreign key  (fk_cliente) references cliente (id_cliente),
