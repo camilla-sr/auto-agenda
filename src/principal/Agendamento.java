@@ -494,6 +494,44 @@ public class Agendamento {
             System.out.println("Agendamento excluído.");
         }
     }
+    
+    public void finalizar(){
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        // Formata a data como String
+        String datastr = hoje.format(formato);
+        setDataConclusao(datastr);
+        
+        if (ag.verificaRegistro()== 0) {
+            System.out.println("\nNão há serviços cadastrados para realizar agendamento");
+            System.out.println("Retornando para o menu principal.");
+            return;
+        } else {
+            ag.listaEdicao();
+        }
+        
+        do {
+            System.out.print("Digite o ID do agendamento: ");
+            String inputID = sc.nextLine();
+            Integer IDvalidado = h.isNumeric(inputID);
+
+            if (IDvalidado == null) {
+                System.out.println("ID inválido. Tente novamente.\n");
+                continue;
+            }
+            setIdAgendamento(IDvalidado);
+            if (!validarAgendamento()) {
+                System.out.println("Agendamento não encontrado. Tente novamente.\n");
+            }
+        } while (!validarAgendamento());
+        
+        boolean fn = false;
+        fn = ag.finalizarAgendamento(getIdAgendamento(), getDataConclusao());
+        if (fn == false) {
+            System.out.println("Erro ao finalizar agendamento.");
+        } else {
+            System.out.println("Agendamento Finalizado.");
+        }        
+    }
 
     // -------------- MÉTODOS DE APOIO ---------------
     public boolean validarAgendamento() {

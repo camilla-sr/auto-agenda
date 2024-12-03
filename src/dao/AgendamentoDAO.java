@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import include.Helper;
 
 public class AgendamentoDAO {
+
     final Conexao conn = new Conexao();
     Helper h = new Helper();
 
@@ -53,7 +54,7 @@ public class AgendamentoDAO {
                     + ", fk_funcionario = " + funcionario + ", data_previsao_entrega = '" + dataPrevisaoEntrega
                     + "', observacao = '" + obs + "'";
         }
-        
+
         sqlEdit = sqlEdit + " WHERE id_agendamento = " + idAgendamento;
         boolean resposta = conn.executar(sqlEdit);
         if (resposta) {
@@ -75,39 +76,36 @@ public class AgendamentoDAO {
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
-            if (lista.isBeforeFirst()) {
-                while (lista.next()) {
-                    int id = lista.getInt("id_agendamento");
-                    String idFuncionario = lista.getString("f.nome_funcionario");
-                    String idServico = lista.getString("s.desc_servico");
-                    String dataCadastro = lista.getString("a.data_cadastro");
-                    String dataPrevisaoEntrega = lista.getString("a.data_previsao_entrega");
-                    String dataConclusaoServico = lista.getString("a.data_conclusao");
-                    String statusAgendamento = lista.getString("a.status_agendamento");
-                    String observacao = lista.getString("a.observacao");
+            while (lista.next()) {
+                int id = lista.getInt("id_agendamento");
+                String idFuncionario = lista.getString("f.nome_funcionario");
+                String idServico = lista.getString("s.desc_servico");
+                String dataCadastro = lista.getString("a.data_cadastro");
+                String dataPrevisaoEntrega = lista.getString("a.data_previsao_entrega");
+                String dataConclusaoServico = lista.getString("a.data_conclusao");
+                String statusAgendamento = lista.getString("a.status_agendamento");
+                String observacao = lista.getString("a.observacao");
 
-                    String conclusao = "";
-                    if (dataConclusaoServico != null) {
-                        conclusao = h.dataPadraoBR(dataConclusaoServico);
-                    }
-
-                    String status = "";
-                    if (statusAgendamento.equals("A")) {
-                        status = "Em aberto";
-                    }
-
-                    System.out.println("ID: " + id);
-                    System.out.println("ID do funcionário: \t" + idFuncionario);
-                    System.out.println("Código do serviço: \t" + idServico);
-                    System.out.println("Data de cadastro: \t" + h.dataPadraoBR(dataCadastro));
-                    System.out.println("Previsão de entrega: \t" + h.dataPadraoBR(dataPrevisaoEntrega));
-                    System.out.println("Conclusão do serviço: \t" + conclusao);
-                    System.out.println("Status do agendamento: \t" + status);
-                    System.out.println("Observações: \t\t" + observacao);
-                    System.out.println("---------------------------");
+                String conclusao = "";
+                if (dataConclusaoServico != null) {
+                    conclusao = h.dataPadraoBR(dataConclusaoServico);
                 }
-            } else {
-                System.out.println("Nenhum resultado encontrado");
+
+                String status = "";
+                if (statusAgendamento.equals("A")) {
+                    status = "Em aberto";
+                } else if (statusAgendamento.equals("D")) {
+                    status = "Finalizado";
+                }
+
+                System.out.println("ID: " + id);
+                System.out.println("ID do funcionário: \t" + idFuncionario);
+                System.out.println("Código do serviço: \t" + idServico);
+                System.out.println("Data de cadastro: \t" + h.dataPadraoBR(dataCadastro));
+                System.out.println("Previsão de entrega: \t" + h.dataPadraoBR(dataPrevisaoEntrega));
+                System.out.println("Conclusão do serviço: \t" + conclusao);
+                System.out.println("Status do agendamento: \t" + status);
+                System.out.println("Observações: \t\t" + observacao);
                 System.out.println("---------------------------");
             }
             lista.close();
@@ -130,7 +128,7 @@ public class AgendamentoDAO {
             conn.desconectar();
             return false;
         }
-        
+
         String sqlDel = "DELETE FROM agendamento WHERE id_agendamento = " + idAgendamento;
         resposta = conn.executar(sqlDel);
 
@@ -145,16 +143,12 @@ public class AgendamentoDAO {
         return resposta;
     }
 
-    public boolean atualizarStatus(int idAgendamento, String novoEstado) {
+    public boolean finalizarAgendamento(int idAgendamento, String conclusao) {
         boolean resposta = false;
-        boolean agendamentoValida = validaID(idAgendamento);
 
-        if (!agendamentoValida) {
-            System.out.println("Agendamento não encontrado");
-        } else {
-            String sql = "UPDATE agendamento set status_agendamento = " + novoEstado + "";
-            resposta = conn.executar(sql);
-        }
+        String sql = "UPDATE agendamento set status_agendamento = 'D', data_conclusao = '" + conclusao + "' where id_agendamento = " + idAgendamento;
+        resposta = conn.executar(sql);
+
         if (resposta == true) {
             conn.desconectar();
             return true;
@@ -206,26 +200,40 @@ public class AgendamentoDAO {
 
     public void listaEdicao() {
         String sqlConsulta = "SELECT "
-                + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.status_agendamento "
+                + "a.id_agendamento, cl.nome_cliente, s.desc_servico, f.nome_funcionario, a.data_cadastro, a.data_previsao_entrega, a.data_conclusao, "
+                + "a.status_agendamento "
                 + "FROM agendamento a "
                 + "JOIN cliente cl ON cl.id_cliente = a.fk_cliente "
                 + "JOIN tipo_servico s ON a.fk_servico = s.id_servico "
                 + "JOIN funcionario f ON a.fk_funcionario = f.id_funcionario;";
 
-        System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | PREVISÃO DE CONCLUSÃO | STATUS");
+        System.out.println("\nID | RESPONSAVEL | SERVIÇO | AGENDADO EM | PREVISTO PARA | CONCLUÍDO EM | STATUS");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         String status = "";
+        String concluido = "";
+        String dataConclusao = "";
         try {
             while (lista.next()) {
-
                 int id = lista.getInt("id_agendamento");
                 String funcionario = lista.getString("f.nome_funcionario");
                 String servico = lista.getString("s.desc_servico");
                 String dataCadastro = h.dataPadraoBR(lista.getString("a.data_cadastro"));
                 String dataPrevisao = h.dataPadraoBR(lista.getString("a.data_previsao_entrega"));
+                if(lista.getString("a.data_conclusao") != null){
+                    dataConclusao = h.dataPadraoBR(lista.getString("a.data_conclusao"));
+                }else{
+                    dataConclusao = "Em aberto";
+                }
+                String statusAg = lista.getString("a.status_agendamento");
 
-                System.out.printf("%d.  %s  | %s | %s | %s \t\t | %s\n",
-                        id, funcionario, servico, dataCadastro, dataPrevisao, status);
+                if (statusAg.equals("A")) {
+                    status = "Em aberto";
+                } else if (statusAg.equals("D")) {
+                    status = "Finalizado";
+                }
+                
+                System.out.printf("%d.  %s  | %s | %s | %s | %s\t | %s\n",
+                        id, funcionario, servico, dataCadastro, dataPrevisao, dataConclusao, status);
             }
 
             lista.close();
@@ -235,8 +243,8 @@ public class AgendamentoDAO {
             conn.desconectar();
         }
     }
-    
-    public int verificaRegistro(){
+
+    public int verificaRegistro() {
         String sqlConsulta = "SELECT * from agendamento";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         int contagem = 0;
