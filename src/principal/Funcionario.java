@@ -110,21 +110,24 @@ public class Funcionario {
         
         while (numeroValidado == null) {
             System.out.print("Digite o ID do funcionário: ");
-            String funcionarioID = sc.nextLine();
+            String funcionario = sc.nextLine(); // Captura a entrada do funcionário
 
-            // atualizo minha variável para testar outra vez
-            numeroValidado = h.isNumeric(funcionarioID);
+            // Valida se a entrada é numérica
+            numeroValidado = h.isNumeric(funcionario);
 
             if (numeroValidado == null) {
-                System.out.println("Digite apenas números.");
-            }
-        }
+                System.out.println("ID inválido. Tente novamente.\n");
+            } else {
+                // Verifica se o funcionário é válido
+                boolean funcionarioValido = f.validaID(numeroValidado);
 
-        // verifico se o id é válido no banco
-        setIdFuncionario(numeroValidado);
-        if (!validarFuncionario()) {
-            System.out.println("ID não encontrado");
-            numeroValidado = null;  // Redefine para continuar o loop
+                if (!funcionarioValido) {
+                    System.out.println("Funcionário não encontrado. Tente novamente.\n");
+                    numeroValidado = null; // Redefine para continuar o loop
+                } else {
+                    setIdFuncionario(numeroValidado);
+                }
+            }
         }
 
         del = f.apagarFuncionario(getIdFuncionario());
