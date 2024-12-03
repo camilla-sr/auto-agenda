@@ -182,6 +182,8 @@ public class Agendamento {
         if (ag.verificaRegistro() == 0) {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
+        } else {
+            ag.listaEdicao();
         }
 
         do {
