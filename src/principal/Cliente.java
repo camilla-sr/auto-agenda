@@ -25,14 +25,14 @@ public class Cliente {
         System.out.print("Nome do Cliente: ");
         setNomeCliente(sc.nextLine());
 
-        System.out.print("WhatsApp do Cliente: ");
+        System.out.print("\nWhatsApp do Cliente: ");
         setWhatsappCliente(sc.nextLine());
 
-        System.out.print("Modelo do Carro: ");
+        System.out.print("\nModelo do Carro: ");
         setModeloCarro(sc.nextLine());
 
         while (numeroValidado == null) {
-            System.out.print("Ano do carro: ");
+            System.out.print("\nAno do carro: ");
             String ano = sc.nextLine();
 
             // Valida se a entrada é numérica
@@ -73,12 +73,12 @@ public class Cliente {
             numeroValidado = h.isNumeric(clienteID);
 
             if (numeroValidado == null) {
-                System.out.println("ID inválido. Digite novamente.");
+                System.out.println("ID inválido. Digite novamente.\n");
             } else {
                 // Verifica se o cliente existe no banco de dados
                 setIdCliente(numeroValidado);
                 if (!validarCliente()) {
-                    System.out.println("ID não encontrado. Tente novamente.");
+                    System.out.println("ID não encontrado. Tente novamente.\n");
                     numeroValidado = null;  // Redefine para continuar o loop
                 }
             }
@@ -153,7 +153,7 @@ public class Cliente {
                     numeroValidado = h.isNumeric(ano);
 
                     if (numeroValidado == null) {
-                        System.out.println("Formato inválido. Tente novamente.");
+                        System.out.println("Formato inválido. Tente novamente.\n");
                         numeroValidado = null;
                     } else {
                         setAnoCarro(numeroValidado);
@@ -199,12 +199,12 @@ public class Cliente {
             numeroValidado = h.isNumeric(clienteID);
 
             if (numeroValidado == null) {
-                System.out.println("ID inválido. Digite apenas números.");
+                System.out.println("ID inválido. Digite apenas números.\n");
             } else {
                 // com o o ID numérico, verifica no banco
                 setIdCliente(numeroValidado);
                 if (!validarCliente()) {
-                    System.out.println("Cliente não encontrado. Tente novamente.");
+                    System.out.println("Cliente não encontrado. Tente novamente.\n");
                     numeroValidado = null;
                 }
             }
