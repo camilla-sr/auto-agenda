@@ -33,10 +33,13 @@ public class Funcionario {
         numeroValidado = null;
         boolean ed = false;
         
-        if (f.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (f.listarFuncionarios()== 0) {
+            System.out.println("\nNão há funcionários cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
-        }
+       }else{           
+            f.listaEdicao();
+       }
         
         while (numeroValidado == null) {
             System.out.print("Digite o id do funcionário: ");
@@ -97,9 +100,12 @@ public class Funcionario {
         boolean del = false;
         numeroValidado = null;
         
-        if (f.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (f.listarFuncionarios()== 0) {
+            System.out.println("\nNão há funcionários cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
+       }else{           
+            f.listaEdicao();
         }
         
         while (numeroValidado == null) {

@@ -5,6 +5,7 @@ import include.Helper;
 import java.util.Scanner;
 
 public class Cliente {
+
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -41,7 +42,7 @@ public class Cliente {
             if (numeroValidado == null) {
                 System.out.println("Formato inválido. Tente novamente.");
                 numeroValidado = null;
-            }else{
+            } else {
                 setAnoCarro(anoCarro);
             }
         }
@@ -57,10 +58,13 @@ public class Cliente {
     public void edCliente() {
         boolean ed = false;
         numeroValidado = null;
-        
-        if (cl.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+
+        if (cl.listarCliente() == 0) {
+            System.out.println("\nNão há clientes cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
+        } else {
+            cl.listaEdicao();
         }
 
         while (numeroValidado == null) {
@@ -69,7 +73,7 @@ public class Cliente {
 
             // Valida se a entrada é numérica
             numeroValidado = h.isNumeric(clienteID);
-            
+
             if (numeroValidado == null) {
                 System.out.println("ID inválido. Digite novamente.");
             } else {
@@ -82,7 +86,7 @@ public class Cliente {
             }
         }
 
-        System.out.print("1. Nome do Cliente\t2. WhatsApp do Cliente"
+        System.out.print("\n1. Nome do Cliente\t2. WhatsApp do Cliente"
                 + "\n3. Modelo do Carro\t4. Ano do Carro\t\t5. Todos os campos\n0. Voltar");
         System.out.print("\n\nO que você deseja editar?  >>>>");
 
@@ -90,7 +94,7 @@ public class Cliente {
 
         switch (opcaoEdicao) {
             case 0:
-                if(opcaoEdicao == 0){
+                if (opcaoEdicao == 0) {
                     System.out.println("Operação cancelada");
                     return;
                 }
@@ -153,11 +157,11 @@ public class Cliente {
                     if (numeroValidado == null) {
                         System.out.println("Formato inválido. Tente novamente.");
                         numeroValidado = null;
-                    }else{
+                    } else {
                         setAnoCarro(anoCarro);
                     }
                 }
-             
+
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
                 break;
             default:
@@ -180,9 +184,12 @@ public class Cliente {
         boolean del = false;
         numeroValidado = null;
         String clienteID = "";
-        if (cl.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (cl.listarCliente() == 0) {
+            System.out.println("\nNão há clientes cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
+        } else {
+            cl.listaEdicao();
         }
 
         // Loop para validar a entrada numérica e a existência no banco
@@ -204,7 +211,7 @@ public class Cliente {
                 }
             }
         }
-        
+
         del = cl.apagarCliente(getIdCliente());
         if (del == false) {
             System.out.println("Dado em uso, não é possível excuir");

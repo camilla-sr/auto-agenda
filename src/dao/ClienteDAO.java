@@ -65,13 +65,14 @@ public class ClienteDAO {
         }
     }
 
-    public void listarCliente() {
+    public int listarCliente() {
         String sqlConsulta = "SELECT * from cliente";
-        System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
 
         try {
             while (lista.next()) {
+                System.out.println("---------------------------");
                 int id = lista.getInt("id_cliente");
                 String nome = lista.getString("nome_cliente");
                 String whatsapp = lista.getString("whatsapp_cliente");
@@ -84,6 +85,7 @@ public class ClienteDAO {
                 System.out.println("Modelo do veículo: " + modelo);
                 System.out.println("Ano do veículo: " + ano);
                 System.out.println("---------------------------");
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -91,6 +93,7 @@ public class ClienteDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 
     public boolean apagarCliente(int idCliente) {
@@ -126,19 +129,17 @@ public class ClienteDAO {
         return resposta;
     }
     
-    public int listaEdicao() {
+    public void listaEdicao() {
         String sqlConsulta = "SELECT * from cliente";
         
         System.out.println("\nID | CLIENTE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
         try {
             while (lista.next()) {
                 int id = lista.getInt("id_cliente");
                 String cliente = lista.getString("nome_cliente");
 
                 System.out.printf("%d. %s\n", id, cliente);
-                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -146,6 +147,5 @@ public class ClienteDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 }

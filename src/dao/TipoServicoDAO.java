@@ -21,10 +21,11 @@ public class TipoServicoDAO {
         }
     }
 
-    public void listarTiposServico() {
+    public int listarTiposServico() {
         String sqlConsulta = "SELECT * FROM tipo_servico order by desc_servico";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-
+        int contagem = 0;
+        
         try {
             System.out.println("\nServiços disponíveis");
             while (lista.next()) {
@@ -32,6 +33,7 @@ public class TipoServicoDAO {
                 String descricaoServico = lista.getString("desc_servico");
 
                 System.out.printf("%d. %s \n", idServico, descricaoServico);
+                contagem++;
             }
             System.out.println("---------------------------");
 
@@ -41,6 +43,7 @@ public class TipoServicoDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 
     public boolean editarTipoServico(int idServico, String novaDescricao) {
@@ -91,19 +94,17 @@ public class TipoServicoDAO {
         return resposta;
     }
     
-    public int listaEdicao() {
+    public void listaEdicao() {
         String sqlConsulta = "SELECT * from tipo_servico";
         
         System.out.println("\nID | SERVIÇO");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
         try {
             while (lista.next()) {
                 int id = lista.getInt("id_servico");
                 String servico = lista.getString("desc_servico");
 
                 System.out.printf("%d. %s\n", id, servico);
-                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -111,6 +112,5 @@ public class TipoServicoDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 }

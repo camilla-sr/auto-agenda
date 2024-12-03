@@ -45,10 +45,13 @@ public class Peca {
         numeroValidado = null; // Reinicializa a variável
         boolean ed = false;
 
-        if (pc.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (pc.listarPecas()== 0) {
+            System.out.println("\nNão há peças cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
-        }
+       }else{           
+            pc.listaEdicao();
+       }
         
         while (numeroValidado == null) {
             System.out.print("Digite o id da peça: ");
@@ -142,9 +145,12 @@ public class Peca {
         boolean del = false;
         numeroValidado = null;
         
-        if (pc.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (pc.listarPecas()== 0) {
+            System.out.println("\nNão há peças cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
+       }else{           
+            pc.listaEdicao();
         }
         
         while (numeroValidado == null || validarPeca() == false) {

@@ -55,10 +55,11 @@ public class PecaDAO {
         }
     }
 
-    public void listarPecas() {
+    public int listarPecas() {
         String sqlConsulta = "SELECT * from peca";
         System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -70,6 +71,7 @@ public class PecaDAO {
                 System.out.println("Peça: " + descricaoPeca);
                 System.out.println("Quantidade: " + quantidade);
                 System.out.println("---------------------------");
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -77,6 +79,7 @@ public class PecaDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 
     public boolean apagarPeca(int idPeca) {
@@ -112,11 +115,10 @@ public class PecaDAO {
         return resposta;
     }
 
-    public int listaEdicao() {
+    public void listaEdicao() {
         String sqlConsulta = "SELECT * from peca";
         System.out.println("\nID | DESCRIÇÃO | QUANTIDADE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
 
         try {
             while (lista.next()) {
@@ -125,7 +127,6 @@ public class PecaDAO {
                 int quantidade = lista.getInt("qntd_peca");
 
                 System.out.printf("%d. %s  \t-  \t%d\n", id, descricaoPeca, quantidade);
-                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -133,6 +134,5 @@ public class PecaDAO {
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 }

@@ -26,7 +26,7 @@ public class Agendamento {
     TipoServicoDAO ts = new TipoServicoDAO();
     FuncionarioDAO f = new FuncionarioDAO();
     ClienteDAO cl = new ClienteDAO();
-    
+
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
     Scanner num = new Scanner(System.in);
@@ -39,17 +39,18 @@ public class Agendamento {
         String dataFormatada = hoje.format(formato);
         setDataCadastro(dataFormatada);
 
-        System.out.print("\n\tAgendamento de Serviços");
-        
-       if (cl.listaEdicao() == 0) {
-            System.out.println("\t\tNão há clientes cadastrados para realizar agendamento");
-            System.out.println("\t\t\tRetornando para o menu principal.");
+        System.out.print("\tAgendamento de Serviços\n");
+        if (cl.listarCliente() == 0) {
+            System.out.println("\nNão há clientes cadastrados para realizar agendamento");
+            System.out.println("Retornando para o menu principal.");
             return;
-       }
-       
-       //cliente / serviço / funcionário
+        } else {
+            cl.listaEdicao();
+        }
+
+        //cliente / serviço / funcionário
         Integer clienteValidado = null;
-         
+
         while (clienteValidado == null) {
             System.out.print("Cliente: ");
             String novocliente = sc.nextLine(); // Captura a entrada do cliente
@@ -65,19 +66,21 @@ public class Agendamento {
 
                 if (!clienteValido) {
                     System.out.println("Cliente não encontrado. Tente novamente.");
-                    clienteValidado = null;       
-                }else{
+                    clienteValidado = null;
+                } else {
                     setCliente(clienteValidado);
                 }
             }
         }
 
-        if(ts.listaEdicao() == 0){
-            System.out.println("\t\tNão há serviços cadastrados para realizar agendamento");
-            System.out.println("\t\t\tRetornando para o menu principal.");
+        if (ts.listarTiposServico() == 0) {
+            System.out.println("\nNão há serviços cadastrados para realizar agendamento");
+            System.out.println("Retornando para o menu principal.");
             return;
+        } else {
+            ts.listaEdicao();
         }
-       
+
         Integer servicoValidado = null; // Reinicia a variável
 
         while (servicoValidado == null) {
@@ -96,20 +99,22 @@ public class Agendamento {
                 if (!servicoValido) {
                     System.out.println("Serviço não encontrado. Tente novamente.\n");
                     servicoValidado = null; // Redefine para continuar o loop
-                }else{
+                } else {
                     setServico(servicoValidado);
                 }
             }
         }
 
-        if(f.listaEdicao() == 0){
-            System.out.println("\t\tNão há funcionários cadastrados para realizar agendamento");
-            System.out.println("\t\tRetornando para o menu principal.");
+        if (f.listarFuncionarios() == 0) {
+            System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
+            System.out.println("Retornando para o menu principal.");
             return;
+        } else {
+            f.listaEdicao();
         }
-        
+
         Integer funcionarioValidado = null; // Reinicia a variável
-        
+
         while (funcionarioValidado == null) {
             System.out.print("Novo funcionário: ");
             String novoFuncionario = sc.nextLine(); // Captura a entrada do funcionário
@@ -126,7 +131,7 @@ public class Agendamento {
                 if (!funcionarioValido) {
                     System.out.println("Funcionário não encontrado. Tente novamente.\n");
                     funcionarioValidado = null; // Redefine para continuar o loop
-                }else{
+                } else {
                     setFuncionario(funcionarioValidado);
                 }
             }
@@ -204,7 +209,14 @@ public class Agendamento {
 
         switch (opcaoEdicao) {
             case 1:
-                cl.listaEdicao(); // Exibe a lista de edição de clientes
+                if (cl.listarCliente() == 0) {
+                    System.out.println("\nNão há clientes cadastrados para realizar agendamento");
+                    System.out.println("Retornando para o menu principal.");
+                    return;
+                } else {
+                    cl.listaEdicao();
+                }
+
                 Integer clienteValidado = null; // Reinicia a variável
 
                 while (clienteValidado == null) {
@@ -232,7 +244,14 @@ public class Agendamento {
                 break;
 
             case 2:
-                ts.listaEdicao(); // Exibe a lista de tipos de serviço
+                if (ts.listarTiposServico() == 0) {
+                    System.out.println("\nNão há serviços cadastrados para realizar agendamento");
+                    System.out.println("Retornando para o menu principal.");
+                    return;
+                } else {
+                    ts.listaEdicao();
+                }
+
                 Integer servicoValidado = null; // Reinicia a variável
 
                 while (servicoValidado == null) {
@@ -260,7 +279,14 @@ public class Agendamento {
                 break;
 
             case 3:
-                f.listaEdicao(); // Exibe a lista de funcionários
+                if (f.listarFuncionarios()== 0) {
+                    System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
+                    System.out.println("Retornando para o menu principal.");
+                    return;
+                } else {
+                    f.listaEdicao();
+                }
+
                 Integer funcionarioValidado = null; // Reinicia a variável
 
                 while (funcionarioValidado == null) {
@@ -320,8 +346,14 @@ public class Agendamento {
 
             case 6:
                 // Editar todos os campos
+                if (cl.listarCliente() == 0) {
+                    System.out.println("\nNão há clientes cadastrados para realizar agendamento");
+                    System.out.println("Retornando para o menu principal.");
+                    return;
+                } else {
+                    cl.listaEdicao();
+                }
 
-                cl.listaEdicao();
                 clienteValidado = null;
                 while (clienteValidado == null) {
                     System.out.print("Novo cliente: ");
@@ -338,7 +370,13 @@ public class Agendamento {
                 setCliente(clienteValidado);
 
                 // Validação do serviço
-                ts.listaEdicao();
+                if (ts.listarTiposServico() == 0) {
+                    System.out.println("\nNão há serviços cadastrados para realizar agendamento");
+                    System.out.println("Retornando para o menu principal.");
+                    return;
+                } else {
+                    ts.listaEdicao();
+                }
                 servicoValidado = null;
                 while (servicoValidado == null) {
                     System.out.print("Novo serviço: ");
@@ -355,7 +393,13 @@ public class Agendamento {
                 setServico(servicoValidado);
 
                 // Validação do funcionário
-                f.listaEdicao();
+                if (f.listarFuncionarios()== 0) {
+                    System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
+                    System.out.println("Retornando para o menu principal.");
+                    return;
+                } else {
+                    f.listaEdicao();
+                }
                 funcionarioValidado = null;
                 while (funcionarioValidado == null) {
                     System.out.print("Novo funcionário: ");
@@ -425,7 +469,7 @@ public class Agendamento {
         while (agendamentoValidado == null) {
             System.out.print("Digite o ID do agendamento: ");
             String agenda = sc.nextLine(); // Captura a entrada do agendamento
-            
+
             // Valida se a entrada é numérica
             agendamentoValidado = h.isNumeric(agenda);
 
@@ -441,7 +485,6 @@ public class Agendamento {
                 }
             }
         }
-
         // verifico se o id é válido no banco
         setIdAgendamento(agendamentoValidado);
         del = ag.apagarAgendamento(getIdAgendamento());
@@ -465,71 +508,54 @@ public class Agendamento {
     public int getIdAgendamento() {
         return idAgendamento;
     }
-
     public void setIdAgendamento(int idAgendamento) {
         this.idAgendamento = idAgendamento;
     }
-
     public int getCliente() {
         return cliente;
     }
-
     public void setCliente(int cliente) {
         this.cliente = cliente;
     }
-
     public int getServico() {
         return servico;
     }
-
     public void setServico(int servico) {
         this.servico = servico;
     }
-
     public int getFuncionario() {
         return funcionario;
     }
-
     public void setFuncionario(int funcionario) {
         this.funcionario = funcionario;
     }
-
     public String getDataCadastro() {
         return dataCadastro;
     }
-
     public void setDataCadastro(String dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
-
     public String getDataPrevisaoEntrega() {
         return dataPrevisaoEntrega;
     }
-
     public void setDataPrevisaoEntrega(String dataPrevisaoEntrega) {
         this.dataPrevisaoEntrega = dataPrevisaoEntrega;
     }
-
     public String getDataConclusao() {
         return dataConclusao;
     }
-
     public void setDataConclusao(String dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
-
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
-
     public String getObservacao() {
         return observacao;
     }
-
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }

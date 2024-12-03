@@ -77,10 +77,11 @@ public class LoteDAO {
         }
     }
 
-    public void listarLote() {
+    public int listarLote() {
         String sqlConsulta = "SELECT * from lote";
         System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
+        int contagem = 0;
         try {
             while (lista.next()) {
                 String dataCompra = h.dataPadraoBR(lista.getString("data_compra"));
@@ -92,6 +93,7 @@ public class LoteDAO {
                 System.out.println("Quantidade de garrafas: \t" + lista.getInt("und_lote"));
                 System.out.println("Tipo de Óleo: \t\t\t" + lista.getString("tipo_oleo"));
                 System.out.println("---------------------------");
+                contagem++;
             }
             lista.close();
         } catch (SQLException e) {
@@ -99,6 +101,7 @@ public class LoteDAO {
         } finally {
             conn.desconectar();
         }
+        return contagem;
     }
 
     public boolean apagarLote(String codLote) {
@@ -134,12 +137,10 @@ public class LoteDAO {
         return resposta;
     }
 
-    public int listaEdicao() {
+    public void listaEdicao() {
         String sqlConsulta = "SELECT * from lote";
         System.out.println("\nCÓDIGO | TIPO DE ÓLEO | DATA DA COMPRA");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        int contagem = 0;
-
         try {
             while (lista.next()) {
                 String cod = lista.getString("cod_lote");
@@ -147,13 +148,11 @@ public class LoteDAO {
                 String tipoOleo = lista.getString("tipo_oleo");
 
                 System.out.printf("%s |  %s  | %s\n", cod, tipoOleo, dataCompra);
-                contagem++;
             }
         } catch (SQLException e) {
             System.out.println("Erro ao processar resultado: " + e.getMessage());
         } finally {
             conn.desconectar();
         }
-        return contagem;
     }
 }

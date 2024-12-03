@@ -33,10 +33,13 @@ public class TipoServico {
         boolean ed = false;
         setIdServico(idServico);
         
-        if (ts.listaEdicao()== 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (ts.listarTiposServico()== 0) {
+            System.out.println("\nNão há serviços cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
-        }
+       }else{           
+            ts.listaEdicao();
+       }
 
         while (numeroValidado == null) {
             System.out.print("Digite o id do serviço: ");
@@ -80,10 +83,13 @@ public class TipoServico {
         boolean del = false;
         numeroValidado = null;
         
-        if (ts.listaEdicao() == 0) {
-            System.out.println("\t\t\tNenhum dado encontrado");
+        if (ts.listarTiposServico()== 0) {
+            System.out.println("\nNão há serviços cadastrados");
+            System.out.println("Retornando para o menu principal.");
             return;
-        }
+       }else{           
+            ts.listaEdicao();
+       }
         
         // Loop para validar a entrada numérica e a existência no banco
         while (numeroValidado == null || validarServico() == false) {
