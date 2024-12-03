@@ -50,7 +50,7 @@ create table agendamento (
   fk_funcionario int(10) unsigned DEFAULT NULL,
   data_cadastro date default null,
   data_previsao_entrega date default null,
-  data_conclusao_servico date default null,
+  data_conclusao date default null,
   status_agendamento char(1) default 'A',
   observacao text default null,
   foreign key  (fk_cliente) references cliente (id_cliente),
