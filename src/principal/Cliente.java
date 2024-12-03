@@ -15,12 +15,12 @@ public class Cliente {
     private String nomeCliente;
     private String whatsappCliente;
     private String modeloCarro;
-    private String anoCarro;
+    private int anoCarro;
 
     public void addCliente() {
         boolean cad = false;
 
-        System.out.println("Cadastrando novo cliente");
+        System.out.println("\tCadastrando novo cliente\n");
 
         System.out.print("Nome do Cliente: ");
         setNomeCliente(sc.nextLine());
@@ -33,19 +33,18 @@ public class Cliente {
 
         while (numeroValidado == null) {
             System.out.print("Ano do carro: ");
-            anoCarro = sc.nextLine();
+            String ano = sc.nextLine();
 
             // Valida se a entrada é numérica
-            numeroValidado = h.isNumeric(anoCarro);
+            numeroValidado = h.isNumeric(ano);
 
             if (numeroValidado == null) {
-                System.out.println("Formato inválido. Tente novamente.");
+                System.out.println("Formato inválido. Tente novamente.\n");
                 numeroValidado = null;
-            } else {
-                setAnoCarro(anoCarro);
             }
         }
 
+        setAnoCarro(numeroValidado);
         cad = cl.cadastrarCliente(getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
         if (cad == false) {
             System.out.println("Algo deu errado");
@@ -101,19 +100,19 @@ public class Cliente {
             case 1:
                 System.out.print("Nome: ");
                 setNomeCliente(sc.nextLine());
-                ed = cl.editarCliente(getIdCliente(), getNomeCliente(), null, null, null);
+                ed = cl.editarCliente(getIdCliente(), getNomeCliente(), null, null, 0);
                 break;
 
             case 2:
                 System.out.print("WhatsApp: ");
                 setWhatsappCliente(sc.nextLine());
-                ed = cl.editarCliente(getIdCliente(), null, getWhatsappCliente(), null, null);
+                ed = cl.editarCliente(getIdCliente(), null, getWhatsappCliente(), null, 0);
                 break;
 
             case 3:
                 System.out.print("Modelo do carro: ");
                 setModeloCarro(sc.nextLine());
-                ed = cl.editarCliente(getIdCliente(), null, null, getModeloCarro(), null);
+                ed = cl.editarCliente(getIdCliente(), null, null, getModeloCarro(), 0);
                 break;
 
             case 4:
@@ -121,18 +120,18 @@ public class Cliente {
 
                 while (numeroValidado == null) {
                     System.out.print("Ano do carro: ");
-                    anoCarro = sc.nextLine();
+                    String ano = sc.nextLine();
 
                     // Valida se a entrada é numérica
-                    numeroValidado = h.isNumeric(anoCarro);
+                    numeroValidado = h.isNumeric(ano);
 
                     if (numeroValidado == null) {
-                        System.out.println("Formato inválido. Tente novamente.");
+                        System.out.println("Formato inválido. Tente novamente.\n");
                         numeroValidado = null;
                     }
                 }
 
-                setAnoCarro(anoCarro); // Usa o valor validado
+                setAnoCarro(numeroValidado); // Usa o valor validado
                 ed = cl.editarCliente(getIdCliente(), null, null, null, getAnoCarro());
                 break;
 
@@ -148,16 +147,16 @@ public class Cliente {
 
                 while (numeroValidado == null) {
                     System.out.print("Ano do carro: ");
-                    anoCarro = sc.nextLine();
+                    String ano = sc.nextLine();
 
                     // Valida se a entrada é numérica
-                    numeroValidado = h.isNumeric(anoCarro);
+                    numeroValidado = h.isNumeric(ano);
 
                     if (numeroValidado == null) {
                         System.out.println("Formato inválido. Tente novamente.");
                         numeroValidado = null;
                     } else {
-                        setAnoCarro(anoCarro);
+                        setAnoCarro(numeroValidado);
                     }
                 }
 
@@ -253,10 +252,10 @@ public class Cliente {
     public void setModeloCarro(String modeloCarro) {
         this.modeloCarro = modeloCarro;
     }
-    public String getAnoCarro() {
+    public int getAnoCarro() {
         return anoCarro;
     }
-    public void setAnoCarro(String anoCarro) {
+    public void setAnoCarro(int anoCarro) {
         this.anoCarro = anoCarro;
     }
     // ------------------------------------------------

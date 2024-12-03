@@ -8,7 +8,7 @@ public class ClienteDAO {
     final Conexao conn = new Conexao();
 
     //Métodos Principais
-    public boolean cadastrarCliente(String nomeCliente, String whatsappCliente, String modeloCarro, String anoCarro) {
+    public boolean cadastrarCliente(String nomeCliente, String whatsappCliente, String modeloCarro, int anoCarro) {
         boolean resposta = false;
         
         String sqlInserir = "INSERT into cliente (nome_cliente, whatsapp_cliente, modelo_carro, ano_carro)"
@@ -24,32 +24,28 @@ public class ClienteDAO {
         }
     }
 
-    public boolean editarCliente(int idCliente, String novoNomeCliente, String novoWhatsappCliente, String novoModeloCarro, String novoAnoCarro) {
+    public boolean editarCliente(int idCliente, String novoNomeCliente, String novoWhatsappCliente, String novoModeloCarro, int novoAnoCarro) {
         boolean resposta = false;
         String sqlEdit = "";
         
         // Muda o nome do cliente
-        if(novoNomeCliente != null && novoWhatsappCliente == null && novoModeloCarro == null && novoAnoCarro == null){
+        if(novoNomeCliente != null && novoWhatsappCliente == null && novoModeloCarro == null && novoAnoCarro == 0){
             sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "'";
         }
-        
         //Muda o whatsapp do cliente
-        if(novoWhatsappCliente != null && novoNomeCliente == null && novoModeloCarro == null && novoAnoCarro == null){
+        if(novoWhatsappCliente != null && novoNomeCliente == null && novoModeloCarro == null && novoAnoCarro == 0){
             sqlEdit = "UPDATE cliente set whatsapp_cliente = '" + novoWhatsappCliente + "'";            
         }
-        
         // Muda o modelo do carro
-        if(novoModeloCarro != null && novoNomeCliente == null && novoWhatsappCliente == null && novoAnoCarro == null){
+        if(novoModeloCarro != null && novoNomeCliente == null && novoWhatsappCliente == null && novoAnoCarro == 0){
             sqlEdit = "UPDATE cliente set modelo_carro = '" + novoModeloCarro + "'";                        
         }
-        
         //Muda o ano do carro
-        if(novoAnoCarro != null && novoNomeCliente == null && novoWhatsappCliente == null && novoModeloCarro == null){
+        if(novoAnoCarro != 0 && novoNomeCliente == null && novoWhatsappCliente == null && novoModeloCarro == null){
             sqlEdit = "UPDATE cliente set ano_carro = " + novoAnoCarro;                        
         }
-        
         // Muda tudo
-        if(novoAnoCarro != null && novoNomeCliente != null && novoWhatsappCliente != null && novoModeloCarro != null){
+        if(novoAnoCarro != 0 && novoNomeCliente != null && novoWhatsappCliente != null && novoModeloCarro != null){
             sqlEdit = "UPDATE cliente set nome_cliente = '" + novoNomeCliente + "', whatsapp_cliente = '" + novoWhatsappCliente
                     + "', modelo_carro = '" + novoModeloCarro + "', ano_carro = '" + novoAnoCarro + "'";                        
         }
