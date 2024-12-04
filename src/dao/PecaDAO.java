@@ -34,7 +34,7 @@ public class PecaDAO {
             }
 
             // dados prontos, preparo a inserção na tabela do estoque
-            String sqlInserirEstoque = "INSERT INTO estoque (fk_produto, fk_lote, quantidade, data_ultima_atualizacao)"
+            String sqlInserirEstoque = "INSERT INTO estoque (fk_peca, fk_lote, quantidade, data_ultima_atualizacao)"
                     + " VALUES (" + idPeca + ", " + null + ", " + qntdPeca + ", '" + dataHoje + "')";
             boolean estoqueInserido = conn.executar(sqlInserirEstoque);
 
@@ -62,16 +62,16 @@ public class PecaDAO {
         }
         // Muda apenas a quantidade
         if (novaQntd != 0 && (novaDescricao == null || novaDescricao.isEmpty())) {
-            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_produto = " + idPeca + "";
+            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_peca = " + idPeca + "";
         }
         // Muda ambos
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd != 0) {
-            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + " where id_peca = " + idPeca + "";
-            sqlEdit2 = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_produto = " + idPeca + "";
+            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "' where id_peca = " + idPeca + "";
+            sqlEdit2 = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_peca = " + idPeca + "";
         }
 
         boolean resposta = false;
-
+        System.out.println(sqlEdit);
         if (!sqlEdit.isEmpty()) {
             resposta = conn.executar(sqlEdit);
             if (!resposta) {
@@ -80,6 +80,8 @@ public class PecaDAO {
                 return false; // Retorna false caso falhe
             }
         }
+        System.out.println(sqlEdit);
+        System.out.println(sqlEdit2);
         // Executa a atualização da quantidade, se necessário
         if (!sqlEdit2.isEmpty()) {
             resposta = conn.executar(sqlEdit2);
