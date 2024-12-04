@@ -1,11 +1,13 @@
 package dao;
 
 import include.Conexao;
+import include.Helper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuxiliarProdutosUsadosDAO {
     final Conexao conn = new Conexao();
+    Helper h = new Helper();
     private int idProdutoUsado;
     private int estoque;
     private int agendamento;
@@ -103,6 +105,66 @@ public class AuxiliarProdutosUsadosDAO {
         }
         return resposta;
     }
+    
+    public boolean atualizarQuantidadeEstoque(int idEstoque, int quantidadeUsada) {        
+        String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada 
+                + " WHERE id_estoque = " + idEstoque + " AND quantidade >= " + quantidadeUsada;
+
+        boolean resposta = conn.executar(sqlAtualizar);
+        if (!resposta) {
+            System.out.println("Erro: Não foi possível atualizar o estoque.\n Verifique se a quantidade é suficiente.\n");
+        }
+        return resposta;
+    }
+
+    public boolean atualizarQuantidadePeca(int idPeca, int quantidadeUsada) {
+        String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada 
+                + " WHERE fk_peca = " + idPeca + " AND quantidade >= " + quantidadeUsada;
+
+        boolean resposta = conn.executar(sqlAtualizar);
+        if (!resposta) {
+            System.out.println("Erro: Não foi possível atualizar a quantidade da peça.\n Verifique se a quantidade é suficiente.\n");
+        }
+        return resposta;
+    }
+
+    public Integer buscarIdEstoque(String identificador) {
+        Integer idEstoque = null;
+
+        // Verificar se o identificador é numérico (para peça) ou não (para lote)
+        Integer idPeca = h.isNumeric(identificador);  // Utilizando seu método isNumeric
+
+        if (idPeca != null) {
+            // Caso seja numérico, busca pelo ID da peça
+            String sqlBusca = "SELECT id_estoque FROM estoque WHERE fk_peca = " + idPeca;
+            ResultSet rs = conn.executarConsulta(sqlBusca);
+
+            try {
+                if (rs != null && rs.next()) {
+                    idEstoque = rs.getInt("id_estoque");
+                }
+                rs.close();
+            } catch (SQLException e) {
+                System.out.println("Erro ao buscar ID do estoque para peça: " + e.getMessage());
+            }
+        } else {
+            // Caso não seja numérico, busca pelo código do lote
+            String sqlBusca = "SELECT id_estoque FROM estoque WHERE fk_lote = '" + identificador + "'";
+            ResultSet rs = conn.executarConsulta(sqlBusca);
+
+            try {
+                if (rs != null && rs.next()) {
+                    idEstoque = rs.getInt("id_estoque");
+                }
+                rs.close();
+            } catch (SQLException e) {
+                System.out.println("Erro ao buscar ID do estoque para lote: " + e.getMessage());
+            }
+        }
+
+        return idEstoque;
+    }
+
     
     // -------------- GETTERS E SETTERS --------------
     public int getIdProdutoUsado() {

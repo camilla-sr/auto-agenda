@@ -22,8 +22,8 @@ public class Interface {
     // ------------------------------------------------
     public void inicio() {
         System.out.println("\tBem-Vindo ao Auto Agenda");
-        System.out.println("1. Cadastrar Itens\t 2. Editar Itens\n"
-                + "3. Apagar Itens\t\t 4. Consultar Itens\t 5. Concluir Agendamento\n"
+        System.out.println("1. Cadastrar Itens\t 2. Editar Itens\t 3. Apagar Itens\n"
+                + "4. Consultar Itens\t 5. Concluir Agendamento\t 6. Relatórios\n"
                 + "0. Sair");
 
         System.out.print("\nVocê pode navegar pelo sistema"
@@ -59,6 +59,10 @@ public class Interface {
                 System.out.println("\nConcluir agendamentos");
                 ag.finalizar();
                 prosseguir();
+                break;
+            case 6:
+                System.out.println("\nGerar Relatórios");
+                relatorios();
                 break;
             case 0:
                 System.exit(0);
@@ -294,9 +298,16 @@ public class Interface {
                 break;
         }
     }
-//    public void relatorios(){
-//        System.out.println("1. Peças");
-//        int tela = num.nextInt();
+    public void relatorios(){
+        System.out.println("1. ");
+        
+        String tela = sc.nextLine();
+        telaValida = h.isNumeric(tela);
+        while (telaValida == null) {
+            System.out.println("Opção inválida. Tente novamente\n");
+            prosseguir();
+            telaValida = null;
+        }
 //        
 //        switch(tela){
 //            case 1:
@@ -308,7 +319,7 @@ public class Interface {
 //                inicio();
 //                break;
 //        }
-//    }
+    }
 
     // método para abrir pergunta antes de continuar o fluxo do sistema
     private void prosseguir() {
