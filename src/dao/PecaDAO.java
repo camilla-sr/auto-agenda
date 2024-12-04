@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PecaDAO {
-
     final Conexao conn = new Conexao();
 
     // Métodos Principais
@@ -167,17 +166,18 @@ public class PecaDAO {
     }
 
     public void listaEdicao() {
-        String sqlConsulta = "SELECT p.id_peca, p.desc_peca, e.quantidade from peca p join estoque e on p.id_peca = e.fk_peca";
-        System.out.println("\nID | DESCRIÇÃO | QUANTIDADE");
+        String sqlConsulta = "SELECT p.id_peca, e.id_estoque, p.desc_peca, e.quantidade from peca p join estoque e on p.id_peca = e.fk_peca";
+        System.out.println("\nID Peça | ID Estoque | PEÇA | QUANTIDADE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
             while (lista.next()) {
                 int id = lista.getInt("id_peca");
+                int estoque = lista.getInt("e.id_estoque");
                 String descricaoPeca = lista.getString("p.desc_peca");
                 int quantidade = lista.getInt("e.quantidade");
 
-                System.out.printf("%d. %s  \t-  \t%d\n", id, descricaoPeca, quantidade);
+                System.out.printf("%d\t | %d \t | %s  \t |  \t%d\n", id, estoque, descricaoPeca, quantidade);
             }
             lista.close();
         } catch (SQLException e) {
