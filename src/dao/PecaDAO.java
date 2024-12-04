@@ -71,7 +71,6 @@ public class PecaDAO {
         }
 
         boolean resposta = false;
-        System.out.println(sqlEdit);
         if (!sqlEdit.isEmpty()) {
             resposta = conn.executar(sqlEdit);
             if (!resposta) {
@@ -80,8 +79,7 @@ public class PecaDAO {
                 return false; // Retorna false caso falhe
             }
         }
-        System.out.println(sqlEdit);
-        System.out.println(sqlEdit2);
+
         // Executa a atualização da quantidade, se necessário
         if (!sqlEdit2.isEmpty()) {
             resposta = conn.executar(sqlEdit2);

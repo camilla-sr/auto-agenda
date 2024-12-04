@@ -76,7 +76,7 @@ public class Cliente {
         }
 
         while (numeroValidado == null) {
-            System.out.print("Digite o id do cliente que deseja editar: ");
+            System.out.print("Digite o ID do cliente que deseja editar: ");
             String clienteID = sc.nextLine();
 
             // Valida se a entrada é numérica
@@ -120,12 +120,12 @@ public class Cliente {
 
                     if(whatsappCliente.length() > 15){
                         System.out.println("Número inválido. Tente novamente");
-                    }else{
-                        setWhatsappCliente(whatsappCliente);
-                        break;
                     }
                 }while(whatsappCliente.length() > 15);
-
+                setWhatsappCliente(whatsappCliente);
+                ed = cl.editarCliente(getIdCliente(), null, getWhatsappCliente(), null, 0);
+                break;
+                
             case 3:
                 System.out.print("Modelo do carro: ");
                 setModeloCarro(sc.nextLine());
@@ -153,6 +153,7 @@ public class Cliente {
                 break;
 
             case 5:
+                numeroValidado = null;
                 System.out.print("Nome: ");
                 setNomeCliente(sc.nextLine());
 
@@ -162,11 +163,9 @@ public class Cliente {
 
                     if(whatsappCliente.length() > 15){
                         System.out.println("Número inválido. Tente novamente");
-                    }else{
-                        setWhatsappCliente(whatsappCliente);
-                        break;
                     }
                 }while(whatsappCliente.length() > 15);
+                setWhatsappCliente(whatsappCliente);
 
                 System.out.print("Modelo do Carro: ");
                 setModeloCarro(sc.nextLine());
@@ -179,10 +178,11 @@ public class Cliente {
                     numeroValidado = h.isNumeric(ano);
 
                     if (numeroValidado == null || ano.length() >= 5) {
-                        System.out.println("Formato inválido. Tente novamente.");
+                        System.out.println("Formato inválido. Tente novamente.\n");
                         numeroValidado = null;
                     }
                 }while (numeroValidado == null);
+                setAnoCarro(numeroValidado); // Usa o valor validado
 
                 ed = cl.editarCliente(getIdCliente(), getNomeCliente(), getWhatsappCliente(), getModeloCarro(), getAnoCarro());
                 break;

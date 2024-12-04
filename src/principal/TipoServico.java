@@ -41,7 +41,7 @@ public class TipoServico {
         }
 
         while (numeroValidado == null) {
-            System.out.print("Digite o id do serviço: ");
+            System.out.print("Digite o ID do serviço: ");
             String servicoID = sc.nextLine();
             setIdServico(idServico);
 

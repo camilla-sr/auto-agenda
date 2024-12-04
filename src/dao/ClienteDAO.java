@@ -65,11 +65,10 @@ public class ClienteDAO {
     public void listarCliente() {
         String sqlConsulta = "SELECT * from cliente";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-
+        System.out.println("---------------------------");
         try {
             if (lista != null) {
                 while (lista.next()) {
-                    System.out.println("---------------------------");
                     int id = lista.getInt("id_cliente");
                     String nome = lista.getString("nome_cliente");
                     String whatsapp = lista.getString("whatsapp_cliente");

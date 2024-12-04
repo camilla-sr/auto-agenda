@@ -42,7 +42,7 @@ public class Funcionario {
        }
         
         while (numeroValidado == null) {
-            System.out.print("Digite o id do funcionário: ");
+            System.out.print("Digite o ID do funcionário: ");
             String funcionarioID = sc.nextLine();
 
             // Valida se a entrada é numérica
@@ -61,7 +61,7 @@ public class Funcionario {
             }
         }
         
-        System.out.print("\n1. Editar nome do Funcionário\t0. Voltar");
+        System.out.print("\n1. Editar nome do funcionário\t0. Voltar");
         System.out.print("\nComo você deseja prosseguir?  >>>>");
 
         int opcaoEdicao = num.nextInt();
@@ -69,7 +69,7 @@ public class Funcionario {
         switch (opcaoEdicao) {
             case 0:
                 if(opcaoEdicao == 0){
-                    System.out.println("Operaçãoo cancelada");
+                    System.out.println("Operação cancelada");
                     return;
                 }
                 break;

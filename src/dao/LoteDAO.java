@@ -69,8 +69,8 @@ public class LoteDAO {
         }
         // QUANTIDADE GARRAFAS
         if (novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novoTipoOleo.isEmpty()) {
-            sqlEdit = "UPDATE lote SET und_lote = " + novaQntdGarrafa + "WHERE cod_lote = '" + codLote + "'";
-            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + " WHERE cod_lote = '" + codLote + "'";
+            sqlEdit = "UPDATE lote SET und_lote = " + novaQntdGarrafa + " WHERE cod_lote = '" + codLote + "'";
+            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + "' WHERE fk_lote = '" + codLote + "'";
         }
         // DATA DA COMPRA
         if (!novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
@@ -83,7 +83,7 @@ public class LoteDAO {
         // TIPO ÓLEO E QUANTIDADE
         if (!novoTipoOleo.isEmpty() && novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty()) {
             sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "', und_lote = " + novaQntdGarrafa;
-            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + " WHERE cod_lote = '" + codLote + "'";
+            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + "' WHERE fk_lote = '" + codLote + "'";
         }
         // DATAS DE COMPRA E VENCIMENTO
         if (!novaDataVencimento.isEmpty() && !novaDataCompra.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
@@ -93,11 +93,12 @@ public class LoteDAO {
         if (!novaDataCompra.isEmpty() && !novaDataVencimento.isEmpty() && novaQntdGarrafa != 0 && !novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "', data_vencimento = '" + novaDataVencimento
                     + "', und_lote = " + novaQntdGarrafa + ", tipo_oleo = '" + novoTipoOleo + "' WHERE cod_lote = '" + codLote + "'";
-            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + " WHERE cod_lote = '" + codLote + "'";
+            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + "' WHERE fk_lote = '" + codLote + "'";
         }
         boolean resposta = false;
 
         resposta = conn.executar(sqlEdit);
+        
         if (!resposta) {
             System.out.println("Erro ao atualizar o lote.");
             conn.desconectar();

@@ -52,7 +52,7 @@ public class Agendamento {
         Integer clienteValidado = null;
 
         while (clienteValidado == null) {
-            System.out.print("Cliente: ");
+            System.out.print("ID do Cliente: ");
             String novocliente = sc.nextLine(); // Captura a entrada do cliente
 
             // Valida se a entrada é numérica
@@ -84,7 +84,7 @@ public class Agendamento {
         Integer servicoValidado = null; // Reinicia a variável
 
         while (servicoValidado == null) {
-            System.out.print("Novo tipo de serviço: ");
+            System.out.print("ID do serviço a ser realizado: ");
             String novoservico = sc.nextLine(); // Captura a entrada do tipo de serviço
 
             // Valida se a entrada é numérica
@@ -116,7 +116,7 @@ public class Agendamento {
         Integer funcionarioValidado = null; // Reinicia a variável
 
         while (funcionarioValidado == null) {
-            System.out.print("Novo funcionário: ");
+            System.out.print("ID do funcionário responsável pelo agendamento: ");
             String novoFuncionario = sc.nextLine(); // Captura a entrada do funcionário
 
             // Valida se a entrada é numérica
@@ -138,7 +138,7 @@ public class Agendamento {
         }
 
         while (true) {
-            System.out.print("Data de previsão para conclusão (dd/MM/yyyy): ");
+            System.out.print("\nData de previsão para conclusão (dd/MM/yyyy): ");
             String dataPrev = sc.nextLine();
 
             String dataValidaP = h.dataPadraoBanco(dataPrev);
@@ -210,6 +210,12 @@ public class Agendamento {
         System.out.println("");
 
         switch (opcaoEdicao) {
+            case 0:
+                if (opcaoEdicao == 0) {
+                    System.out.println("Operação cancelada");
+                    return;
+                }
+                break;
             case 1:
                 if (cl.verificaRegistro() == 0) {
                     System.out.println("\nNão há clientes cadastrados para realizar agendamento");
@@ -222,7 +228,7 @@ public class Agendamento {
                 Integer clienteValidado = null; // Reinicia a variável
 
                 while (clienteValidado == null) {
-                    System.out.print("Novo cliente: ");
+                    System.out.print("ID do novo cliente: ");
                     String novocliente = sc.nextLine(); // Captura a entrada do cliente
 
                     // Valida se a entrada é numérica
@@ -257,7 +263,7 @@ public class Agendamento {
                 Integer servicoValidado = null; // Reinicia a variável
 
                 while (servicoValidado == null) {
-                    System.out.print("Novo tipo de serviço: ");
+                    System.out.print("ID do novo serviço a ser realizado: ");
                     String novoservico = sc.nextLine(); // Captura a entrada do tipo de serviço
 
                     // Valida se a entrada é numérica
@@ -292,7 +298,7 @@ public class Agendamento {
                 Integer funcionarioValidado = null; // Reinicia a variável
 
                 while (funcionarioValidado == null) {
-                    System.out.print("Novo funcionário: ");
+                    System.out.print("ID do novo funcionário responsável pelo agendamento: ");
                     String novoFuncionario = sc.nextLine(); // Captura a entrada do funcionário
 
                     // Valida se a entrada é numérica
@@ -358,7 +364,7 @@ public class Agendamento {
 
                 clienteValidado = null;
                 while (clienteValidado == null) {
-                    System.out.print("Novo cliente: ");
+                    System.out.print("ID do novo cliente: ");
                     String novoCliente = sc.nextLine();
 
                     clienteValidado = h.isNumeric(novoCliente);
@@ -381,7 +387,7 @@ public class Agendamento {
                 }
                 servicoValidado = null;
                 while (servicoValidado == null) {
-                    System.out.print("Novo serviço: ");
+                    System.out.print("ID do novo serviço a ser realizado: ");
                     String novoServico = sc.nextLine();
 
                     servicoValidado = h.isNumeric(novoServico);
@@ -404,7 +410,7 @@ public class Agendamento {
                 }
                 funcionarioValidado = null;
                 while (funcionarioValidado == null) {
-                    System.out.print("Novo funcionário: ");
+                    System.out.print("ID do novo funcionário responsável pelo agendamento: ");
                     String novoFuncionario = sc.nextLine();
 
                     funcionarioValidado = h.isNumeric(novoFuncionario);
@@ -440,9 +446,7 @@ public class Agendamento {
                         getFuncionario(), getDataPrevisaoEntrega(), getObservacao()
                 );
                 break;
-
-            case 0:
-                break;
+                
             default:
                 System.out.println("Opção inválida. Tente novamente.");
                 return;
