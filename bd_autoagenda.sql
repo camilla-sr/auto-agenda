@@ -38,7 +38,7 @@ create table estoque (
   fk_lote varchar(10) default null,
   quantidade int(3) default 0,
   data_ultima_atualizacao datetime default null,
-  foreign key (fk_produto) references peca (id_peca),
+  foreign key (fk_peca) references peca (id_peca),
   foreign key (fk_lote) references lote (cod_lote)
 );
 

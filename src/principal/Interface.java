@@ -17,6 +17,7 @@ public class Interface {
     TipoServico ts = new TipoServico();
     Agendamento ag = new Agendamento();
     Funcionario f = new Funcionario();
+    Estoque e = new Estoque();
 
     // ------------------------------------------------
     public void inicio() {
@@ -239,7 +240,7 @@ public class Interface {
     public void consultar() {
         System.out.print("1. Peças\t 2. Lotes de Óleo\t 3. Clientes"
                 + "\n4. Serviço \t 5. Agendamento \t 6. Funcionário"
-                + "\n0. Voltar\n >>>>> ");
+                + "\n7. Estoque \t 0. Voltar\n >>>>> ");
 
         String tela = sc.nextLine();
         telaValida = h.isNumeric(tela);
@@ -276,6 +277,11 @@ public class Interface {
                 break;
             case 6:
                 f.consFuncionario();
+                System.out.println("\n");
+                prosseguir();
+                break;
+            case 7:
+                e.consEstoque();
                 System.out.println("\n");
                 prosseguir();
                 break;

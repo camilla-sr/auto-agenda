@@ -12,17 +12,14 @@ public class Estoque {
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
     Scanner num = new Scanner(System.in);
-    FuncionarioDAO fn = new FuncionarioDAO();
+    EstoqueDAO es = new EstoqueDAO();
     
     private int idEstoque;
     private int qntdEstoque;
     private String dataUltimaAtualizacao;
     
-    public void estoque (){
-        boolean cad = false;
-        
-        System.out.print("Quantidade no estoque: ");
-        
+    public void consEstoque (){
+        es.listarProdutos();
     }
 
     
