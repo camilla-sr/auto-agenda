@@ -62,7 +62,7 @@ public class PecaDAO {
         }
         // Muda apenas a quantidade
         if (novaQntd != 0 && (novaDescricao == null || novaDescricao.isEmpty())) {
-            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_peca = " + idPeca + "";
+            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + ", data_ultima_atualizacao = " where fk_peca = " + idPeca + "";
         }
         // Muda ambos
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd != 0) {

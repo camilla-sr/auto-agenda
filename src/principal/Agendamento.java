@@ -504,7 +504,7 @@ public class Agendamento {
         setDataConclusao(datastr);
         
         if (ag.verificaRegistro()== 0) {
-            System.out.println("\nNão há serviços cadastrados para realizar agendamento");
+            System.out.println("\nNão há agendamentos realizados para serem finalizados");
             System.out.println("Retornando para o menu principal.");
             return;
         } else {
