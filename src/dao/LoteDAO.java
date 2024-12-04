@@ -28,12 +28,12 @@ public class LoteDAO {
             }
 
             // Recupera o ID do lote recém-inserido
-            String sqlConsultaLote = "SELECT cod_lote FROM lote WHERE cod_lote = '" + codLote + "' ORDER BY id_lote DESC LIMIT 1";
+            String sqlConsultaLote = "SELECT cod_lote FROM lote WHERE cod_lote = '" + codLote + "' ORDER BY cod_lote DESC LIMIT 1";
             ResultSet rs = conn.executarConsulta(sqlConsultaLote);
 
-            int idLote = -1;
+            String idLote = null;
             if (rs.next()) {
-                idLote = rs.getInt("cod_lote"); // Obtém o ID do lote
+                idLote = rs.getString("cod_lote"); // Obtém o ID do lote
             } else {
                 System.out.println("Erro ao recuperar o ID do lote.");
                 return false;  // Se o ID não for recuperado, retorna false
@@ -41,7 +41,7 @@ public class LoteDAO {
 
             // Insere no estoque
             String sqlInserirEstoque = "INSERT INTO estoque (fk_peca, fk_lote, quantidade, data_ultima_atualizacao) "
-                    + "VALUES (null, " + idLote + ", " + qntdGarrafa + ", '" + hoje + "')";
+                    + "VALUES (null, '" + idLote + "', " + qntdGarrafa + ", '" + hoje + "')";
 
             estoqueInserido = conn.executar(sqlInserirEstoque);
             if (!estoqueInserido) {
@@ -69,7 +69,7 @@ public class LoteDAO {
         // QUANTIDADE GARRAFAS
         if (novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET und_lote = " + novaQntdGarrafa + "WHERE cod_lote = '" + codLote + "'";
-            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + " WHERE cod_lote = '" + codLote + "'";
+            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + " WHERE cod_lote = '" + codLote + "'";
         }
         // DATA DA COMPRA
         if (!novaDataCompra.isEmpty() && novaDataVencimento.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
@@ -82,7 +82,7 @@ public class LoteDAO {
         // TIPO ÓLEO E QUANTIDADE
         if (!novoTipoOleo.isEmpty() && novaQntdGarrafa != 0 && novaDataCompra.isEmpty() && novaDataVencimento.isEmpty()) {
             sqlEdit = "UPDATE lote SET tipo_oleo = '" + novoTipoOleo + "', und_lote = " + novaQntdGarrafa;
-            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + " WHERE cod_lote = '" + codLote + "'";
+            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + " WHERE cod_lote = '" + codLote + "'";
         }
         // DATAS DE COMPRA E VENCIMENTO
         if (!novaDataVencimento.isEmpty() && !novaDataCompra.isEmpty() && novaQntdGarrafa == 0 && novoTipoOleo.isEmpty()) {
@@ -92,7 +92,7 @@ public class LoteDAO {
         if (!novaDataCompra.isEmpty() && !novaDataVencimento.isEmpty() && novaQntdGarrafa != 0 && !novoTipoOleo.isEmpty()) {
             sqlEdit = "UPDATE lote SET data_compra = '" + novaDataCompra + "', data_vencimento = '" + novaDataVencimento
                     + "', und_lote = " + novaQntdGarrafa + ", tipo_oleo = '" + novoTipoOleo + "' WHERE cod_lote = '" + codLote + "'";
-            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + " WHERE cod_lote = '" + codLote + "'";
+            sqlEditEstoque = "UPDATE estoque SET quantidade = " + novaQntdGarrafa + ", data_ultima_atualizacao = '" + hoje + " WHERE cod_lote = '" + codLote + "'";
         }
         boolean resposta = false;
 
