@@ -93,15 +93,15 @@ public class PecaDAO {
     }
 
     public void listarPecas() {
-        String sqlConsulta = "SELECT * from peca";
+        String sqlConsulta = "SELECT p.id_peca, p.desc_peca, e.quantidade from peca p join estoque e on p.id_peca = e.fk_peca";
         System.out.println("---------------------------");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
             while (lista.next()) {
-                int id = lista.getInt("id_peca");
-                String descricaoPeca = lista.getString("desc_peca");
-                int quantidade = lista.getInt("qntd_peca");
+                int id = lista.getInt("p.id_peca");
+                String descricaoPeca = lista.getString("p.desc_peca");
+                int quantidade = lista.getInt("e.quantidade");
 
                 System.out.println("ID: " + id);
                 System.out.println("Peça: " + descricaoPeca);
@@ -150,7 +150,7 @@ public class PecaDAO {
     }
 
     public void listaEdicao() {
-        String sqlConsulta = "SELECT p.id_peca, p.desc_peca, e.quantidade from peca p join estoque e on p.id_peca = e.fk_peca;";
+        String sqlConsulta = "SELECT p.id_peca, p.desc_peca, e.quantidade from peca p join estoque e on p.id_peca = e.fk_peca";
         System.out.println("\nID | DESCRIÇÃO | QUANTIDADE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
