@@ -52,7 +52,7 @@ public class PecaDAO {
         return resposta;
     }
 
-    public boolean editarPeca(int idPeca, String novaDescricao, int novaQntd) {
+    public boolean editarPeca(int idPeca, String novaDescricao, int novaQntd, String dataHoje) {
         String sqlEdit = ""; // inicializo a variável da query
         String sqlEdit2 = ""; // inicializo a variável da query
 
@@ -62,12 +62,12 @@ public class PecaDAO {
         }
         // Muda apenas a quantidade
         if (novaQntd != 0 && (novaDescricao == null || novaDescricao.isEmpty())) {
-            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + ", data_ultima_atualizacao = " where fk_peca = " + idPeca + "";
+            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + ", data_ultima_atualizacao = '" + dataHoje + "' where fk_peca = " + idPeca + "";
         }
         // Muda ambos
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd != 0) {
             sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "' where id_peca = " + idPeca + "";
-            sqlEdit2 = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_peca = " + idPeca + "";
+            sqlEdit2 = "UPDATE estoque SET quantidade = " + novaQntd + ", data_ultima_atualizacao = '" + dataHoje + "' where fk_peca = " + idPeca + "";
         }
 
         boolean resposta = false;

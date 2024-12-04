@@ -107,7 +107,7 @@ public class Peca {
                 System.out.print("Digite a nova descrição da peça: ");
                 setDescricaoPeca(sc.nextLine());
                 setQntdPeca(0);
-                ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
+                ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca(), dataHoje);
                 break;
             case 2:
                 numeroValidado = null; // Reinicializa para validar a quantidade
@@ -122,7 +122,7 @@ public class Peca {
                     }
                 }
                 setQntdPeca(numeroValidado);
-                ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
+                ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca(), dataHoje);
                 break;
             case 3:
                 System.out.print("Digite a nova descrição da peça: ");
@@ -140,7 +140,7 @@ public class Peca {
                     }
                 }
                 setQntdPeca(numeroValidado);
-                ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca());
+                ed = pc.editarPeca(getIdPeca(), getDescricaoPeca(), getQntdPeca(), dataHoje);
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
