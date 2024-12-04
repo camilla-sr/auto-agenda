@@ -5,50 +5,91 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PecaDAO {
+
     final Conexao conn = new Conexao();
 
     // Métodos Principais
-    public boolean cadastrarPeca(String descricaoPeca, int qntdPeca) {
-        String sqlInserir = "INSERT into peca (desc_peca, qntd_peca)"
-                + "VALUES ('" + descricaoPeca + "', " + qntdPeca + ")";
+    public boolean cadastrarPeca(String descricaoPeca, int qntdPeca, String dataHoje) {
+        boolean resposta = false;
+        try {
+            // primeiro faço a inserção da descrição na tabela peça
+            String sqlInserirPeca = "INSERT INTO peca (desc_peca) VALUES ('" + descricaoPeca + "')";
+            boolean pecaInserida = conn.executar(sqlInserirPeca);
 
-        boolean resposta = conn.executar(sqlInserir);
-        if (resposta == true) {
+            if (!pecaInserida) {
+                System.out.println("Erro ao cadastrar");
+                return false;
+            }
+
+            // recupero o ID da peça que acabei de inserir
+            String sqlConsultaPeca = "SELECT id_peca FROM peca WHERE desc_peca = '" + descricaoPeca + "' ORDER BY id_peca DESC LIMIT 1";
+            ResultSet rs = conn.executarConsulta(sqlConsultaPeca);
+
+            int idPeca = -1; // Inicializa o ID da peça com valor inválido
+            if (rs.next()) {
+                idPeca = rs.getInt("id_peca");  //Se a inserção for feita, pego o ID
+            } else {
+                System.out.println("Erro ao recuperar o ID da peça.");
+                return false;
+            }
+
+            // dados prontos, preparo a inserção na tabela do estoque
+            String sqlInserirEstoque = "INSERT INTO estoque (fk_produto, fk_lote, quantidade, data_ultima_atualizacao)"
+                    + " VALUES (" + idPeca + ", " + null + ", " + qntdPeca + ", '" + dataHoje + "')";
+            boolean estoqueInserido = conn.executar(sqlInserirEstoque);
+
+            if (!estoqueInserido) {
+                System.out.println("Erro ao cadastrar peça no estoque");
+                apagarPeca(idPeca);
+                return false;
+            }
+            resposta = true;
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar peça: " + e.getMessage());
+        } finally {
             conn.desconectar();
-            return true;
-        } else {
-            conn.desconectar();
-            return false;
         }
+        return resposta;
     }
 
     public boolean editarPeca(int idPeca, String novaDescricao, int novaQntd) {
         String sqlEdit = ""; // inicializo a variável da query
+        String sqlEdit2 = ""; // inicializo a variável da query
 
         // testo o que será editado e mudo a descrição da peça
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd == 0) {
-            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "'";
+            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "' where id_peca = " + idPeca;
         }
         // Muda apenas a quantidade
         if (novaQntd != 0 && (novaDescricao == null || novaDescricao.isEmpty())) {
-            sqlEdit = "UPDATE peca SET qntd_peca = " + novaQntd;
+            sqlEdit = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_produto = " + idPeca + "";
         }
         // Muda ambos
         if (novaDescricao != null && !novaDescricao.isEmpty() && novaQntd != 0) {
-            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + "', qntd_peca = " + novaQntd;
+            sqlEdit = "UPDATE peca SET desc_peca = '" + novaDescricao + " where id_peca = " + idPeca + "";
+            sqlEdit2 = "UPDATE estoque SET quantidade = " + novaQntd + " where fk_produto = " + idPeca + "";
         }
 
-        sqlEdit = sqlEdit + " where id_peca = " + idPeca + "";
         boolean resposta = false;
 
-        resposta = conn.executar(sqlEdit);
-        if (resposta == true) {
-            conn.desconectar();
-            return true;
-        } else {
-            conn.desconectar();
-            return false;
+        if (!sqlEdit.isEmpty()) {
+            resposta = conn.executar(sqlEdit);
+            if (!resposta) {
+                System.out.println("Erro ao atualizar a descrição da peça.");
+                conn.desconectar();
+                return false; // Retorna false caso falhe
+            }
         }
+        // Executa a atualização da quantidade, se necessário
+        if (!sqlEdit2.isEmpty()) {
+            resposta = conn.executar(sqlEdit2);
+            if (!resposta) {
+                System.out.println("Erro ao atualizar a quantidade no estoque.");
+                conn.desconectar();
+                return false; // Retorna false caso falhe
+            }
+        }
+        return true; // Se ambos os updates foram bem-sucedidos
     }
 
     public void listarPecas() {
@@ -109,15 +150,15 @@ public class PecaDAO {
     }
 
     public void listaEdicao() {
-        String sqlConsulta = "SELECT * from peca";
+        String sqlConsulta = "SELECT p.id_peca, p.desc_peca, e.quantidade from peca p join estoque e on p.id_peca = e.fk_peca;";
         System.out.println("\nID | DESCRIÇÃO | QUANTIDADE");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
             while (lista.next()) {
                 int id = lista.getInt("id_peca");
-                String descricaoPeca = lista.getString("desc_peca");
-                int quantidade = lista.getInt("qntd_peca");
+                String descricaoPeca = lista.getString("p.desc_peca");
+                int quantidade = lista.getInt("e.quantidade");
 
                 System.out.printf("%d. %s  \t-  \t%d\n", id, descricaoPeca, quantidade);
             }
@@ -129,7 +170,7 @@ public class PecaDAO {
         }
     }
 
-    public int verificaRegistro(){
+    public int verificaRegistro() {
         String sqlConsulta = "SELECT * from peca";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         int contagem = 0;

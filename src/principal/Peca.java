@@ -2,9 +2,15 @@ package principal;
 
 import dao.PecaDAO;
 import include.Helper;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Peca {
+    LocalDateTime agora = LocalDateTime.now(); // Retorna data e hora atuais com base no servidor
+    DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String dataHoje = agora.format(formato);
+    
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -43,7 +49,7 @@ public class Peca {
         }
 
         setQntdPeca(numeroValidado);
-        boolean cad = pc.cadastrarPeca(getDescricaoPeca(), getQntdPeca());
+        boolean cad = pc.cadastrarPeca(getDescricaoPeca(), getQntdPeca(), dataHoje);
         if (cad == false) {
             System.out.println("Algo deu errado");
         } else {

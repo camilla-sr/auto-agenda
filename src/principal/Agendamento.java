@@ -599,5 +599,5 @@ public class Agendamento {
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
-// ------------------------------------------------    
+    // ------------------------------------------------    
 }

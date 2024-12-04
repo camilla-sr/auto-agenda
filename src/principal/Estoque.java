@@ -7,8 +7,7 @@ import include.Helper;
 import java.util.Scanner;
 
 
-public class Estoque {
-    
+public class Estoque {    
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
