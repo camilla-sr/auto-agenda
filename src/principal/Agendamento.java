@@ -576,7 +576,8 @@ public class Agendamento {
 
             } while (pc.validaID(IDvalido) == 0);
             pu.cadastrarVinculo(IDvalido, getIdAgendamento(), qntdValida);
-            pu.buscarIdEstoque(String.valueOf(IDvalido));
+            int estoque = pu.buscarIdEstoque(String.valueOf(IDvalido));
+            pu.atualizarQuantidadeEstoque(estoque, qntdValida);
             prodOpcao = 0;
         }
 
@@ -613,7 +614,8 @@ public class Agendamento {
 
             } while (lt.validaCOD(inputLote) == 0);
             pu.cadastrarVinculo(IDvalido, getIdAgendamento(), qntdValida);
-            pu.buscarIdEstoque(inputLote);
+            int estoque = pu.buscarIdEstoque(inputLote);
+            pu.atualizarQuantidadeEstoque(estoque, qntdValida);
             prodOpcao = 0;
         }
 

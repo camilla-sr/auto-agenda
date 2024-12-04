@@ -106,7 +106,8 @@ public class AuxiliarProdutosUsadosDAO {
         return resposta;
     }
     
-    public boolean atualizarQuantidadeEstoque(int idEstoque, int quantidadeUsada) {        
+    public boolean atualizarQuantidadeEstoque(int idEstoque, int quantidadeUsada) {
+        
         String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada 
                 + " WHERE id_estoque = " + idEstoque + " AND quantidade >= " + quantidadeUsada;
 
@@ -128,7 +129,7 @@ public class AuxiliarProdutosUsadosDAO {
         return resposta;
     }
 
-    public Integer buscarIdEstoque(String identificador) {
+    public String buscarIdEstoque(String identificador) {
         Integer idEstoque = null;
 
         // Verificar se o identificador é numérico (para peça) ou não (para lote)
