@@ -23,7 +23,7 @@ public class Interface {
     public void inicio() {
         System.out.println("\tBem-Vindo ao Auto Agenda");
         System.out.println("1. Cadastrar Itens\t 2. Editar Itens\t 3. Apagar Itens\n"
-                + "4. Consultar Itens\t 5. Concluir Agendamento 6. Relatórios\n"
+                + "4. Consultar Itens\t 5. Concluir Agendamento\n"
                 + "0. Sair");
 
         System.out.print("\nVocê pode navegar pelo sistema"
@@ -60,10 +60,10 @@ public class Interface {
                 ag.finalizar();
                 prosseguir();
                 break;
-            case 6:
-                System.out.println("\nGerar Relatórios");
-                ag.relatorios();
-                break;
+//            case 6:
+//                System.out.println("\nGerar Relatórios");
+//                ag.relatorios();
+//                break;
             case 0:
                 System.exit(0);
                 break;

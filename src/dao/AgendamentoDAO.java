@@ -4,11 +4,12 @@ import include.Conexao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import include.Helper;
+import dao.AuxiliarProdutosUsadosDAO;
 
 public class AgendamentoDAO {
-
     final Conexao conn = new Conexao();
     Helper h = new Helper();
+    AuxiliarProdutosUsadosDAO au = new AuxiliarProdutosUsadosDAO();
 
     // Métodos Principais
     public boolean cadastrarAgendamento(int cliente, int servico, int funcionario, String dataCadastro, String dataPrevisaoEntrega, String observacao) {
@@ -121,8 +122,12 @@ public class AgendamentoDAO {
 
         // desativo a verificação de chave estrangeira
         String sqlDisableFKCheck = "SET FOREIGN_KEY_CHECKS = 0";
+        boolean aux = au.apagarVinculo(idAgendamento);
+        if(aux == false){
+            System.out.println("Nâo é possível apagar, dados em uso");
+        }
+               
         boolean desativarFK = conn.executar(sqlDisableFKCheck);
-
         if (!desativarFK) {
             System.out.println("Permissão negada para desativar verificação de chave estrangeira.");
             conn.desconectar();
@@ -177,26 +182,26 @@ public class AgendamentoDAO {
         return resposta;
     }
 
-    private boolean cadastrarProdutoUsado(int idAgendamento, int idEstoque, int qntdUsada) {
-        boolean insertSecundario = false;
-        boolean agendamentoValida = validaID(idAgendamento);
-
-        if (agendamentoValida) {
-            System.out.println("Agendamento não encontrado");
-        } else {
-            // aqui será incluído na lógica as listas de produtos para que o usuário as insira aqui
-
-            String sql = "INSERT into aux_prod_usados(fk_estoque, fk_agendamento, qntd_usada)"
-                    + "values (" + idAgendamento + ", " + idEstoque + ", " + qntdUsada + ")";
-            boolean resposta = conn.executar(sql);
-            if (resposta == true) {
-                insertSecundario = true;
-            } else {
-                insertSecundario = false;
-            }
-        }
-        return insertSecundario;
-    }
+//    private boolean cadastrarProdutoUsado(int idAgendamento, int idEstoque, int qntdUsada) {
+//        boolean insertSecundario = false;
+//        boolean agendamentoValida = validaID(idAgendamento);
+//
+//        if (agendamentoValida) {
+//            System.out.println("Agendamento não encontrado");
+//        } else {
+//            // aqui será incluído na lógica as listas de produtos para que o usuário as insira aqui
+//
+//            String sql = "INSERT into aux_prod_usados(fk_estoque, fk_agendamento, qntd_usada)"
+//                    + "values (" + idAgendamento + ", " + idEstoque + ", " + qntdUsada + ")";
+//            boolean resposta = conn.executar(sql);
+//            if (resposta == true) {
+//                insertSecundario = true;
+//            } else {
+//                insertSecundario = false;
+//            }
+//        }
+//        return insertSecundario;
+//    }
 
     public void listaEdicao() {
         String sqlConsulta = "SELECT "

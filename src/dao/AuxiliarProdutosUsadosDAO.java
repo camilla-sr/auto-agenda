@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuxiliarProdutosUsadosDAO {
+
     final Conexao conn = new Conexao();
     Helper h = new Helper();
     private int idProdutoUsado;
@@ -16,7 +17,7 @@ public class AuxiliarProdutosUsadosDAO {
     // -------------- MÉTODOS PRINCIPAIS ---------------
     public void cadastrarVinculo(int estoque, int agendamento, int qndUsada) {
         String sqlInserir = "INSERT into aux_prod_usados (fk_estoque, fk_agendamento, qntd_usada)"
-                + "VALUES ("+ estoque +", "+ agendamento +", "+ qntdUsada +")";
+                + "VALUES (" + estoque + ", " + agendamento + ", " + qntdUsada + ")";
 
         boolean resposta = conn.executar(sqlInserir);
         if (resposta == true) {
@@ -26,7 +27,7 @@ public class AuxiliarProdutosUsadosDAO {
         }
         conn.desconectar();
     }
-    
+
     public void editarVinculo(int idProdutoUsado, int estoque, int agendamento) {
         int auxiliarValido = validaID(idProdutoUsado);
 
@@ -45,7 +46,7 @@ public class AuxiliarProdutosUsadosDAO {
         }
         conn.desconectar();
     }
-    
+
     public void listarVinculos() {
         String sqlConsulta = "SELECT * from aux_prod_usados";
         System.out.println("-----------Listando Vínculos------------");
@@ -69,24 +70,20 @@ public class AuxiliarProdutosUsadosDAO {
             conn.desconectar();
         }
     }
-    
-    public void apagarVinculo(int idProdutoUsado) {
-        int auxiliarValido = validaID(idProdutoUsado);
-        
-        if (auxiliarValido == 2) {
-            System.out.println("Vínculo não encontrado na base");
+
+    public boolean apagarVinculo(int idAgendamento) {
+        String sqlDel = "DELETE from aux_prod_usados where fk_agendamento = " + idAgendamento + "";
+        boolean resposta = conn.executar(sqlDel);
+        if (resposta == true) {
+            conn.desconectar();
+            return true;
         } else {
-            String sqlDel = "DELETE from peca where id_peca = " + idProdutoUsado + "";
-            boolean resposta = conn.executar(sqlDel);
-            if (resposta == true) {
-                System.out.println("Vinculo deletado");
-            } else {
-                System.out.println("Algo deu errado");
-            }
+            conn.desconectar();
+            return false;
+
         }
-        conn.desconectar();
     }
-    
+
     // -------------- MÉTODOS DE APOIO ---------------    
     private int validaID(int id) {
         int resposta = 0;
@@ -105,10 +102,10 @@ public class AuxiliarProdutosUsadosDAO {
         }
         return resposta;
     }
-    
+
     public boolean atualizarQuantidadeEstoque(int idEstoque, int quantidadeUsada) {
-        
-        String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada 
+
+        String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada
                 + " WHERE id_estoque = " + idEstoque + " AND quantidade >= " + quantidadeUsada;
 
         boolean resposta = conn.executar(sqlAtualizar);
@@ -119,7 +116,7 @@ public class AuxiliarProdutosUsadosDAO {
     }
 
     public boolean atualizarQuantidadePeca(int idPeca, int quantidadeUsada) {
-        String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada 
+        String sqlAtualizar = "UPDATE estoque SET quantidade = quantidade - " + quantidadeUsada
                 + " WHERE fk_peca = " + idPeca + " AND quantidade >= " + quantidadeUsada;
 
         boolean resposta = conn.executar(sqlAtualizar);
@@ -137,7 +134,7 @@ public class AuxiliarProdutosUsadosDAO {
 
         if (idPeca != null) {
             // Caso seja numérico, busca pelo ID da peça
-            String sqlBusca = "SELECT id_estoque FROM estoque WHERE fk_peca = " + idPeca;
+            String sqlBusca = "SELECT id_estoque FROM estoque WHERE fk_peca = '" + idPeca + "'";
             ResultSet rs = conn.executarConsulta(sqlBusca);
 
             try {
@@ -166,29 +163,35 @@ public class AuxiliarProdutosUsadosDAO {
         return idEstoque;
     }
 
-    
     // -------------- GETTERS E SETTERS --------------
     public int getIdProdutoUsado() {
         return idProdutoUsado;
     }
+
     public void setIdProdutoUsado(int idProdutoUsado) {
         this.idProdutoUsado = idProdutoUsado;
     }
+
     public int getEstoque() {
         return estoque;
     }
+
     public void setEstoque(int estoque) {
         this.estoque = estoque;
     }
+
     public int getAgendamento() {
         return agendamento;
     }
+
     public void setAgendamento(int agendamento) {
         this.agendamento = agendamento;
     }
+
     public int getQntdUsada() {
         return qntdUsada;
     }
+
     public void setQntdUsada(int qntdUsada) {
         this.qntdUsada = qntdUsada;
     }

@@ -477,7 +477,7 @@ public class Agendamento {
             System.out.println("\t\t\tNenhum dado encontrado");
             return;
         }
-
+        ag.listaEdicao();
         while (agendamentoValidado == null) {
             System.out.print("Digite o ID do agendamento: ");
             String agenda = sc.nextLine(); // Captura a entrada do agendamento
