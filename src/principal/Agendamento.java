@@ -1,9 +1,12 @@
 package principal;
 
 import dao.AgendamentoDAO;
+import dao.AuxiliarProdutosUsadosDAO;
 import dao.TipoServicoDAO;
 import dao.FuncionarioDAO;
 import dao.ClienteDAO;
+import dao.LoteDAO;
+import dao.PecaDAO;
 import include.Helper;
 import java.util.Scanner;
 import java.time.LocalDate;
@@ -26,6 +29,9 @@ public class Agendamento {
     TipoServicoDAO ts = new TipoServicoDAO();
     FuncionarioDAO f = new FuncionarioDAO();
     ClienteDAO cl = new ClienteDAO();
+    PecaDAO pc = new PecaDAO();
+    LoteDAO lt = new LoteDAO();
+    AuxiliarProdutosUsadosDAO pu = new AuxiliarProdutosUsadosDAO();
 
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -40,7 +46,7 @@ public class Agendamento {
         setDataCadastro(dataFormatada);
 
         System.out.print("\tAgendamento de Serviços\n");
-        if (cl.verificaRegistro()== 0) {
+        if (cl.verificaRegistro() == 0) {
             System.out.println("\nNão há clientes cadastrados para realizar agendamento");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -73,7 +79,7 @@ public class Agendamento {
             }
         }
 
-        if (ts.verificaRegistro()== 0) {
+        if (ts.verificaRegistro() == 0) {
             System.out.println("\nNão há serviços cadastrados para realizar agendamento");
             System.out.println("Retornando para o menu principal.");
             return;
@@ -287,7 +293,7 @@ public class Agendamento {
                 break;
 
             case 3:
-                if (f.verificaRegistro()== 0) {
+                if (f.verificaRegistro() == 0) {
                     System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -401,7 +407,7 @@ public class Agendamento {
                 setServico(servicoValidado);
 
                 // Validação do funcionário
-                if (f.verificaRegistro()== 0) {
+                if (f.verificaRegistro() == 0) {
                     System.out.println("\nNão há funcionários cadastrados para realizar agendamento");
                     System.out.println("Retornando para o menu principal.");
                     return;
@@ -500,21 +506,20 @@ public class Agendamento {
             System.out.println("Agendamento excluído.");
         }
     }
-    
-    public void finalizar(){
+
+    public void finalizar() {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         // Formata a data como String
         String datastr = hoje.format(formato);
         setDataConclusao(datastr);
-        
-        if (ag.verificaRegistro()== 0) {
+
+        if (ag.verificaRegistro() == 0) {
             System.out.println("\nNão há agendamentos realizados para serem finalizados");
             System.out.println("Retornando para o menu principal.");
             return;
         } else {
             ag.listaEdicao();
         }
-        
         do {
             System.out.print("Digite o ID do agendamento: ");
             String inputID = sc.nextLine();
@@ -529,14 +534,94 @@ public class Agendamento {
                 System.out.println("Agendamento não encontrado. Tente novamente.\n");
             }
         } while (!validarAgendamento());
+
+        System.out.println("Alguma peça foi usada nesse serviço? 1-Sim 2-Não");
+        int prodOpcao = num.nextInt();
+        Integer IDvalido = null;
+        Integer qntdValida = null;
+
+        if (prodOpcao == 1) {
+            if (pc.verificaRegistro() == 0) {
+                System.out.println("\t\t\tNenhum dado encontrado");
+                return;
+            }
+
+            pc.listaEdicao();
+
+            do {
+                System.out.print("Informe o ID: ");
+                String inputPeca = sc.nextLine();
+                IDvalido = h.isNumeric(inputPeca);
+
+                if (IDvalido == null) {
+                    System.out.println("Apenas números. Tente novamente.\n");
+                    IDvalido = null;
+                    continue;
+                }
+                if (pc.validaID(IDvalido) == 0) {
+                    System.out.println("Peça não encontrada. Tente novamente.\n");
+                    IDvalido = null;
+                }
+                while (qntdValida == null) {
+                    System.out.println("Quantidade usada:");
+                    String inputQntd = sc.nextLine();
+                    qntdValida = h.isNumeric(inputQntd);
+
+                    if (qntdValida == null) {
+                        System.out.println("Apenas números. Tente novamente.\n");
+                        qntdValida = null;
+                        return;
+                    }
+                }
+
+            } while (pc.validaID(IDvalido) == 0);
+            pu.cadastrarVinculo(IDvalido, getIdAgendamento(), qntdValida);
+            prodOpcao = 0;
+        }
+
         
+        System.out.println("Foi gasto óleo nesse serviço? 1-Sim 2-Não");
+        prodOpcao = num.nextInt();
+        if (prodOpcao == 1) {
+            if (lt.verificaRegistro() == 0) {
+                System.out.println("\t\t\tNenhum dado encontrado");
+                return;
+            }
+
+            lt.listaEdicao();
+            String inputLote = "";
+            do {
+                System.out.print("Informe o Código do lote: ");
+                inputLote = sc.nextLine();
+
+                if (lt.validaCOD(inputLote) == 0) {
+                    System.out.println("Lote não encontrada. Tente novamente.\n");
+                }
+                
+                while (qntdValida == null) {
+                    System.out.println("Quantidade usada:");
+                    String inputQntd = sc.nextLine();
+                    qntdValida = h.isNumeric(inputQntd);
+
+                    if (qntdValida == null) {
+                        System.out.println("Apenas números. Tente novamente.\n");
+                        qntdValida = null;
+                        return;
+                    }
+                }
+
+            } while (lt.validaCOD(inputLote) == 0);
+            pu.cadastrarVinculo(IDvalido, getIdAgendamento(), qntdValida);
+            prodOpcao = 0;
+        }
+
         boolean fn = false;
         fn = ag.finalizarAgendamento(getIdAgendamento(), getDataConclusao());
         if (fn == false) {
             System.out.println("Erro ao finalizar agendamento.");
         } else {
             System.out.println("Agendamento Finalizado.");
-        }        
+        }
     }
 
     // -------------- MÉTODOS DE APOIO ---------------
@@ -552,54 +637,71 @@ public class Agendamento {
     public int getIdAgendamento() {
         return idAgendamento;
     }
+
     public void setIdAgendamento(int idAgendamento) {
         this.idAgendamento = idAgendamento;
     }
+
     public int getCliente() {
         return cliente;
     }
+
     public void setCliente(int cliente) {
         this.cliente = cliente;
     }
+
     public int getServico() {
         return servico;
     }
+
     public void setServico(int servico) {
         this.servico = servico;
     }
+
     public int getFuncionario() {
         return funcionario;
     }
+
     public void setFuncionario(int funcionario) {
         this.funcionario = funcionario;
     }
+
     public String getDataCadastro() {
         return dataCadastro;
     }
+
     public void setDataCadastro(String dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
+
     public String getDataPrevisaoEntrega() {
         return dataPrevisaoEntrega;
     }
+
     public void setDataPrevisaoEntrega(String dataPrevisaoEntrega) {
         this.dataPrevisaoEntrega = dataPrevisaoEntrega;
     }
+
     public String getDataConclusao() {
         return dataConclusao;
     }
+
     public void setDataConclusao(String dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
+
     public String getStatus() {
         return status;
     }
+
     public void setStatus(String status) {
         this.status = status;
     }
+
     public String getObservacao() {
         return observacao;
     }
+
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
