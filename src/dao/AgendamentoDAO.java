@@ -232,7 +232,7 @@ public class AgendamentoDAO {
                     status = "Finalizado";
                 }
                 
-                System.out.printf("%d.  %s  | %s | %s | %s | %s\t | %s\n",
+                System.out.printf("%s.  %s  | %s | %s | %s | %s\t | %s\n",
                         id, funcionario, servico, dataCadastro, dataPrevisao, dataConclusao, status);
             }
 

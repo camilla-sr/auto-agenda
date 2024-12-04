@@ -198,7 +198,7 @@ public class LoteDAO {
                 String tipoOleo = lista.getString("lt.tipo_oleo");
                 String qntd = lista.getString("e.quantidade");
 
-                System.out.printf("%s |  %s  | %d | %s\n", cod, tipoOleo, qntd, dataCompra);
+                System.out.printf("%s |  %s  | %s | %s\n", cod, tipoOleo, qntd, dataCompra);
             }
         } catch (SQLException e) {
             System.out.println("Erro ao processar resultado: " + e.getMessage());
