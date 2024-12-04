@@ -100,15 +100,19 @@ public class PecaDAO {
         ResultSet lista = conn.executarConsulta(sqlConsulta);
 
         try {
-            while (lista.next()) {
-                int id = lista.getInt("p.id_peca");
-                String descricaoPeca = lista.getString("p.desc_peca");
-                int quantidade = lista.getInt("e.quantidade");
+            if (lista != null) {
+                while (lista.next()) {
+                    int id = lista.getInt("p.id_peca");
+                    String descricaoPeca = lista.getString("p.desc_peca");
+                    int quantidade = lista.getInt("e.quantidade");
 
-                System.out.println("ID: " + id);
-                System.out.println("Peça: " + descricaoPeca);
-                System.out.println("Quantidade: " + quantidade);
-                System.out.println("---------------------------");
+                    System.out.println("ID: " + id);
+                    System.out.println("Peça: " + descricaoPeca);
+                    System.out.println("Quantidade: " + quantidade);
+                    System.out.println("---------------------------");
+                }
+            } else {
+                System.out.println("\tNenhum cliente cadastrado");
             }
             lista.close();
         } catch (SQLException e) {
@@ -120,17 +124,28 @@ public class PecaDAO {
 
     public boolean apagarPeca(int idPeca) {
         boolean resposta = false;
-        String sqlDel = "DELETE from peca where id_peca = " + idPeca + "";
-        resposta = conn.executar(sqlDel);
+        
+        String sqlDelEstoque = "DELETE from estoque WHERE fk_peca = " + idPeca; // Primeiro apago o registro da tabela estoque
+        resposta = conn.executar(sqlDelEstoque);
 
-        if (resposta == true) {
-            conn.desconectar();
-            return true;
+        if (resposta) {
+            String sqlDelPeca = "DELETE from peca WHERE id_peca = " + idPeca; //se deu certo, apaga da tabela das peças
+            resposta = conn.executar(sqlDelPeca);
+            if (resposta) {
+                conn.desconectar();
+                return true;
+            } else {
+                System.out.println("Erro ao apagar a peça da tabela 'peca'.");
+                conn.desconectar();
+                return false;
+            }
         } else {
+            System.out.println("Erro ao apagar a peça da tabela 'estoque'.");
             conn.desconectar();
             return false;
         }
     }
+
 
 // -------------- MÉTODOS DE APOIO ---------------    
     public int validaID(int id) {

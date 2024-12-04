@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class FuncionarioDAO {
+
     final Conexao conn = new Conexao();
 
     public boolean cadastrarFuncionario(String nomeFuncionario) {
@@ -23,13 +24,17 @@ public class FuncionarioDAO {
     public void listarFuncionarios() {
         String sqlConsulta = "SELECT * FROM funcionario order by nome_funcionario";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
-        System.out.println("\n\tListando Funcionários");
         try {
-            while (lista.next()) {
-                int idFuncionario = lista.getInt("id_funcionario");
-                String nomeFuncionario = lista.getString("nome_funcionario");
+            if (lista != null) {
+                System.out.println("\n\tListando Funcionários");
+                while (lista.next()) {
+                    int idFuncionario = lista.getInt("id_funcionario");
+                    String nomeFuncionario = lista.getString("nome_funcionario");
 
-                System.out.println(nomeFuncionario);
+                    System.out.println(nomeFuncionario);
+                }
+            } else {
+                System.out.println("\tNenhum funcinonário cadastrado");
             }
             System.out.println("---------------------------");
             lista.close();
@@ -115,8 +120,8 @@ public class FuncionarioDAO {
             conn.desconectar();
         }
     }
-    
-    public int verificaRegistro(){
+
+    public int verificaRegistro() {
         String sqlConsulta = "SELECT * from funcionario";
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         int contagem = 0;

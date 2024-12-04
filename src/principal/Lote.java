@@ -3,8 +3,14 @@ package principal;
 import include.Helper;
 import java.util.Scanner;
 import dao.LoteDAO;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Lote {
+    LocalDateTime agora = LocalDateTime.now(); // Retorna data e hora atuais com base no servidor
+    DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String dataHoje = agora.format(formato);
+    
     Integer numeroValidado = null;
     Helper h = new Helper();
     Scanner sc = new Scanner(System.in, "utf8");
@@ -60,7 +66,7 @@ public class Lote {
             }
         }
         setQntdGarrafa(numeroValidado);
-        cad = lt.cadastrarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+        cad = lt.cadastrarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
         if (cad == false) {
             System.out.println("Algo deu errado");
         } else {
@@ -114,7 +120,7 @@ public class Lote {
                 System.out.print("Digite a nova descrição do tipo de óleo: ");
                 String oleo = sc.nextLine();
                 setTipoOleo(oleo);
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
 
             case 2:
@@ -130,7 +136,7 @@ public class Lote {
                     }
                 }
                 setQntdGarrafa(qntdValida);
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
 
             case 3:
@@ -148,7 +154,7 @@ public class Lote {
                         System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
 
             case 4:
@@ -166,7 +172,7 @@ public class Lote {
                         System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
 
             case 5:
@@ -184,7 +190,7 @@ public class Lote {
                     }
                 }
                 setQntdGarrafa(numeroValidado);
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
 
             case 6:
@@ -216,7 +222,7 @@ public class Lote {
                         System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
 
             case 7:
@@ -260,7 +266,7 @@ public class Lote {
                         System.out.println("Formato inválido. Tente novamente\n");
                     }
                 }
-                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo());
+                ed = lt.editarLote(getCodLote(), getDataCompra(), getDataVencimento(), getQntdGarrafa(), getTipoOleo(), dataHoje);
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
