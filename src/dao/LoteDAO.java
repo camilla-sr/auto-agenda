@@ -187,16 +187,17 @@ public class LoteDAO {
     }
 
     public void listaEdicao() {
-        String sqlConsulta = "SELECT * from lote";
-        System.out.println("\nCÓDIGO | TIPO DE ÓLEO | DATA DA COMPRA");
+        String sqlConsulta = "SELECT lt.cod_lote, lt.data_compra, lt.tipo_oleo, e.quantidade from lote lt join estoque e on lt.cod_lote = e.fk_lote;";
+        System.out.println("\nCÓDIGO | TIPO DE ÓLEO | QUANTIDADE | DATA DA COMPRA");
         ResultSet lista = conn.executarConsulta(sqlConsulta);
         try {
             while (lista.next()) {
-                String cod = lista.getString("cod_lote");
-                String dataCompra = h.dataPadraoBR(lista.getString("data_compra"));
-                String tipoOleo = lista.getString("tipo_oleo");
+                String cod = lista.getString("lt.cod_lote");
+                String dataCompra = h.dataPadraoBR(lista.getString("lt.data_compra"));
+                String tipoOleo = lista.getString("lt.tipo_oleo");
+                String qntd = lista.getString("e.quantidade");
 
-                System.out.printf("%s |  %s  | %s\n", cod, tipoOleo, dataCompra);
+                System.out.printf("%s |  %s  | %d | %s\n", cod, tipoOleo, qntd, dataCompra);
             }
         } catch (SQLException e) {
             System.out.println("Erro ao processar resultado: " + e.getMessage());
