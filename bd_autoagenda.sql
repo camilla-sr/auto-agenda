@@ -34,7 +34,7 @@ create table lote(
 
 create table estoque (
   id_estoque int(10) unsigned auto_increment primary key,
-  fk_produto int(10) unsigned default null,
+  fk_peca int(10) unsigned default null,
   fk_lote varchar(10) default null,
   quantidade int(3) default 0,
   data_ultima_atualizacao datetime default null,
