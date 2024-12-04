@@ -636,6 +636,10 @@ public class Agendamento {
             return false;
         }
     }
+    
+    public void relatorios(){
+        ag.relatorio();
+    }
 
     // -------------- GETTERS E SETTERS --------------
     public int getIdAgendamento() {

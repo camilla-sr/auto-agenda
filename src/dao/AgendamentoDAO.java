@@ -219,9 +219,9 @@ public class AgendamentoDAO {
                 String servico = lista.getString("s.desc_servico");
                 String dataCadastro = h.dataPadraoBR(lista.getString("a.data_cadastro"));
                 String dataPrevisao = h.dataPadraoBR(lista.getString("a.data_previsao_entrega"));
-                if(lista.getString("a.data_conclusao") != null){
+                if (lista.getString("a.data_conclusao") != null) {
                     dataConclusao = h.dataPadraoBR(lista.getString("a.data_conclusao"));
-                }else{
+                } else {
                     dataConclusao = "Em aberto";
                 }
                 String statusAg = lista.getString("a.status_agendamento");
@@ -231,7 +231,7 @@ public class AgendamentoDAO {
                 } else if (statusAg.equals("D")) {
                     status = "Finalizado";
                 }
-                
+
                 System.out.printf("%s.  %s  | %s | %s | %s | %s\t | %s\n",
                         id, funcionario, servico, dataCadastro, dataPrevisao, dataConclusao, status);
             }
@@ -259,5 +259,99 @@ public class AgendamentoDAO {
             conn.desconectar();
         }
         return contagem;
+    }
+
+    public void relatorio() {
+        // SQL para obter todos os agendamentos, status, peças e lotes
+        String sqlConsulta = "SELECT f.nome_funcionario, \n" +
+                        "       a.id_agendamento, \n" +
+                        "       a.status_agendamento,\n" +
+                        "       COUNT(DISTINCT apu.fk_estoque) AS total_produtos_usados,\n" +
+                        "       SUM(apu.qntd_usada) AS total_qntd_usada\n" +
+                        "FROM agendamento a\n" +
+                        "JOIN funcionario f ON a.fk_funcionario = f.id_funcionario\n" +
+                        "LEFT JOIN aux_prod_usados apu ON a.id_agendamento = apu.fk_agendamento\n" +
+                        "LEFT JOIN estoque e ON apu.fk_estoque = e.id_estoque\n" +
+                        "GROUP BY f.nome_funcionario, a.id_agendamento, a.status_agendamento\n" +
+                        "ORDER BY f.nome_funcionario, a.id_agendamento";
+
+        ResultSet lista = conn.executarConsulta(sqlConsulta);
+        System.out.println("---------------------------");
+
+        try {
+            if (lista != null) {
+                // Variáveis de contagem
+                int agendamentosAbertos = 0;
+                int agendamentosFinalizados = 0;
+                int totalPecasUsadas = 0;
+                int totalLotesUsados = 0;
+
+                String nomeFuncionarioAtual = "";
+
+                while (lista.next()) {
+                    String nomeFuncionario = lista.getString("nome_funcionario");
+                    int idAgendamento = lista.getInt("id_agendamento");
+                    String statusAgendamento = lista.getString("status_agendamento");
+                    Integer fkPeca = lista.getInt("fk_peca");
+                    Integer fkLote = lista.getInt("fk_lote");
+                    int quantidade = lista.getInt("quantidade");
+
+                    // Verificar se o funcionário mudou (iniciar novo funcionário)
+                    if (!nomeFuncionario.equals(nomeFuncionarioAtual)) {
+                        // Exibir os resultados do funcionário anterior, se houver
+                        if (!nomeFuncionarioAtual.isEmpty()) {
+                            System.out.println("Funcionário: " + nomeFuncionarioAtual);
+                            System.out.println("Total de agendamentos: " + verificaRegistro());
+                            System.out.println("Agendamentos em aberto: " + agendamentosAbertos);
+                            System.out.println("Agendamentos finalizados: " + agendamentosFinalizados);
+                            System.out.println("Total de peças usadas: " + totalPecasUsadas);
+                            System.out.println("Total de lotes usados: " + totalLotesUsados);
+                            System.out.println("---------------------------");
+                        }
+                        // Resetar as variáveis para o novo funcionário
+                        nomeFuncionarioAtual = nomeFuncionario;
+                        agendamentosAbertos = 0;
+                        agendamentosFinalizados = 0;
+                        totalPecasUsadas = 0;
+                        totalLotesUsados = 0;
+                    }
+
+                    // Contar agendamentos em aberto ou finalizados
+                    if ("A".equals(statusAgendamento)) {
+                        agendamentosAbertos++;
+                    } else if ("F".equals(statusAgendamento)) {
+                        agendamentosFinalizados++;
+                    }
+
+                    // Verificar se a peça foi usada
+                    if (fkPeca != null) {
+                        totalPecasUsadas += quantidade;
+                    }
+
+                    // Verificar se o lote foi usado
+                    if (fkLote != null) {
+                        totalLotesUsados += quantidade;
+                    }
+                }
+
+                // Exibir o relatório final para o último funcionário
+                if (!nomeFuncionarioAtual.isEmpty()) {
+                    System.out.println("Funcionário: " + nomeFuncionarioAtual);
+                    System.out.println("Total de agendamentos: " + verificaRegistro());
+                    System.out.println("Agendamentos em aberto: " + agendamentosAbertos);
+                    System.out.println("Agendamentos finalizados: " + agendamentosFinalizados);
+                    System.out.println("Total de peças usadas: " + totalPecasUsadas);
+                    System.out.println("Total de lotes usados: " + totalLotesUsados);
+                    System.out.println("---------------------------");
+                }
+            } else {
+                System.out.println("\tNenhum agendamento encontrado.");
+            }
+            lista.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao processar resultado: " + e.getMessage());
+        } finally {
+            conn.desconectar();
+        }
     }
 }

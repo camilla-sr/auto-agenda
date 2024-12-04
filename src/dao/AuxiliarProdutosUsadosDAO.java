@@ -129,7 +129,7 @@ public class AuxiliarProdutosUsadosDAO {
         return resposta;
     }
 
-    public String buscarIdEstoque(String identificador) {
+    public Integer buscarIdEstoque(String identificador) {
         Integer idEstoque = null;
 
         // Verificar se o identificador é numérico (para peça) ou não (para lote)
