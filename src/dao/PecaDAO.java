@@ -40,7 +40,7 @@ public class PecaDAO {
 
             if (!estoqueInserido) {
                 System.out.println("Erro ao cadastrar peça no estoque");
-                apagarPeca(idPeca);
+                rollback(idPeca);
                 return false;
             }
             resposta = true;
@@ -202,5 +202,20 @@ public class PecaDAO {
             conn.desconectar();
         }
         return contagem;
+    }
+    
+    public boolean rollback(int id) {
+        boolean resposta = false;
+
+        String sqlDelEstoque = "DELETE from peca WHERE id_peca = " + id;
+        resposta = conn.executar(sqlDelEstoque);
+
+        if (resposta) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 }

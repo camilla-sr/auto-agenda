@@ -46,6 +46,7 @@ public class LoteDAO {
             estoqueInserido = conn.executar(sqlInserirEstoque);
             if (!estoqueInserido) {
                 System.out.println("Erro ao cadastrar no estoque.");
+                rollback(codLote);
                 return false;
             }
             resposta = true;  // Se ambos os inserts foram bem-sucedidos, retorna true
@@ -147,7 +148,7 @@ public class LoteDAO {
 
         String sqlDelEstoque = "DELETE from estoque WHERE fk_lote = '" + codLote + "'";
         resposta = conn.executar(sqlDelEstoque);
-        
+
         if (resposta) {
             String sqlDelLote = "DELETE from lote WHERE cod_lote = '" + codLote + "'";
             resposta = conn.executar(sqlDelLote);
@@ -219,5 +220,20 @@ public class LoteDAO {
             conn.desconectar();
         }
         return contagem;
+    }
+    
+    public boolean rollback(String codLote) {
+        boolean resposta = false;
+
+        String sqlDelEstoque = "DELETE from lote WHERE cod_lote = '" + codLote + "'";
+        resposta = conn.executar(sqlDelEstoque);
+
+        if (resposta) {
+            conn.desconectar();
+            return true;
+        } else {
+            conn.desconectar();
+            return false;
+        }
     }
 }
