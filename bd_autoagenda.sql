@@ -21,8 +21,7 @@ create table funcionario (
 
 create table peca (
   id_peca int(10) unsigned auto_increment primary key,
-  desc_peca varchar(150) default null,
-  qntd_peca int(2) default 0
+  desc_peca varchar(150) default null
 );
 
 create table lote(
