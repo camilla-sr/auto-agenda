@@ -14,7 +14,7 @@
 
 .acao{
     transition: all 0.2s ease;
-    box-shadow: 3px 3px black;
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.61);
 }
 
 .acao:hover{
@@ -39,11 +39,25 @@
     background-position: right 5px center;
 }
 
-.home:hover{
-    box-shadow: 0px 0px 12px yellow;
+.home{
+    background: transparent;
+    border: none;
+    border-radius: 50rem;
 }
 
+.home:hover{
+    box-shadow: 0px 0px 10px white;
+}
 
+.adicionar:hover{
+    transition: all 0.3s ease;
+    box-shadow: 0px 0px 15px green;
+    border-radius: 20px;
+}
+
+.active:hover{
+    color: blue;
+}
 
 
 /* .botao{
