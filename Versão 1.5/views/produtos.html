@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - Centro Automotivo JJ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../assets/estilo.css">
+    <script src="../assets/script.js"></script>
+</head>
+<body class="bg-light">
+    <div id="barra"></div>
+
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between mb-4">
+            <h2 class="fw-bold text-dark">Produtos em Estoque</h2>
+            <button class="btn btn-success adicionar">
+                <img src="../assets/plus.png" width="25"> Novo Produto
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover acao">
+                <thead style="background-color: rgba(0, 0, 0, 0.7); color: white; border-bottom: 2px solid black;">
+                    <tr>
+                        <th>ID</th>
+                        <th>Produto</th>
+                        <th>Descrição</th>
+                        <th>Estoque</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>Óleo Motor</td>
+                        <td>Óleo sintético 5W30 - 1L</td>
+                        <td>45 unidades</td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-2">Editar</button>
+                            <button class="btn btn-sm btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>002</td>
+                        <td>Filtro de Ar</td>
+                        <td>Filtro de ar esportivo</td>
+                        <td>32 unidades</td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-2">Editar</button>
+                            <button class="btn btn-sm btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>003</td>
+                        <td>Pastilha Freio</td>
+                        <td>Pastilha cerâmica dianteira</td>
+                        <td>18 unidades</td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-2">Editar</button>
+                            <button class="btn btn-sm btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>004</td>
+                        <td>Bateria</td>
+                        <td>Bateria 60Ah 12V</td>
+                        <td>12 unidades</td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-2">Editar</button>
+                            <button class="btn btn-sm btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>005</td>
+                        <td>Limpador Parabrisa</td>
+                        <td>Palhetas 24"/18"</td>
+                        <td>27 unidades</td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-2">Editar</button>
+                            <button class="btn btn-sm btn-danger">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
