@@ -1,120 +1,269 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produtos - Centro Automotivo JJ</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="../assets/estilo.css">
-    <script src="../assets/script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos - Centro Automotivo JJ</title>
+  <link rel="stylesheet" href="/Versão 1.5/assets/style.css">
 </head>
-<style>
-     td {
-  border: 1px solid black;
-  border-radius: 10px;
-}
-</style>
-<body class="bg-light">
-    <div id="barra"></div>
-
-    <div class="container mt-5">
-        <div class="d-flex justify-content-between mb-4">
-            <h2 class="fw-bold text-dark">Produtos em Estoque</h2>
-            <button class="btn btn-success adicionar" data-bs-toggle="modal" data-bs-target="#addServico">
-                <img src="../assets/plus.png" width="25"> Novo Produto
-            </button>
+<body>
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">
+        <h1><span class="logo-highlight">Centro Automotivo</span> JJ</h1>
+      </div>
+      
+      <nav class="nav-menu">
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link">Dashboard</a>
         </div>
-
-        <div class="table-responsive">
-            <table class="table table-hover acao">
-                <thead style="background-color: rgba(0, 0, 0, 0.7); color: white;">
-                    <tr>
-                        <th>ID</th>
-                        <th>Produto</th>
-                        <th>Descrição</th>
-                        <th>Estoque</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>001</td>
-                        <td>Óleo Motor</td>
-                        <td>Óleo sintético 5W30 - 1L</td>
-                        <td>45 unidades</td>
-                        <td>
-                            <button class="btn btn-sm btn-success me-2">Editar</button>
-                            <button class="btn btn-sm btn-danger">Excluir</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>002</td>
-                        <td>Filtro de Ar</td>
-                        <td>Filtro de ar esportivo</td>
-                        <td>32 unidades</td>
-                        <td>
-                            <button class="btn btn-sm btn-success me-2">Editar</button>
-                            <button class="btn btn-sm btn-danger">Excluir</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>003</td>
-                        <td>Pastilha Freio</td>
-                        <td>Pastilha cerâmica dianteira</td>
-                        <td>18 unidades</td>
-                        <td>
-                            <button class="btn btn-sm btn-success me-2">Editar</button>
-                            <button class="btn btn-sm btn-danger">Excluir</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>004</td>
-                        <td>Bateria</td>
-                        <td>Bateria 60Ah 12V</td>
-                        <td>12 unidades</td>
-                        <td>
-                            <button class="btn btn-sm btn-success me-2">Editar</button>
-                            <button class="btn btn-sm btn-danger">Excluir</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>005</td>
-                        <td>Limpador Parabrisa</td>
-                        <td>Palhetas 24"/18"</td>
-                        <td>27 unidades</td>
-                        <td>
-                            <button class="btn btn-sm btn-success me-2">Editar</button>
-                            <button class="btn btn-sm btn-danger">Excluir</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="nav-item">
+          <a href="agendamentos.html" class="nav-link">Agendamentos</a>
         </div>
+        <div class="nav-item">
+          <a href="servicos.html" class="nav-link">Serviços</a>
+        </div>
+        <div class="nav-item">
+          <a href="produtos.html" class="nav-link active">Produtos</a>
+        </div>
+        <div class="nav-item">
+          <a href="calendario.html" class="nav-link">Calendário</a>
+        </div>
+        <div class="nav-item">
+          <a href="login.html" class="nav-link">Sair</a>
+        </div>
+      </nav>
     </div>
+  </header>
 
-    <div class="modal fade" id="addServico" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" style="color: black;">Cadastro de Serviço</h1>
-                </div>
-                <div class="modal-body modal-add">
-                    <span style="color: black;">Serviço</span>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control">
-                    </div>
-                    <span style="color: black;">Descrição do Serviço</span>
-                    <div class="input-group">
-                        <textarea class="form-control"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger " data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
-                </div>
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+    <div class="container">
+      <h2 style="margin-bottom: 20px;">Gerenciamento de Produtos</h2>
+      
+      <!-- Formulário de Produto -->
+      <div class="form-container" id="produto-form-container">
+        <div class="form-header">
+          <h3>Cadastrar Novo Produto</h3>
+        </div>
+        
+        <form id="produto-form">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="nome" class="form-label">Nome do Produto</label>
+                <input type="text" id="nome" name="nome" class="form-input" placeholder="Nome do produto" required>
+              </div>
             </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="codigo" class="form-label">Código</label>
+                <input type="text" id="codigo" name="codigo" class="form-input" placeholder="Código do produto" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select id="categoria" name="categoria" class="form-input" required>
+                  <option value="">Selecione uma categoria</option>
+                  <option value="oleo">Óleos e Lubrificantes</option>
+                  <option value="filtros">Filtros</option>
+                  <option value="freios">Sistema de Freios</option>
+                  <option value="suspensao">Suspensão</option>
+                  <option value="motor">Motor</option>
+                  <option value="eletrica">Sistema Elétrico</option>
+                  <option value="acessorios">Acessórios</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="fornecedor" class="form-label">Fornecedor</label>
+                <select id="fornecedor" name="fornecedor" class="form-input" required>
+                  <option value="">Selecione um fornecedor</option>
+                  <option value="1">AutoPeças Brasil</option>
+                  <option value="2">Distribuidora de Peças Ltda</option>
+                  <option value="3">Peças & Cia</option>
+                  <option value="4">Importadora de Autopeças</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="preco_custo" class="form-label">Preço de Custo (R$)</label>
+                <input type="number" id="preco_custo" name="preco_custo" step="0.01" min="0" class="form-input" placeholder="0,00" required>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="preco_venda" class="form-label">Preço de Venda (R$)</label>
+                <input type="number" id="preco_venda" name="preco_venda" step="0.01" min="0" class="form-input" placeholder="0,00" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="estoque_atual" class="form-label">Estoque Atual</label>
+                <input type="number" id="estoque_atual" name="estoque_atual" min="0" class="form-input" placeholder="0" required>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="estoque_minimo" class="form-label">Estoque Mínimo</label>
+                <input type="number" id="estoque_minimo" name="estoque_minimo" min="0" class="form-input" placeholder="0" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea id="descricao" name="descricao" class="form-input" rows="3" placeholder="Descrição detalhada do produto"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="reset" class="btn btn-secondary" id="btn-cancelar">Cancelar</button>
+            <button type="submit" class="btn" id="btn-salvar">Salvar Produto</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tabela de Produtos -->
+      <div class="table-container">
+        <div class="table-header">
+          <h3 class="table-title">Lista de Produtos</h3>
+          <button class="btn btn-secondary" id="btn-novo-produto">Novo Produto</button>
         </div>
+        
+        <div style="padding: 15px;">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="busca" class="form-label">Buscar Produto</label>
+                <input type="text" id="busca" name="busca" class="form-input" placeholder="Digite para buscar...">
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="filtro_categoria" class="form-label">Filtrar por Categoria</label>
+                <select id="filtro_categoria" name="filtro_categoria" class="form-input">
+                  <option value="">Todas as categorias</option>
+                  <option value="oleo">Óleos e Lubrificantes</option>
+                  <option value="filtros">Filtros</option>
+                  <option value="freios">Sistema de Freios</option>
+                  <option value="suspensao">Suspensão</option>
+                  <option value="motor">Motor</option>
+                  <option value="eletrica">Sistema Elétrico</option>
+                  <option value="acessorios">Acessórios</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>Preço de Venda</th>
+              <th>Estoque Atual</th>
+              <th>Estoque Mínimo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>OL5530</td>
+              <td>Óleo Motor 5W30</td>
+              <td>Óleos e Lubrificantes</td>
+              <td>R$ 35,90</td>
+              <td>3</td>
+              <td>5</td>
+              <td class="action-buttons">
+                <button class="btn btn-action" id="btn-editar-1">Editar</button>
+                <button class="btn btn-action" id="btn-excluir-1">Excluir</button>
+              </td>
+            </tr>
+            <tr>
+              <td>FOU123</td>
+              <td>Filtro de Óleo Universal</td>
+              <td>Filtros</td>
+              <td>R$ 25,50</td>
+              <td>2</td>
+              <td>10</td>
+              <td class="action-buttons">
+                <button class="btn btn-action" id="btn-editar-2">Editar</button>
+                <button class="btn btn-action" id="btn-excluir-2">Excluir</button>
+              </td>
+            </tr>
+            <tr>
+              <td>PFD456</td>
+              <td>Pastilha de Freio Dianteira Gol/Parati</td>
+              <td>Sistema de Freios</td>
+              <td>R$ 89,90</td>
+              <td>1</td>
+              <td>3</td>
+              <td class="action-buttons">
+                <button class="btn btn-action" id="btn-editar-3">Editar</button>
+                <button class="btn btn-action" id="btn-excluir-3">Excluir</button>
+              </td>
+            </tr>
+            <tr>
+              <td>AMORT789</td>
+              <td>Amortecedor Dianteiro HB20</td>
+              <td>Suspensão</td>
+              <td>R$ 299,90</td>
+              <td>4</td>
+              <td>2</td>
+              <td class="action-buttons">
+                <button class="btn btn-action" id="btn-editar-4">Editar</button>
+                <button class="btn btn-action" id="btn-excluir-4">Excluir</button>
+              </td>
+            </tr>
+            <tr>
+              <td>BAT12V</td>
+              <td>Bateria 60Ah</td>
+              <td>Sistema Elétrico</td>
+              <td>R$ 349,90</td>
+              <td>5</td>
+              <td>3</td>
+              <td class="action-buttons">
+                <button class="btn btn-action" id="btn-editar-5">Editar</button>
+                <button class="btn btn-action" id="btn-excluir-5">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div style="padding: 15px; text-align: center;">
+          <button class="btn btn-secondary" id="btn-anterior" disabled>Anterior</button>
+          <span style="margin: 0 10px;">Página 1 de 1</span>
+          <button class="btn btn-secondary" id="btn-proximo" disabled>Próximo</button>
+        </div>
+      </div>
     </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
+    </div>
+  </footer>
 </body>
 </html>
