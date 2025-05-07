@@ -4,34 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/Versão 1.5/assets/style.css">
+  <link rel="stylesheet" href="/Versão 1.5/assets/style1.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <!-- Cabeçalho -->
   <header class="header">
-    <div class="container header-container">
+    <div class="container">
       <div class="logo">
         <h1><span class="logo-highlight">Centro Automotivo</span> JJ</h1>
       </div>
       
       <nav class="nav-menu">
         <div class="nav-item">
-          <a href="dashboard.html" class="nav-link">Dashboard</a>
+          <a href="index.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </div>
         <div class="nav-item">
-          <a href="agendamentos.html" class="nav-link">Agendamentos</a>
+          <a href="agendamentos.html" class="nav-link"><i class="fas fa-calendar-check"></i> Agendamentos</a>
         </div>
         <div class="nav-item">
-          <a href="servicos.html" class="nav-link">Serviços</a>
+          <a href="servicos.html" class="nav-link"><i class="fas fa-tools"></i> Serviços</a>
         </div>
         <div class="nav-item">
-          <a href="produtos.html" class="nav-link active">Produtos</a>
+          <a href="produtos.html" class="nav-link active"><i class="fas fa-box-open"></i> Produtos</a>
         </div>
         <div class="nav-item">
-          <a href="calendario.html" class="nav-link">Calendário</a>
+          <a href="calendario.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Calendário</a>
         </div>
         <div class="nav-item">
-          <a href="login.html" class="nav-link">Sair</a>
+          <a href="../login.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
         </div>
       </nav>
     </div>
@@ -40,27 +41,69 @@
   <!-- Conteúdo Principal -->
   <main class="main-content">
     <div class="container">
-      <h2 style="margin-bottom: 20px;">Gerenciamento de Produtos</h2>
+      <div class="page-header">
+        <h2><i class="fas fa-box-open"></i> Gerenciamento de Produtos</h2>
+        <p>Controle seu estoque e cadastre novos itens</p>
+      </div>
+      
+      <!-- Estatísticas rápidas -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-boxes"></i>
+          </div>
+          <div class="stat-info">
+            <h3>5</h3>
+            <p>Produtos cadastrados</p>
+          </div>
+        </div>
+        
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-info">
+            <h3>2</h3>
+            <p>Produtos com estoque baixo</p>
+          </div>
+        </div>
+        
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <h3>3</h3>
+            <p>Categorias em dia</p>
+          </div>
+        </div>
+      </div>
       
       <!-- Formulário de Produto -->
       <div class="form-container" id="produto-form-container">
         <div class="form-header">
-          <h3>Cadastrar Novo Produto</h3>
+          <h3><i class="fas fa-plus-circle"></i> Cadastrar Novo Produto</h3>
         </div>
         
         <form id="produto-form">
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
-                <label for="nome" class="form-label">Nome do Produto</label>
-                <input type="text" id="nome" name="nome" class="form-input" placeholder="Nome do produto" required>
+                <label for="nome">Nome do Produto</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-tag input-icon"></i>
+                  <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
+                </div>
               </div>
             </div>
             
             <div class="form-col">
               <div class="form-group">
-                <label for="codigo" class="form-label">Código</label>
-                <input type="text" id="codigo" name="codigo" class="form-input" placeholder="Código do produto" required>
+                <label for="codigo">Código</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-barcode input-icon"></i>
+                  <input type="text" id="codigo" name="codigo" placeholder="Código do produto" required>
+                </div>
               </div>
             </div>
           </div>
@@ -68,30 +111,36 @@
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
-                <label for="categoria" class="form-label">Categoria</label>
-                <select id="categoria" name="categoria" class="form-input" required>
-                  <option value="">Selecione uma categoria</option>
-                  <option value="oleo">Óleos e Lubrificantes</option>
-                  <option value="filtros">Filtros</option>
-                  <option value="freios">Sistema de Freios</option>
-                  <option value="suspensao">Suspensão</option>
-                  <option value="motor">Motor</option>
-                  <option value="eletrica">Sistema Elétrico</option>
-                  <option value="acessorios">Acessórios</option>
-                </select>
+                <label for="categoria">Categoria</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-folder input-icon"></i>
+                  <select id="categoria" name="categoria" required>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="oleo">Óleos e Lubrificantes</option>
+                    <option value="filtros">Filtros</option>
+                    <option value="freios">Sistema de Freios</option>
+                    <option value="suspensao">Suspensão</option>
+                    <option value="motor">Motor</option>
+                    <option value="eletrica">Sistema Elétrico</option>
+                    <option value="acessorios">Acessórios</option>
+                  </select>
+                </div>
               </div>
             </div>
             
             <div class="form-col">
               <div class="form-group">
-                <label for="fornecedor" class="form-label">Fornecedor</label>
-                <select id="fornecedor" name="fornecedor" class="form-input" required>
-                  <option value="">Selecione um fornecedor</option>
-                  <option value="1">AutoPeças Brasil</option>
-                  <option value="2">Distribuidora de Peças Ltda</option>
-                  <option value="3">Peças & Cia</option>
-                  <option value="4">Importadora de Autopeças</option>
-                </select>
+                <label for="fornecedor">Fornecedor</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-truck input-icon"></i>
+                  <select id="fornecedor" name="fornecedor" required>
+                    <option value="">Selecione um fornecedor</option>
+                    <option value="1">AutoPeças Brasil</option>
+                    <option value="2">Distribuidora de Peças Ltda</option>
+                    <option value="3">Peças & Cia</option>
+                    <option value="4">Importadora de Autopeças</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -99,15 +148,21 @@
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
-                <label for="preco_custo" class="form-label">Preço de Custo (R$)</label>
-                <input type="number" id="preco_custo" name="preco_custo" step="0.01" min="0" class="form-input" placeholder="0,00" required>
+                <label for="preco_custo">Preço de Custo (R$)</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-tag input-icon"></i>
+                  <input type="number" id="preco_custo" name="preco_custo" step="0.01" min="0" placeholder="0,00" required>
+                </div>
               </div>
             </div>
             
             <div class="form-col">
               <div class="form-group">
-                <label for="preco_venda" class="form-label">Preço de Venda (R$)</label>
-                <input type="number" id="preco_venda" name="preco_venda" step="0.01" min="0" class="form-input" placeholder="0,00" required>
+                <label for="preco_venda">Preço de Venda (R$)</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-dollar-sign input-icon"></i>
+                  <input type="number" id="preco_venda" name="preco_venda" step="0.01" min="0" placeholder="0,00" required>
+                </div>
               </div>
             </div>
           </div>
@@ -115,27 +170,40 @@
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
-                <label for="estoque_atual" class="form-label">Estoque Atual</label>
-                <input type="number" id="estoque_atual" name="estoque_atual" min="0" class="form-input" placeholder="0" required>
+                <label for="estoque_atual">Estoque Atual</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-boxes input-icon"></i>
+                  <input type="number" id="estoque_atual" name="estoque_atual" min="0" placeholder="0" required>
+                </div>
               </div>
             </div>
             
             <div class="form-col">
               <div class="form-group">
-                <label for="estoque_minimo" class="form-label">Estoque Mínimo</label>
-                <input type="number" id="estoque_minimo" name="estoque_minimo" min="0" class="form-input" placeholder="0" required>
+                <label for="estoque_minimo">Estoque Mínimo</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-exclamation-circle input-icon"></i>
+                  <input type="number" id="estoque_minimo" name="estoque_minimo" min="0" placeholder="0" required>
+                </div>
               </div>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="descricao" class="form-label">Descrição</label>
-            <textarea id="descricao" name="descricao" class="form-input" rows="3" placeholder="Descrição detalhada do produto"></textarea>
+            <label for="descricao">Descrição</label>
+            <div class="input-wrapper">
+              <i class="fas fa-align-left input-icon"></i>
+              <textarea id="descricao" name="descricao" rows="3" placeholder="Descrição detalhada do produto"></textarea>
+            </div>
           </div>
           
           <div class="form-actions">
-            <button type="reset" class="btn btn-secondary" id="btn-cancelar">Cancelar</button>
-            <button type="submit" class="btn" id="btn-salvar">Salvar Produto</button>
+            <button type="reset" class="btn btn-secondary">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn">
+              <i class="fas fa-save"></i> Salvar Produto
+            </button>
           </div>
         </form>
       </div>
@@ -143,117 +211,170 @@
       <!-- Tabela de Produtos -->
       <div class="table-container">
         <div class="table-header">
-          <h3 class="table-title">Lista de Produtos</h3>
-          <button class="btn btn-secondary" id="btn-novo-produto">Novo Produto</button>
+          <h3><i class="fas fa-clipboard-list"></i> Lista de Produtos</h3>
+          <button class="btn btn-primary" id="btn-novo-produto">
+            <i class="fas fa-plus"></i> Novo Produto
+          </button>
         </div>
         
-        <div style="padding: 15px;">
+        <div class="table-filters">
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
-                <label for="busca" class="form-label">Buscar Produto</label>
-                <input type="text" id="busca" name="busca" class="form-input" placeholder="Digite para buscar...">
+                <label for="busca">Buscar Produto</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-search input-icon"></i>
+                  <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
+                </div>
               </div>
             </div>
             
             <div class="form-col">
               <div class="form-group">
-                <label for="filtro_categoria" class="form-label">Filtrar por Categoria</label>
-                <select id="filtro_categoria" name="filtro_categoria" class="form-input">
-                  <option value="">Todas as categorias</option>
-                  <option value="oleo">Óleos e Lubrificantes</option>
-                  <option value="filtros">Filtros</option>
-                  <option value="freios">Sistema de Freios</option>
-                  <option value="suspensao">Suspensão</option>
-                  <option value="motor">Motor</option>
-                  <option value="eletrica">Sistema Elétrico</option>
-                  <option value="acessorios">Acessórios</option>
-                </select>
+                <label for="filtro_categoria">Filtrar por Categoria</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-filter input-icon"></i>
+                  <select id="filtro_categoria" name="filtro_categoria">
+                    <option value="">Todas as categorias</option>
+                    <option value="oleo">Óleos e Lubrificantes</option>
+                    <option value="filtros">Filtros</option>
+                    <option value="freios">Sistema de Freios</option>
+                    <option value="suspensao">Suspensão</option>
+                    <option value="motor">Motor</option>
+                    <option value="eletrica">Sistema Elétrico</option>
+                    <option value="acessorios">Acessórios</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
         </div>
         
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Preço de Venda</th>
-              <th>Estoque Atual</th>
-              <th>Estoque Mínimo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>OL5530</td>
-              <td>Óleo Motor 5W30</td>
-              <td>Óleos e Lubrificantes</td>
-              <td>R$ 35,90</td>
-              <td>3</td>
-              <td>5</td>
-              <td class="action-buttons">
-                <button class="btn btn-action" id="btn-editar-1">Editar</button>
-                <button class="btn btn-action" id="btn-excluir-1">Excluir</button>
-              </td>
-            </tr>
-            <tr>
-              <td>FOU123</td>
-              <td>Filtro de Óleo Universal</td>
-              <td>Filtros</td>
-              <td>R$ 25,50</td>
-              <td>2</td>
-              <td>10</td>
-              <td class="action-buttons">
-                <button class="btn btn-action" id="btn-editar-2">Editar</button>
-                <button class="btn btn-action" id="btn-excluir-2">Excluir</button>
-              </td>
-            </tr>
-            <tr>
-              <td>PFD456</td>
-              <td>Pastilha de Freio Dianteira Gol/Parati</td>
-              <td>Sistema de Freios</td>
-              <td>R$ 89,90</td>
-              <td>1</td>
-              <td>3</td>
-              <td class="action-buttons">
-                <button class="btn btn-action" id="btn-editar-3">Editar</button>
-                <button class="btn btn-action" id="btn-excluir-3">Excluir</button>
-              </td>
-            </tr>
-            <tr>
-              <td>AMORT789</td>
-              <td>Amortecedor Dianteiro HB20</td>
-              <td>Suspensão</td>
-              <td>R$ 299,90</td>
-              <td>4</td>
-              <td>2</td>
-              <td class="action-buttons">
-                <button class="btn btn-action" id="btn-editar-4">Editar</button>
-                <button class="btn btn-action" id="btn-excluir-4">Excluir</button>
-              </td>
-            </tr>
-            <tr>
-              <td>BAT12V</td>
-              <td>Bateria 60Ah</td>
-              <td>Sistema Elétrico</td>
-              <td>R$ 349,90</td>
-              <td>5</td>
-              <td>3</td>
-              <td class="action-buttons">
-                <button class="btn btn-action" id="btn-editar-5">Editar</button>
-                <button class="btn btn-action" id="btn-excluir-5">Excluir</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço de Venda</th>
+                <th>Estoque</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="product-code">OL5530</span></td>
+                <td>Óleo Motor 5W30</td>
+                <td><span class="category-badge oleo">Óleos e Lubrificantes</span></td>
+                <td class="price">R$ 35,90</td>
+                <td>
+                  <div class="stock-indicator low-stock">
+                    <span class="stock-amount">3</span>
+                    <span class="stock-min">(Mín: 5)</span>
+                  </div>
+                </td>
+                <td class="action-buttons">
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="product-code">FOU123</span></td>
+                <td>Filtro de Óleo Universal</td>
+                <td><span class="category-badge filtros">Filtros</span></td>
+                <td class="price">R$ 25,50</td>
+                <td>
+                  <div class="stock-indicator low-stock">
+                    <span class="stock-amount">2</span>
+                    <span class="stock-min">(Mín: 10)</span>
+                  </div>
+                </td>
+                <td class="action-buttons">
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="product-code">PFD456</span></td>
+                <td>Pastilha de Freio Dianteira Gol/Parati</td>
+                <td><span class="category-badge freios">Sistema de Freios</span></td>
+                <td class="price">R$ 89,90</td>
+                <td>
+                  <div class="stock-indicator low-stock">
+                    <span class="stock-amount">1</span>
+                    <span class="stock-min">(Mín: 3)</span>
+                  </div>
+                </td>
+                <td class="action-buttons">
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="product-code">AMORT789</span></td>
+                <td>Amortecedor Dianteiro HB20</td>
+                <td><span class="category-badge suspensao">Suspensão</span></td>
+                <td class="price">R$ 299,90</td>
+                <td>
+                  <div class="stock-indicator good-stock">
+                    <span class="stock-amount">4</span>
+                    <span class="stock-min">(Mín: 2)</span>
+                  </div>
+                </td>
+                <td class="action-buttons">
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="product-code">BAT12V</span></td>
+                <td>Bateria 60Ah</td>
+                <td><span class="category-badge eletrica">Sistema Elétrico</span></td>
+                <td class="price">R$ 349,90</td>
+                <td>
+                  <div class="stock-indicator good-stock">
+                    <span class="stock-amount">5</span>
+                    <span class="stock-min">(Mín: 3)</span>
+                  </div>
+                </td>
+                <td class="action-buttons">
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         
-        <div style="padding: 15px; text-align: center;">
-          <button class="btn btn-secondary" id="btn-anterior" disabled>Anterior</button>
-          <span style="margin: 0 10px;">Página 1 de 1</span>
-          <button class="btn btn-secondary" id="btn-proximo" disabled>Próximo</button>
+        <div class="table-pagination">
+          <button class="btn btn-secondary" id="btn-anterior" disabled>
+            <i class="fas fa-chevron-left"></i> Anterior
+          </button>
+          <span class="pagination-info">Página 1 de 1</span>
+          <button class="btn btn-secondary" id="btn-proximo" disabled>
+            Próximo <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -262,7 +383,13 @@
   <!-- Rodapé -->
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
+      <div class="footer-content">
+        <div class="footer-logo">
+          <i class="fas fa-car-alt"></i>
+          <span class="logo-highlight">Centro Automotivo</span> JJ
+        </div>
+        <p class="footer-copyright">&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
+      </div>
     </div>
   </footer>
 </body>
