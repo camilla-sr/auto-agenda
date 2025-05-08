@@ -10,20 +10,37 @@
     color:yellow !important;
 }
 
-.acao{
+.acao {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+	margin: 0;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
     transition: all 0.2s ease;
     box-shadow: 3px 3px rgba(0, 0, 0, 0.61);
+    display: inline-block;
 }
 
 .acao:hover{
     box-shadow: 0px 0px black;
 }
 
+.acao-edit{
+	background-image: url("/assets/icons/edit-1.png");
+	margin-right: 30px;
+}
+
+.acao-exc{
+	background-image: url("/assets/icons/trash-1.png");
+}
+
 #busca{
     transition: 0.2s ease;
     border: 0;
     padding-left: 30px;
-    background-image: url("../assets/search-1.png");
+    background-image: url("/assets/icons/search-1.png");
     background-size: 20px;
     background-repeat: no-repeat;
     background-position: left 5px center;
@@ -39,8 +56,14 @@
 
 .home{
     background: transparent;
+	background-image: url("/assets/icons/home.png");
+	background-size: 40px;
+	background-repeat: no-repeat;
     border: none;
     border-radius: 50rem;
+	width: 40px;
+	height: 40px;
+	display: inline-block;
 }
 
 .home:hover{
@@ -49,7 +72,6 @@
 
 .adicionar{
     transition: all 0.3s ease;
-
 }
 
 .adicionar:hover{
@@ -77,6 +99,9 @@ h3{
     border-top: solid 2px;
 }
 
+.modal.fade .modal-dialog {
+    transform: translateY(-5%) !important; /* Diminui o deslocamento */
+}
 
 /* TELA DE LOGIN */
 .mensagem{
