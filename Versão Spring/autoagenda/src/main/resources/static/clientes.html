@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços</title>
+	<link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="assets/js/script.js"></script>
+	<link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+
+<body>
+    <div id="barra"></div>
+
+    <div class="container">
+        <div class="busca d-flex justify-content-end">
+            <div class="input-group w-25 p-3 m-4">
+                <input type="text" class="form-control" placeholder="Pesquisa" id="busca">
+            </div>
+        </div>
+        <div class="d-flex justify-content-start mp-4">
+            <button type="button" class="btn btn-success adicionar" data-bs-toggle="modal" data-bs-target="#addCliente">Cadastrar Cliente</button>
+        </div>
+        
+        <div>
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">WhatsApp</th>
+                    <th scope="col">Veículo</th>
+                    <th scope="col">Ano Veículo</th>
+                    <th scope="col" class="text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Fulano de tal</td>
+                    <td>11 92638-2735</td>
+                    <td>Sedan</td>
+                    <td>2020</td>
+                    <td class="text-center">
+						<input type="hidden" value="1">
+                        <button type="button" class="btn btn-outline-warning acao acao-edit"></button>
+                        <button type="button" class="btn btn-outline-danger acao acao-exc"></button>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="addCliente" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" style="overflow: hidden;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4">Cadastro de Cliente</h1>
+                    </div>
+                    <div class="modal-body modal-add">
+                        <span class="text-dark">Nome do Cliente</span>
+                        <div class="input-group mb-3">
+                            <input type="text" id="nomeCliente" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-body modal-add">
+                        <span class="text-dark">WhatsApp</span>
+                        <div class="input-group mb-3">
+                            <input type="text" id="whatsapp" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-body modal-add">
+                        <span class="text-dark">Veículo</span>
+                        <div class="input-group mb-3">
+                            <input type="text" id="veiculo" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-body modal-add">
+                        <span class="text-dark">Ano do Veículo</span>
+                        <div class="input-group mb-3">
+                            <input type="text" id="veiculoano" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger " data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
