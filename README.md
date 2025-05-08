@@ -1,131 +1,42 @@
-> Atualizado pela última vez em 20/10
+> Atualizado em 07/05/2025
 
-# Classes
+### :grey_question: O que há de novo
 
-### Peças
-Referência à entidade Peca no banco de dados que irá armazenar todas as peças e ferramentas da oficina para informatizar o controle de estoque, atualmente feito por memória dos funcionários
+Nesta nova versão, foi feita com Spring Boot e com a linguagem HTML e suas ferramentas: JavaScript, CSS sob a frame BootStrap v5.3.6. Para a organização é usado o padrão MVC (Model, View e Controller).
 
-- [X]  cadastrarPeca();
-- [X]  listarPecas();
-- [X]  editarPeca();
-- [X]  apagarPeca();
-- [X]  Métodos de apoio:
-    - [X]  validarID();
-- [X]  Getters e Setters;
-
-### Funcionário
-Referência à entidade Funcionario no banco de dados que irá armazenar somente os nomes dos funcionários para identificá-los como responsáveis nos agendamentos
-
-- [X]  cadastrarFuncionario();
-- [X]  listarFuncionario();
-- [X]  editarFuncionario();
-- [X]  apagarFuncionario();
-- [X]  Métodos de apoio:
-    - [X]  validarID();
-- [X]  Getters e Setters;
-
-### ~~Funcionamento~~
-~~Referência à entidade Funcionamento no banco de dados com o único obejtivo de registrar os dias e horários de funcionamento da oficina. Será utilizado para que o sistema barre sozinho agendamentos em dias e/ou horários em que a oficina não está operando~~
-
-### Estoque
-Referência à entidade Estoque no banco de dados, seu intuito é mostrar os valores somados das entidades Peça e Lote, que irá armazenar informações das garras de óleo comercializados e utilizados na oficina
-
-- [X]  listarProdutos();
-- Métodos de Apoio:
-    - [X]  contadorPecas()
-    - [X]  contadorOleo()  
-- [X]  Getters e Setters;
-
-### Auxiliar Produtos Usados
-Referência à entidade auxiliar Auxiliar Produtos Usados, que tem por finalidade indicar os produtos usados no serviço agendado **após a finalizaçao do agendamento no sistema**, por produtos entende-se peças e/ou garrafas de óleo. Essa tabela vai relacionar as Peças e Garrafas de Óleo com o agendamento finalizado indicando as quantidades gastas
-
-- [ ]  registarUsosInsumo();
-- [ ]  listarUsos();
-- [ ]  editarUso();
-- [ ]  apagarUso();
-- Métodos de Apoio:
-    - [ ]  validarID()
-- [ ]  Getters e Setters;
-
-### Agendamento
-Referência à entidade Agendamento no banco de dados que irá armazenar as informações referentes aos serviços agendados para outro dia. Aqui será identificado o cliente que o receberá, o funcionário responsável por realizar o serviço e informações básicas sobre o automóvel. **Essa tabela não irá armazenar valores pois não há controle de OS no sistema** 
-
-- [ ]  cadastrarAgendamento();
-- [ ]  listarAgendamentos();
-- [ ]  editarAgendamento();
-- [ ]  apagarAgendamento();
-- [ ]  atualizarStatus();
-- [ ]  registarProdutosUsados();
-- Métodos de Apoio:
-    - [ ]  validarID()
-- [ ]  Getters e Setters;
-
-### Cliente
-Referência à entidade Cliente no banco de dados, vai ser utilizada para guardar as informações básicas dos clientes que receberão o atendimento na oficina somente para referência dos funcionários, uma vez que os cliente **não terão** acesso ao sistema.
-
-- [ ]  cadastrarCliente();
-- [ ]  listarClientes();
-- [ ]  editarCliente();
-- [ ]  apagarCliente();
-- Métodos de Apoio:
-    - [ ]  validarID()  
-- [X]  Getters e Setters;
-
-### Lote
-Referência à entidade Lote no bando de dados, ao contrário do que o nome sugere, será usada para armazenar as informações das garrafas de óleo automotivo. Foi necessária essa criação esses óleos possuem data de validade e finalidades diferentes, além de serem compradas em lotes.Por essa razão, a tabela não possui intenção de identificar as unidades especificamente, esse é o motivo de não haver um ID nem um auto_increment no banco.
-
-- [X]  cadastrarLote();
-- [X]  listarLote();
-- [X]  editarLote();
-- [X]  apagarLote();
-- Métodos de Apoio:
-    - [X]  contadorPecas()
-    - [X]  contadorOleo()  
-- [X]  Getters e Setters;
+O uso de script de Banco de Dados foram deixadas de fora deste projeto com o uso da dependência "H2 Database".
 
 
-### Tipo de Serviço
-Referência à entidade Tipo Serviço no banco de dados, será utilizada para referenciar qual o serviço agendado para um determinado cliente, descreverá como funciona o serviço somente. Não haverá vínculo de valores, pois seria uma informação inútil para o sistema como ele está hoje, uma vez que não há controle de OS (Ordem de Serviço)
+### :mag_right: Detalhes do projeto
 
-- [X]  cadastrarTipoServico();
-- [X]  listarTiposServico();
-- [ ]  editarTipoServico();
-- [ ]  apagarTipoServico();
-- Métodos de Apoio:
-    - [ ]  validarID() 
-- [X]  Getters e Setters;
+O projeto __versão Spring__ fica localizado no caminho `**/auto-agenda/Versão Spring` enquanto a __versão para VS Code__ rodando no formato web fica em: `**/auto-agenda/Versão 1.5.`
 
----
+> A existência da pasta com a `versão 1.5` serve para facilitar o acesso as interfaces web do projeto para criar e modificar funcionalidades e design usando o VS Code.
 
-### Linha Evolutiva do código
-- Inicialmente, a conexão com o banco e envio de dados seria feita a partir das classes principais e assim estava estruturado. Na última reunião do grupo, houveram mudanças discutidas a serem implementadas seguindo os novos diagramas do repositório oficial do projeto, obtido através de
+
+
+
+
+#### :computer: Abrindo pela primeira vez
+
+No Eclipse:
 
 ```
-    git clone https://github.com/senac-sp-cas-sa/Equipe_A-Auto_Agenda.git
+Importar projeto > Maven > "Existing Maven Projects" > Localizar e selecionar caminho do projeto > Finalize com "Finish" 
 ```
 
-- Decidi adaptar as classes já desenvolvidas para serem as DAOs de nossas principais, trocando de lugar no caso da função, ou seja
-    - [1] as classes já codadas serão a camada mais profunda que trata da conexão com o banco de dados propriamente dito
-    - [2] as novas classes principais funcionarão como um filtro para o que for digitado de forma que a main fique limpa em questão de validações
+> **:bulb: Dica de uso com VS Code:**
+>
+>A importação é o processo comum como qualquer outro arquivo, porém caso queira fazer alterações e vê-las aparecendo em tempo real (sem necessidade de apertar a tecla F5 a cada alteração), utilize a extensão "Live Server".
 
----
+[Em construção]
+- Como fazer para rodar o projeto do Spring, IDE usada e passo-a-passo para rodar (desde encontrar o arquivo principal até a parte do navegador para abrir o projeto na web)
 
-### Histórico de alterações
+- Abertura de console no Eclipse (validação de funcionamento  vai ou não) -- Mostra uma mensagem de erro enquanto executa
 
-- A ideia de trabalhar com logs automáticos para **todas** as operações do sistema foi descartada
-    - Razão: conceitos e algoritmos complicados demais para o nível geral do grupo e por segurança de todo o projeto
 
-- Uma tabela para armazenar as informações do Cliente foi criada (ninguém se lembrou disso antes) isso envolveu implementações no código
-    - Razão: cobrança do professor orientador do PI
 
-- A forma como o sistema conversa com o estoque foi melhor definida do que antes, o tratamento a partir de dados do banco foi readaptada
-    - Razão: um exercício de banco de dados mostrou ser possível uma dinâmica que não tinhamos conhecimento antes
 
-- Uma nova tabela auxiliar foi implementada para informar os produtos utilizados em um serviço após um agendamento ser concluído para criar uma conexão entre todas as entidades criadas no projeto
-    - Razão: alerta vindo pelo professor orientador do projeto, uma vez que, desde o início não era um intuito trabalhar com um algoritmo de gerenciamento de OS
 
-- A entidade e classe para funcionamento, que seria utilizada para comparar os dias da semana no momento do agendamento, foi descartada
-    - Razão: é possível validar a informação sem a necessidade de salvar dados no banco, isso será tratado no código agora
 
-- Tinha retirado todos os getters e setters pois não estávamos utilizando adequadamente, mas implementei novamente
-    - Razão: obrigatório na documentação, mas eu não tinha visto
+
