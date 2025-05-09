@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamentos - Centro Automotivo JJ</title>
+  <link rel="stylesheet" href="agendamentos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <h1><span class="logo-highlight">Centro Automotivo</span> JJ</h1>
+      </div>
+      
+      <nav class="nav-menu">
+        <div class="nav-item">
+          <a href="index.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </div>
+        <div class="nav-item">
+          <a href="agendamentos.html" class="nav-link active"><i class="fas fa-calendar-check"></i> Agendamentos</a>
+        </div>
+        <div class="nav-item">
+          <a href="servicos.html" class="nav-link"><i class="fas fa-tools"></i> Serviços</a>
+        </div>
+        <div class="nav-item">
+          <a href="produtos.html" class="nav-link"><i class="fas fa-box-open"></i> Produtos</a>
+        </div>
+        <div class="nav-item">
+          <a href="calendario.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Calendário</a>
+        </div>
+        <div class="nav-item">
+          <a href="../login.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h2><i class="fas fa-calendar-check"></i> Gerenciamento de Agendamentos</h2>
+        <p>Visualize e gerencie os agendamentos de serviços</p>
+      </div>
+      
+      <!-- Estatísticas rápidas -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <h3>4</h3>
+            <p>Agendamentos pendentes</p>
+          </div>
+        </div>
+        
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <div class="stat-info">
+            <h3>2</h3>
+            <p>Em andamento</p>
+          </div>
+        </div>
+        
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <h3>3</h3>
+            <p>Concluídos hoje</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Formulário de Agendamento -->
+      <div class="form-container" id="agendamento-form-container">
+        <div class="form-header">
+          <h3><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
+        </div>
+        
+        <form id="agendamento-form">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="nome_cliente">Nome do Cliente</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-user input-icon"></i>
+                  <input type="text" id="nome_cliente" name="nome_cliente" placeholder="Nome completo do cliente" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="tipo_servico">Tipo de Serviço</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-tools input-icon"></i>
+                  <select id="tipo_servico" name="tipo_servico" required>
+                    <option value="">Selecione um serviço</option>
+                    <option value="troca_oleo">Troca de Óleo</option>
+                    <option value="revisao">Revisão Completa</option>
+                    <option value="freios">Manutenção de Freios</option>
+                    <option value="suspensao">Serviços de Suspensão</option>
+                    <option value="eletrica">Sistema Elétrico</option>
+                    <option value="motor">Reparo de Motor</option>
+                    <option value="ar_condicionado">Ar Condicionado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="data_agendamento">Data do Agendamento</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-calendar-alt input-icon"></i>
+                  <input type="date" id="data_agendamento" name="data_agendamento" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="data_previsao">Previsão de Conclusão</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-hourglass-half input-icon"></i>
+                  <input type="date" id="data_previsao" name="data_previsao" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-info-circle input-icon"></i>
+                  <select id="status" name="status" required>
+                    <option value="">Selecione um status</option>
+                    <option value="agendado">Agendado</option>
+                    <option value="confirmado">Confirmado</option>
+                    <option value="em_andamento">Em Andamento</option>
+                    <option value="concluido">Concluído</option>
+                    <option value="cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col" id="data_conclusao_container">
+              <div class="form-group">
+                <label for="data_conclusao">Data de Conclusão</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-flag-checkered input-icon"></i>
+                  <input type="date" id="data_conclusao" name="data_conclusao">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="observacao">Observações</label>
+            <div class="input-wrapper">
+              <i class="fas fa-comment-alt input-icon"></i>
+              <textarea id="observacao" name="observacao" rows="3" placeholder="Observações adicionais sobre o agendamento"></textarea>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="reset" class="btn btn-secondary">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn">
+              <i class="fas fa-save"></i> Salvar Agendamento
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tabela de Agendamentos -->
+      <div class="table-container">
+        <div class="table-header">
+          <h3><i class="fas fa-list"></i> Lista de Agendamentos</h3>
+          <button class="btn btn-primary" id="btn-novo-agendamento">
+            <i class="fas fa-plus"></i> Novo Agendamento
+          </button>
+        </div>
+        
+        <div class="table-filters">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="busca">Buscar Agendamento</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-search input-icon"></i>
+                  <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="filtro_status">Filtrar por Status</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-filter input-icon"></i>
+                  <select id="filtro_status" name="filtro_status">
+                    <option value="">Todos os status</option>
+                    <option value="agendado">Agendado</option>
+                    <option value="confirmado">Confirmado</option>
+                    <option value="em_andamento">Em Andamento</option>
+                    <option value="concluido">Concluído</option>
+                    <option value="cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Tipo de Serviço</th>
+                <th>Data do Agendamento</th>
+                <th>Previsão</th>
+                <th>Conclusão</th>
+                <th>Status</th>
+                <th>Observação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>João Silva</td>
+                <td><span class="service-badge troca_oleo">Troca de Óleo</span></td>
+                <td>10/05/2025</td>
+                <td>10/05/2025</td>
+                <td>-</td>
+                <td><span class="status-badge agendado">Agendado</span></td>
+                <td class="observacao-cell">Cliente solicitou óleo sintético de alta performance</td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Maria Oliveira</td>
+                <td><span class="service-badge revisao">Revisão Completa</span></td>
+                <td>11/05/2025</td>
+                <td>13/05/2025</td>
+                <td>-</td>
+                <td><span class="status-badge confirmado">Confirmado</span></td>
+                <td class="observacao-cell">Veículo com 30.000 km, primeira revisão completa</td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Pedro Santos</td>
+                <td><span class="service-badge freios">Manutenção de Freios</span></td>
+                <td>09/05/2025</td>
+                <td>09/05/2025</td>
+                <td>-</td>
+                <td><span class="status-badge em_andamento">Em Andamento</span></td>
+                <td class="observacao-cell">Freios traseiros com desgaste excessivo</td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Ana Pereira</td>
+                <td><span class="service-badge suspensao">Serviços de Suspensão</span></td>
+                <td>08/05/2025</td>
+                <td>09/05/2025</td>
+                <td>09/05/2025</td>
+                <td><span class="status-badge concluido">Concluído</span></td>
+                <td class="observacao-cell">Substituição de amortecedores dianteiros</td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Carlos Ferreira</td>
+                <td><span class="service-badge eletrica">Sistema Elétrico</span></td>
+                <td>07/05/2025</td>
+                <td>08/05/2025</td>
+                <td>08/05/2025</td>
+                <td><span class="status-badge concluido">Concluído</span></td>
+                <td class="observacao-cell">Instalação de bateria nova e verificação da alternador</td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Juliana Mendes</td>
+                <td><span class="service-badge ar_condicionado">Ar Condicionado</span></td>
+                <td>12/05/2025</td>
+                <td>12/05/2025</td>
+                <td>-</td>
+                <td><span class="status-badge cancelado">Cancelado</span></td>
+                <td class="observacao-cell">Cliente remarcará para a próxima semana</td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="table-pagination">
+          <button class="btn btn-secondary" id="btn-anterior" disabled>
+            <i class="fas fa-chevron-left"></i> Anterior
+          </button>
+          <span class="pagination-info">Página 1 de 1</span>
+          <button class="btn btn-secondary" id="btn-proximo" disabled>
+            Próximo <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <i class="fas fa-car-alt"></i>
+          <span class="logo-highlight">Centro Automotivo</span> JJ
+        </div>
+        <p class="footer-copyright">&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script para o campo de data de conclusão -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const statusSelect = document.getElementById('status');
+      const dataConclusaoContainer = document.getElementById('data_conclusao_container');
+      
+      // Verifica o status inicial
+      checkStatus();
+      
+      // Adiciona evento para verificar quando o status muda
+      statusSelect.addEventListener('change', checkStatus);
+      
+      function checkStatus() {
+        if (statusSelect.value === 'concluido') {
+          dataConclusaoContainer.style.display = 'block';
+          document.getElementById('data_conclusao').required = true;
+        } else {
+          dataConclusaoContainer.style.display = 'none';
+          document.getElementById('data_conclusao').required = false;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
