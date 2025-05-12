@@ -1,16 +1,29 @@
 package br.com.autoagenda.autoagenda.controller;
 
-import org.springframework.stereotype.Controller;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.autoagenda.autoagenda.include.Helper;
-import br.com.autoagenda.autoagenda.model.M_Cliente;
+import br.com.autoagenda.autoagenda.model.Cliente;
+import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 
-@Controller
-@RequestMapping("/clientes")
+@RestController
+@RequestMapping("/cliente-api")
 public class C_Cliente {
+	
+	@Autowired
+	private ClienteRepository repo;
+	
+	@GetMapping("/consulta")
+	public List<Cliente> consultarCliente(){
+		return repo.findAll();
+	}
 
 	@PostMapping("/cadastrarCliente")
     public String cadastrarCliente(@RequestParam String nomeCliente, String whatsapp, String veiculo, int veiculoano) {
@@ -19,11 +32,10 @@ public class C_Cliente {
         if(veiculo == null || veiculo.trim().isEmpty()) return "campo-vazio";
         if(Helper.isNumeric(veiculoano + "")) return "campo-vazio";
         
-        M_Cliente cliente = new M_Cliente();
+        Cliente cliente = new Cliente();
         boolean resposta = cliente.cadastrarCliente(nomeCliente, whatsapp, veiculo, veiculoano);
         
-        if(!resposta) return "cadastro-nao-concluido";
-        return "cadastro-completo";
+        return resposta ? "cadastro-completo" : "cadastro-nao-concluido";
     }
 
 	@PostMapping("/editarCliente")
@@ -33,23 +45,14 @@ public class C_Cliente {
         if(veiculo == null || veiculo.trim().isEmpty()) return "campo-vazio";
         if(Helper.isNumeric(veiculoano + "")) return "campo-vazio";
         
-        M_Cliente cliente = new M_Cliente();
-        boolean resposta = cliente.editarCliente(idCliente, nomeCliente, whatsapp, veiculo, veiculoano);
+        Cliente cliente = new Cliente();
         
-        if(!resposta) return "cadastro-nao-concluido";
-        return "cadastro-completo";
+        return "foi";
     }
-
-//    public void consCliente() {
-//        cl.listarCliente();
-//    }
 
 	@PostMapping("/apagarCliente")
     public String apagarCliente(@RequestParam int idCliente) {
-        M_Cliente cliente = new M_Cliente();
-        boolean resposta = cliente.apagarCliente(idCliente);
-        
-        if(!resposta) return "algo-deu-errado";
-        return "apagou";
+        Cliente cliente = new Cliente();
+        return "foi";
     }
 }

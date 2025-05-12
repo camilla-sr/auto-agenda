@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.autoagenda.autoagenda.model.M_Funcionario;
+import br.com.autoagenda.autoagenda.model.Funcionario;
 
 public class Conexao {
     private static final String servidor = "jdbc:mysql://127.0.0.1:3306/auto_agenda";
@@ -54,7 +54,7 @@ public class Conexao {
         return dados;
     }
     
-    public static M_Funcionario logar(String usuario, String senha) {
+    public static Funcionario logar(String usuario, String senha) {
     	String sql = "select * from funcionario where usuario = ? and senha = ?";
     	
     	try(Connection conn = conectar();
@@ -64,7 +64,7 @@ public class Conexao {
     		ResultSet rs = stmt.executeQuery();
     		
     		if (rs.next()) {
-                M_Funcionario func = new M_Funcionario();
+                Funcionario func = new Funcionario();
                 func.setIdFuncionario(rs.getInt("id"));
                 func.setNomeFuncionario(rs.getString("nome"));
                 func.setUsuario(rs.getString("usuario"));

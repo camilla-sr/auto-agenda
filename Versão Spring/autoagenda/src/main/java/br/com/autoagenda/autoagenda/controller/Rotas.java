@@ -30,4 +30,9 @@ public class Rotas {
     public String produtos() {
     	return "produtos";
     }
+    
+    @GetMapping("/agendamentos")
+    public String agendamentos() {
+    	return "agendamentos";
+    }
 }
