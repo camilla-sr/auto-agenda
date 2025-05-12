@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funcionários - Centro Automotivo JJ</title>
     <link rel="stylesheet" href="../assets/css/style2.css">
-</head>
-
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -28,7 +25,9 @@
 
     <div class="container">
         <h2>Lista de Funcionários</h2>
-        <a href="adicionar_funcionario.html" class="btn-success">Cadastrar Funcionário</a>
+        <button type="button" class="btn-success" data-bs-toggle="modal" data-bs-target="#cadastroModal">
+            Cadastrar Funcionário
+        </button>
 
         <table>
             <thead>
@@ -74,5 +73,62 @@
     <footer>
         <p>Centro Automotivo JJ &copy; 2025 - Todos os direitos reservados</p>
     </footer>
+
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cadastroModalLabel">Cadastrar Novo Funcionário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formFuncionario">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="cargo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="especialidade" class="form-label">Especialidade</label>
+                            <input type="text" class="form-control" id="especialidade" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefone" class="form-label">Telefone</label>
+                            <input type="text" class="form-control" id="telefone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.getElementById('formFuncionario').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const nome = document.getElementById('nome').value;
+        const cargo = document.getElementById('cargo').value;
+        const especialidade = document.getElementById('especialidade').value;
+        const telefone = document.getElementById('telefone').value;
+        const email = document.getElementById('email').value;
+
+        console.log('Funcionário cadastrado:', { nome, cargo, especialidade, telefone, email });
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('cadastroModal'));
+        modal.hide();
+
+        this.reset();
+    });
+    </script>
 </body>
 </html>
