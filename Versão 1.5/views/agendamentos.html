@@ -79,113 +79,7 @@
         </div>
       </div>
       
-      <!-- Formulário de Agendamento -->
-      <div class="form-container" id="agendamento-form-container">
-        <div class="form-header">
-          <h3><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
-        </div>
-        
-        <form id="agendamento-form">
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label for="nome_cliente">Nome do Cliente</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="nome_cliente" name="nome_cliente" placeholder="Nome completo do cliente" required>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-col">
-              <div class="form-group">
-                <label for="tipo_servico">Tipo de Serviço</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-tools input-icon"></i>
-                  <select id="tipo_servico" name="tipo_servico" required>
-                    <option value="">Selecione um serviço</option>
-                    <option value="troca_oleo">Troca de Óleo</option>
-                    <option value="revisao">Revisão Completa</option>
-                    <option value="freios">Manutenção de Freios</option>
-                    <option value="suspensao">Serviços de Suspensão</option>
-                    <option value="eletrica">Sistema Elétrico</option>
-                    <option value="motor">Reparo de Motor</option>
-                    <option value="ar_condicionado">Ar Condicionado</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label for="data_agendamento">Data do Agendamento</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-calendar-alt input-icon"></i>
-                  <input type="date" id="data_agendamento" name="data_agendamento" required>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-col">
-              <div class="form-group">
-                <label for="data_previsao">Previsão de Conclusão</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-hourglass-half input-icon"></i>
-                  <input type="date" id="data_previsao" name="data_previsao" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label for="status">Status</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-info-circle input-icon"></i>
-                  <select id="status" name="status" required>
-                    <option value="">Selecione um status</option>
-                    <option value="agendado">Agendado</option>
-                    <option value="confirmado">Confirmado</option>
-                    <option value="em_andamento">Em Andamento</option>
-                    <option value="concluido">Concluído</option>
-                    <option value="cancelado">Cancelado</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-col" id="data_conclusao_container">
-              <div class="form-group">
-                <label for="data_conclusao">Data de Conclusão</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-flag-checkered input-icon"></i>
-                  <input type="date" id="data_conclusao" name="data_conclusao">
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="observacao">Observações</label>
-            <div class="input-wrapper">
-              <i class="fas fa-comment-alt input-icon"></i>
-              <textarea id="observacao" name="observacao" rows="3" placeholder="Observações adicionais sobre o agendamento"></textarea>
-            </div>
-          </div>
-          
-          <div class="form-actions">
-            <button type="reset" class="btn btn-secondary">
-              <i class="fas fa-times"></i> Cancelar
-            </button>
-            <button type="submit" class="btn">
-              <i class="fas fa-save"></i> Salvar Agendamento
-            </button>
-          </div>
-        </form>
-      </div>
+      
       
       <!-- Tabela de Agendamentos -->
       <div class="table-container">
@@ -375,6 +269,113 @@
             Próximo <i class="fas fa-chevron-right"></i>
           </button>
         </div>
+      </div>
+      <!-- Formulário de Agendamento -->
+      <div class="form-container" id="agendamento-form-container">
+        <div class="form-header">
+          <h3><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
+        </div>
+        
+        <form id="agendamento-form">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="nome_cliente">Nome do Cliente</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-user input-icon"></i>
+                  <input type="text" id="nome_cliente" name="nome_cliente" placeholder="Nome completo do cliente" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="tipo_servico">Tipo de Serviço</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-tools input-icon"></i>
+                  <select id="tipo_servico" name="tipo_servico" required>
+                    <option value="">Selecione um serviço</option>
+                    <option value="troca_oleo">Troca de Óleo</option>
+                    <option value="revisao">Revisão Completa</option>
+                    <option value="freios">Manutenção de Freios</option>
+                    <option value="suspensao">Serviços de Suspensão</option>
+                    <option value="eletrica">Sistema Elétrico</option>
+                    <option value="motor">Reparo de Motor</option>
+                    <option value="ar_condicionado">Ar Condicionado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="data_agendamento">Data do Agendamento</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-calendar-alt input-icon"></i>
+                  <input type="date" id="data_agendamento" name="data_agendamento" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col">
+              <div class="form-group">
+                <label for="data_previsao">Previsão de Conclusão</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-hourglass-half input-icon"></i>
+                  <input type="date" id="data_previsao" name="data_previsao" required>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-info-circle input-icon"></i>
+                  <select id="status" name="status" required>
+                    <option value="">Selecione um status</option>
+                    <option value="agendado">Agendado</option>
+                    <option value="confirmado">Confirmado</option>
+                    <option value="em_andamento">Em Andamento</option>
+                    <option value="concluido">Concluído</option>
+                    <option value="cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-col" id="data_conclusao_container">
+              <div class="form-group">
+                <label for="data_conclusao">Data de Conclusão</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-flag-checkered input-icon"></i>
+                  <input type="date" id="data_conclusao" name="data_conclusao">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="observacao">Observações</label>
+            <div class="input-wrapper">
+              <i class="fas fa-comment-alt input-icon"></i>
+              <textarea id="observacao" name="observacao" rows="3" placeholder="Observações adicionais sobre o agendamento"></textarea>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="reset" class="btn btn-secondary">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn">
+              <i class="fas fa-save"></i> Salvar Agendamento
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </main>
