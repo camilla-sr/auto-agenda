@@ -1,4 +1,4 @@
-> Atualizado em 08/05/2025
+> Atualizado em 21/05/2025
 
 ## :grey_question: O que há de novo
 
