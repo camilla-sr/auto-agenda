@@ -5,17 +5,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "funcionario")
 public class Funcionario {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFuncionario;
+	
+	@NotEmpty
     private String nomeFuncionario;
-    private String usuario;
-    private String senha;
+	@NotEmpty
+	private String usuario;
+	@NotEmpty
+	private String senha;
 	
 	public Funcionario() {}
 
@@ -25,15 +29,6 @@ public class Funcionario {
 		this.usuario = usuario;
 		this.senha = senha;
 	}
-    
-    public boolean cadastrarFuncionario(String nomeFuncionario, String usuario, String senha) {
-        String sql = "INSERT INTO funcionario (nome_funcionario) VALUES ('" + nomeFuncionario + "', '" + usuario + "', "
-        		+ "'" + senha + "')";
-        
-        return true;
-    }
-
-// -------------- MÉTODOS DE APOIO --------------
     
     public int getIdFuncionario() { return idFuncionario; }
     public void setIdFuncionario(int idFuncionario) { this.idFuncionario = idFuncionario; }

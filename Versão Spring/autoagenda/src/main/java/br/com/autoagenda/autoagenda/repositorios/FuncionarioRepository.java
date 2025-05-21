@@ -1,11 +1,14 @@
 package br.com.autoagenda.autoagenda.repositorios;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import br.com.autoagenda.autoagenda.model.Funcionario;
 
-public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer>{
+public interface FuncionarioRepository extends CrudRepository<Funcionario, Integer>{
 	
-	//Esse método fará a busca na tabela de funcionários apartir do usuario informado
 	Funcionario findByUsuario(String usuario);
+	
+	Iterable<Funcionario> findAll();
+	
+	Funcionario findById(int id);
 }

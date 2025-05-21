@@ -1,5 +1,6 @@
 package br.com.autoagenda.autoagenda.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,12 @@ public class C_Produto {
 	}
 	
 	@GetMapping("/consulta")
-	public List<Produto> consultarProduto(){
-		return repo.findAll();
+	public List<Produto> consultarServico(){
+	    List<Produto> lista = new ArrayList<>();
+	    repo.findAll().forEach(lista::add);
+	    return lista;
 	}
+
 	
 //	@PostMapping("/editarProduto")
 //    public String editarCliente(@RequestParam int idProduto, String codigoProduto, String categoria, String nomeProduto, 

@@ -1,5 +1,6 @@
 package br.com.autoagenda.autoagenda.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,12 @@ public class C_Cliente {
 	private ClienteRepository repo;
 	
 	@GetMapping("/consulta")
-	public List<Cliente> consultarCliente(){
-		return repo.findAll();
+	public List<Cliente> consultarServico(){
+	    List<Cliente> lista = new ArrayList<>();
+	    repo.findAll().forEach(lista::add);
+	    return lista;
 	}
+
 
 	@PostMapping("/cadastrarCliente")
     public String cadastrarCliente(@RequestParam String nomeCliente, String whatsapp, String veiculo, int veiculoano) {

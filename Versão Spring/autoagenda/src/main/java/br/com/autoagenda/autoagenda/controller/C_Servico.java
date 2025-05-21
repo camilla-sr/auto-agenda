@@ -1,5 +1,6 @@
 package br.com.autoagenda.autoagenda.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 
@@ -22,9 +22,11 @@ public class C_Servico {
 
 	@GetMapping("/consulta")
 	public List<Servico> consultarServico(){
-		return repo.findAll();
+	    List<Servico> lista = new ArrayList<>();
+	    repo.findAll().forEach(lista::add);
+	    return lista;
 	}
-	
+
 	@PostMapping("/cadastrarServico")
 	public String cadastrarServico(@RequestParam String descricao) {
 		if (descricao == null || descricao.trim().isEmpty()) return "erro-campo-vazio";

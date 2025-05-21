@@ -17,11 +17,11 @@
         <div class="cadastro">
             <img src="assets/img/logo.png">
 
-            <form action="" method="post">
+			<form method="post" action="/funcionario-api/cadastroSistema">
                 <div class="cad-inputs">
                     <span>Nome Completo</span>
                     <div class="input-group mb-3">
-                        <input type="text" name="nome" class="form-control">
+                        <input type="text" name="nomeFuncionario" class="form-control">
                     </div>
 
                     <span>Usuário</span>
@@ -31,16 +31,16 @@
 
                     <span>Senha</span>
                     <div class="input-group mb-3">
-                        <input type="text" name="senha" class="form-control">
+                        <input type="password" name="senha" class="form-control">
                     </div>
 
                     <span>Confirme sua senha</span>
                     <div class="input-group mb-3">
-                        <input type="text" name="confSenha" class="form-control">
+                        <input type="password" class="form-control">
                     </div>
 
                     <div class="botoes">
-                        <button type="button" class="btnSalvar">Salvar</button>
+                        <button type="submit" class="btnSalvar">Salvar</button>
                         <button type="button" class="btnVoltar" onclick="window.location.href = '/login.html'">Voltar</button>
                     </div>
             </form>

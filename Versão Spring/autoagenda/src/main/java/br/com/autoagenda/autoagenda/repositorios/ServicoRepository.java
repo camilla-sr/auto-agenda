@@ -1,9 +1,9 @@
 package br.com.autoagenda.autoagenda.repositorios;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import br.com.autoagenda.autoagenda.model.Servico;
 
-public interface ServicoRepository extends JpaRepository<Servico, Integer>{
-
+public interface ServicoRepository extends CrudRepository<Servico, Integer>{
+	Iterable<Servico> findAll();
 }
