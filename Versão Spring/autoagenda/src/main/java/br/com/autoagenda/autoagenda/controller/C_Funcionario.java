@@ -34,7 +34,7 @@ public class C_Funcionario {
 		
 		repo.save(func);
 		
-		return "PARECE QUE SALVOU";
+		return "redirect:/login";
 	}
 	
 	@GetMapping("/consulta")

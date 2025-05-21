@@ -1119,3 +1119,6 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 48 more
+2025-05-21 20:09:06.103063-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SENHA CHARACTER VARYING(15)": "U&'bati a cabe\\00e7a no teclado' (24)"; SQL statement:
+insert into funcionario (nome_funcionario,senha,usuario,id_funcionario) values (?,?,?,default) [22001-232]

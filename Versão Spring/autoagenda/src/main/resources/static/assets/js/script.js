@@ -10,24 +10,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	    const inputConfSenha = document.getElementById('confirmarSenha');
 	    const mensagem = document.getElementById('mensagem');
 	    
-	    // Função para verificar se senhas coincidem e mostrar retorno em tempo real
 	    function verificarSenha() {
 	        const senha = inputSenha.value;
 	        const confirmacao = inputConfSenha.value;
 	        
 	        if (confirmacao.length > 0) {
-	            if (senha !== confirmacao) {
+	            if (senha != confirmacao) {
 	                inputConfSenha.classList.add('is-invalid');
+					inputSenha.classList.add('is-invalid');
 	                mensagem.style.display = 'block';
 	                return false;
 	            } else {
 	                inputConfSenha.classList.remove('is-invalid');
+					inputSenha.classList.remove('is-invalid');
+					
 	                inputConfSenha.classList.add('is-valid');
+					inputSenha.classList.add('is-valid');
 	                mensagem.style.display = 'none';
 	                return true;
 	            }
 	        } else {
 	            inputConfSenha.classList.remove('is-invalid', 'is-valid');
+				inputSenha.classList.remove('is-invalid', 'is-valid');
 	            mensagem.style.display = 'none';
 	            return false;
 	        }
