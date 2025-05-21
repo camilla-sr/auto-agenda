@@ -1,7 +1,5 @@
-package br.com.autoagenda.autoagenda.include;
+package br.com.autoagenda.autoagenda.controller;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,11 +23,11 @@ public final class Helper {
     	return Integer.parseInt(valor);
     }
     
-    public static boolean IDValido(String tabela, String coluna, int id) {
+    public static void IDValido(String tabela, String coluna, int id) {
     	if(isNumeric("'" + id + "'")) {
-    		return false;
+    		//
     	}
-    	return Conexao.validaID(tabela, coluna, id);
+    	
     }
 
     // Novos padrões de código para o formato das datas

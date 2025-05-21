@@ -8,7 +8,12 @@ public class Rotas {
 	
 	@GetMapping("/")
 	public String index() {
-	    return "index";
+	    return "dashboard";
+	}
+	
+	@GetMapping("/cadastroSistema")
+	public String cadastroSistema() {
+		return "cadastro";
 	}
 	
     @GetMapping("/servicos")

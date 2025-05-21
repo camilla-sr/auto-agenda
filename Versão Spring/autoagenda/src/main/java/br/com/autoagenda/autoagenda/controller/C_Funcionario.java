@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,17 +27,19 @@ public class C_Funcionario {
 	}
 	
 	@PostMapping("/login")
-	public String login(@RequestParam String usuario, 
-						@RequestParam String senha, HttpSession session) {
-		if(usuario == null || usuario.trim().isEmpty()) return "usuario-nao-informado";
-		if(senha == null || senha.trim().isEmpty()) return "senha-nao-informada";
+	public String login(@RequestBody Funcionario dados,  HttpSession sessao) {
+		if(dados.getNomeFuncionario() == null || dados.getNomeFuncionario().trim().isEmpty()) return "usuario-nao-informado";
+		if(dados.getSenha() == null || dados.getSenha().trim().isEmpty()) return "senha-nao-informada";
 		
-		Funcionario func = new Funcionario().logar(usuario, senha);
+		Funcionario user = repo.findByUsuario(dados.getUsuario());
 		
-		if(func == null) return "redirect:/login";
-		
-		session.setAttribute("usuarioLogado", func);
-		return "redirect:/index";
+		if (user != null && user.getSenha().equals(dados.getSenha())) {
+            // 
+//			sessao.setAttribute("usuarioLogado", user);
+			return "Beleza ta funcional";
+        } else {
+            return "Email ou senha incorretos.";
+        }
 	}
 	
 	

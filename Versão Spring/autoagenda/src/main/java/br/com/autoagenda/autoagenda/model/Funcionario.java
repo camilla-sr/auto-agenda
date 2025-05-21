@@ -1,6 +1,5 @@
 package br.com.autoagenda.autoagenda.model;
 
-import br.com.autoagenda.autoagenda.include.Conexao;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,18 +26,10 @@ public class Funcionario {
 		this.senha = senha;
 	}
     
-	public Funcionario logar(String usuario, String senha) {
-		Funcionario func = Conexao.logar(usuario, senha);
-        if (func == null) return null;
-        return func;
-	}
-    
     public boolean cadastrarFuncionario(String nomeFuncionario, String usuario, String senha) {
         String sql = "INSERT INTO funcionario (nome_funcionario) VALUES ('" + nomeFuncionario + "', '" + usuario + "', "
         		+ "'" + senha + "')";
         
-        boolean resposta = Conexao.executar(sql);
-        if(!resposta) return false;
         return true;
     }
 

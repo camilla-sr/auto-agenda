@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.autoagenda.autoagenda.include.Helper;
 import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 

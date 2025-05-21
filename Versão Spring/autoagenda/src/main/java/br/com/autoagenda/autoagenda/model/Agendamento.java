@@ -2,7 +2,6 @@ package br.com.autoagenda.autoagenda.model;
 
 import java.time.LocalDate;
 
-import br.com.autoagenda.autoagenda.include.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,10 +46,8 @@ public class Agendamento {
                 + dataPrevisao + "', '"
                 + status + "', '"
                 + observacao + "')";
-    	
-        boolean resposta = Conexao.executar(sqlInserir);
         
-        return resposta;
+        return true;
     }
 
     /*public boolean editarAgendamento(int idAgendamento, int cliente, int servico, int funcionario, String dataPrevisaoEntrega, String obs) {

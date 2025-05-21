@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
-import br.com.autoagenda.autoagenda.include.Helper;
 
 @RestController
 @RequestMapping("/servico-api")
@@ -30,8 +29,6 @@ public class C_Servico {
 	public String cadastrarServico(@RequestParam String descricao) {
 		if (descricao == null || descricao.trim().isEmpty()) return "erro-campo-vazio";
 	
-		Servico novoServico = new Servico();
-		boolean salvou = novoServico.cadastrarServico(descricao);
-		return salvou ? "cadastro-completo" : "cadastro-nao-concluido";
+		return "sim";
 	}
 }

@@ -21,23 +21,21 @@
         <div class="login">
             <img src="assets/img/logo.png">
 
-			<form action="/funcionarios/login" method="post">
-	            <div class="entrada">
-	                <span>Usuário</span>
-	                <div class="input-group mb-3">
-	                    <input type="text" name="usuario" class="form-control">
-	                </div>
-	                <span>Senha</span>
-	                <div class="input-group mb-3">
-	                    <input type="text" name="senha" class="form-control">
-	                </div>
-	
-	                <div class="botoes">
-	                    <button type="submit" class="btnLogin">Entrar</button>
-	                    <button type="button" class="btnLogin">Cadastro</button>
-	                </div>
-	            </div>
-			</form>
+            <div class="log-inputs">
+                <span>Usuário</span>
+                <div class="input-group mb-3">
+                    <input type="text" name="usuario" class="form-control">
+                </div>
+                <span>Senha</span>
+                <div class="input-group mb-3">
+                    <input type="password" name="senha" class="form-control">
+                </div>
+
+                <div class="botoes">
+                    <button type="button" class="btnLogin">Entrar</button>
+                    <button type="button" class="btnCadastro" onclick="window.location.href = '/cadastro.html'">Cadastro</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
