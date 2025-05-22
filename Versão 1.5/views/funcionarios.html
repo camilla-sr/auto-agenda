@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funcionários - Centro Automotivo JJ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        nav {
+            background-color: #34495e;
+            padding: 10px;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        nav li {
+            margin: 0 15px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Oficina Mecânica SpeedCar</h1>
+        <p>Gestão de Funcionários</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="funcionarios.html">Funcionários</a></li>
+            <li><a href="servicos.html">Serviços</a></li>
+            <li><a href="veiculos.html">Veículos</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <h2>Lista de Funcionários</h2>
+        
+        <a href="adicionar_funcionario.html" class="btn btn-success">Adicionar Funcionário</a>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th>Especialidade</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>001</td>
+                    <td>João Silva</td>
+                    <td>Mecânico Chefe</td>
+                    <td>Motor e Transmissão</td>
+                    <td>(11) 99999-9999</td>
+                    <td>joao@speedcar.com</td>
+                    <td>
+                        <a href="#" class="btn">Editar</a>
+                        <a href="#" class="btn btn-danger">Remover</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Maria Santos</td>
+                    <td>Mecânica</td>
+                    <td>Suspensão e Freios</td>
+                    <td>(11) 98888-8888</td>
+                    <td>maria@speedcar.com</td>
+                    <td>
+                        <a href="#" class="btn">Editar</a>
+                        <a href="#" class="btn btn-danger">Remover</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>003</td>
+                    <td>Carlos Oliveira</td>
+                    <td>Eletricista Automotivo</td>
+                    <td>Sistema Elétrico</td>
+                    <td>(11) 97777-7777</td>
+                    <td>carlos@speedcar.com</td>
+                    <td>
+                        <a href="#" class="btn">Editar</a>
+                        <a href="#" class="btn btn-danger">Remover</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>004</td>
+                    <td>Ana Costa</td>
+                    <td>Atendente</td>
+                    <td>Atendimento ao Cliente</td>
+                    <td>(11) 96666-6666</td>
+                    <td>ana@speedcar.com</td>
+                    <td>
+                        <a href="#" class="btn">Editar</a>
+                        <a href="#" class="btn btn-danger">Remover</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <footer>
+        <p>Oficina Mecânica SpeedCar &copy; 2023 - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>
