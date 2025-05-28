@@ -18,7 +18,12 @@ public class Rotas {
 	
     @GetMapping("/servicos")
     public String servicos() {
-        return "/error.html";
+        return "servicos";
+    }
+    
+    @GetMapping("/funcionarios")
+    public String funcionarios() {
+    	return "funcionarios";
     }
     
     @GetMapping("/login")
