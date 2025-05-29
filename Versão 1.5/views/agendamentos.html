@@ -82,7 +82,7 @@
       
       
       <!-- Tabela de Agendamentos -->
-      <div class="table-container">
+      <div class="table-container" id="lista-agendamentos-container">
         <div class="table-header">
           <h3><i class="fas fa-list"></i> Lista de Agendamentos</h3>
           <button class="btn btn-primary" id="btn-novo-agendamento">
@@ -370,7 +370,7 @@
           </div>
           
           <div class="form-actions">
-            <button type="reset" class="btn btn-secondary">
+            <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-agendamento">
               <i class="fas fa-times"></i> Cancelar
             </button>
             <button type="submit" class="btn">
@@ -452,12 +452,15 @@
 
     // Adicionar funcionalidade ao botão "Cancelar" do formulário de novo agendamento
     const btnCancelarNovoAgendamento = document.getElementById('btn-cancelar-novo-agendamento');
+    const formContainer1  = document.getElementById('lista-agendamentos-container')
     if (btnCancelarNovoAgendamento && formContainer) {
         btnCancelarNovoAgendamento.addEventListener('click', function() {
             formContainer.style.display = 'none'; 
              document.getElementById('formNovoAgendamento').reset(); 
+
+             formContainer1.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-    }
+    } 
 
   });
 </script>
