@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos - Centro Automotivo JJ</title>
   <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="/assets/css/agendamentos.css">
+  <link rel="stylesheet" href="/assets/css/agendamentos.css">
   <script src="/assets/js/script.js"></script>
 </head>
+
 <body>
   <!-- Cabeçalho -->
-	<div id="barra"></div>
+  <div id="barra"></div>
 
   <!-- Conteúdo Principal -->
   <main class="main-content">
@@ -19,7 +21,7 @@
         <h2><i class="fas fa-calendar-check"></i> Gerenciamento de Agendamentos</h2>
         <p>Visualize e gerencie os agendamentos de serviços</p>
       </div>
-      
+
       <!-- Estatísticas rápidas -->
       <div class="stats-container">
         <div class="stat-card">
@@ -31,7 +33,7 @@
             <p>Agendamentos pendentes</p>
           </div>
         </div>
-        
+
         <div class="stat-card warning">
           <div class="stat-icon">
             <i class="fas fa-cog"></i>
@@ -41,7 +43,7 @@
             <p>Em andamento</p>
           </div>
         </div>
-        
+
         <div class="stat-card success">
           <div class="stat-icon">
             <i class="fas fa-check-circle"></i>
@@ -52,18 +54,18 @@
           </div>
         </div>
       </div>
-      
-      
-      
+
+
+
       <!-- Tabela de Agendamentos -->
-      <div class="table-container">
+      <div class="table-container" id="lista-agendamentos-container">
         <div class="table-header">
           <h3><i class="fas fa-list"></i> Lista de Agendamentos</h3>
           <button class="btn btn-primary" id="btn-novo-agendamento">
             <i class="fas fa-plus"></i> Novo Agendamento
           </button>
         </div>
-        
+
         <div class="table-filters">
           <div class="form-row">
             <div class="form-col">
@@ -75,7 +77,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="form-col">
               <div class="form-group">
                 <label for="filtro_status">Filtrar por Status</label>
@@ -94,7 +96,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="table-responsive">
           <table>
             <thead>
@@ -233,7 +235,7 @@
             </tbody>
           </table>
         </div>
-        
+
         <div class="table-pagination">
           <button class="btn btn-secondary" id="btn-anterior" disabled>
             <i class="fas fa-chevron-left"></i> Anterior
@@ -244,12 +246,14 @@
           </button>
         </div>
       </div>
+
+
       <!-- Formulário de Agendamento -->
-      <div class="form-container" id="agendamento-form-container">
+      <div class="form-container" id="agendamento-form-container" style="display: none;">
         <div class="form-header">
           <h3><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
         </div>
-        
+
         <form id="agendamento-form">
           <div class="form-row">
             <div class="form-col">
@@ -257,11 +261,12 @@
                 <label for="nome_cliente">Nome do Cliente</label>
                 <div class="input-wrapper">
                   <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="nome_cliente" name="nome_cliente" placeholder="Nome completo do cliente" required>
+                  <input type="text" id="nome_cliente" name="nome_cliente" placeholder="Nome completo do cliente"
+                    required>
                 </div>
               </div>
             </div>
-            
+
             <div class="form-col">
               <div class="form-group">
                 <label for="tipo_servico">Tipo de Serviço</label>
@@ -281,7 +286,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -292,7 +297,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="form-col">
               <div class="form-group">
                 <label for="data_previsao">Previsão de Conclusão</label>
@@ -303,7 +308,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -321,7 +326,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="form-col" id="data_conclusao_container">
               <div class="form-group">
                 <label for="data_conclusao">Data de Conclusão</label>
@@ -332,17 +337,18 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-group">
             <label for="observacao">Observações</label>
             <div class="input-wrapper">
               <i class="fas fa-comment-alt input-icon"></i>
-              <textarea id="observacao" name="observacao" rows="3" placeholder="Observações adicionais sobre o agendamento"></textarea>
+              <textarea id="observacao" name="observacao" rows="3"
+                placeholder="Observações adicionais sobre o agendamento"></textarea>
             </div>
           </div>
-          
+
           <div class="form-actions">
-            <button type="reset" class="btn btn-secondary">
+            <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-agendamento">
               <i class="fas fa-times"></i> Cancelar
             </button>
             <button type="submit" class="btn">
@@ -369,16 +375,16 @@
 
   <!-- Script para o campo de data de conclusão -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const statusSelect = document.getElementById('status');
       const dataConclusaoContainer = document.getElementById('data_conclusao_container');
-      
+
       // Verifica o status inicial
       checkStatus();
-      
+
       // Adiciona evento para verificar quando o status muda
       statusSelect.addEventListener('change', checkStatus);
-      
+
       function checkStatus() {
         if (statusSelect.value === 'concluido') {
           dataConclusaoContainer.style.display = 'block';
@@ -390,5 +396,72 @@
       }
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Seleciona o botão "Novo Agendamento"
+      const btnNovoAgendamento = document.getElementById('btn-novo-agendamento');
+
+      // Seleciona o container do formulário de novo agendamento
+      const formContainer = document.getElementById('agendamento-form-container');
+
+      // Verifica se ambos os elementos existem na página
+      if (btnNovoAgendamento && formContainer) {
+        // Adiciona um evento de clique ao botão
+        btnNovoAgendamento.addEventListener('click', function () {
+          // Mostra o container do formulário
+          if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+            formContainer.style.display = 'block'; // 
+
+            // Scrolla a tela para o container do formulário
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+
+            formContainer.style.display = 'none';
+          }
+        });
+      } else {
+        if (!btnNovoAgendamento) {
+          console.error('Botão com ID "btn-novo-agendamento" não encontrado.');
+        }
+        if (!formContainer) {
+          console.error('Container do formulário com ID "agendamento-form-container" não encontrado.');
+        }
+      }
+
+      // Adicionar funcionalidade ao botão "Cancelar" do formulário de novo agendamento
+      const btnCancelarNovoAgendamento = document.getElementById('btn-cancelar-novo-agendamento');
+      const containerListaAgendamentos = document.getElementById('lista-agendamentos-container');
+
+
+      if (btnCancelarNovoAgendamento && formContainer && containerListaAgendamentos) {
+        btnCancelarNovoAgendamento.addEventListener('click', function () {
+          // Esconde o formulário de novo agendamento
+          formContainer.style.display = 'none';
+
+          // Reseta os campos do formulário
+          const formNovo = document.getElementById('formNovoAgendamento');
+          if (formNovo) {
+            formNovo.reset();
+          }
+
+          // Scrolla a tela de volta para a lista de agendamentos
+          containerListaAgendamentos.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      } else {
+        if (!btnCancelarNovoAgendamento) {
+          console.error('Botão "Cancelar Novo Agendamento" (btn-cancelar-novo-agendamento) não encontrado.');
+        }
+        if (!formContainer) {
+          console.error('Container do formulário de novo agendamento (formNovoAgendamentoContainer) não encontrado para o botão Cancelar.');
+        }
+        if (!containerListaAgendamentos) {
+          console.error('Container da lista de agendamentos (lista-agendamentos-container) não encontrado para scroll no Cancelar.');
+        }
+      }
+
+
+    });
+  </script>
 </body>
+
 </html>
