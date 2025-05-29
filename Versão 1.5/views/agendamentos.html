@@ -452,16 +452,36 @@
 
     // Adicionar funcionalidade ao botão "Cancelar" do formulário de novo agendamento
     const btnCancelarNovoAgendamento = document.getElementById('btn-cancelar-novo-agendamento');
-    const formContainer1  = document.getElementById('lista-agendamentos-container')
-    if (btnCancelarNovoAgendamento && formContainer) {
+    const containerListaAgendamentos = document.getElementById('lista-agendamentos-container'); 
+
+
+    if (btnCancelarNovoAgendamento && formContainer && containerListaAgendamentos) {
         btnCancelarNovoAgendamento.addEventListener('click', function() {
+            // Esconde o formulário de novo agendamento
             formContainer.style.display = 'none'; 
-             document.getElementById('formNovoAgendamento').reset(); 
+            
+            // Reseta os campos do formulário
+            const formNovo = document.getElementById('formNovoAgendamento');
+            if (formNovo) {
+                formNovo.reset();
+            }
 
-             formContainer1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Scrolla a tela de volta para a lista de agendamentos
+            containerListaAgendamentos.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-    } 
+    } else {
+        if (!btnCancelarNovoAgendamento) {
+            console.error('Botão "Cancelar Novo Agendamento" (btn-cancelar-novo-agendamento) não encontrado.');
+        }
+        if (!formContainer) {
+            console.error('Container do formulário de novo agendamento (formNovoAgendamentoContainer) não encontrado para o botão Cancelar.');
+        }
+        if (!containerListaAgendamentos) {
+            console.error('Container da lista de agendamentos (lista-agendamentos-container) não encontrado para scroll no Cancelar.');
+        }
+    }
 
+    
   });
 </script>
 </body>
