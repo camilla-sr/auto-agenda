@@ -4,15 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="/assets/css/agendamentos.css">
-  <script src="/assets/js/script.js"></script>
+  <link rel="stylesheet" href="../assets/css/agendamentos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <!-- Cabeçalho -->
-	<div id="barra"></div>
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <h1><span class="logo-highlight">Centro Automotivo</span> JJ</h1>
+      </div>
+      
+      <nav class="nav-menu">
+        <div class="nav-item">
+          <a href="index.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </div>
+        <div class="nav-item">
+          <a href="agendamentos.html" class="nav-link active"><i class="fas fa-calendar-check"></i> Agendamentos</a>
+        </div>
+        <div class="nav-item">
+          <a href="servicos.html" class="nav-link"><i class="fas fa-tools"></i> Serviços</a>
+        </div>
+        <div class="nav-item">
+          <a href="produtos.html" class="nav-link"><i class="fas fa-box-open"></i> Produtos</a>
+        </div>
+        <div class="nav-item">
+          <a href="calendario.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Calendário</a>
+        </div>
+        <div class="nav-item">
+          <a href="../login.html" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-  <!-- Conteúdo Principal -->
+ <!-- Conteúdo Principal -->
   <main class="main-content">
     <div class="container">
       <div class="page-header">
@@ -244,8 +270,10 @@
           </button>
         </div>
       </div>
+
+
       <!-- Formulário de Agendamento -->
-      <div class="form-container" id="agendamento-form-container">
+      <div class="form-container" id="agendamento-form-container" style="display: none;">
         <div class="form-header">
           <h3><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
         </div>
@@ -390,5 +418,48 @@
       }
     });
   </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona o botão "Novo Agendamento"
+    const btnNovoAgendamento = document.getElementById('btn-novo-agendamento');
+    
+    // Seleciona o container do formulário de novo agendamento
+    const formContainer = document.getElementById('agendamento-form-container');
+
+    // Verifica se ambos os elementos existem na página
+    if (btnNovoAgendamento && formContainer) {
+      // Adiciona um evento de clique ao botão
+      btnNovoAgendamento.addEventListener('click', function() {
+        // Mostra o container do formulário
+        if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+          formContainer.style.display = 'block'; // 
+
+          // Scrolla a tela para o container do formulário
+          formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          
+          formContainer.style.display = 'none'; 
+        }
+      });
+    } else {
+      if (!btnNovoAgendamento) {
+        console.error('Botão com ID "btn-novo-agendamento" não encontrado.');
+      }
+      if (!formContainer) {
+        console.error('Container do formulário com ID "agendamento-form-container" não encontrado.');
+      }
+    }
+
+    // Adicionar funcionalidade ao botão "Cancelar" do formulário de novo agendamento
+    const btnCancelarNovoAgendamento = document.getElementById('btn-cancelar-novo-agendamento');
+    if (btnCancelarNovoAgendamento && formContainer) {
+        btnCancelarNovoAgendamento.addEventListener('click', function() {
+            formContainer.style.display = 'none'; 
+             document.getElementById('formNovoAgendamento').reset(); 
+        });
+    }
+
+  });
+</script>
 </body>
 </html>
