@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "produto")
@@ -13,49 +14,37 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idProduto;
+	
 	private String codigoProduto;
+	@NotEmpty
 	private String categoria;
+	@NotEmpty
 	private String nomeProduto;
-	private double preco;
+	@NotEmpty
+	private double precoCusto;
+	@NotEmpty
+	private double precoVenda;
+	
 	private String fornecedor;
+	@NotEmpty
 	private int estoqueAtual;
+	@NotEmpty
 	private int estoqueMinimo;
+	@NotEmpty
 	private String descricao;
 	
 	public Produto() {}
 	
-	public boolean cadastrarProduto(int id, String codigoProduto, String categoria, String nomeProduto, double preco, String fornecedor, int estoqueAtual, int estoqueMinimo, String descricao) {
-		String sql = "INSERT INTO produto "
-	               + "(codigo_produto, categoria, nome_produto, preco, fornecedor, estoque_atual, estoque_minimo, descricao) "
-	               + "VALUES ('"
-	               + codigoProduto + "', '"
-	               + categoria + "', '"
-	               + nomeProduto + "', "
-	               + preco + ", '"
-	               + fornecedor + "', "
-	               + estoqueAtual + ", "
-	               + estoqueMinimo + ", '"
-	               + descricao + "')";
-		
-		return true;
+	public Produto(int idProduto, String codigoProduto, String categoria, String nomeProduto
+			, int estoqueAtual, int estoqueMinimo, String descricao) {
+		this.idProduto = idProduto;
+		this.codigoProduto = codigoProduto;
+		this.nomeProduto = nomeProduto;
+		this.estoqueAtual = estoqueAtual;
+		this.estoqueMinimo = estoqueMinimo;
+		this.descricao = descricao;
 	}
-	
-	
-//	public boolean editarProduto() {
-//		
-//	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public int getIdProduto() { return idProduto; }
 	public void setIdProduto(int idProduto) { this.idProduto = idProduto; }
 	public String getCodigoProduto() { return codigoProduto; }
@@ -64,8 +53,10 @@ public class Produto {
 	public void setCategoria(String categoria) { this.categoria = categoria; }
 	public String getNomeProduto() { return nomeProduto; }
 	public void setNomeProduto(String nomeProduto) { this.nomeProduto = nomeProduto; }
-	public double getPreco() { return preco; }
-	public void setPreco(double preco) { this.preco = preco; }
+	public double getPrecoCusto() { return precoCusto; }
+	public void setPrecoCusto(double preco) { this.precoCusto = preco; }
+	public double getPrecoVenda() { return precoVenda; }
+	public void setPrecoVenda(double preco) { this.precoVenda = preco; }
 	public String getFornecedor() { return fornecedor; }
 	public void setFornecedor(String fornecedor) { this.fornecedor = fornecedor; }
 	public int getEstoqueAtual() { return estoqueAtual; }

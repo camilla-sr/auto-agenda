@@ -25,15 +25,13 @@ public class C_Funcionario {
 	@Autowired
 	private FuncionarioRepository repo;
 	
-	@RequestMapping(value = "/cadastroSistema", method = RequestMethod.POST)
+	@PostMapping(value = "/cadastroSistema")
 	public String cadastroFuncionario(@Valid Funcionario func, BindingResult result) {
 		
 		if(result.hasErrors()) {
 			return "redirect:/cadastroSistema";
 		}
-		
 		repo.save(func);
-		
 		return "redirect:/login";
 	}
 	
@@ -43,22 +41,5 @@ public class C_Funcionario {
 	    repo.findAll().forEach(lista::add);
 	    return lista;
 	}
-
-	
-//	@PostMapping("/login")
-//	public String login(@RequestBody Funcionario dados,  HttpSession sessao) {
-//		if(dados.getNomeFuncionario() == null || dados.getNomeFuncionario().trim().isEmpty()) return "usuario-nao-informado";
-//		if(dados.getSenha() == null || dados.getSenha().trim().isEmpty()) return "senha-nao-informada";
-//		
-//		Funcionario user = repo.findByUsuario(dados.getUsuario());
-//		
-//		if (user != null && user.getSenha().equals(dados.getSenha())) {
-//            // 
-////			sessao.setAttribute("usuarioLogado", user);
-//			return "Beleza ta funcional";
-//        } else {
-//            return "Email ou senha incorretos.";
-//        }
-//	}
     
 }

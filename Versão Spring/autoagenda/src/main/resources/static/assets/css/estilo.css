@@ -105,12 +105,12 @@ h3{
 
 /* TELA DE LOGIN */
 .mensagem{
-    position: absolute;
-    left: 40%;
-    top: 23%;
-    font-size: 20pt;
-    color: white;
-    font-weight: bolder;
+	position: absolute;
+	left: 40%;
+	top: 23%;
+	font-size: 20pt;
+	color: black;
+	font-weight: bolder;
 }
 
 img{
@@ -158,7 +158,7 @@ img{
 .form-control{
     background-color: transparent;
     border: none;
-    border-bottom: solid 1px white;
+    border-bottom: solid 1px black;
     transition: all 0.3s ease;
 }
 
@@ -174,7 +174,7 @@ img{
 }
 
 span{
-    color: white;
+    color: black;
     font-weight: bold;
     font-size: 12pt;
 }

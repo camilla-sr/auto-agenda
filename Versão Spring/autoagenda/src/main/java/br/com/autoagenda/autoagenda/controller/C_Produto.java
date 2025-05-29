@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.autoagenda.autoagenda.model.Produto;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.ProdutoRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/produto-api")
@@ -21,19 +23,13 @@ public class C_Produto {
 	@Autowired
 	private ProdutoRepository repo;
 	
-	@PostMapping("/cadastrarProduto")
-	public String cadastrarProduto(@RequestParam int idProduto, String codigoProduto, String categoria, String nomeProduto, 
-									double preco, String fornecedor, int estoqueAtual, int estoqueMinimo, String descricao) {
-		
-		if(idProduto == 0 || codigoProduto.trim().isEmpty() || categoria.trim().isEmpty() || nomeProduto.trim().isEmpty() || preco == 0
-				|| fornecedor.trim().isEmpty() || estoqueAtual == 0 || estoqueMinimo == 0) {
-			return "campo-nao-informado";
+	@PostMapping(value = "/cadastrarProduto")
+	public String cadastrarProduto(@Valid Produto prod, BindingResult result) {
+		if(result.hasErrors()) {
+			return "deu alguma merda";
 		}
-		
-		Produto produto = new Produto();
-		boolean resposta = produto.cadastrarProduto(idProduto, codigoProduto, categoria, nomeProduto, preco, fornecedor, estoqueAtual, estoqueMinimo, descricao);
-		
-		return resposta ? "cadastro-realizado" : "cadastro-nao-realizado";
+		repo.save(prod);
+		return "ta salvo";
 	}
 	
 	@GetMapping("/consulta")

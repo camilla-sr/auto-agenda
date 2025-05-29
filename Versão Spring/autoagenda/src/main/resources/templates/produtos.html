@@ -229,14 +229,14 @@
           <h3><i class="fas fa-plus-circle"></i> Cadastrar Novo Produto</h3>
         </div>
 
-        <form id="produto-form">
+        <form method="post" action="/produto-api/cadastrarProduto">
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
                 <label for="nome">Nome do Produto</label>
                 <div class="input-wrapper">
                   <i class="fas fa-tag input-icon"></i>
-                  <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
+                  <input type="text" id="nome" name="nomeProduto" placeholder="Nome do produto" required>
                 </div>
               </div>
             </div>
@@ -246,7 +246,7 @@
                 <label for="codigo">Código</label>
                 <div class="input-wrapper">
                   <i class="fas fa-barcode input-icon"></i>
-                  <input type="text" id="codigo" name="codigo" placeholder="Código do produto" required>
+                  <input type="text" id="codigo" name="codigoProduto" placeholder="Código do produto">
                 </div>
               </div>
             </div>
@@ -277,12 +277,12 @@
                 <label for="fornecedor">Fornecedor</label>
                 <div class="input-wrapper">
                   <i class="fas fa-truck input-icon"></i>
-                  <select id="fornecedor" name="fornecedor" required>
+                  <select id="fornecedor" name="fornecedor">
                     <option value="">Selecione um fornecedor</option>
-                    <option value="1">AutoPeças Brasil</option>
-                    <option value="2">Distribuidora de Peças Ltda</option>
-                    <option value="3">Peças & Cia</option>
-                    <option value="4">Importadora de Autopeças</option>
+                    <option value="autopecas brasil">AutoPeças Brasil</option>
+                    <option value="distribuidora de pecas ltda">Distribuidora de Peças Ltda</option>
+                    <option value="pecas e cia">Peças & Cia</option>
+                    <option value="importadora de autopecas">Importadora de Autopeças</option>
                   </select>
                 </div>
               </div>
@@ -295,7 +295,7 @@
                 <label for="preco_custo">Preço de Custo (R$)</label>
                 <div class="input-wrapper">
                   <i class="fas fa-tag input-icon"></i>
-                  <input type="number" id="preco_custo" name="preco_custo" step="0.01" min="0" placeholder="0,00"
+                  <input type="number" id="preco_custo" name="precoCusto" step="0.01" min="0" placeholder="0,00"
                     required>
                 </div>
               </div>
@@ -306,7 +306,7 @@
                 <label for="preco_venda">Preço de Venda (R$)</label>
                 <div class="input-wrapper">
                   <i class="fas fa-dollar-sign input-icon"></i>
-                  <input type="number" id="preco_venda" name="preco_venda" step="0.01" min="0" placeholder="0,00"
+                  <input type="number" id="preco_venda" name="precoVenda" step="0.01" min="0" placeholder="0,00"
                     required>
                 </div>
               </div>
@@ -319,7 +319,7 @@
                 <label for="estoque_atual">Estoque Atual</label>
                 <div class="input-wrapper">
                   <i class="fas fa-boxes input-icon"></i>
-                  <input type="number" id="estoque_atual" name="estoque_atual" min="0" placeholder="0" required>
+                  <input type="number" id="estoque_atual" name="estoqueAtual" min="0" placeholder="0" required>
                 </div>
               </div>
             </div>
@@ -329,7 +329,7 @@
                 <label for="estoque_minimo">Estoque Mínimo</label>
                 <div class="input-wrapper">
                   <i class="fas fa-exclamation-circle input-icon"></i>
-                  <input type="number" id="estoque_minimo" name="estoque_minimo" min="0" placeholder="0" required>
+                  <input type="number" id="estoque_minimo" name="estoqueMinimo" min="0" placeholder="0" required>
                 </div>
               </div>
             </div>
