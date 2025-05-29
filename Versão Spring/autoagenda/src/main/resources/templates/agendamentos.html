@@ -415,8 +415,9 @@
             // Scrolla a tela para o container do formulário
             formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           } else {
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // formContainer.style.display = 'none';
 
-            formContainer.style.display = 'none';
           }
         });
       } else {
