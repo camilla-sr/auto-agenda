@@ -15,8 +15,12 @@ create table if not exists funcionario (
   id_funcionario int primary key auto_increment,
   nome_funcionario varchar(50) default null,
   usuario       varchar(15) not null,
-  senha         varchar(15) not null
+  senha         varchar(15) not null,
+  acesso		varchar(5) default 'comum'
 );
+
+insert into funcionario (nome_funcionario, usuario, senha, acesso)
+values ('Administrador', 'admin', '123', 'admin');
 
 create table if not exists produto (
 	id_produto int primary key auto_increment,

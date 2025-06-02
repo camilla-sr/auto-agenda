@@ -16,7 +16,9 @@ create table tipo_servico (
 
 create table funcionario (
   id_funcionario int(10) unsigned auto_increment primary key,
-  nome_funcionario varchar(50) DEFAULT NULL
+  nome_funcionario varchar(50) DEFAULT NULL,
+  usuario     varchar(15) not null,
+  senha       varchar(15) not null
 );
 
 create table peca (
