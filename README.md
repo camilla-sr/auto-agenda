@@ -21,10 +21,10 @@ O projeto __versão Spring Boot__ fica localizado no caminho `**/auto-agenda/Ver
 #### :computer: Abrindo pela primeira vez 
 
 Na plataforma Eclipse:
-
 ```
 Importar projeto > Maven > "Existing Maven Projects" > Localizar e selecionar caminho do projeto > Finalize clicando em "Finish" 
 ```
+
 
 > **:bulb: Dica de uso com VS Code:**
 >
@@ -34,15 +34,12 @@ Importar projeto > Maven > "Existing Maven Projects" > Localizar e selecionar ca
 
 #### :arrow_forward: Rodando o projeto 
 
-Para rodar o projeto é necessário que a plataforma de desenvolvimento Eclipse esteja aberta no arquivo principal com nome `AutoagendaApplication.java`, com isso feito, basta executar o arquivo que irá inicializar o Spring Boot e, caso não tenha nenhuma falha durante as validações de arquivos (que será indicado pelo console da plataforma), abra a página inicial do projeto no navegador `index.html`.
+Para rodar o projeto é necessário que a plataforma de desenvolvimento Eclipse esteja aberta no arquivo principal com nome `AutoagendaApplication.java`, com isso feito, basta executar o arquivo que irá inicializar o Spring Boot e, caso não tenha nenhuma falha durante as validações de arquivos (que será indicado pelo console da plataforma), abra o navegador e na barra de endereços digite `localhost:8080` ou `127.0.0.1:8080` e tecle enter.
 
 
-> **:round_pushpin: Localização dos arquivos:**
+> **:round_pushpin: Localização do arquivo:**
 > - **AutoagendaApplication.java**:
 > **\Versão Spring\autoagenda\src\main\java\br\com\autoagenda\autoagenda
->
-> - **index.html**:
-> **\Versão Spring\autoagenda\src\main\resources\static
 
 
 
@@ -50,17 +47,17 @@ Para rodar o projeto é necessário que a plataforma de desenvolvimento Eclipse 
 Para padronizar os commits, o GitHub possui convenções que deixam os logs de mudanças mais fáceis de entender. Segue abaixo as convenções principais para serem utilizadas no projeto:
 
 > - "**feat:** *[mensagem de commit]*": usado para adicionar uma nova funcionalidade.
-> - "**chore:** *[mensagem de commit]"*: usado para atualizações de dependências, configurações ou tarefas auxiliares.
-> - "**fix:** *[mensagem de commit]*": usado para correção de bugs
-> - "**refactor:** *[mensagem de commit]*": usado para melhorias da estrutura de código.
+> - "**chore:** *[mensagem de commit]"*: usado para tarefas de manutenção (por exemplo: atualizar dependências como `pom.xml`, atualizar `.gitignore`, configurar arquivos do GitHub Actions).
+> - "**fix:** *[mensagem de commit]*": usado para correção de bugs.
+> - "**refactor:** *[mensagem de commit]*": usado para melhorias da estrutura de código mantendo o comportamento externo (mudança de nome de variável, troca de estruturas 'for' e/ou 'if', remoção de código morto, organização de imports ou formatar o código).
 >
 >
 > Commits que (quase ou) não afetam a lógica do desenvolvimento:
 >- "**docs:** *[mensagem de commit]*": usado para alterações na documentação.
 > - "**add:** *[mensagem de commit]*": usado para adição de novos arquivos no projeto. (commit informal)
-> - "**style:** *[mensagem de commit]*": usado para mudanças de formatação (espaços, vírgulas, etc.) que não afetam a lógica.
+> - "**style:** *[mensagem de commit]*": usado para mudanças de formatação (espaços, vírgulas, etc.) e estética (cores de página, localização de elementos e valores em arquivo CSS) que não afetam a lógica.
 >
-> *Mudanças nos arquivos (limpeza, renomeação ou ajustes de pastas) devem receber em seu commit a convenção **"chore"**.
+> *Mudanças nos arquivos (limpeza, renomeação ou ajustes de arquivos e pastas) devem receber em seu commit a convenção **"chore"**. Essa convenção não inclui alterações em código diretamente.
 
 
 
