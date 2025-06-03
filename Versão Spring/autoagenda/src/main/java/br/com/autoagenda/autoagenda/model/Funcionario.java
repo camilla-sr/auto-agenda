@@ -20,7 +20,8 @@ public class Funcionario {
 	private String usuario;
 	@NotEmpty
 	private String senha;
-	private String acesso;
+	
+	private String acesso = "comum";
 	
 	public Funcionario() {}
 
