@@ -1,4 +1,4 @@
-> Atualizado em 21/05/2025
+> Atualizado em 02/06/2025
 
 ## :grey_question: O que há de novo
 
@@ -57,7 +57,7 @@ Para padronizar os commits, o GitHub possui convenções que deixam os logs de m
 > - "**add:** *[mensagem de commit]*": usado para adição de novos arquivos no projeto. (commit informal)
 > - "**style:** *[mensagem de commit]*": usado para mudanças de formatação (espaços, vírgulas, etc.) e estética (cores de página, localização de elementos e valores em arquivo CSS) que não afetam a lógica.
 >
-> *Mudanças nos arquivos (limpeza, renomeação ou ajustes de arquivos e pastas) devem receber em seu commit a convenção **"chore"**. Essa convenção não inclui alterações em código diretamente.
+> *Mudanças nos arquivos (limpeza, renomeação ou ajustes de arquivos e pastas) devem receber em seu commit a convenção **"chore"**. Essa convenção não abrange alterações diretas em código.
 
 
 
