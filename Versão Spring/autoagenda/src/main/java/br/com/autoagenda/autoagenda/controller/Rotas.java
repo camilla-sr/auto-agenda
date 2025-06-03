@@ -1,13 +1,14 @@
 package br.com.autoagenda.autoagenda.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import br.com.autoagenda.autoagenda.model.Funcionario;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class Rotas {
-	
+public class Rotas {	
 	@GetMapping("/cadastroSistema")
 	public String cadastroSistema() {
 		return "cadastro";
@@ -25,10 +26,12 @@ public class Rotas {
     }
 	
 	@GetMapping("/")
-	public String index(HttpSession session) {
+	public String index(HttpSession session, Model model) {
 	    if(session.getAttribute("usuarioLogado") == null) {
 	    	return "redirect:/login";
 	    }
+	    
+	    model.addAttribute("nome", ((Funcionario)session.getAttribute("usuarioLogado")).getNomeFuncionario());
 		return "dashboard";
 	}
 	

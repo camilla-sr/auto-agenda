@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import br.com.autoagenda.autoagenda.model.Funcionario;
@@ -20,6 +22,19 @@ import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
 public class C_Funcionario {
 	@Autowired
 	private FuncionarioRepository repo;
+
+	@PostConstruct
+	private void verificarAdmin() {
+		Funcionario admin = repo.findByUsuario("admin");
+		if(admin == null) {
+			Funcionario adminPadrao = new Funcionario();
+			adminPadrao.setNomeFuncionario("Administrador");
+			adminPadrao.setUsuario("admin");
+			adminPadrao.setSenha("123");
+			adminPadrao.setAcesso("admin");
+			repo.save(adminPadrao);
+		}
+	}
 	
 	@PostMapping(value = "/cadastroSistema")
 	public String cadastroFuncionario(@Valid Funcionario func, BindingResult result) {
