@@ -1,11 +1,4 @@
-fetch('../assets/barra.html')
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('barra').innerHTML = data;
-    });
-
-
-document.addEventListener('DOMContentLoaded', function() {
+sdocument.addEventListener('DOMContentLoaded', function() {
     const inputSenha = document.getElementById('senha');
     const inputConfSenha = document.getElementById('confirmarSenha');
     const mensagem = document.getElementById('mensagem');

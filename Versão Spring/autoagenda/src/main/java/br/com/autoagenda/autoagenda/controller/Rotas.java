@@ -30,8 +30,6 @@ public class Rotas {
 	    if(session.getAttribute("usuarioLogado") == null) {
 	    	return "redirect:/login";
 	    }
-	    
-	    model.addAttribute("nome", ((Funcionario)session.getAttribute("usuarioLogado")).getNomeFuncionario());
 		return "dashboard";
 	}
 	

@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/assets/css/index.css">
-  <script src="/assets/js/script.js"></script>
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <script src="/js/script.js"></script>
 </head>
 <body>
   <!-- Cabeçalho -->
-	<div id="barra"></div>
+	<div th:replace="barra :: barra"></div>
 
   <!-- Conteúdo Principal -->
   <main class="main-content">
     <div class="container">
-		<p>Ola, <span th:text="${nome}"></span></p>
       <div class="page-header">
         <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
         <p>Visão geral do Centro Automotivo JJ</p>
