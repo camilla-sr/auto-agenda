@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Funcionários - Centro Automotivo JJ</title>
+  <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/script.js"></script>
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="/css/style1.css">
 </head>
@@ -49,46 +52,24 @@
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Usuário</th>
+                <th>Tipo de Acesso</th>
+                <th>CPF</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><span class="employee-id">001</span></td>
-                <td>João Silva</td>
-                <td>joao.silva</td>
+				<tr th:if="${funcionarios == null or funcionarios.empty}">
+					<td colspan="6">Nenhum resultado encontrado</td>
+				</tr>
+              <tr th:each="func : ${funcionarios}">
+                <td><span class="employee-id" th:text="${func.idFuncionario}"></span></td>
+                <td th:text="${func.nomeFuncionario}"></td>
+                <td th:text="${func.usuario}"></td>
+                <td th:text="${func.acesso}"></td>
+                <td class="cpf-mask" th:text="${func.cpf}"></td>
+				
                 <td class="action-buttons">
                   <!-- Botões de ação -->
-                  <button class="btn btn-action edit-btn" title="Editar">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-action delete-btn" title="Excluir">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-              
-              <!-- Linha de exemplo 2 -->
-              <tr>
-                <td><span class="employee-id">002</span></td>
-                <td>Maria Santos</td>
-                <td>maria.santos</td>
-                <td class="action-buttons">
-                  <button class="btn btn-action edit-btn" title="Editar">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-action delete-btn" title="Excluir">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-              
-              <!-- Linha de exemplo 3 -->
-              <tr>
-                <td><span class="employee-id">003</span></td>
-                <td>Carlos Oliveira</td>
-                <td>carlos.oliveira</td>
-                <td class="action-buttons">
                   <button class="btn btn-action edit-btn" title="Editar">
                     <i class="fas fa-edit"></i>
                   </button>

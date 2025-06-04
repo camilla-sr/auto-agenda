@@ -1,8 +1,5 @@
 package br.com.autoagenda.autoagenda.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,6 +27,7 @@ public class C_Funcionario {
 			Funcionario adminPadrao = new Funcionario();
 			adminPadrao.setNomeFuncionario("Administrador");
 			adminPadrao.setUsuario("admin");
+			adminPadrao.setCpf("12345678901");
 			adminPadrao.setSenha("123");
 			adminPadrao.setAcesso("admin");
 			repo.save(adminPadrao);
@@ -41,12 +39,10 @@ public class C_Funcionario {
 		if(result.hasErrors()) {
 			return "redirect:/cadastroSistema?erro=true";
 		}
-		
 		Funcionario existe = repo.findByUsuario(func.getUsuario());
 		if(existe != null) {
 			return "redirect:/cadastroSistema?erroUsuario=true";
 		}
-		
 		repo.save(func);
 		return "redirect:/login?sucesso=true";
 	}
@@ -59,12 +55,5 @@ public class C_Funcionario {
 		}
 		session.setAttribute("usuarioLogado", func);
 	    return "redirect:/";
-	}
-	
-	@GetMapping("/consulta")
-	public List<Funcionario> consultarServico(){
-	    List<Funcionario> lista = new ArrayList<>();
-	    repo.findAll().forEach(lista::add);
-	    return lista;
 	}
 }

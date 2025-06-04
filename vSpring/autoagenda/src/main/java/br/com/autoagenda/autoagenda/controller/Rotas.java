@@ -7,12 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import br.com.autoagenda.autoagenda.model.Funcionario;
+import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class Rotas {
 	@Autowired
 	private Sessao s;
+	
+	@Autowired
+	private FuncionarioRepository repoFunc;
 	
 	@ModelAttribute
     public void usuarioGlobal(HttpSession session, Model model) {
@@ -43,6 +47,7 @@ public class Rotas {
     @GetMapping("/funcionarios")
     public String funcionarios(HttpSession session, Model model) {
     	if(!s.verificaAcesso(session, "admin")) { return "acesso-negado"; }
+    	model.addAttribute("funcionarios", repoFunc.findAll());
     	return verificaUsuario(session, "funcionarios");
     }
 	

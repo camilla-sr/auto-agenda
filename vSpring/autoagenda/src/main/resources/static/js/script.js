@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+	document.querySelectorAll('.cpf-mask').forEach(function(element) {
+        let cpf = element.textContent.trim();
+        element.textContent = formatarCPF(cpf);
+    });
+    
+    function formatarCPF(cpf) {
+        if (!cpf) return '';
+        cpf = cpf.replace(/\D/g, '');
+        if (cpf.length !== 11) return cpf;
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+	
     const inputSenha = document.getElementById('senha');
     const inputConfSenha = document.getElementById('confirmarSenha');
     const inputValido = document.getElementById('senhaValida');

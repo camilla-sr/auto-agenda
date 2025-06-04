@@ -1,5 +1,6 @@
 package br.com.autoagenda.autoagenda.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,9 +14,10 @@ public class Funcionario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFuncionario;
-	
 	@NotEmpty
     private String nomeFuncionario;
+	@NotEmpty
+	private String cpf;
 	@NotEmpty
 	private String usuario;
 	@NotEmpty
@@ -25,9 +27,10 @@ public class Funcionario {
 	
 	public Funcionario() {}
 
-	public Funcionario(int idFuncionario, String nomeFuncionario, String usuario, String senha) {
+	public Funcionario(int idFuncionario, String nomeFuncionario, String cpf, String usuario, String senha) {
 		this.idFuncionario = idFuncionario;
 		this.nomeFuncionario = nomeFuncionario;
+		this.cpf = cpf;
 		this.usuario = usuario;
 		this.senha = senha;
 	}
@@ -42,4 +45,6 @@ public class Funcionario {
 	public void setSenha(String senha) { this.senha = senha; }
 	public String getAcesso() { return acesso; }
 	public void setAcesso(String acesso) { this.acesso = acesso; }
+	public String getCpf() { return cpf; }
+	public void setCpf(String cpf) { this.cpf = cpf; }
 }
