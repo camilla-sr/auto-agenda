@@ -8,9 +8,9 @@
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="/js/sweetalert2.all.min.js"></script>
-	<script src="/js/script.js"></script>
 	<script src="/js/validacao.js"></script>
     <link rel="stylesheet" href="/css/estilo.css">
+	<script src="/js/script.js"></script>
 </head>
 
 <body>
@@ -32,13 +32,14 @@
 
                     <span>Senha</span>
                     <div class="input-group mb-3">
-                        <input type="password" name="senha" id="senha" class="form-control">
+                        <input type="password" id="senha" class="form-control">
                     </div>
 
                     <span>Confirme sua senha</span>
                     <div class="input-group mb-3">
                         <input type="password" id="confirmarSenha" class="form-control">
                     </div>
+						<input type="hidden" name="senha" id="senhaValida" readOnly>
 
                     <div class="botoes">
                         <button type="submit" class="btnSalvar">Salvar</button>

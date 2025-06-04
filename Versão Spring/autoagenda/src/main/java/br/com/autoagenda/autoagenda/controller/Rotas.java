@@ -1,75 +1,68 @@
 package br.com.autoagenda.autoagenda.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class Rotas {	
+public class Rotas {
+	@Autowired
+	private Sessao s;
+	
+	@ModelAttribute
+    public void usuarioGlobal(HttpSession session, Model model) {
+        if (s.loginAtivo(session)) {
+            model.addAttribute("usuarioLogado", (Funcionario) session.getAttribute("usuarioLogado"));
+        }
+    }
+	
+	public String verificaUsuario(HttpSession session, String page) {
+		if(!s.loginAtivo(session)) return "login";
+		return page;
+	}
+	
 	@GetMapping("/cadastroSistema")
 	public String cadastroSistema() {
 		return "cadastro";
 	}
-	
     @GetMapping("/login")
     public String logar() {
     	return "login";
     }
-    
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-    	session.invalidate();
-    	return "redirect:/login";
-    }
 	
 	@GetMapping("/")
 	public String index(HttpSession session, Model model) {
-	    if(session.getAttribute("usuarioLogado") == null) {
-	    	return "redirect:/login";
-	    }
-		return "dashboard";
+		return verificaUsuario(session, "dashboard");
 	}
 	
     @GetMapping("/funcionarios")
-    public String funcionarios(HttpSession session) {
-    	if(session.getAttribute("usuarioLogado") == null) {
-    		return "redirect:/login";
-    	}
-    	return "funcionarios";
+    public String funcionarios(HttpSession session, Model model) {
+    	if(!s.verificaAcesso(session, "admin")) { return "acesso-negado"; }
+    	return verificaUsuario(session, "funcionarios");
     }
 	
     @GetMapping("/servicos")
     public String servicos(HttpSession session) {
-    	if(session.getAttribute("usuarioLogado") == null) {
-    		return "redirect:/login";
-    	}
-        return "servicos";
+    	return verificaUsuario(session, "servicos");
     }
     
     @GetMapping("/clientes")
     public String clientes(HttpSession session) {
-    	if(session.getAttribute("usuarioLogado") == null) {
-    		return "redirect:/login";
-    	}
-    	return "clientes";
+    	return verificaUsuario(session, "clientes");
     }
     
     @GetMapping("/produtos")
     public String produtos(HttpSession session) {
-    	if(session.getAttribute("usuarioLogado") == null) {
-    		return "redirect:/login";
-    	}
-    	return "produtos";
+    	return verificaUsuario(session, "produtos");
     }
     
     @GetMapping("/agendamentos")
     public String agendamentos(HttpSession session) {
-    	if(session.getAttribute("usuarioLogado") == null) {
-    		return "redirect:/login";
-    	}
-    	return "agendamentos";
+    	return verificaUsuario(session, "agendamentos");
     }
 }

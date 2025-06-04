@@ -4,7 +4,6 @@
 	<link rel="stylesheet" href="/fontawesome/css/all.min.css">
 	<link rel="stylesheet" href="/css/style1.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-	<script src="/js/script.js"></script>
 	<script src="/js/sweetalert2.all.min.js"></script>
 </head>
 
@@ -24,11 +23,13 @@
 	          		<a href="/agendamentos" class="nav-link"><i class="fas fa-calendar-check"></i>Agendamentos</a>
 	        	</div>
 		        <div class="nav-item">
-		          	<a href="/funcionarios" class="nav-link"><i class="fas fa-calendar-check"></i>Funcionários</a>
-		        </div>
-		        <div class="nav-item">
 		          	<a href="/servicos" class="nav-link"><i class="fas fa-tools"></i>Serviços</a>
 		        </div>
+				<div th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
+					<div class="nav-item">
+					  	<a href="/funcionarios" class="nav-link"><i class="fas fa-calendar-check"></i>Funcionários</a>
+					</div>
+				</div>
 		        <div class="nav-item">
 		          	<a href="/produtos" class="nav-link"><i class="fas fa-box-open"></i>Produtos</a>
 		        </div>
