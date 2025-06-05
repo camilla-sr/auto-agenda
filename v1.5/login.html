@@ -11,33 +11,33 @@
     <link rel="stylesheet" href="assets/css/estilo.css">
 </head>
 
-<body class="bg-secondary">
-    <div class="container">
-            
-        <div class="mensagem">
-            <p>Faça seu login ou cadastre-se</p>
-        </div>
+<body class="bg-secondary text-white d-flex align-items-center justify-content-center min-vh-100">
 
-        <div class="login">
-            <img src="assets/img/logo.png">
+    <div class="container text-center">
+        <p class="mensagem mb-4">Faça seu login ou cadastre-se</p>
+
+        <div class="login mx-auto">
+            <img src="assets/img/logo.png" alt="Logo JJ" class="logo-login">
 
             <div class="log-inputs">
                 <span>Usuário</span>
                 <div class="input-group mb-3">
                     <input type="text" name="usuario" class="form-control">
                 </div>
+
                 <span>Senha</span>
                 <div class="input-group mb-3">
                     <input type="password" name="senha" class="form-control">
                 </div>
 
-                <div class="botoes">
+                <div class="botoes d-flex justify-content-center gap-3 flex-wrap mt-3">
                     <button type="button" class="btnLogin">Entrar</button>
                     <button type="button" class="btnCadastro">Cadastro</button>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

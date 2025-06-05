@@ -1,191 +1,71 @@
-.navbar-toggler-icon{
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23FFFFFF' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-}
-
-.nav-link {
-    color: white !important;
-}
-
-.nav-link:hover{
-    color:yellow !important;
-}
-
-.acao {
-    width: 35px;
-    height: 35px;
-    padding: 0;
-	margin: 0;
-    background-size: 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: all 0.2s ease;
-    box-shadow: 3px 3px rgba(0, 0, 0, 0.61);
-    display: inline-block;
-}
-
-.acao:hover{
-    box-shadow: 0px 0px black;
-}
-
-.acao-edit{
-	background-image: url("/assets/icons/edit-1.png");
-	margin-right: 30px;
-}
-
-.acao-exc{
-	background-image: url("/assets/icons/trash-1.png");
-}
-
-#busca{
-    transition: 0.2s ease;
-    border: 0;
-    padding-left: 30px;
-    background-image: url("/assets/icons/search-1.png");
-    background-size: 20px;
-    background-repeat: no-repeat;
-    background-position: left 5px center;
-    border-bottom: solid 2px blue;
-}
-
-#busca:focus{
-    transition: 0.2s ease;
-    border: none;
-    padding-left: 10px;
-    background-position: right 5px center;
-}
-
-.home{
-    background: transparent;
-	background-image: url("/assets/icons/home.png");
-	background-size: 40px;
-	background-repeat: no-repeat;
-    border: none;
-    border-radius: 50rem;
-	width: 40px;
-	height: 40px;
-	display: inline-block;
-}
-
-.home:hover{
-    box-shadow: 0px 0px 10px white;
-}
-
-.adicionar{
-    transition: all 0.3s ease;
-}
-
-.adicionar:hover{
-    box-shadow: 0px 0px 15px green;
-    border-radius: 20px;
-}
-
-.active:hover{
-    color: blue;
-}
-
-.dashboard{
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dashboard:hover{
-    transition: all 0.2s ease;
-    scale: 1.2;
-    background-color: rgb(255, 255, 103);
-}
-
-h3{
-    border-top: solid 2px;
-}
-
-.modal.fade .modal-dialog {
-    transform: translateY(-5%) !important; /* Diminui o deslocamento */
-}
-
-/* TELA DE LOGIN */
-.mensagem{
-    position: absolute;
-    left: 40%;
-    top: 23%;
+/* Removidos os position: absolute problemáticos */
+.mensagem {
     font-size: 20pt;
-    color: white;
     font-weight: bolder;
+    color: white;
+    margin-bottom: 20px;
 }
 
-img{
-    position: absolute;
-    left: -13%;
-    top: 25%;
+/* Centraliza a imagem no topo */
+.logo-login {
     width: 170px;
-    height:170px;
+    height: 170px;
+    display: block;
+    margin: 0 auto 20px auto;
 }
 
-.login, .cadastro{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Login container mantém estilo visual */
+.login {
     backdrop-filter: blur(20px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: solid 3px;
-}
-
-.login{
-    width: 35%;
-    height: 40%;
-    padding: 30px 50px;
-    padding-left: 6%;
     border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 50px;
+    margin: 0 auto;
+    background-color: transparent;
 }
 
-.log-inputs{
+/* Mantém espaçamento entre inputs */
+.log-inputs {
     margin-top: 16%;
 }
 
-.cadastro{
-    width: 35%;
-    height: 50%;
-    padding: 30px 50px;
-    padding-left: 6%;
-    border-radius: 20px;
-}
-
-.cad-inputs{
-    margin-top: 12%;
-}
-
-.form-control{
+.form-control {
     background-color: transparent;
     border: none;
     border-bottom: solid 1px white;
     transition: all 0.3s ease;
+    color: white;
 }
 
-.form-control:hover{
+.form-control:hover {
     border-bottom: solid 1px yellow;
 }
 
-.form-control:focus{
+.form-control:focus {
     transition: all 0.3s ease;
     background-color: transparent;
     border: none;
     border-bottom: solid 2px yellow;
+    box-shadow: none;
 }
 
-span{
+span {
     color: white;
     font-weight: bold;
     font-size: 12pt;
+    text-align: left;
+    display: block;
 }
 
-.botoes{
-    position: absolute;
-    top: 95%;
-    left: 60%;
+.botoes {
+    margin-top: 20px;
 }
 
-.btnLogin, .btnCadastro, .btnSalvar, .btnVoltar{
+/* Botões originais mantidos */
+.btnLogin, .btnCadastro {
     transition: 0.2s ease;
     background-color: rgb(230, 230, 0);
     border: solid;
@@ -196,6 +76,32 @@ span{
     box-shadow: 0px 5px rgb(54, 54, 52);
 }
 
-.btnLogin:hover,  .btnCadastro:hover, .btnSalvar:hover, .btnVoltar:hover{
+.btnLogin:hover, .btnCadastro:hover {
     box-shadow: 0px 0px black;
+}
+
+/* Responsividade */
+@media (max-width: 500px) {
+    .login {
+        padding: 20px;
+    }
+
+    .log-inputs {
+        margin-top: 10%;
+    }
+
+    .botoes {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btnLogin, .btnCadastro {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .logo-login {
+        width: 120px;
+        height: 120px;
+    }
 }
