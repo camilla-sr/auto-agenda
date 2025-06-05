@@ -28,7 +28,7 @@
             <i class="fas fa-boxes"></i>
           </div>
           <div class="stat-info">
-            <h3>5</h3> <p>Produtos cadastrados</p>
+            <h3 th:text="${totalProdutos}"></h3> <p>Produtos cadastrados</p>
           </div>
         </div>
 
@@ -37,7 +37,7 @@
             <i class="fas fa-exclamation-triangle"></i>
           </div>
           <div class="stat-info">
-            <h3>2</h3> <p>Abaixo do estoque mínimo</p>
+            <h3 th:text="${estoqueBaixo}"></h3> <p>Abaixo do estoque mínimo</p>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
             <i class="fas fa-dollar-sign"></i>
           </div>
           <div class="stat-info">
-            <h3>R$ 1.250,00</h3> <p>Valor total em estoque</p>
+            <h3 th:text="'R$ ' + ${precoEstoque}"></h3> <p>Valor total em estoque</p>
           </div>
         </div>
       </div>
