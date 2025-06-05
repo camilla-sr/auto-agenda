@@ -30,8 +30,14 @@ public class C_Produto {
 			if(!prod.getCodigoProduto().isEmpty()) {
 				existe.setCodigoProduto(prod.getCodigoProduto());				
 			}
-			existe.setCategoria(prod.getCategoria());
-			existe.setNomeProduto(prod.getNomeProduto());
+			if(!prod.getCategoria().isEmpty()) {
+				existe.setCategoria(prod.getCategoria());				
+			}
+			if(!prod.getNomeProduto().isEmpty()) {
+				existe.setNomeProduto(prod.getNomeProduto());				
+			}
+			
+			
 			existe.setPrecoCusto(prod.getPrecoCusto());
 			existe.setPrecoVenda(prod.getPrecoVenda());
 			if(!prod.getFornecedor().isEmpty()) {

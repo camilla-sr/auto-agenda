@@ -77,7 +77,8 @@ public class Rotas {
     
     @GetMapping("/clientes")
     public String clientes(HttpSession session) {
-    	return verificaUsuario(session, "clientes");
+    	return "erro";
+    	//return verificaUsuario(session, "clientes");
     }
     
     @GetMapping("/produtos")
@@ -90,7 +91,9 @@ public class Rotas {
     }
     
     @GetMapping("/agendamentos")
-    public String agendamentos(HttpSession session) {
+    public String agendamentos(HttpSession session, Model model) {
+    	model.addAttribute("servicos", repoServ.findAll());
+    	model.addAttribute("agendamentos", repoAg.findAll());
     	return verificaUsuario(session, "agendamentos");
     }
 }

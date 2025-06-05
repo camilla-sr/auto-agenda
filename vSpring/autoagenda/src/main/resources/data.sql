@@ -36,13 +36,12 @@ create table if not exists produto (
 
 create table if not exists agendamento (
   id_agendamento int primary key auto_increment,
-  fk_cliente int,
+  nome_cliente	varchar(30) not null,
   fk_servico int,
   data_cadastro date,
-  data_previsao_entrega date,
+  data_previsao date,
   data_conclusao date,
-  status_agendamento varchar(20) default 'Ativo',
+  status_agendamento varchar(20) default 'ativo',
   observacao text default null,
-  foreign key (fk_cliente) references cliente (id_cliente),
   foreign key (fk_servico) references servico (id_servico)
 );
