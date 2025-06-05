@@ -8,6 +8,7 @@ create table if not exists cliente (
 
 create table if not exists servico (
   id_servico int primary key auto_increment,
+  nome_servico		varchar(30) not null,
   desc_servico varchar(200)
 );
 

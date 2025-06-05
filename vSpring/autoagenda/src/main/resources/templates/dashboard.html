@@ -31,7 +31,7 @@
               <i class="fas fa-calendar-alt"></i>
             </div>
             <div class="stat-info">
-              <h3>9</h3>
+              <h3 th:text="${totalAgenda}"></h3>
               <p>Total de Agendamentos</p>
             </div>
           </div>
@@ -70,7 +70,7 @@
               <i class="fas fa-boxes"></i>
             </div>
             <div class="stat-info">
-              <h3>50</h3>
+              <h3 th:text="${totalProdutos}"></h3>
               <p>Total de Produtos</p>
             </div>
           </div>
@@ -80,7 +80,7 @@
               <i class="fas fa-exclamation-triangle"></i>
             </div>
             <div class="stat-info">
-              <h3>5</h3>
+              <h3 th:text="${estoqueBaixo}"></h3>
               <p>Produtos em Baixo Estoque</p>
             </div>
           </div>
@@ -90,7 +90,7 @@
               <i class="fas fa-dollar-sign"></i>
             </div>
             <div class="stat-info">
-              <h3>R$ 15.000</h3>
+              <h3 th:text="'R$ ' + ${precoEstoque}"></h3>
               <p>Valor Total em Estoque</p>
             </div>
           </div>

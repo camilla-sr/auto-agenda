@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }
 	
-    const inputSenha = document.getElementById('senha');
-    const inputConfSenha = document.getElementById('confirmarSenha');
-    const inputValido = document.getElementById('senhaValida');
+    let inputSenha = document.getElementById('senha');
+    let inputConfSenha = document.getElementById('confirmarSenha');
+    let inputValido = document.getElementById('senhaValida');
 
     function verificarSenha() {
         const senha = inputSenha.value;
@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
             inputValido.value = '';
             return false;
         }
-
         if (senha !== confirmacao) {
             inputConfSenha.classList.add('is-invalid');
             inputSenha.classList.add('is-invalid');
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return true;
         }
     }
-
-    inputConfSenha.addEventListener('input', verificarSenha);
-    inputSenha.addEventListener('input', verificarSenha);
+	
+	inputSenha.addEventListener('input', verificarSenha);
+	inputConfSenha.addEventListener('input', verificarSenha);
 });

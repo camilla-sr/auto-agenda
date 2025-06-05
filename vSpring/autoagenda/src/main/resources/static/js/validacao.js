@@ -41,11 +41,65 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
     }
 	
+	if (urlParams.get('erroEditar') === 'true') {
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Erro ao editar usuário.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }	
+	
+	if (urlParams.get('usuarioExiste') === 'false') {
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Usuário não existe',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }	
 	
 	if (urlParams.get('usuarioValido') === 'false') {
         Swal.fire({
             title: 'Erro!',
             text: 'Usuário/Senha incorreto.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
+	
+	if (urlParams.get('editado') === 'true') {
+        Swal.fire({
+            title: 'Sucesso!',
+            text: 'Edição concluída.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
+	
+	if (urlParams.get('apagar') === 'true') {
+        Swal.fire({
+            title: 'Sucesso!',
+            text: 'Registro excluído.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
+	
+	if (urlParams.get('erroServico') === 'true') {
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Serviço já cadastrado.',
             icon: 'error',
             confirmButtonText: 'OK'
 		}).then(() => {
