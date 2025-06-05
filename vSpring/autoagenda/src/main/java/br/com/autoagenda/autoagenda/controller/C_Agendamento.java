@@ -1,5 +1,8 @@
 package br.com.autoagenda.autoagenda.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,6 +14,7 @@ import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
+import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 import jakarta.validation.Valid;
 
 @Controller
@@ -19,24 +23,29 @@ public class C_Agendamento {
 	
 	@Autowired
 	private AgendamentoRepository repo;
+	@Autowired
+	private ServicoRepository repoServ;
 	
 	@PostMapping("/salvar")
-    public String salvar(@Valid Agendamento ag, BindingResult result) {
+    public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico ,BindingResult result) {
 		if(result.hasErrors()) {
 			return "redirect:/agendamentos?erro=true";
 		}
+		Servico servicoSelecionado = repoServ.findById(idServico).orElseThrow();
 		if(ag.getIdAgendamento() != null) {
+			
 			Agendamento existe = repo.findById(ag.getIdAgendamento()).orElse(new Agendamento());
 			
 			existe.setNomeCliente(ag.getNomeCliente());
-			existe.setServico(ag.getServico());
+			existe.setServico(servicoSelecionado);
 			existe.setDataPrevisao(ag.getDataPrevisao());
-			existe.setDataCadastro(ag.getDataConclusao());
+			existe.setDataConclusao(ag.getDataConclusao());
 			existe.setStatusAgendamento(ag.getStatusAgendamento());
 			existe.setObservacao(ag.getObservacao());
 			repo.save(existe);
 			return "redirect:/agendamentos?editado=true";
 		} else {
+			ag.setServico(servicoSelecionado);
 			repo.save(ag);
 		}
 		return "redirect:/agendamentos?sucesso=true";

@@ -122,9 +122,8 @@
 				        th:classappend="' ' + ${#strings.replace(ag.nomeServico.toLowerCase(), ' ', '-')}"
 				        th:text="${ag.status}"></span>
 				</td>
-                <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd-MM-yyyy')}"></td>
-                <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd-MM-yyyy')}"></td>
-                <td class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'dd-MM-yyyy')}"></td>
+                <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}"></td>
+                <td class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}"></td>
 				<td class="ag-status">
 				  <span class="status-badge" th:classappend=" ${ag.status.replaceAll(' ', '-').toLowerCase()}"
 				        th:text="${ag.status}"></span>
@@ -183,7 +182,7 @@
                 <label for="tipo_servico">Tipo de Serviço</label>
                 <div class="input-wrapper">
                   <i class="fas fa-tools input-icon"></i>
-                  <select id="tipo-servico" name="nomeServico" required>
+                  <select id="nome-servico" name="idServico" required>
                     <option value="">Selecione um serviço</option>
 					<option th:each="serv : ${servicos}" 
 					        th:value="${serv.idServico}"
@@ -194,23 +193,28 @@
             </div>
           </div>
 
-		  <div class="form-col">
-		    <div class="form-group">
-		      <label for="data-previsao">Agendamento para</label>
-		      <div class="input-wrapper">
-		        <i class="fas fa-calendar-alt input-icon"></i>
-		        <input type="date" id="data-previsao" name="dataPrevisao" required>
-		      </div>
+		  <div class="form-row">
+		    <div class="form-col">
+			    <div class="form-group">
+			      <label for="data-previsao">Agendamento para</label>
+			      <div class="input-wrapper">
+			        <i class="fas fa-calendar-alt input-icon"></i>
+			        <input type="date" id="data-previsao" name="dataPrevisao">
+			      </div>
+			   	</div>
 		    </div>
+
+		    <div class="form-col" style="visibility: hidden">
+				<div class="form-group">
+			      <label for="data-conclusao">Data de Conclusão</label>
+			      <div class="input-wrapper">
+			        <i class="fas fa-calendar-plus input-icon"></i>
+			        <input type="date" id="data-conclusao" name="dataConclusao">
+			      </div>
+			    </div>
+			 </div>
 		  </div>
 		  
-		  <div class="form-group" id="data-conclusao-container" style="display: none;">
-		    <label for="data-conclusao">Data de Concluão</label>
-		    <div class="input-wrapper">
-		      <i class="fas fa-calendar-plus input-icon"></i>
-		      <input type="date" id="data-conclusao" name="dataConclusao">
-		    </div>
-		  </div>
 
           <div class="form-row">
             <div class="form-col">
@@ -218,7 +222,7 @@
                 <label for="status">Status</label>
                 <div class="input-wrapper">
                   <i class="fas fa-info-circle input-icon"></i>
-                  <select id="status" name="status" required>
+                  <select id="status" name="statusAgendamento" required>
                     <option value="">Selecione um status</option>
                     <option value="agendado">Agendado</option>
                     <option value="confirmado">Confirmado</option>
@@ -230,15 +234,7 @@
               </div>
             </div>
 
-            <div class="form-col" id="data_conclusao_container">
-              <div class="form-group">
-                <label for="data_conclusao">Data de Conclusão</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-flag-checkered input-icon"></i>
-                  <input type="date" id="data-conclusao" name="dataConclusao">
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           <div class="form-group">
@@ -381,7 +377,6 @@
 	  	      const id = button.dataset.id;
 			  const nome = row.querySelector('.ag-cliente').textContent.trim();
 		      const status = row.querySelector('.ag-status span').textContent.trim();
-		      const dataCadastro = row.querySelector('.ag-cadastro').textContent.trim();
 		      const dataPrevisao = row.querySelector('.ag-previsao').textContent.trim();
 		      const dataConclusao = row.querySelector('.ag-conclusao').textContent.trim();
 		      const observacao = row.querySelector('.ag-observacao').textContent.trim();
@@ -391,8 +386,8 @@
 			  document.getElementById('nome-cliente').value = nome;
 		      document.getElementById('status').value = status.toLowerCase().replaceAll(' ', '-');
 		      document.getElementById('data-previsao').value = dataPrevisao;
-		      document.getElementById('observacao').value = observacao;
 			  document.getElementById('data-conclusao').value = dataConclusao || '';
+		      document.getElementById('observacao').value = observacao;
 			  document.getElementById('data-conclusao-container').style.display = 'block';
 	  	
 	  	    });
