@@ -1,6 +1,5 @@
 package br.com.autoagenda.autoagenda.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +12,7 @@ import jakarta.validation.constraints.NotEmpty;
 public class Funcionario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idFuncionario;
+    private Integer idFuncionario;
 	@NotEmpty
     private String nomeFuncionario;
 	@NotEmpty
@@ -27,7 +26,7 @@ public class Funcionario {
 	
 	public Funcionario() {}
 
-	public Funcionario(int idFuncionario, String nomeFuncionario, String cpf, String usuario, String senha) {
+	public Funcionario(Integer idFuncionario, String nomeFuncionario, String cpf, String usuario, String senha) {
 		this.idFuncionario = idFuncionario;
 		this.nomeFuncionario = nomeFuncionario;
 		this.cpf = cpf;
@@ -35,8 +34,8 @@ public class Funcionario {
 		this.senha = senha;
 	}
     
-    public int getIdFuncionario() { return idFuncionario; }
-    public void setIdFuncionario(int idFuncionario) { this.idFuncionario = idFuncionario; }
+    public Integer getIdFuncionario() { return idFuncionario; }
+    public void setIdFuncionario(Integer idFuncionario) { this.idFuncionario = idFuncionario; }
     public String getNomeFuncionario() { return nomeFuncionario; }
     public void setNomeFuncionario(String nomeFuncionario) { this.nomeFuncionario = nomeFuncionario; }
 	public String getUsuario() { return usuario; }

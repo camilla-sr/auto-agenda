@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,5 +56,36 @@ public class C_Funcionario {
 		}
 		session.setAttribute("usuarioLogado", func);
 	    return "redirect:/";
+	}
+	
+	@PostMapping(value = "/salvar")
+	public String salvarFuncionario(@ModelAttribute Funcionario func, @RequestParam(required = false) String novaSenha, BindingResult result) {
+		if(result.hasErrors()) {
+			return "redirect:/funcionarios?erroEditar=true";
+		}
+		if(func.getIdFuncionario() != null) {
+			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElse(new Funcionario());
+			
+			funcExistente.setNomeFuncionario(func.getNomeFuncionario());
+			funcExistente.setCpf(func.getCpf());
+			funcExistente.setUsuario(func.getUsuario());
+			funcExistente.setAcesso(func.getAcesso());
+			
+			if (novaSenha != null && !novaSenha.isEmpty()) {
+				funcExistente.setSenha(novaSenha);
+			}			
+			repo.save(funcExistente);
+		} else {
+			repo.save(func);
+		}
+		return "redirect:/funcionarios?sucesso=true";
+	}
+	
+	@PostMapping(value = "/apagar")
+	public String apagarFuncionario(@RequestParam Integer idFuncionario) {
+		if(idFuncionario != null) {
+			repo.deleteById(idFuncionario);
+		}
+		return "redirect:/funcionarios?apagar=true";
 	}
 }
