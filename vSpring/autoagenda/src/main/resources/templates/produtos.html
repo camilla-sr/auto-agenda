@@ -51,12 +51,6 @@
         </div>
       </div>
 
-      <div class="actions-bar" id="product-actions-bar">
-        <button class="btn btn-primary" id="btn-novo-produto" type="button">
-          <i class="fas fa-plus"></i> Novo Produto
-        </button>
-      </div>
-
       <div class="form-container" id="formNovoProdutoContainer" style="display: none;">
         <h3><i class="fas fa-pencil-alt"></i> Adicionar Novo Produto</h3>
         <form id="formNovoProduto" action="/produto-api/salvar" method="post"> <div class="form-row">
@@ -151,10 +145,16 @@
       </div>
 
       <div class="table-container">
-        <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
+        <div class="table-header">
+          <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
+          <button class="btn btn-primary" id="btn-novo-produto" type="button">
+            <i class="fas fa-plus"></i> Novo Produto
+          </button>
+        </div>
+
         <div class="table-actions">
           <input type="text" id="searchInputProdutos" placeholder="Pesquisar produtos...">
-          </div>
+        </div>
         <table class="appointments-table" id="productsTable"> <thead>
             <tr>
               <th>Nome</th>
@@ -210,59 +210,37 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Seleciona o botão "Novo Produto"
       const btnNovoProduto = document.getElementById('btn-novo-produto');
-      
-      // Seleciona o container do formulário de novo produto
       const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
-
-      // Seleciona o botão "Cancelar" dentro do formulário de novo produto
       const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
+      
+      // MODIFICADO: A referência para rolagem agora é o container da tabela
+      const tableContainerForScroll = document.querySelector('.table-container');
 
-      // Seleciona a barra de ações onde está o botão "Novo Produto"
-      const productActionsBar = document.getElementById('product-actions-bar');
-
-      // Lógica para o botão "Novo Produto"
       if (btnNovoProduto && formProdutoContainer) {
         btnNovoProduto.addEventListener('click', function() {
           if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
-            formProdutoContainer.style.display = 'block'; // Ou 'flex', dependendo do seu CSS para .form-container
+            formProdutoContainer.style.display = 'block';
             formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          } else {
-            // Opcional: Se você quiser que o botão também esconda o formulário se ele já estiver visível
-            // formProdutoContainer.style.display = 'none';
-            // if (productActionsBar) { // Scroll de volta se esconder
-            //    productActionsBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // }
           }
         });
-      } else {
-        if (!btnNovoProduto) console.error('Botão "Novo Produto" (btn-novo-produto) não encontrado.');
-        if (!formProdutoContainer) console.error('Container do formulário (formNovoProdutoContainer) não encontrado.');
       }
 
-      // Lógica para o botão "Cancelar" do formulário de novo produto
-      if (btnCancelarNovoProduto && formProdutoContainer && productActionsBar) {
+      // Lógica para o botão "Cancelar" foi ajustada para usar a nova referência
+      if (btnCancelarNovoProduto && formProdutoContainer && tableContainerForScroll) {
         btnCancelarNovoProduto.addEventListener('click', function() {
           formProdutoContainer.style.display = 'none';
-          
           const formNovo = document.getElementById('formNovoProduto');
           if (formNovo) {
             formNovo.reset(); 
           }
-          
-          // Scrolla de volta para a barra de ações (onde está o botão "Novo Produto")
-          productActionsBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // MODIFICADO: Scrolla de volta para o topo da tabela
+          tableContainerForScroll.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-      } else {
-        if (!btnCancelarNovoProduto) console.error('Botão "Cancelar Novo Produto" (btn-cancelar-novo-produto) não encontrado. Verifique se o ID foi adicionado corretamente ao botão.');
-        if (!formProdutoContainer) console.error('Container do formulário (formNovoProdutoContainer) não encontrado para o botão Cancelar.');
-        if (!productActionsBar) console.error('Barra de ações (product-actions-bar) não encontrada para scroll no Cancelar. Verifique se o ID foi adicionado corretamente à div.');
       }
 
-	  //		SCRIPT DO BACK, AQUI BOTA PRA FUNCIONAR EDITAR E APAGAR
+	  // O restante do script permanece igual
 	  const editButtons = document.querySelectorAll('.btn-edit');
-	  	
 	  editButtons.forEach(function(button) {
 	    button.addEventListener('click', function() {
 		if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
@@ -270,7 +248,6 @@
             formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
 	      const row = button.closest('tr');
-	
 	      const id = button.dataset.id;
 	      const nome = row.querySelector('.nome-produto').textContent.trim();
 	      const codigo = row.querySelector('.codigo-produto').textContent.trim();
@@ -292,18 +269,14 @@
 	      document.getElementById('estoque-atual').value = estoqueA;
 	      document.getElementById('estoque-minimo').value = estoqueM;
 	      document.getElementById('descricao').value = descricao;
-	
 	    });
 	  });
 	
 	const deleteButtons = document.querySelectorAll('.btn-delete');
-	
 	    deleteButtons.forEach(function(button) {
 	      button.addEventListener('click', function(e) {
 	        e.preventDefault();
-	
 	        const id = button.dataset.id;
-	
 	        Swal.fire({
 	          title: 'Você tem certeza?',
 	          text: "Esta ação não poderá ser desfeita!",
