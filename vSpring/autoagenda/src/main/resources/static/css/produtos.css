@@ -406,14 +406,25 @@ body {
   font-weight: 600;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--cor-borda);
 }
 
 .table-container h3 i {
   margin-right: 10px;
   color: var(--cor-primaria);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+
+.table-header .btn {
+   width: auto;
 }
 
 .table-actions {
