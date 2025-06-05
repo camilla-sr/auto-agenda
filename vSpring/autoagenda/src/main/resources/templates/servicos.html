@@ -118,50 +118,60 @@
     </div>
   </footer>
   <script>
-	  document.addEventListener('DOMContentLoaded', function() {
-	      const editButtons = document.querySelectorAll('.edit-btn');
-	
-	      editButtons.forEach(function(button) {
-	        button.addEventListener('click', function() {
-	          const row = button.closest('tr');
-	
-	          const id = button.dataset.id;
-	          const nome = row.querySelector('.nome-servico').textContent.trim();
-	          const descricao = row.querySelector('.desc-servico').textContent.trim();
-	
-	          document.getElementById('idServico').value = id;
-	          document.getElementById('nome-servico').value = nome;
-	          document.getElementById('descricao-servico').value = descricao;
-	
-	        });
-	      });
-	  	
-	  	const deleteButtons = document.querySelectorAll('.delete-btn');
-	
-	  	    deleteButtons.forEach(function(button) {
-	  	      button.addEventListener('click', function(e) {
-	  	        e.preventDefault();
-	
-	  	        const id = button.dataset.id;
-	
-	  	        Swal.fire({
-	  	          title: 'Você tem certeza?',
-	  	          text: "Esta ação não poderá ser desfeita!",
-	  	          icon: 'warning',
-	  	          showCancelButton: true,
-	  	          confirmButtonColor: '#d33',
-	  	          cancelButtonColor: '#3085d6',
-	  	          confirmButtonText: 'Sim, excluir!',
-	  	          cancelButtonText: 'Cancelar'
-	  	        }).then((result) => {
-	  	          if (result.isConfirmed) {
-	  	            document.getElementById('deleteId').value = id;
-	  	            document.getElementById('deleteForm').submit();
-	  	          }
-	  	        });
-	  	      });
-	  	    });
+	document.addEventListener('DOMContentLoaded', function() {
+	  const formTitulo = document.querySelector('.form-header h3');
+	  const submitBtn = document.querySelector('button[type="submit"]');
+	  const nomeInput = document.getElementById('nome-servico');
+	  const descInput = document.getElementById('descricao-servico');
+	  const idInput = document.getElementById('idServico');
+
+	  function atualizarEstadoBotao() {
+	    const nomeValido = nomeInput.value.trim() !== '';
+	    const descValida = descInput.value.trim() !== '';
+	    if (!idInput.value) {
+	      submitBtn.disabled = !(nomeValido && descValida);
+	    }
+	  }
+
+	  nomeInput.addEventListener('input', atualizarEstadoBotao);
+	  descInput.addEventListener('input', atualizarEstadoBotao);
+
+	  // Modo "novo" (padrão)
+	  function resetFormulario() {
+	    formTitulo.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço';
+	    submitBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Serviço';
+	    submitBtn.disabled = true;
+	  }
+
+	  // Reset quando clicar em "Cancelar"
+	  document.querySelector('button[type="reset"]').addEventListener('click', function() {
+	    idInput.value = '';
+	    nomeInput.value = '';
+	    descInput.value = '';
+	    resetFormulario();
+	  });
+
+	  // Editar
+	  document.querySelectorAll('.edit-btn').forEach(function(button) {
+	    button.addEventListener('click', function() {
+	      const row = button.closest('tr');
+	      const id = button.dataset.id;
+	      const nome = row.querySelector('.nome-servico').textContent.trim();
+	      const descricao = row.querySelector('.desc-servico').textContent.trim();
+
+	      idInput.value = id;
+	      nomeInput.value = nome;
+	      descInput.value = descricao;
+
+	      formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
+	      submitBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+	      submitBtn.disabled = false;
 	    });
+	  });
+
+	  // Inicializa em modo novo
+	  resetFormulario();
+	});
   </script>
 </body>
 </html>
