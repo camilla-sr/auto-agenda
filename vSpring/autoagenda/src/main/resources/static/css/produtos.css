@@ -362,33 +362,38 @@ body {
 }
 
 .btn-edit {
-  background-color: var(--cor-primaria-light);
-  color: var(--cor-secundaria);
+  background-color: var(--cor-primaria-light); 
+  color: var(--cor-secundaria);       
+  border:none;        
 }
 
 .btn-edit:hover {
-  background-color: var(--cor-primaria);
-  color: var(--cor-texto-claro);
+  background-color: var(--cor-primaria);      
+  color: var(--cor-secundaria);     
+  border:none;             
 }
 
 .btn-delete {
-  background-color: var(--cor-erro-light);
-  color: var(--cor-erro);
+  background-color: var(--cor-erro-light);   
+  color: var(--cor-erro);   
+  border:none;                     
 }
 
 .btn-delete:hover {
-  background-color: var(--cor-erro);
-  color: var(--cor-texto-claro);
+  filter: brightness(95%);     
+  border:none;                  
 }
 
 .btn-view {
-  background-color: var(--cor-info-light);
-  color: var(--cor-info);
+  background-color: var(--cor-info-light);    
+  color: var(--cor-info); 
+  border:none;                       
 }
 
 .btn-view:hover {
-  background-color: var(--cor-info);
-  color: var(--cor-texto-claro);
+  background-color: var(--cor-info);          
+  color: var(--cor-texto-claro);     
+  border:none;            
 }
 
 /* Tabela */
