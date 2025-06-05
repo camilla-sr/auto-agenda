@@ -5,16 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/css/produtos.css"> 
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
-  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="/css/produtos.css">
   <script src="/js/sweetalert2.all.min.js"></script>
   <script src="/js/validacao.js"></script>
 </head>
 
 <body>
-  <div th:replace="~{barra :: barra}"></div>
+  <div th:replace="barra :: barra"></div>
 
+  <!-- Conteúdo Principal -->
   <main class="main-content">
     <div class="container">
       <div class="page-header">
@@ -22,13 +22,15 @@
         <p>Controle seu estoque e cadastre novos itens</p>
       </div>
 
+      <!-- Estatísticas rápidas -->
       <div class="stats-container">
         <div class="stat-card">
           <div class="stat-icon">
             <i class="fas fa-boxes"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${totalProdutos}"></h3> <p>Produtos cadastrados</p>
+            <h3 th:text="${totalProdutos}">0</h3>
+            <p>Produtos cadastrados</p>
           </div>
         </div>
 
@@ -37,7 +39,8 @@
             <i class="fas fa-exclamation-triangle"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${estoqueBaixo}"></h3> <p>Abaixo do estoque mínimo</p>
+            <h3 th:text="${estoqueBaixo}">0</h3>
+            <p>Abaixo do estoque mínimo</p>
           </div>
         </div>
 
@@ -46,94 +49,195 @@
             <i class="fas fa-dollar-sign"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="'R$ ' + ${precoEstoque}"></h3> <p>Valor total em estoque</p>
+            <h3 th:text="'R$ ' + ${precoEstoque}">R$ 0,00</h3>
+            <p>Valor total em estoque</p>
           </div>
         </div>
       </div>
 
-      <div class="actions-bar" id="product-actions-bar">
-        <button class="btn btn-primary" id="btn-novo-produto" type="button">
-          <i class="fas fa-plus"></i> Novo Produto
-        </button>
+      <!-- Tabela de Produtos -->
+      <div class="table-container" id="lista-produtos-container">
+        <div class="table-header">
+          <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
+          <button class="btn btn-primary" id="btn-novo-produto">
+            <i class="fas fa-plus"></i> Novo Produto
+          </button>
+        </div>
+
+        <div class="table-filters">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="searchInputProdutos">Buscar Produto</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-search input-icon"></i>
+                  <input type="text" id="searchInputProdutos" name="searchInputProdutos" placeholder="Digite para buscar...">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="products-table" id="productsTable">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Código</th>
+                <th>Categoria</th>
+                <th>Preço Venda</th>
+                <th>Estoque</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${produtos == null or produtos.empty}">
+                <td colspan="7">Nenhum resultado encontrado</td>
+              </tr>
+              <tr th:each="p : ${produtos}">
+                <td class="nome-produto" th:text="${p.nomeProduto}"></td>
+                <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
+                <td class="categoria" th:text="${p.categoria}"></td>
+                <td class="preco-custo" th:text="${p.precoCusto}" style="display:none;"></td>
+                <td class="preco-venda" th:text="${p.precoVenda}"></td>
+                <td class="fornecedor" th:text="${p.fornecedor}" style="display:none;"></td>
+                <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
+                <td class="estoque-atual" th:text="${p.estoqueAtual}"></td>
+                <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
+                <td>
+                  <span class="status-badge status-ok" th:if="${p.estoqueAtual > p.estoqueMinimo}">Em estoque</span>
+                  <span class="status-badge" style="background-color: var(--cor-alerta);" th:if="${p.estoqueAtual <= p.estoqueMinimo}">Estoque baixo</span>
+                </td>
+                <td class="action-buttons">
+                  <button class="btn btn-action view-btn btn-view" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="btn btn-action edit-btn btn-edit" th:attr="data-id=${p.idProduto}" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-action delete-btn btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-pagination">
+          <button class="btn btn-secondary" id="btn-anterior" disabled>
+            <i class="fas fa-chevron-left"></i> Anterior
+          </button>
+          <span class="pagination-info">Página 1 de 1</span>
+          <button class="btn btn-secondary" id="btn-proximo" disabled>
+            Próximo <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
 
-      <div class="form-container" id="formNovoProdutoContainer" style="display: none;">
-        <h3><i class="fas fa-pencil-alt"></i> Adicionar Novo Produto</h3>
-        <form id="formNovoProduto" action="/produto-api/salvar" method="post"> <div class="form-row">
-			<input type="hidden" name="idProduto" id="idProduto" readonly>
-            <div class="form-group">
-              <label for="nome_produto">Nome do Produto</label>
-              <div class="input-wrapper">
-                <i class="fas fa-tag input-icon"></i>
-                <input type="text" id="nome-produto" name="nomeProduto" placeholder="Ex: Óleo Motor 10W40" required>
+      <!-- Formulário de Produto -->
+      <div class="form-container" id="produto-form-container" style="display: none;">
+        <div class="form-header">
+          <h3><i class="fas fa-plus-circle"></i> Novo Produto</h3>
+        </div>
+
+        <form id="produto-form" action="/produto-api/salvar" method="post">
+          <input type="hidden" name="idProduto" id="idProduto" readonly>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="nome-produto">Nome do Produto</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-tag input-icon"></i>
+                  <input type="text" id="nome-produto" name="nomeProduto" placeholder="Ex: Óleo Motor 10W40" required>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="codigo_produto">Código/SKU</label>
-              <div class="input-wrapper">
-                <i class="fas fa-barcode input-icon"></i>
-                <input type="text" id="codigo-produto" name="codigoProduto" placeholder="Ex: OLEO10W40SL">
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="codigo-produto">Código/SKU</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-barcode input-icon"></i>
+                  <input type="text" id="codigo-produto" name="codigoProduto" placeholder="Ex: OLEO10W40SL">
+                </div>
               </div>
             </div>
           </div>
 
           <div class="form-row">
-            <div class="form-group">
-              <label for="preco_compra">Preço de Compra (R$)</label>
-              <div class="input-wrapper">
-                <i class="fas fa-dollar-sign input-icon"></i>
-                <input type="number" id="preco-custo" name="precoCusto" step="0.01" min="0" placeholder="0.00" required>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="preco-custo">Preço de Compra (R$)</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-dollar-sign input-icon"></i>
+                  <input type="number" id="preco-custo" name="precoCusto" step="0.01" min="0" placeholder="0.00" required>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="preco_venda">Preço de Venda (R$)</label>
-              <div class="input-wrapper">
-                <i class="fas fa-hand-holding-usd input-icon"></i>
-                <input type="number" id="preco-venda" name="precoVenda" step="0.01" min="0" placeholder="0.00" required>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="preco-venda">Preço de Venda (R$)</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-hand-holding-usd input-icon"></i>
+                  <input type="number" id="preco-venda" name="precoVenda" step="0.01" min="0" placeholder="0.00" required>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="form-row">
-            <div class="form-group">
-              <label for="fornecedor">Fornecedor</label>
-              <div class="input-wrapper">
-                <i class="fas fa-truck input-icon"></i>
-                <input type="text" id="fornecedor" name="fornecedor" placeholder="Nome do fornecedor">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="fornecedor">Fornecedor</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-truck input-icon"></i>
+                  <input type="text" id="fornecedor" name="fornecedor" placeholder="Nome do fornecedor">
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="categoria">Categoria</label>
-              <div class="input-wrapper">
-                <i class="fas fa-sitemap input-icon"></i>
-                <input type="text" id="categoria" name="categoria" placeholder="Ex: Lubrificantes, Filtros">
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="categoria">Categoria</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-sitemap input-icon"></i>
+                  <input type="text" id="categoria" name="categoria" placeholder="Ex: Lubrificantes, Filtros">
+                </div>
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
-            <div class="form-group">
-                <label for="estoque_atual">Estoque Atual</label>
+            <div class="form-col">
+              <div class="form-group">
+                <label for="estoque-atual">Estoque Atual</label>
                 <div class="input-wrapper">
                   <i class="fas fa-boxes input-icon"></i>
                   <input type="number" id="estoque-atual" name="estoqueAtual" min="0" placeholder="0" required>
                 </div>
               </div>
+            </div>
+
+            <div class="form-col">
               <div class="form-group">
-                <label for="estoque_minimo">Estoque Mínimo</label>
+                <label for="estoque-minimo">Estoque Mínimo</label>
                 <div class="input-wrapper">
                   <i class="fas fa-exclamation-circle input-icon"></i>
                   <input type="number" id="estoque-minimo" name="estoqueMinimo" min="0" placeholder="0" required>
                 </div>
               </div>
+            </div>
           </div>
 
           <div class="form-group">
             <label for="descricao">Descrição</label>
             <div class="input-wrapper">
               <i class="fas fa-align-left input-icon"></i>
-              <textarea id="descricao" name="descricao" rows="3"
-                placeholder="Descrição detalhada do produto"></textarea>
+              <textarea id="descricao" name="descricao" rows="3" placeholder="Descrição detalhada do produto"></textarea>
             </div>
           </div>
 
@@ -141,61 +245,20 @@
             <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-produto">
               <i class="fas fa-times"></i> Cancelar
             </button>
-            <button type="submit" class="btn"> <i class="fas fa-save"></i> Salvar Produto
+            <button type="submit" class="btn">
+              <i class="fas fa-save"></i> Salvar Produto
             </button>
           </div>
         </form>
-		<form id="deleteForm" action="produto-api/apagar" method="post" style="display: none;">
-		    <input type="hidden" name="idProduto" id="deleteId">
-		</form>
-      </div>
 
-      <div class="table-container">
-        <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
-        <div class="table-actions">
-          <input type="text" id="searchInputProdutos" placeholder="Pesquisar produtos...">
-          </div>
-        <table class="appointments-table" id="productsTable"> <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Código</th>
-              <th>Preço Venda</th>
-              <th>Estoque</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-			<tr th:if="${produtos == null or produtos.empty}">
-				<td colspan="6">Nenhum resultado encontrado</td>
-			</tr>
-            <tr th:each="p : ${produtos}">
-              <td class="nome-produto" th:text="${p.nomeProduto}"></td>
-              <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
-              <td class="categoria" th:text="${p.categoria}" style="display:none;"></td>
-              <td class="preco-custo" th:text="${p.precoCusto}" style="display:none;"></td>
-              <td class="preco-venda" th:text="${p.precoVenda}"></td>
-              <td class="fornecedor" th:text="${p.fornecedor}" style="display:none;"></td>
-              <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
-              <td class="estoque-atual" th:text="${p.estoqueAtual}"></td>
-              <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
-              <td><span class="status-badge status-ok">Em estoque</span></td> <td>
-                <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i class="fas fa-edit"></i></button>
-                <button class="btn-icon btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir"><i class="fas fa-trash"></i></button>
-                <button class="btn-icon btn-view" title="Detalhes"><i class="fas fa-eye"></i></button>
-              </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="pagination">
-          <button>Anterior</button>
-          <span>Página 1 de X</span>
-          <button>Próximo</button>
-        </div>
+        <form id="deleteForm" action="produto-api/apagar" method="post" style="display: none;">
+          <input type="hidden" name="idProduto" id="deleteId">
+        </form>
       </div>
     </div>
   </main>
 
+  <!-- Rodapé -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -209,120 +272,128 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Seleciona o botão "Novo Produto"
       const btnNovoProduto = document.getElementById('btn-novo-produto');
-      
+
       // Seleciona o container do formulário de novo produto
-      const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
+      const formContainer = document.getElementById('produto-form-container');
 
-      // Seleciona o botão "Cancelar" dentro do formulário de novo produto
-      const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
+      // Verifica se ambos os elementos existem na página
+      if (btnNovoProduto && formContainer) {
+        // Adiciona um evento de clique ao botão
+        btnNovoProduto.addEventListener('click', function () {
+          // Mostra o container do formulário
+          if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+            formContainer.style.display = 'block';
 
-      // Seleciona a barra de ações onde está o botão "Novo Produto"
-      const productActionsBar = document.getElementById('product-actions-bar');
-
-      // Lógica para o botão "Novo Produto"
-      if (btnNovoProduto && formProdutoContainer) {
-        btnNovoProduto.addEventListener('click', function() {
-          if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
-            formProdutoContainer.style.display = 'block'; // Ou 'flex', dependendo do seu CSS para .form-container
-            formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Scrolla a tela para o container do formulário
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           } else {
-            // Opcional: Se você quiser que o botão também esconda o formulário se ele já estiver visível
-            // formProdutoContainer.style.display = 'none';
-            // if (productActionsBar) { // Scroll de volta se esconder
-            //    productActionsBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // }
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         });
       } else {
-        if (!btnNovoProduto) console.error('Botão "Novo Produto" (btn-novo-produto) não encontrado.');
-        if (!formProdutoContainer) console.error('Container do formulário (formNovoProdutoContainer) não encontrado.');
+        if (!btnNovoProduto) {
+          console.error('Botão com ID "btn-novo-produto" não encontrado.');
+        }
+        if (!formContainer) {
+          console.error('Container do formulário com ID "produto-form-container" não encontrado.');
+        }
       }
 
-      // Lógica para o botão "Cancelar" do formulário de novo produto
-      if (btnCancelarNovoProduto && formProdutoContainer && productActionsBar) {
-        btnCancelarNovoProduto.addEventListener('click', function() {
-          formProdutoContainer.style.display = 'none';
-          
-          const formNovo = document.getElementById('formNovoProduto');
+      // Adicionar funcionalidade ao botão "Cancelar" do formulário de novo produto
+      const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
+      const containerListaProdutos = document.getElementById('lista-produtos-container');
+
+      if (btnCancelarNovoProduto && formContainer && containerListaProdutos) {
+        btnCancelarNovoProduto.addEventListener('click', function () {
+          // Esconde o formulário de novo produto
+          formContainer.style.display = 'none';
+
+          // Reseta os campos do formulário
+          const formNovo = document.getElementById('produto-form');
           if (formNovo) {
-            formNovo.reset(); 
+            formNovo.reset();
           }
-          
-          // Scrolla de volta para a barra de ações (onde está o botão "Novo Produto")
-          productActionsBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Scrolla a tela de volta para a lista de produtos
+          containerListaProdutos.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       } else {
-        if (!btnCancelarNovoProduto) console.error('Botão "Cancelar Novo Produto" (btn-cancelar-novo-produto) não encontrado. Verifique se o ID foi adicionado corretamente ao botão.');
-        if (!formProdutoContainer) console.error('Container do formulário (formNovoProdutoContainer) não encontrado para o botão Cancelar.');
-        if (!productActionsBar) console.error('Barra de ações (product-actions-bar) não encontrada para scroll no Cancelar. Verifique se o ID foi adicionado corretamente à div.');
+        if (!btnCancelarNovoProduto) {
+          console.error('Botão "Cancelar Novo Produto" (btn-cancelar-novo-produto) não encontrado.');
+        }
+        if (!formContainer) {
+          console.error('Container do formulário de novo produto (produto-form-container) não encontrado para o botão Cancelar.');
+        }
+        if (!containerListaProdutos) {
+          console.error('Container da lista de produtos (lista-produtos-container) não encontrado para scroll no Cancelar.');
+        }
       }
 
-	  //		SCRIPT DO BACK, AQUI BOTA PRA FUNCIONAR EDITAR E APAGAR
-	  const editButtons = document.querySelectorAll('.btn-edit');
-	  	
-	  editButtons.forEach(function(button) {
-	    button.addEventListener('click', function() {
-		if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
-            formProdutoContainer.style.display = 'block';
-            formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // SCRIPT DO BACK, AQUI BOTA PRA FUNCIONAR EDITAR E APAGAR
+      const editButtons = document.querySelectorAll('.btn-edit');
+
+      editButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+            formContainer.style.display = 'block';
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
-	      const row = button.closest('tr');
-	
-	      const id = button.dataset.id;
-	      const nome = row.querySelector('.nome-produto').textContent.trim();
-	      const codigo = row.querySelector('.codigo-produto').textContent.trim();
-	      const categoria = row.querySelector('.categoria').textContent.trim();
-	      const custo = row.querySelector('.preco-custo').textContent.trim();
-	      const venda = row.querySelector('.preco-venda').textContent.trim();
-	      const fornecedor = row.querySelector('.fornecedor').textContent.trim();
-	      const estoqueA = row.querySelector('.estoque-atual').textContent.trim();
-	      const estoqueM = row.querySelector('.estoque-minimo').textContent.trim();
-	      const descricao = row.querySelector('.descricao').textContent.trim();
-	
-	      document.getElementById('idProduto').value = id;
-	      document.getElementById('codigo-produto').value = codigo;
-	      document.getElementById('nome-produto').value = nome;
-	      document.getElementById('categoria').value = categoria;
-	      document.getElementById('preco-custo').value = custo;
-	      document.getElementById('preco-venda').value = venda;
-	      document.getElementById('fornecedor').value = fornecedor;
-	      document.getElementById('estoque-atual').value = estoqueA;
-	      document.getElementById('estoque-minimo').value = estoqueM;
-	      document.getElementById('descricao').value = descricao;
-	
-	    });
-	  });
-	
-	const deleteButtons = document.querySelectorAll('.btn-delete');
-	
-	    deleteButtons.forEach(function(button) {
-	      button.addEventListener('click', function(e) {
-	        e.preventDefault();
-	
-	        const id = button.dataset.id;
-	
-	        Swal.fire({
-	          title: 'Você tem certeza?',
-	          text: "Esta ação não poderá ser desfeita!",
-	          icon: 'warning',
-	          showCancelButton: true,
-	          confirmButtonColor: '#d33',
-	          cancelButtonColor: '#3085d6',
-	          confirmButtonText: 'Sim, excluir!',
-	          cancelButtonText: 'Cancelar'
-	        }).then((result) => {
-	          if (result.isConfirmed) {
-	            document.getElementById('deleteId').value = id;
-	            document.getElementById('deleteForm').submit();
-	          }
-	        });
-	      });
-	    });
-    
+          const row = button.closest('tr');
+
+          const id = button.dataset.id;
+          const nome = row.querySelector('.nome-produto').textContent.trim();
+          const codigo = row.querySelector('.codigo-produto').textContent.trim();
+          const categoria = row.querySelector('.categoria').textContent.trim();
+          const custo = row.querySelector('.preco-custo').textContent.trim();
+          const venda = row.querySelector('.preco-venda').textContent.trim();
+          const fornecedor = row.querySelector('.fornecedor').textContent.trim();
+          const estoqueA = row.querySelector('.estoque-atual').textContent.trim();
+          const estoqueM = row.querySelector('.estoque-minimo').textContent.trim();
+          const descricao = row.querySelector('.descricao').textContent.trim();
+
+          document.getElementById('idProduto').value = id;
+          document.getElementById('codigo-produto').value = codigo;
+          document.getElementById('nome-produto').value = nome;
+          document.getElementById('categoria').value = categoria;
+          document.getElementById('preco-custo').value = custo;
+          document.getElementById('preco-venda').value = venda;
+          document.getElementById('fornecedor').value = fornecedor;
+          document.getElementById('estoque-atual').value = estoqueA;
+          document.getElementById('estoque-minimo').value = estoqueM;
+          document.getElementById('descricao').value = descricao;
+        });
+      });
+
+      const deleteButtons = document.querySelectorAll('.btn-delete');
+
+      deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          const id = button.dataset.id;
+
+          Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Esta ação não poderá ser desfeita!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              document.getElementById('deleteId').value = id;
+              document.getElementById('deleteForm').submit();
+            }
+          });
+        });
+      });
     });
   </script>
 </body>
+
 </html>
