@@ -5,41 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - AutoAgenda</title>
-	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<link rel="stylesheet" href="/fontawesome/css/all.min.css">
-	<script src="/js/sweetalert2.all.min.js"></script>	
-	<script src="/js/validacao.js"></script>
-	<link rel="stylesheet" href="/css/estilo.css">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <script src="/js/sweetalert2.all.min.js"></script>
+    <script src="/js/validacao.js"></script>
+    <script src="/js/script.js"></script>
+    <link rel="stylesheet" href="/css/estilo.css">
 </head>
 
-<body>
-    <div class="container">
-        <div class="mensagem">
-            <p>Faça seu login ou cadastre-se</p>
-        </div>
-        <div class="login">
-            <img src="/img/logo.png">
+<body class="bg-secondary text-white d-flex align-items-center justify-content-center min-vh-100">
 
-			<form method="post" action="/funcionario-api/logar">
-	            <div class="log-inputs">
-	                <span>Usuário</span>
-	                <div class="input-group mb-3">
-	                    <input type="text" name="usuario" id="usuario" class="form-control">
-	                </div>
-	                <span>Senha</span>
-	                <div class="input-group mb-3">
-	                    <input type="password" name="senha" id="senha" class="form-control">
-	                </div>
-	
-	                <div class="botoes">
-	                    <button type="submit" class="btnLogin">Entrar</button>
-	                    <button type="button" class="btnCadastro" onclick="window.location.href = '/cadastroSistema'">Cadastro</button>
-	                </div>
-	            </div>
-			</form>
+    <div class="container text-center">
+        <p class="mensagem mb-4">Faça seu login ou cadastre-se</p>
+
+        <div class="login mx-auto">
+            <img src="/img/logo.png" alt="Logo JJ" class="logo-login">
+
+            <form method="post" action="/funcionario-api/logar">
+                <div class="log-inputs">
+                    <span>Usuário</span>
+                    <div class="input-group mb-3">
+                        <input type="text" name="usuario" id="usuario" class="form-control">
+                    </div>
+
+                    <span>Senha</span>
+                    <div class="input-group mb-3">
+                        <input type="password" name="senha" id="senha" class="form-control">
+                    </div>
+
+                    <div class="botoes d-flex justify-content-center gap-3 flex-wrap mt-3">
+                        <button type="submit" class="btnLogin">Entrar</button>
+                        <button type="button" class="btnCadastro" onclick="window.location.href = '/cadastroSistema'">Cadastro</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+
 </body>
 
 </html>
