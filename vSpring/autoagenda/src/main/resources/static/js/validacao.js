@@ -95,4 +95,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		    limparUrl();
 		});
     }
+	
+	if (urlParams.get('erroServico') === 'true') {
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Serviço já cadastrado.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
 });

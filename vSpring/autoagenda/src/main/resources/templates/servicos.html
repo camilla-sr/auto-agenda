@@ -6,12 +6,14 @@
   <title>Serviços - Centro Automotivo JJ</title>
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="/css/style1.css">
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sweetalert2.all.min.js"></script>
+  <script src="/js/validacao.js"></script>
 </head>
 <body>
 
-	<div th:replace="barra :: barra"></div>
+	<div th:replace="~{barra :: barra}"></div>
 
-  <!-- Conteúdo Principal -->
   <main class="main-content">
     <div class="container">
 
@@ -20,24 +22,24 @@
         <p>Controle e cadastre novos serviços</p>
       </div>
 
-      <!-- Formulário de Cadastro -->
       <div class="form-container">
         <div class="form-header">
           <h3><i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço</h3>
         </div>
 
-        <form id="form-servico">
+        <form method="post"action="/servico-api/salvar" id="form-servico" >
+			<input type="hidden" name="idServico" id="idServico" readonly>
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
                 <label for="nome-servico">Nome do Serviço</label>
-                <input type="text" id="nome-servico" class="form-input" placeholder="Ex: Troca de óleo" required>
+                <input type="text" id="nome-servico" name="nomeServico" class="form-input" placeholder="Ex: Troca de óleo" >
               </div>
             </div>
             <div class="form-col">
               <div class="form-group">
                 <label for="descricao-servico">Descrição</label>
-                <input type="text" id="descricao-servico" class="form-input" placeholder="Ex: Troca de óleo do motor" required>
+                <input type="text" id="descricao-servico" name="descServico" class="form-input" placeholder="Ex: Troca de óleo do motor" >
               </div>
             </div>
           </div>
@@ -51,6 +53,9 @@
             </button>
           </div>
         </form>
+		<form id="deleteForm" action="servico-api/apagar" method="post" style="display: none;">
+		    <input type="hidden" name="idServico" id="deleteId">
+		</form>
       </div>
 
       <!-- Filtros de Busca -->
@@ -63,7 +68,6 @@
         </div>
       </div>
 
-      <!-- Lista de Serviços -->
       <div class="table-container">
         <div class="table-header">
           <h3><i class="fas fa-clipboard-list"></i> Lista de Serviços</h3>
@@ -78,26 +82,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Troca de óleo</td>
-              <td>Troca de óleo do motor</td>
+			<tr th:if="${servicos == null or servicos.empty}">
+				<td colspan="3">Nenhum resultado encontrado</td>
+			</tr>
+            <tr th:each="serv : ${servicos}">
+              <td class="nome-servico" th:text="${serv.nomeServico}"></td>
+              <td class="desc-servico" th:text="${serv.descServico}"></td>
+			  
               <td class="action-buttons">
-                <button class="btn btn-action edit-btn" title="Editar">
+                <button class="btn btn-action edit-btn" th:attr="data-id=${serv.idServico}" title="Editar">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn btn-action delete-btn" title="Excluir">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Calibragem</td>
-              <td>Alinhamento de suspensão</td>
-              <td class="action-buttons">
-                <button class="btn btn-action edit-btn" title="Editar">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-action delete-btn" title="Excluir">
+                <button class="btn btn-action delete-btn" th:attr="data-id=${serv.idServico}" title="Excluir">
                   <i class="fas fa-trash"></i>
                 </button>
               </td>
@@ -121,6 +117,51 @@
       </div>
     </div>
   </footer>
-
+  <script>
+	  document.addEventListener('DOMContentLoaded', function() {
+	      const editButtons = document.querySelectorAll('.edit-btn');
+	
+	      editButtons.forEach(function(button) {
+	        button.addEventListener('click', function() {
+	          const row = button.closest('tr');
+	
+	          const id = button.dataset.id;
+	          const nome = row.querySelector('.nome-servico').textContent.trim();
+	          const descricao = row.querySelector('.desc-servico').textContent.trim();
+	
+	          document.getElementById('idServico').value = id;
+	          document.getElementById('nome-servico').value = nome;
+	          document.getElementById('descricao-servico').value = descricao;
+	
+	        });
+	      });
+	  	
+	  	const deleteButtons = document.querySelectorAll('.delete-btn');
+	
+	  	    deleteButtons.forEach(function(button) {
+	  	      button.addEventListener('click', function(e) {
+	  	        e.preventDefault();
+	
+	  	        const id = button.dataset.id;
+	
+	  	        Swal.fire({
+	  	          title: 'Você tem certeza?',
+	  	          text: "Esta ação não poderá ser desfeita!",
+	  	          icon: 'warning',
+	  	          showCancelButton: true,
+	  	          confirmButtonColor: '#d33',
+	  	          cancelButtonColor: '#3085d6',
+	  	          confirmButtonText: 'Sim, excluir!',
+	  	          cancelButtonText: 'Cancelar'
+	  	        }).then((result) => {
+	  	          if (result.isConfirmed) {
+	  	            document.getElementById('deleteId').value = id;
+	  	            document.getElementById('deleteForm').submit();
+	  	          }
+	  	        });
+	  	      });
+	  	    });
+	    });
+  </script>
 </body>
 </html>

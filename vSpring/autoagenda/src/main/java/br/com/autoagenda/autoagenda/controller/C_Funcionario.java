@@ -75,6 +75,7 @@ public class C_Funcionario {
 				funcExistente.setSenha(novaSenha);
 			}			
 			repo.save(funcExistente);
+			return "redirect:/funcionarios?editado=true";
 		} else {
 			repo.save(func);
 		}
