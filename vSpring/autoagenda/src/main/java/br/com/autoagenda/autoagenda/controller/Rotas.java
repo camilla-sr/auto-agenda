@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
+import br.com.autoagenda.autoagenda.repositorios.ProdutoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 import jakarta.servlet.http.HttpSession;
 
@@ -20,6 +21,8 @@ public class Rotas {
 	private FuncionarioRepository repoFunc;
 	@Autowired
 	private ServicoRepository repoServ;
+	@Autowired
+	private ProdutoRepository repoProd;
 	
 	@ModelAttribute
     public void usuarioGlobal(HttpSession session, Model model) {
@@ -66,7 +69,8 @@ public class Rotas {
     }
     
     @GetMapping("/produtos")
-    public String produtos(HttpSession session) {
+    public String produtos(HttpSession session, Model model) {
+    	model.addAttribute("produtos", repoProd.findAll());
     	return verificaUsuario(session, "produtos");
     }
     
