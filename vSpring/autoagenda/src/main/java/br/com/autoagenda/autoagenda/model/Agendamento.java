@@ -63,7 +63,7 @@ public class Agendamento {
     public LocalDate getDataConclusao() { return dataConclusao; }
     public void setDataConclusao(LocalDate dataConclusao) { this.dataConclusao = dataConclusao; }
     public String getStatusAgendamento() { return statusAgendamento; }
-    public void setStatusAgendamento(String status) { this.statusAgendamento = status; }
+    public void setStatusAgendamento(String statusAgendamento) { this.statusAgendamento = statusAgendamento; }
     public String getObservacao() { return observacao; }
     public void setObservacao(String observacao) { this.observacao = observacao; }
 }

@@ -38,6 +38,7 @@ public class C_Agendamento {
 			
 			existe.setNomeCliente(ag.getNomeCliente());
 			existe.setServico(servicoSelecionado);
+			existe.setDataCadastro(LocalDate.now());
 			existe.setDataPrevisao(ag.getDataPrevisao());
 			existe.setDataConclusao(ag.getDataConclusao());
 			existe.setStatusAgendamento(ag.getStatusAgendamento());
@@ -45,6 +46,7 @@ public class C_Agendamento {
 			repo.save(existe);
 			return "redirect:/agendamentos?editado=true";
 		} else {
+			ag.setDataCadastro(LocalDate.now());
 			ag.setServico(servicoSelecionado);
 			repo.save(ag);
 		}
