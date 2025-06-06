@@ -122,6 +122,7 @@
 					        th:if="${ag.servico != null && ag.servico.nomeServico != null}" th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}" th:text="${ag.servico.nomeServico}"> </span>
 					  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}">
 				</td>
+                <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'yyyy-MM-dd')}"></td>
                 <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}"></td>
                 <td class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}"></td>
 				<td class="ag-status">
@@ -164,7 +165,7 @@
         </div>
 
         <form method="post" action="/agendamento-api/salvar" id="agendamento-form">
-			<input type="text" name="idAgendamento" id="idAgendamento" readonly>
+			<input type="hidden" name="idAgendamento" id="idAgendamento" readonly>
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -226,7 +227,7 @@
                     <option value="">Selecione um status</option>
                     <option value="agendado">Agendado</option>
                     <option value="confirmado">Confirmado</option>
-                    <option value="em-andamento">Em Andamento</option>
+                    <option value="em_andamento">Em Andamento</option>
                     <option value="concluido">Concluído</option>
                     <option value="cancelado">Cancelado</option>
                   </select>
