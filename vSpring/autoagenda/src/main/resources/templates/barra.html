@@ -8,7 +8,7 @@
 </head>
 
 <div th:fragment="barra">
-	<header class="header">
+	<header class="header md-6">
 	    <div class="container">
 	      	
 			<div class="logo">
@@ -27,7 +27,7 @@
 		        </div>
 				<div th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
 					<div class="nav-item">
-					  	<a href="/funcionarios" class="nav-link"><i class="fas fa-calendar-check"></i>Funcionários</a>
+					  	<a href="/funcionarios" class="nav-link"><i class="fas fa-address-card"></i>Funcionários</a>
 					</div>
 				</div>
 		        <div class="nav-item">
