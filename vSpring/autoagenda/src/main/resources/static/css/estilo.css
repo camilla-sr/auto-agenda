@@ -11,7 +11,7 @@
     width: 170px;
     height: 170px;
     display: block;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 10px auto;
 }
 
 /* Login container mantém estilo visual */
@@ -27,9 +27,23 @@
     background-color: transparent;
 }
 
+.cadastro{
+	max-width: 500px;
+    padding: 20px 30px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: solid 3px;
+    border-radius: 20px;
+    background-color: transparent;
+}
+
+.cad-inputs .form-control {
+    min-width: 100%;
+}
+
 /* Mantém espaçamento entre inputs */
 .log-inputs, .cad-inputs {
-    margin-top: 16%;
+    margin-top: 20px;
 }
 
 .form-control {
