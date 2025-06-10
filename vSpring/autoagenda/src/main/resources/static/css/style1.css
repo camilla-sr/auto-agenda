@@ -429,6 +429,18 @@ table tbody tr:hover {
   background-color: var(--cor-fundo-claro);
 }
 
+.table-actions {
+  margin-bottom: 20px;
+}
+
+.table-actions input {
+  padding: 8px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  width: 250px;
+  font-family: 'Poppins', sans-serif;
+}
+
 .product-code {
   display: inline-block;
   background-color: var(--cor-fundo-claro);

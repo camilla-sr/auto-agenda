@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/css/produtos.css"> 
+  <link rel="stylesheet" href="/css/produtos.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -53,7 +53,7 @@
       </div>
 
       <div class="form-container" id="formNovoProdutoContainer" style="display: none;">
-        <h3><i class="fas fa-pencil-alt"></i> Adicionar Novo Produto</h3>
+        <h3><i class="fas fa-plus"></i> Adicionar Novo Produto</h3>
         <form id="formNovoProduto" action="/produto-api/salvar" method="post"> <div class="form-row">
 			<input type="hidden" name="idProduto" id="idProduto" readonly>
             <div class="form-group">
@@ -148,9 +148,7 @@
       <div class="table-container">
         <div class="table-header">
           <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
-          <button class="btn btn-primary" id="btn-novo-produto" type="button">
-            <i class="fas fa-plus"></i> Novo Produto
-          </button>
+          <button class="btn btn-primary" id="btn-novo-produto" type="button"><i class="fas fa-plus-circle"></i>Novo Produto</button>
         </div>
 
         <div class="table-actions">
