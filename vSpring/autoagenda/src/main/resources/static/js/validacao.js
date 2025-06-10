@@ -106,4 +106,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		    limparUrl();
 		});
     }
+	
+	if (urlParams.get('erroCPF') === 'true') {
+        Swal.fire({
+            title: 'Erro!',
+            text: 'CPF já cadastrado.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
 });
