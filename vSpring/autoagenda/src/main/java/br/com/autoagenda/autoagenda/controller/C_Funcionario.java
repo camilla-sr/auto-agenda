@@ -62,13 +62,27 @@ public class C_Funcionario {
 	@PostMapping(value = "/salvar")
 	public String salvarFuncionario(@ModelAttribute Funcionario func, @RequestParam(required = false) String novaSenha, BindingResult result) {
 		if(result.hasErrors()) {
-			return "redirect:/funcionarios?erroEditar=true";
+			return "redirect:/funcionarios?erro=true";
 		}
+		
+		
 		if(func.getIdFuncionario() != null) {
+			Funcionario usrExistente = repo.findByUsuario(func.getUsuario());
+			if(repo.findByUsuario(func.getUsuario()) != null && !usrExistente.getIdFuncionario().equals(func.getIdFuncionario())) {
+				return "redirect:/funcionarios?erroUsuario=true";
+			}
+						
 			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElse(new Funcionario());
+
+			String cpfFormatado = func.getCpf().replaceAll("\\D", "");
+			funcExistente.setCpf(cpfFormatado);
+			
+			Funcionario cpfExistente = repo.findByCpf(cpfFormatado);
+			if(cpfExistente != null && !cpfExistente.getIdFuncionario().equals(func.getIdFuncionario())) {
+				return "redirect:/funcionarios?erroCPF=true";
+			}
 			
 			funcExistente.setNomeFuncionario(func.getNomeFuncionario());
-			funcExistente.setCpf(func.getCpf().replaceAll("\\D", ""));
 			funcExistente.setUsuario(func.getUsuario());
 			funcExistente.setAcesso(func.getAcesso());
 			
