@@ -15,7 +15,7 @@
 }
 
 /* Login container mantém estilo visual */
-.login {
+.login, .cadastro {
     backdrop-filter: blur(20px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: solid 3px;
@@ -28,7 +28,7 @@
 }
 
 /* Mantém espaçamento entre inputs */
-.log-inputs {
+.log-inputs, .cad-inputs {
     margin-top: 16%;
 }
 
@@ -65,7 +65,7 @@ span {
 }
 
 /* Botões originais mantidos */
-.btnLogin, .btnCadastro {
+.btnLogin, .btnCadastro, .btnSalvar, .btnVoltar {
     transition: 0.2s ease;
     background-color: rgb(230, 230, 0);
     border: solid;
@@ -82,11 +82,11 @@ span {
 
 /* Responsividade */
 @media (max-width: 500px) {
-    .login {
+    .login, .cadastro {
         padding: 20px;
     }
 
-    .log-inputs {
+    .log-inputs, .cad-inputs {
         margin-top: 10%;
     }
 
@@ -95,7 +95,7 @@ span {
         align-items: center;
     }
 
-    .btnLogin, .btnCadastro {
+    .btnLogin, .btnCadastro, .btnSalvar, .btnVoltar {
         width: 100%;
         margin-bottom: 10px;
     }

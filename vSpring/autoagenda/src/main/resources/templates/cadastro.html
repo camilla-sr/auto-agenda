@@ -9,15 +9,16 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="/js/sweetalert2.all.min.js"></script>
+	<script src="/js/inputmask.min.js"></script>
 	<script src="/js/validacao.js"></script>
     <link rel="stylesheet" href="/css/estilo.css">
 	<script src="/js/script.js"></script>
 </head>
 
-<body>
+<body class="bg-secondary text-white d-flex align-items-center justify-content-center min-vh-100">
     <div class="container">
         <div class="cadastro">
-            <img src="/img/logo.png">
+            <img src="/img/logo.png" class="logo-login">
 
 			<form method="post" action="/funcionario-api/cadastroSistema">
                 <div class="cad-inputs">
@@ -33,7 +34,7 @@
 
                     <span>CPF</span>
                     <div class="input-group mb-3">
-                        <input type="text" name="cpf" class="form-control">
+                        <input type="text" id="cpf" name="cpf" class="form-control">
                     </div>
 
                     <span>Senha</span>
@@ -55,6 +56,19 @@
             </form>
         </div>
     </div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+		const cpfInput = document.getElementById("cpf");
+		if (cpfInput) {
+		    Inputmask({
+		        mask: "999.999.999-99",
+		        showMaskOnHover: false,
+		        clearIncomplete: true,
+				clearMaskOnLostFocus: false,
+		    }).mask(cpfInput);
+		}
+	});
+	</script>
 </body>
 
 </html>
