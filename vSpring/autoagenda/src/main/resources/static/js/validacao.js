@@ -1,12 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {	
 	const urlParams = new URLSearchParams(window.location.search);
 	
 	function limparUrl() {
-			if (window.history.replaceState) {
-				const novaUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-				window.history.replaceState({}, document.title, novaUrl);
-			}
+		if (window.history.replaceState) {
+			const novaUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+			window.history.replaceState({}, document.title, novaUrl);
 		}
+	}
 	
 	if (urlParams.get('sucesso') === 'true') {
 	    Swal.fire({

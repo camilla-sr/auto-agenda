@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/style1.css">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/js/sweetalert2.all.min.js"></script>
+  <script src="/js/inputmask.min.js"></script>
   <script src="/js/validacao.js"></script>
 </head>
 
@@ -46,7 +47,6 @@
           </div>
         </div>
         
-        <!-- Tabela responsiva com lista de usuários -->
         <div class="table-responsive">
           <table>
             <thead>
@@ -68,7 +68,7 @@
                 <td class="nome-funcionario" th:text="${func.nomeFuncionario}"></td>
                 <td class="usuario-funcionario" th:text="${func.usuario}"></td>
                 <td class="acesso-funcionario" th:text="${func.acesso}"></td>
-                <td class="cpf-mask cpf-funcionario" th:text="${func.cpf}"></td>
+                <td class="cpf-funcionario" th:text="${func.cpf}"></td>
 				
                 <td class="action-buttons">
                   <button class="btn btn-action edit-btn" th:attr="data-id=${func.idFuncionario}" title="Editar"><i class="fas fa-edit"></i>
@@ -118,7 +118,7 @@
                 <label for="cpf">CPF</label>
                 <div class="input-wrapper">
                   <i class="fas fa-id-card input-icon"></i>
-                  <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                  <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="000.000.000-00" required>
                 </div>
               </div>
             </div>
@@ -196,32 +196,49 @@
     </div>
   </div>
   
-  <script>
+  <script>	
 	document.addEventListener('DOMContentLoaded', function() {
-	    const editButtons = document.querySelectorAll('.edit-btn');
+		const form = document.getElementById("funcionario-form");
+	    form.addEventListener("submit", function () {
+	        const cpfInput = document.getElementById("cpf");
+	        cpfInput.value = cpfInput.value.replace(/\D/g, '');
+	    });
+		
+		Inputmask("999.999.999-99").mask(document.querySelectorAll(".cpf-funcionario"));
 
+		const cpfInput = document.getElementById("cpf");
+		if (cpfInput) {
+		    Inputmask({
+		        mask: "999.999.999-99",
+		        showMaskOnHover: false,
+		        clearIncomplete: true,
+				clearMaskOnLostFocus: false,
+		    }).mask(cpfInput);
+		}
+		
+	    const editButtons = document.querySelectorAll('.edit-btn');
 	    editButtons.forEach(function(button) {
-	      button.addEventListener('click', function() {
+			button.addEventListener('click', function() {
 	        const row = button.closest('tr');
 
-	        // Extrai os dados da linha usando as classes das células
 	        const id = button.dataset.id;
 	        const nome = row.querySelector('.nome-funcionario').textContent.trim();
 	        const usuario = row.querySelector('.usuario-funcionario').textContent.trim();
 	        const acesso = row.querySelector('.acesso-funcionario').textContent.trim();
-	        const cpf = row.querySelector('.cpf-funcionario').textContent.trim();
+	        const cpf = row.querySelector('.cpf-funcionario').textContent.trim().replace(/\D/g, '');
 
 	        document.getElementById('idFuncionario').value = id;
 	        document.getElementById('nomeFuncionario').value = nome;
 	        document.getElementById('usuario').value = usuario;
 	        document.getElementById('acesso').value = acesso;
-	        document.getElementById('cpf').value = cpf;
+			
+			cpfInput.value = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+			Inputmask("999.999.999-99").mask(cpfInput);
 
 			const campoSenha = document.getElementById('senha');
             if (campoSenha) {
                 campoSenha.setAttribute('name', 'novaSenha');
 
-                // Adiciona o listener para verificar se está vazio
                 campoSenha.addEventListener('input', function() {
                     if (campoSenha.value.trim() === '') {
                         campoSenha.removeAttribute('required');
@@ -231,37 +248,34 @@
                 });
                 campoSenha.removeAttribute('required');
             }
-
-	        document.querySelector('.form-header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário';
-	      });
-	    });
+			document.querySelector('.form-header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário';
+		});
+	});
 		
 		const deleteButtons = document.querySelectorAll('.delete-btn');
+		deleteButtons.forEach(function(button) {
+			button.addEventListener('click', function(e) {
+			e.preventDefault();
 
-		    deleteButtons.forEach(function(button) {
-		      button.addEventListener('click', function(e) {
-		        e.preventDefault();
-
-		        const id = button.dataset.id;
-
+			const id = button.dataset.id;
 		        Swal.fire({
-		          title: 'Você tem certeza?',
-		          text: "Esta ação não poderá ser desfeita!",
-		          icon: 'warning',
-		          showCancelButton: true,
-		          confirmButtonColor: '#d33',
-		          cancelButtonColor: '#3085d6',
-		          confirmButtonText: 'Sim, excluir!',
-		          cancelButtonText: 'Cancelar'
-		        }).then((result) => {
-		          if (result.isConfirmed) {
-		            document.getElementById('deleteId').value = id;
-		            document.getElementById('deleteForm').submit();
-		          }
-		        });
-		      });
-		    });
-	  });
+					title: 'Você tem certeza?',
+					text: "Esta ação não poderá ser desfeita!",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#d33',
+					cancelButtonColor: '#3085d6',
+					confirmButtonText: 'Sim, excluir!',
+					cancelButtonText: 'Cancelar'
+				}).then((result) => {
+					if (result.isConfirmed) {
+		            	document.getElementById('deleteId').value = id;
+		            	document.getElementById('deleteForm').submit();
+				}
+			});
+		});
+	});
+});
   </script>
 </body>
 </html>
