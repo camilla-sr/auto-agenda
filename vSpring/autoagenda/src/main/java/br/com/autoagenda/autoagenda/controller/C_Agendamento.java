@@ -33,7 +33,6 @@ public class C_Agendamento {
 		}
 		Servico servicoSelecionado = repoServ.findById(idServico).orElseThrow();
 		if(ag.getIdAgendamento() != null) {
-			
 			Agendamento existe = repo.findById(ag.getIdAgendamento()).orElse(new Agendamento());
 			
 			existe.setNomeCliente(ag.getNomeCliente());
