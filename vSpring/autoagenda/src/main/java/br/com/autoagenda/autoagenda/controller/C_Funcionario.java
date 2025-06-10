@@ -44,6 +44,7 @@ public class C_Funcionario {
 		if(existe != null) {
 			return "redirect:/cadastroSistema?erroUsuario=true";
 		}
+		func.setCpf(func.getCpf().replaceAll("\\D", ""));
 		repo.save(func);
 		return "redirect:/login?sucesso=true";
 	}
@@ -67,16 +68,17 @@ public class C_Funcionario {
 			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElse(new Funcionario());
 			
 			funcExistente.setNomeFuncionario(func.getNomeFuncionario());
-			funcExistente.setCpf(func.getCpf());
+			funcExistente.setCpf(func.getCpf().replaceAll("\\D", ""));
 			funcExistente.setUsuario(func.getUsuario());
 			funcExistente.setAcesso(func.getAcesso());
 			
 			if (novaSenha != null && !novaSenha.isEmpty()) {
 				funcExistente.setSenha(novaSenha);
-			}			
+			}
 			repo.save(funcExistente);
 			return "redirect:/funcionarios?editado=true";
 		} else {
+			func.setCpf(func.getCpf().replaceAll("\\D", ""));
 			repo.save(func);
 		}
 		return "redirect:/funcionarios?sucesso=true";
