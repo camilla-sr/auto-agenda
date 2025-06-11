@@ -31,6 +31,13 @@
   --categoria-acessorios: #34495e;
 }
 
+/* Marcação de campos obrigatórios */
+label.required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
+
 /* Reset e estilos gerais */
 * {
   box-sizing: border-box;

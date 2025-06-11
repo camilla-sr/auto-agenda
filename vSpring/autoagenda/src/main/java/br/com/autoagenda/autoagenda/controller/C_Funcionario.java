@@ -65,7 +65,6 @@ public class C_Funcionario {
 			return "redirect:/funcionarios?erro=true";
 		}
 		
-		
 		if(func.getIdFuncionario() != null) {
 			Funcionario usrExistente = repo.findByUsuario(func.getUsuario());
 			if(repo.findByUsuario(func.getUsuario()) != null && !usrExistente.getIdFuncionario().equals(func.getIdFuncionario())) {

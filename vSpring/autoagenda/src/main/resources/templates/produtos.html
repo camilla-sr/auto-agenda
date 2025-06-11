@@ -53,11 +53,11 @@
       </div>
 
       <div class="form-container" id="formNovoProdutoContainer" style="display: none;">
-        <h3><i class="fas fa-plus"></i> Adicionar Novo Produto</h3>
+        <h3 id="formTitulo"><i class="fas fa-plus"></i> Adicionar Novo Produto</h3>
         <form id="formNovoProduto" action="/produto-api/salvar" method="post"> <div class="form-row">
 			<input type="hidden" name="idProduto" id="idProduto" readonly>
             <div class="form-group">
-              <label for="nome_produto">Nome do Produto</label>
+              <label for="nome_produto" class="required">Nome do Produto</label>
               <div class="input-wrapper">
                 <i class="fas fa-tag input-icon"></i>
                 <input type="text" id="nome-produto" name="nomeProduto" placeholder="Ex: Óleo Motor 10W40" required>
@@ -74,14 +74,14 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="preco_compra">Preço de Compra (R$)</label>
+              <label for="preco_compra" class="required">Preço de Compra (R$)</label>
               <div class="input-wrapper">
                 <i class="fas fa-dollar-sign input-icon"></i>
                 <input type="number" id="preco-custo" name="precoCusto" step="0.01" min="0" placeholder="0.00" required>
               </div>
             </div>
             <div class="form-group">
-              <label for="preco_venda">Preço de Venda (R$)</label>
+              <label for="preco_venda" class="required">Preço de Venda (R$)</label>
               <div class="input-wrapper">
                 <i class="fas fa-hand-holding-usd input-icon"></i>
                 <input type="number" id="preco-venda" name="precoVenda" step="0.01" min="0" placeholder="0.00" required>
@@ -98,24 +98,24 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="categoria">Categoria</label>
+              <label for="categoria" class="required">Categoria</label>
               <div class="input-wrapper">
                 <i class="fas fa-sitemap input-icon"></i>
-                <input type="text" id="categoria" name="categoria" placeholder="Ex: Lubrificantes, Filtros">
+                <input type="text" id="categoria" name="categoria" placeholder="Ex: Lubrificantes, Filtros" required>
               </div>
             </div>
           </div>
           
           <div class="form-row">
             <div class="form-group">
-                <label for="estoque_atual">Estoque Atual</label>
+                <label for="estoque_atual" class="required">Estoque Atual</label>
                 <div class="input-wrapper">
                   <i class="fas fa-boxes input-icon"></i>
                   <input type="number" id="estoque-atual" name="estoqueAtual" min="0" placeholder="0" required>
                 </div>
               </div>
               <div class="form-group">
-                <label for="estoque_minimo">Estoque Mínimo</label>
+                <label for="estoque_minimo" class="required">Estoque Mínimo</label>
                 <div class="input-wrapper">
                   <i class="fas fa-exclamation-circle input-icon"></i>
                   <input type="number" id="estoque-minimo" name="estoqueMinimo" min="0" placeholder="0" required>
@@ -136,8 +136,7 @@
             <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-produto">
               <i class="fas fa-times"></i> Cancelar
             </button>
-            <button type="submit" class="btn"> <i class="fas fa-save"></i> Salvar Produto
-            </button>
+            <button type="submit" class="btn" disabled><i class="fas fa-save"></i>Salvar Produto</button>
           </div>
         </form>
 		<form id="deleteForm" action="produto-api/apagar" method="post" style="display: none;">
@@ -209,39 +208,69 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const btnNovoProduto = document.getElementById('btn-novo-produto');
-      const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
-      const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
-      
-      // MODIFICADO: A referência para rolagem agora é o container da tabela
-      const tableContainerForScroll = document.querySelector('.table-container');
+		const form = document.getElementById('formNovoProduto');
+		const formTitulo = document.getElementById('formTitulo');
+		const botaoSalvar = form.querySelector('button[type="submit"]');
 
-      if (btnNovoProduto && formProdutoContainer) {
-        btnNovoProduto.addEventListener('click', function() {
-          if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
-            formProdutoContainer.style.display = 'block';
-            formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        });
-      }
+		const camposObrigatorios = [
+		  'nome-produto',
+		  'preco-custo',
+		  'preco-venda',
+		  'categoria',
+		  'estoque-atual',
+		  'estoque-minimo'
+		];
 
-      // Lógica para o botão "Cancelar" foi ajustada para usar a nova referência
-      if (btnCancelarNovoProduto && formProdutoContainer && tableContainerForScroll) {
-        btnCancelarNovoProduto.addEventListener('click', function() {
-          formProdutoContainer.style.display = 'none';
-          const formNovo = document.getElementById('formNovoProduto');
-          if (formNovo) {
-            formNovo.reset(); 
-          }
-          // MODIFICADO: Scrolla de volta para o topo da tabela
-          tableContainerForScroll.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      }
+		function verificarCampos() {
+		  let todosPreenchidos = true;
+
+		  camposObrigatorios.forEach(id => {
+		    const campo = document.getElementById(id);
+		    if (campo) {
+		      if (campo.value.trim() === '') {
+		        todosPreenchidos = false;
+		      }
+		    }
+		  });
+
+		  botaoSalvar.disabled = !todosPreenchidos;
+		}
+
+		// Executa verificação ao carregar a página
+		verificarCampos();
+
+		// Verifica a cada input
+		camposObrigatorios.forEach(id => {
+		  const campo = document.getElementById(id);
+		  if (campo) {
+		    campo.addEventListener('input', verificarCampos);
+		  }
+		});
+
+		// Mostrar e ocultar o formulário
+		const btnNovoProduto = document.getElementById('btn-novo-produto');
+		const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
+		const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
+
+		btnNovoProduto.addEventListener('click', () => {
+			form.querySelector('#idProduto').value = "";
+			formTitulo.innerHTML = '<i class="fas fa-plus"></i> Adicionar Novo Produto';
+			formProdutoContainer.style.display = 'block';
+			form.scrollIntoView({ behavior: 'smooth' });
+		});
+
+		btnCancelarNovoProduto.addEventListener('click', () => {
+		  form.reset();
+		  formProdutoContainer.style.display = 'none';
+		  verificarCampos(); // Desativa o botão novamente
+		});
+
 
 	  // O restante do script permanece igual
 	  const editButtons = document.querySelectorAll('.btn-edit');
 	  editButtons.forEach(function(button) {
 	    button.addEventListener('click', function() {
+			formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Produto';
 		if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
             formProdutoContainer.style.display = 'block';
             formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -268,33 +297,32 @@
 	      document.getElementById('estoque-atual').value = estoqueA;
 	      document.getElementById('estoque-minimo').value = estoqueM;
 	      document.getElementById('descricao').value = descricao;
-	    });
-	  });
+		});
+	});
 	
 	const deleteButtons = document.querySelectorAll('.btn-delete');
-	    deleteButtons.forEach(function(button) {
-	      button.addEventListener('click', function(e) {
+		deleteButtons.forEach(function(button) {
+			button.addEventListener('click', function(e) {
 	        e.preventDefault();
 	        const id = button.dataset.id;
 	        Swal.fire({
-	          title: 'Você tem certeza?',
-	          text: "Esta ação não poderá ser desfeita!",
-	          icon: 'warning',
-	          showCancelButton: true,
-	          confirmButtonColor: '#d33',
-	          cancelButtonColor: '#3085d6',
-	          confirmButtonText: 'Sim, excluir!',
-	          cancelButtonText: 'Cancelar'
+				title: 'Você tem certeza?',
+				text: "Esta ação não poderá ser desfeita!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#d33',
+				cancelButtonColor: '#3085d6',
+				confirmButtonText: 'Sim, excluir!',
+				cancelButtonText: 'Cancelar'
 	        }).then((result) => {
 	          if (result.isConfirmed) {
 	            document.getElementById('deleteId').value = id;
 	            document.getElementById('deleteForm').submit();
-	          }
-	        });
-	      });
-	    });
-    
-    });
+				}
+			});
+		});
+	});
+});
   </script>
 </body>
 </html>

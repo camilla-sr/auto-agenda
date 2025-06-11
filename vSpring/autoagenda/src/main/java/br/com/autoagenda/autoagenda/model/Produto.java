@@ -30,7 +30,7 @@ public class Produto {
 	private int estoqueAtual;
 	@NotNull
 	private int estoqueMinimo;
-	@NotEmpty
+	
 	private String descricao;
 	
 	public Produto() {}

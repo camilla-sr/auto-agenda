@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (urlParams.get('erro') === 'true') {
 	    Swal.fire({
 	        title: 'Erro!',
-	        text: 'Ocorreu um erro no cadastro.',
+	        text: 'Ocorreu um erro no processo.',
 	        icon: 'error',
 	        confirmButtonText: 'OK'
 		}).then(() => {

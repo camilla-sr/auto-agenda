@@ -21,12 +21,10 @@ public class C_Produto {
 	@PostMapping(value = "/salvar")
 	public String salvar(@Valid Produto prod, BindingResult result) {
 		if(result.hasErrors()) {
-			return "deu alguma merda";
+			return "redirect:/produtos?erro=true";
 		}
-		
 		if(prod.getIdProduto() != null) {
 			Produto existe = repo.findById(prod.getIdProduto()).orElse(new Produto());
-			
 			if(!prod.getCodigoProduto().isEmpty()) {
 				existe.setCodigoProduto(prod.getCodigoProduto());				
 			}
@@ -36,8 +34,6 @@ public class C_Produto {
 			if(!prod.getNomeProduto().isEmpty()) {
 				existe.setNomeProduto(prod.getNomeProduto());				
 			}
-			
-			
 			existe.setPrecoCusto(prod.getPrecoCusto());
 			existe.setPrecoVenda(prod.getPrecoVenda());
 			if(!prod.getFornecedor().isEmpty()) {
@@ -49,11 +45,21 @@ public class C_Produto {
 				existe.setDescricao(prod.getDescricao());
 			}
 			repo.save(existe);
-		} else {
-			repo.save(prod);			
 			return "redirect:/produtos?editado=true";
+		} else {
+			if(prod.getCodigoProduto().isEmpty()) {
+				prod.setCodigoProduto("");				
+			}
+			
+			if(prod.getFornecedor().isEmpty()) {
+				prod.setFornecedor("");				
+			}
+			if(prod.getDescricao().isEmpty()) {
+				prod.setDescricao("");				
+			}
+			repo.save(prod);			
+			return "redirect:/produtos?sucesso=true";
 		}
-		return "redirect:/produtos?sucesso=true";
 	}
 	
 	@PostMapping(value = "/apagar")
