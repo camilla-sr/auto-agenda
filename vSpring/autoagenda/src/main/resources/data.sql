@@ -41,7 +41,7 @@ create table if not exists agendamento (
   data_cadastro date,
   data_previsao date,
   data_conclusao date,
-  status_agendamento varchar(20) default 'ativo',
+  status_agendamento varchar(20) default 'agendado',
   observacao text default null,
   foreign key (fk_servico) references servico (id_servico)
 );

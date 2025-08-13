@@ -17,17 +17,12 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class Rotas {
-	@Autowired
-	private Sessao s;
+	@Autowired private Sessao s;
 	
-	@Autowired
-	private FuncionarioRepository repoFunc;
-	@Autowired
-	private ServicoRepository repoServ;
-	@Autowired
-	private ProdutoRepository repoProd;
-	@Autowired
-	private AgendamentoRepository repoAg;
+	@Autowired private FuncionarioRepository repoFunc;
+	@Autowired private ServicoRepository repoServ;
+	@Autowired private ProdutoRepository repoProd;
+	@Autowired private AgendamentoRepository repoAg;
 	
 	@ModelAttribute
     public void usuarioGlobal(HttpSession session, Model model) {
@@ -61,6 +56,8 @@ public class Rotas {
 		model.addAttribute("estoqueBaixo", repoProd.countByEstoqueAtualLessThan(5));	//aqui passa o de corte pra considerar baixo
 		model.addAttribute("precoEstoque", somaPrecoCusto());
 		model.addAttribute("totalAgenda", repoAg.count());
+		model.addAttribute("agendaPendente", repoAg.agpendentes());
+		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
 		return verificaUsuario(session, "dashboard");
 	}
 	
@@ -96,6 +93,9 @@ public class Rotas {
     public String agendamentos(HttpSession session, Model model) {
     	model.addAttribute("servicos", repoServ.findAll());
     	model.addAttribute("agendamentos", repoAg.findAll());
+		model.addAttribute("agendaPendente", repoAg.agpendentes());
+		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
+		model.addAttribute("agendaAndamento", repoAg.agandamento());
     	return verificaUsuario(session, "agendamentos");
     }
 }

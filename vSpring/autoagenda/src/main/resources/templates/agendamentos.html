@@ -29,7 +29,7 @@
             <i class="fas fa-clock"></i>
           </div>
           <div class="stat-info">
-            <h3>4</h3>
+            <h3 th:text="${agendaPendente}"></h3>
             <p>Agendamentos pendentes</p>
           </div>
         </div>
@@ -39,7 +39,7 @@
             <i class="fas fa-cog"></i>
           </div>
           <div class="stat-info">
-            <h3>2</h3>
+            <h3 th:text="${agendaAndamento}"></h3>
             <p>Em andamento</p>
           </div>
         </div>
@@ -49,7 +49,7 @@
             <i class="fas fa-check-circle"></i>
           </div>
           <div class="stat-info">
-            <h3>3</h3>
+            <h3 th:text="${agendaConcluido}"></h3>
             <p>Concluídos hoje</p>
           </div>
         </div>

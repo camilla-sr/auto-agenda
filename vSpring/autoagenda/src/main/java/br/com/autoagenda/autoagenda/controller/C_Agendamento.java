@@ -20,11 +20,8 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/agendamento-api")
 public class C_Agendamento {
-	
-	@Autowired
-	private AgendamentoRepository repo;
-	@Autowired
-	private ServicoRepository repoServ;
+	@Autowired private AgendamentoRepository repo;
+	@Autowired private ServicoRepository repoServ;
 	
 	@PostMapping("/salvar")
     public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico ,BindingResult result) {
