@@ -17,6 +17,8 @@ public interface AgendamentoRepository extends CrudRepository<Agendamento, Integ
 	@Query("select count(statusAgendamento) from Agendamento where statusAgendamento = 'concluido'")
     long agconcluidos();
 	
-	@Query("select count(statusAgendamento) from Agendamento where statusAgendamento = 'concluido'")
+	@Query("select count(statusAgendamento) from Agendamento "
+			+ "where statusAgendamento = 'concluido' and dataConclusao is not null "
+			+ "and dataConclusao = CURRENT_DATE")
     long agconcluidohoje();
 }

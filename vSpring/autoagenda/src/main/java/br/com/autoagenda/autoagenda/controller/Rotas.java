@@ -96,6 +96,7 @@ public class Rotas {
 		model.addAttribute("agendaPendente", repoAg.agpendentes());
 		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
 		model.addAttribute("agendaAndamento", repoAg.agandamento());
+		model.addAttribute("agendaAndamento", repoAg.agconcluidohoje());
     	return verificaUsuario(session, "agendamentos");
     }
 }
