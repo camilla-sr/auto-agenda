@@ -91,7 +91,13 @@ public class C_Funcionario {
 			repo.save(funcExistente);
 			return "redirect:/funcionarios?editado=true";
 		} else {
+			Funcionario existe = repo.findByUsuario(func.getUsuario());
+	        if (existe != null) {
+	            return "redirect:/funcionarios?erroUsuario=true";
+	        }
+			
 			func.setCpf(func.getCpf().replaceAll("\\D", ""));
+			
 			repo.save(func);
 		}
 		return "redirect:/funcionarios?sucesso=true";
