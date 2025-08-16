@@ -14,5 +14,5 @@ public interface ProdutoRepository extends CrudRepository<Produto, Integer>{
 	long countByEstoqueAtualLessThan(int nivelCondicao);
 	
 	 @Query("SELECT SUM(p.precoCusto) FROM Produto p")
-	 Float sumTotalPrecoCusto(); 
+	 Double sumTotalPrecoCusto(); 
 }

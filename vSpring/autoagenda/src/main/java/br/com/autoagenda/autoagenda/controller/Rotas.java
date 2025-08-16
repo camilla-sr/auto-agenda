@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class Rotas {
 	@Autowired private Sessao s;
+	
 	@Autowired private FuncionarioRepository repoFunc;
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private ProdutoRepository repoProd;
@@ -35,10 +36,9 @@ public class Rotas {
 		return page;
 	}
 	
-	public String somaPrecoCusto() {
-		Float soma = repoProd.sumTotalPrecoCusto();
-		if(soma == null) return "0,00";
-		return String.format("%.2f", soma).replace(".", ",");
+	public double somaPrecoCusto() {
+		Double soma = repoProd.sumTotalPrecoCusto();
+		return soma == null ? 0.0: soma;
 	}
 	
 	@GetMapping("/cadastroSistema")
