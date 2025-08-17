@@ -151,7 +151,7 @@
         </div>
 
         <div class="table-actions">
-          <input type="text" id="searchInputProdutos" placeholder="Pesquisar produtos...">
+          <input type="text" id="busca" placeholder="Pesquisar produtos...">
         </div>
         <table class="appointments-table" id="productsTable"> <thead>
             <tr>
@@ -322,6 +322,26 @@
 			});
 		});
 	});
+	
+
+	//	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
+	const busca = document.getElementById('busca')
+	const tabela = document.querySelector('table');
+	const linhas = tabela.querySelectorAll('tbody tr');
+
+	busca.addEventListener('input', function (){
+		const termoBusca = busca.value.toLowerCase();
+		
+		linhas.forEach(function(linha) {
+	        const textoLinha = linha.textContent.toLowerCase();
+
+	        if (textoLinha.includes(termoBusca)) {
+	            linha.style.display = '';
+	        } else {
+	            linha.style.display = 'none';
+	        }
+		})
+	})
 });
   </script>
 </body>

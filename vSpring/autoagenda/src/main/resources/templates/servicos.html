@@ -30,7 +30,7 @@
         </div>
 
 		<div class="table-actions">
-          <input type="text" id="searchInputServicos" placeholder="Pesquisar serviços...">
+          <input type="text" id="busca" placeholder="Pesquisar serviços...">
         </div>
         <table class="table appointments-table">
           <thead>
@@ -194,6 +194,26 @@
 
 	  // Inicializa em modo novo
 	  resetFormulario();
+	  
+
+	  //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
+	  const busca = document.getElementById('busca')
+	  const tabela = document.querySelector('table');
+	  const linhas = tabela.querySelectorAll('tbody tr');
+
+	  busca.addEventListener('input', function (){
+	  	const termoBusca = busca.value.toLowerCase();
+	  	
+	  	linhas.forEach(function(linha) {
+	          const textoLinha = linha.textContent.toLowerCase();
+
+	          if (textoLinha.includes(termoBusca)) {
+	              linha.style.display = '';
+	          } else {
+	              linha.style.display = 'none';
+	          }
+	  	})
+	  })
 });
   </script>
 </body>
