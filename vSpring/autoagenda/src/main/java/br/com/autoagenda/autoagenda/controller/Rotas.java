@@ -1,6 +1,10 @@
 package br.com.autoagenda.autoagenda.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +22,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class Rotas {
 	@Autowired private Sessao s;
-	
 	@Autowired private FuncionarioRepository repoFunc;
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private ProdutoRepository repoProd;
@@ -36,9 +39,16 @@ public class Rotas {
 		return page;
 	}
 	
-	public double somaPrecoCusto() {
-		Double soma = repoProd.sumTotalPrecoCusto();
-		return soma == null ? 0.0: soma;
+	public String somaPrecoCusto() {
+		Float soma = repoProd.sumTotalPrecoCusto();
+		if(soma == null) return "0.00";
+
+		BigDecimal valor = BigDecimal.valueOf(soma).setScale(2, RoundingMode.HALF_UP);
+
+	    NumberFormat nf = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
+	    nf.setMinimumFractionDigits(2);
+	    nf.setMaximumFractionDigits(2);
+	    return nf.format(valor);
 	}
 	
 	@GetMapping("/cadastroSistema")
