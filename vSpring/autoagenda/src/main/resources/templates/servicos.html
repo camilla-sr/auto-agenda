@@ -42,7 +42,7 @@
           </thead>
           <tbody>
 			<tr th:if="${servicos == null or servicos.empty}">
-				<td colspan="3">Nenhum resultado encontrado</td>
+				<td colspan="3" style="text-align: center;">Nenhum resultado encontrado</td>
 			</tr>
             <tr th:each="serv : ${servicos}">
               <td class="nome-servico" th:text="${serv.nomeServico}"></td>

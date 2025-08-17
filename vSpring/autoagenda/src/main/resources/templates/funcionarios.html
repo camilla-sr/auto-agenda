@@ -47,7 +47,7 @@
             </thead>
             <tbody>
 				<tr th:if="${funcionarios == null or funcionarios.empty}">
-					<td colspan="6">Nenhum resultado encontrado</td>
+					<td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
 				</tr>
               <tr th:each="func : ${funcionarios}">
                 <td><span class="employee-id" th:text="${func.idFuncionario}"></span></td>

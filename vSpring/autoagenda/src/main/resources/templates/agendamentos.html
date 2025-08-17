@@ -113,7 +113,7 @@
             </thead>
             <tbody>
 				<tr th:if="${agendamentos == null or agendamentos.empty}">
-					<td colspan="6">Nenhum resultado encontrado</td>
+					<td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
 				</tr>
               <tr th:each="ag : ${agendamentos}">
                 <td class="ag-cliente" th:text="${ag.nomeCliente}"></td>

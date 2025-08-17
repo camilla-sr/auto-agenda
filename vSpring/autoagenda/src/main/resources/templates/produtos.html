@@ -165,7 +165,7 @@
           </thead>
           <tbody>
 			<tr th:if="${produtos == null or produtos.empty}">
-				<td colspan="6">Nenhum resultado encontrado</td>
+				<td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
 			</tr>
             <tr th:each="p : ${produtos}">
               <td class="nome-produto" th:text="${p.nomeProduto}"></td>
