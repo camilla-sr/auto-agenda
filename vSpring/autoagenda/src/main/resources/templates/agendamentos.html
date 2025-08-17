@@ -259,7 +259,7 @@
             <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-agendamento">
               <i class="fas fa-times"></i> Cancelar
             </button>
-            <button type="submit" class="btn">
+            <button type="submit" class="btn" id="salvarAg">
               <i class="fas fa-save"></i> Salvar Agendamento
             </button>
           </div>
@@ -432,6 +432,32 @@
 	  	    });
 
     });
+	
+	
+	//	ESSE BLOCO VAI VERIFICAR A DATA INSERIDA NO 'AGENDAMENTO PARA' NO FORMULÁRIO
+	const inputData = document.getElementById('data-previsao');
+	const salva = document.getElementById('salvarAg');
+	
+	inputData.addEventListener('change', function() {
+	    const valor = inputData.value;
+	    if (!valor) return;
+
+	    const partes = valor.split('-');
+	    const ano = parseInt(partes[0], 10);
+	    const mes = parseInt(partes[1], 10) - 1; // Mês em JS é de 0 a 11
+	    const dia = parseInt(partes[2], 10);
+	    
+	    const dataInput = new Date(ano, mes, dia);
+
+	    const hoje = new Date();
+	    hoje.setHours(0, 0, 0, 0);
+
+	    if (dataInput.getTime() < hoje.getTime()) {
+			salva.disabled = true
+	    }else{
+			salva.disabled = false
+	    }
+	});
   </script>
 </body>
 
