@@ -36,14 +36,15 @@ public class C_Agendamento {
 			existe.setServico(servicoSelecionado);
 			existe.setDataCadastro(LocalDate.now());
 			existe.setDataPrevisao(ag.getDataPrevisao());
-			existe.setDataConclusao(ag.getDataConclusao());
 			existe.setStatusAgendamento(ag.getStatusAgendamento());
+			existe.setDataConclusao("concluido".equals(ag.getStatusAgendamento()) ? LocalDate.now() : null);
 			existe.setObservacao(ag.getObservacao());
 			repo.save(existe);
 			return "redirect:/agendamentos?editado=true";
 		} else {
 			ag.setDataCadastro(LocalDate.now());
 			ag.setServico(servicoSelecionado);
+			ag.setDataConclusao("concluido".equals(ag.getStatusAgendamento()) ? LocalDate.now() : null);
 			repo.save(ag);
 		}
 		return "redirect:/agendamentos?sucesso=true";

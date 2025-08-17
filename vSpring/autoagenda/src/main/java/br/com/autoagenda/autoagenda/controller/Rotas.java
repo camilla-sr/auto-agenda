@@ -3,7 +3,6 @@ package br.com.autoagenda.autoagenda.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.time.LocalDate;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +105,7 @@ public class Rotas {
 		model.addAttribute("agendaPendente", repoAg.agpendentes());
 		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
 		model.addAttribute("agendaAndamento", repoAg.agandamento());
-		model.addAttribute("agendaAndamento", repoAg.agconcluidohoje());
+		model.addAttribute("agendaConcluidoHoje", repoAg.agconcluidohoje());
     	return verificaUsuario(session, "agendamentos");
     }
 }
