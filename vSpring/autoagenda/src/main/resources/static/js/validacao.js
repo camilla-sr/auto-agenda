@@ -117,4 +117,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		    limparUrl();
 		});
     }
+
+	//		AGENDAMENTOS	
+	if (urlParams.get('atualizado') === 'false') {
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Agendamento não encontrado.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
+	
+	if (urlParams.get('atualizado') === 'true') {
+        Swal.fire({
+            title: 'Sucesso!',
+            text: 'Status atualizado.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+		}).then(() => {
+		    limparUrl();
+		});
+    }
 });

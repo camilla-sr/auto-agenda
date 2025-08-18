@@ -2,6 +2,7 @@ package br.com.autoagenda.autoagenda.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public class C_Agendamento {
 	@Autowired private ServicoRepository repoServ;
 	
 	@PostMapping("/salvar")
-    public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico ,BindingResult result) {
+    public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico, BindingResult result) {
 		if(result.hasErrors()) {
 			return "redirect:/agendamentos?erro=true";
 		}
@@ -49,6 +50,17 @@ public class C_Agendamento {
 		}
 		return "redirect:/agendamentos?sucesso=true";
     }
+	
+	@PostMapping(value = "/atualizaStatus")
+	public String atualizarStatus(@RequestParam Integer idAgendamento, @RequestParam String status) {
+		if(idAgendamento != null) {
+			Agendamento ag = repo.findById(idAgendamento).orElseThrow();
+			ag.setStatusAgendamento(status);
+			repo.save(ag);
+			return "redirect:/agendamentos?atualizado=true";
+		}
+		return "redirect:/agendamentos?atualizado=false";
+	}
 	
 	@PostMapping(value = "/apagar")
 	public String apagar(@RequestParam Integer idAgendamento) {
