@@ -1,4 +1,4 @@
-> ![Atualizado em](https://img.shields.io/github/last-commit/USUARIO/REPOSITORIO?label=Atualizado%20em)
+> ![Atualizado em](https://img.shields.io/github/last-commit/camilla-sr/auto-agenda?label=Atualizado%20em)
 ```
 escrito por HectorSemenssato
 ```
