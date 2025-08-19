@@ -1,9 +1,13 @@
-> Atualizado em 04/06/2025
+> Atualizado em 19/08/2025
+```
+escrito por HectorSemenssato
+```
 
 ## :grey_question: O que há de novo
 
-Nesta nova versão, temos a inserção do Spring Boot com a linguagem HTML (criação de páginas na web), JavaScript (mais interatividade para as páginas), Thymeleaf (dinamismo em páginas e integração back-end e front-end) e CSS (estilização de páginas) sob a frame Bootstrap v5.3.6. É usada a arquitetura de software no padrão MVC (Model, View e Controller) para a separação do projeto em camadas garantindo benefícios como a organização, a facilidade de manutenção e a reutilização de código.
+Na versão 1.5 temos a inserção do Spring Boot com a linguagem HTML (criação de páginas na web), JavaScript (mais interatividade para as páginas), Thymeleaf (dinamismo em páginas e integração back-end e front-end) e CSS (estilização de páginas) sob a frame Bootstrap v5.3.6. É usada a arquitetura de software no padrão MVC (Model, View e Controller) para a separação do projeto em camadas garantindo benefícios como a organização, a facilidade de manutenção e a reutilização de código.
 
+E com a versão 2.0, será trazida a inserção de imagens dos veículos nos agendamentos — garantindo que o cliente e o funcionário tenham registros do veículo antes e depois do serviço —, inclusão dos microserviços e as melhorias e correções da versão v1.5.
 
 :scissors: O uso de script de Banco de Dados foi abandonado deste projeto com o uso da dependência "H2 Database".
 
@@ -11,7 +15,7 @@ Para saber mais sobre as versões do projeto consulte as [notas das versões](ht
 
 ## :mag_right: Detalhes do projeto
 
-O projeto __versão com Spring Boot__ fica localizado na pasta `vSpring` enquanto a __versão para uso no VS Code__ para criação das interfaces fica na pasta `v1.5.`
+O projeto __versão com Spring Boot__ fica localizado na pasta `vSpring` enquanto a __versão para uso no VS Code__ para criação das interfaces fica na pasta `v1.5`.
 
 > A existência da pasta `v1.5` serve para facilitar o acesso as interfaces web do projeto para criar e modificar as funcionalidades ou o design usando o VS Code.
 
