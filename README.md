@@ -1,4 +1,4 @@
-> Atualizado em 19/08/2025
+> Atualizado em ![Último commit](https://img.shields.io/github/last-commit/camilla-sr/auto-agenda)
 ```
 escrito por HectorSemenssato
 ```
