@@ -268,6 +268,16 @@
 		  verificarCampos(); // Desativa o botão novamente
 		});
 		
+	    $('#formNovoProduto').on('submit', function() {
+	        $(this).find('.valores').each(function() {
+	            const valorLimpo = $(this).cleanVal();
+				let valorParaEnviar = (parseFloat(valorLimpo) / 100).toFixed(2);
+	            if (isNaN(valorParaEnviar)) { valorParaEnviar = ''; }
+	            $(this).val(valorParaEnviar);
+	        });
+	        return true;
+	    });
+		
 	  // O restante do script permanece igual
 	  const editButtons = document.querySelectorAll('.btn-edit');
 	  editButtons.forEach(function(button) {
