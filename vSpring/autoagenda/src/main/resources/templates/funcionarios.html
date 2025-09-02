@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
 </head>
 
 <body>
-	<div th:replace="~{barra :: barra}"></div>
+  <div th:replace="~{barra :: barra}"></div>
 
   <main class="main-content">
     <div class="container">
@@ -23,14 +24,15 @@
         <h2><i class="fas fa-users"></i> Gerenciamento de Funcionários</h2>
         <p>Cadastre e gerencie os usuários do sistema</p>
       </div>
-		
+
       <div class="table-container">
         <div class="table-header">
           <h3><i class="fas fa-clipboard-list"></i> Lista de Usuários</h3>
-          <button class="btn btn-primary" id="btn-novo-funcionario"><i class="fas fa-plus-circle"></i>Novo Usuário</button>
+          <button class="btn btn-primary" id="btn-novo-funcionario"><i class="fas fa-plus-circle"></i>Novo
+            Usuário</button>
         </div>
-        
-		<div class="table-actions">
+
+        <div class="table-actions">
           <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
         </div>
         <div class="table-responsive">
@@ -46,18 +48,19 @@
               </tr>
             </thead>
             <tbody>
-				<tr th:if="${funcionarios == null or funcionarios.empty}">
-					<td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
-				</tr>
+              <tr th:if="${funcionarios == null or funcionarios.empty}">
+                <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
+              </tr>
               <tr th:each="func : ${funcionarios}">
                 <td><span class="employee-id" th:text="${func.idFuncionario}"></span></td>
                 <td class="nome-funcionario" th:text="${func.nomeFuncionario}"></td>
                 <td class="usuario-funcionario" th:text="${func.usuario}"></td>
                 <td class="acesso-funcionario" th:text="${func.acesso}"></td>
                 <td class="cpf-funcionario" th:text="${func.cpf}"></td>
-				
+
                 <td class="action-buttons">
-                  <button class="btn btn-action edit-btn" th:attr="data-id=${func.idFuncionario}" title="Editar"><i class="fas fa-edit"></i>
+                  <button class="btn btn-action edit-btn" th:attr="data-id=${func.idFuncionario}" title="Editar"><i
+                      class="fas fa-edit"></i>
                   </button>
                   <button class="btn btn-action delete-btn" th:attr="data-id=${func.idFuncionario}" title="Excluir">
                     <i class="fas fa-trash"></i>
@@ -67,7 +70,7 @@
             </tbody>
           </table>
         </div>
-        
+
         <!-- Controles de paginação -->
         <div class="table-pagination">
           <button class="btn btn-secondary" id="btn-anterior" disabled>
@@ -79,26 +82,27 @@
           </button>
         </div>
       </div>
-      
+
       <!-- Seção do formulário de cadastro -->
       <div class="form-container" id="funcionario-form-container" style="display: none">
         <div class="form-header">
           <h3><i class="fas fa-user-plus"></i> Cadastrar Novo Usuário</h3>
         </div>
-        
+
         <form method="post" action="/funcionario-api/salvar" id="funcionario-form">
-		  <input type="hidden" name="idFuncionario" id="idFuncionario" readonly>
+          <input type="hidden" name="idFuncionario" id="idFuncionario" readonly>
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
                 <label for="nome">Nome Completo</label>
                 <div class="input-wrapper">
                   <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="nomeFuncionario" name="nomeFuncionario" placeholder="Nome completo do funcionário" required>
+                  <input type="text" id="nomeFuncionario" name="nomeFuncionario"
+                    placeholder="Nome completo do funcionário" required>
                 </div>
               </div>
             </div>
-            
+
             <div class="form-col">
               <div class="form-group">
                 <label for="cpf">CPF</label>
@@ -109,7 +113,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -120,7 +124,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="form-col">
               <div class="form-group">
                 <label for="senha">Senha</label>
@@ -130,30 +134,30 @@
                 </div>
               </div>
             </div>
-			
+
             <div class="form-col">
               <div class="form-group">
                 <label for="acesso">Tipo de Acesso</label>
                 <div class="input-wrapper">
                   <i class="fas fa-lock input-icon"></i>
-				  	<select id="acesso" name="acesso">
-				          <option value="">Selecione</option>
-				          <option value="admin">Administrador</option>
-				          <option value="comum">Usuário Comum</option>
-				     </select>
+                  <select id="acesso" name="acesso">
+                    <option value="">Selecione</option>
+                    <option value="admin">Administrador</option>
+                    <option value="comum">Usuário Comum</option>
+                  </select>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div class="form-actions">
             <button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i> Cancelar </button>
             <button type="submit" id="salvarEdit" class="btn"><i class="fas fa-save"></i> Salvar Usuário </button>
           </div>
         </form>
-		<form id="deleteForm" action="/funcionario-api/apagar" method="post" style="display: none;">
-		    <input type="hidden" name="idFuncionario" id="deleteId">
-		</form>
+        <form id="deleteForm" action="/funcionario-api/apagar" method="post" style="display: none;">
+          <input type="hidden" name="idFuncionario" id="deleteId">
+        </form>
       </div>
     </div>
   </main>
@@ -181,134 +185,135 @@
       <div class="modal-body"></div>
     </div>
   </div>
-  
-  <script>	
-	document.addEventListener('DOMContentLoaded', function() {
-		const btnNovoFuncionario = document.getElementById("btn-novo-funcionario");
-		const formFuncionarioContainer = document.getElementById("funcionario-form-container");
-		if (btnNovoFuncionario && formFuncionarioContainer) {
-		  btnNovoFuncionario.addEventListener('click', function () {
-		    formFuncionarioContainer.style.display = 'block';
-		    formFuncionarioContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			});
-		}
-		
-		const btnCancelar = document.querySelector("#funcionario-form button[type='reset']");
-		if (btnCancelar && formFuncionarioContainer) {
-		  btnCancelar.addEventListener('click', function (e) {
-		    e.preventDefault();
-		    formFuncionarioContainer.style.display = 'none';
-		    document.getElementById("funcionario-form").reset();
-		    document.getElementById("idFuncionario").value = '';
-		    document.getElementById("senha").setAttribute("name", "senha");
-		    document.getElementById("senha").setAttribute("required", "required");
-		    document.querySelector('.form-header h3').innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
-		  });
-		}
-		
-		const form = document.getElementById("funcionario-form");
-	    form.addEventListener("submit", function () {
-	        const cpfInput = document.getElementById("cpf");
-	        cpfInput.value = cpfInput.value.replace(/\D/g, '');
-	    });
-		
-		Inputmask("999.999.999-99").mask(document.querySelectorAll(".cpf-funcionario"));
 
-		const cpfInput = document.getElementById("cpf");
-		if (cpfInput) {
-		    Inputmask({
-		        mask: "999.999.999-99",
-		        showMaskOnHover: false,
-		        clearIncomplete: true,
-				clearMaskOnLostFocus: false,
-		    }).mask(cpfInput);
-		}
-		
-		// EDITAR
-	    const editButtons = document.querySelectorAll('.edit-btn');
-	    editButtons.forEach(function(button) {
-			button.addEventListener('click', function() {
-			if (formFuncionarioContainer.style.display === 'none' || formFuncionarioContainer.style.display === '') {
-				formFuncionarioContainer.style.display = 'block';
-				formFuncionarioContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			}
-	        const row = button.closest('tr');
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const btnNovoFuncionario = document.getElementById("btn-novo-funcionario");
+      const formFuncionarioContainer = document.getElementById("funcionario-form-container");
+      if (btnNovoFuncionario && formFuncionarioContainer) {
+        btnNovoFuncionario.addEventListener('click', function () {
+          formFuncionarioContainer.style.display = 'block';
+          formFuncionarioContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
 
-	        const id = button.dataset.id;
-	        const nome = row.querySelector('.nome-funcionario').textContent.trim();
-	        const usuario = row.querySelector('.usuario-funcionario').textContent.trim();
-	        const acesso = row.querySelector('.acesso-funcionario').textContent.trim();
-	        const cpf = row.querySelector('.cpf-funcionario').textContent.trim().replace(/\D/g, '');
+      const btnCancelar = document.querySelector("#funcionario-form button[type='reset']");
+      if (btnCancelar && formFuncionarioContainer) {
+        btnCancelar.addEventListener('click', function (e) {
+          e.preventDefault();
+          formFuncionarioContainer.style.display = 'none';
+          document.getElementById("funcionario-form").reset();
+          document.getElementById("idFuncionario").value = '';
+          document.getElementById("senha").setAttribute("name", "senha");
+          document.getElementById("senha").setAttribute("required", "required");
+          document.querySelector('.form-header h3').innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
+        });
+      }
 
-	        document.getElementById('idFuncionario').value = id;
-	        document.getElementById('nomeFuncionario').value = nome;
-	        document.getElementById('usuario').value = usuario;
-	        document.getElementById('acesso').value = acesso;
-			
-			cpfInput.value = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
-			Inputmask("999.999.999-99").mask(cpfInput);
-			
-			const campoSenha = document.getElementById('senha');
-            if (campoSenha) {
-                campoSenha.setAttribute('name', 'novaSenha');
+      const form = document.getElementById("funcionario-form");
+      form.addEventListener("submit", function () {
+        const cpfInput = document.getElementById("cpf");
+        cpfInput.value = cpfInput.value.replace(/\D/g, '');
+      });
 
-                campoSenha.addEventListener('input', function() {
-                    if (campoSenha.value.trim() === '') {
-                        campoSenha.removeAttribute('required');
-                    } else {
-                        campoSenha.setAttribute('required', 'required');
-                    }
-                });
+      Inputmask("999.999.999-99").mask(document.querySelectorAll(".cpf-funcionario"));
+
+      const cpfInput = document.getElementById("cpf");
+      if (cpfInput) {
+        Inputmask({
+          mask: "999.999.999-99",
+          showMaskOnHover: false,
+          clearIncomplete: true,
+          clearMaskOnLostFocus: false,
+        }).mask(cpfInput);
+      }
+
+      // EDITAR
+      const editButtons = document.querySelectorAll('.edit-btn');
+      editButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          if (formFuncionarioContainer.style.display === 'none' || formFuncionarioContainer.style.display === '') {
+            formFuncionarioContainer.style.display = 'block';
+            formFuncionarioContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          const row = button.closest('tr');
+
+          const id = button.dataset.id;
+          const nome = row.querySelector('.nome-funcionario').textContent.trim();
+          const usuario = row.querySelector('.usuario-funcionario').textContent.trim();
+          const acesso = row.querySelector('.acesso-funcionario').textContent.trim();
+          const cpf = row.querySelector('.cpf-funcionario').textContent.trim().replace(/\D/g, '');
+
+          document.getElementById('idFuncionario').value = id;
+          document.getElementById('nomeFuncionario').value = nome;
+          document.getElementById('usuario').value = usuario;
+          document.getElementById('acesso').value = acesso;
+
+          cpfInput.value = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+          Inputmask("999.999.999-99").mask(cpfInput);
+
+          const campoSenha = document.getElementById('senha');
+          if (campoSenha) {
+            campoSenha.setAttribute('name', 'novaSenha');
+
+            campoSenha.addEventListener('input', function () {
+              if (campoSenha.value.trim() === '') {
                 campoSenha.removeAttribute('required');
+              } else {
+                campoSenha.setAttribute('required', 'required');
+              }
+            });
+            campoSenha.removeAttribute('required');
+          }
+          document.querySelector('.form-header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário';
+        });
+      });
+
+      const deleteButtons = document.querySelectorAll('.delete-btn');
+      deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          const id = button.dataset.id;
+          Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Esta ação não poderá ser desfeita!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4CAF50',
+            cancelButtonColor: '#E0E0E0',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              document.getElementById('deleteId').value = id;
+              document.getElementById('deleteForm').submit();
             }
-			document.querySelector('.form-header h3').innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário';
-		});
-	});
-		
-		const deleteButtons = document.querySelectorAll('.delete-btn');
-		deleteButtons.forEach(function(button) {
-			button.addEventListener('click', function(e) {
-			e.preventDefault();
+          });
+        });
+      });
 
-			const id = button.dataset.id;
-		        Swal.fire({
-					title: 'Você tem certeza?',
-					text: "Esta ação não poderá ser desfeita!",
-					icon: 'warning',
-					showCancelButton: true,
-					confirmButtonColor: '#4CAF50',
-					cancelButtonColor: '#E0E0E0',
-					confirmButtonText: 'Sim, excluir!',
-					cancelButtonText: 'Cancelar'
-				}).then((result) => {
-					if (result.isConfirmed) {
-		            	document.getElementById('deleteId').value = id;
-		            	document.getElementById('deleteForm').submit();
-				}
-			});
-		});
-	});
-	
 
-	//	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
-	const busca = document.getElementById('busca')
-	const tabela = document.querySelector('table');
-	const linhas = tabela.querySelectorAll('tbody tr');
+      //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
+      const busca = document.getElementById('busca')
+      const tabela = document.querySelector('table');
+      const linhas = tabela.querySelectorAll('tbody tr');
 
-	busca.addEventListener('input', function (){
-		const termoBusca = busca.value.toLowerCase();
-		
-		linhas.forEach(function(linha) {
-	        const textoLinha = linha.textContent.toLowerCase();
+      busca.addEventListener('input', function () {
+        const termoBusca = busca.value.toLowerCase();
 
-	        if (textoLinha.includes(termoBusca)) {
-	            linha.style.display = '';
-	        } else {
-	            linha.style.display = 'none';
-	        }
-		})
-	})
-});
+        linhas.forEach(function (linha) {
+          const textoLinha = linha.textContent.toLowerCase();
+
+          if (textoLinha.includes(termoBusca)) {
+            linha.style.display = '';
+          } else {
+            linha.style.display = 'none';
+          }
+        })
+      })
+    });
   </script>
 </body>
+
 </html>

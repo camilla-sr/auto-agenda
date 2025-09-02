@@ -32,7 +32,8 @@
             <i class="fas fa-boxes"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${totalProdutos}"></h3> <p>Produtos cadastrados</p>
+            <h3 th:text="${totalProdutos}"></h3>
+            <p>Produtos cadastrados</p>
           </div>
         </div>
 
@@ -41,7 +42,8 @@
             <i class="fas fa-exclamation-triangle"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${estoqueBaixo}"></h3> <p>Abaixo do estoque mínimo</p>
+            <h3 th:text="${estoqueBaixo}"></h3>
+            <p>Abaixo do estoque mínimo</p>
           </div>
         </div>
 
@@ -50,15 +52,17 @@
             <i class="fas fa-dollar-sign"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="'R$ ' + ${precoEstoque}"></h3> <p>Valor total em estoque</p>
+            <h3 th:text="'R$ ' + ${precoEstoque}"></h3>
+            <p>Valor total em estoque</p>
           </div>
         </div>
       </div>
 
       <div class="form-container" id="formNovoProdutoContainer" style="display: none;">
         <h3 id="formTitulo"><i class="fas fa-plus"></i> Adicionar Novo Produto</h3>
-        <form id="formNovoProduto" action="/produto-api/salvar" method="post"> <div class="form-row">
-			<input type="hidden" name="idProduto" id="idProduto" readonly>
+        <form id="formNovoProduto" action="/produto-api/salvar" method="post">
+          <div class="form-row">
+            <input type="hidden" name="idProduto" id="idProduto" readonly>
             <div class="form-group">
               <label for="nome_produto" class="required">Nome do Produto</label>
               <div class="input-wrapper">
@@ -80,14 +84,16 @@
               <label for="preco_compra" class="required">Preço de Compra (R$)</label>
               <div class="input-wrapper">
                 <i class="fas fa-dollar-sign input-icon"></i>
-                <input class="valores" type="text" id="preco-custo" name="precoCusto" placeholder="0,00" inputmode="numeric" required>
+                <input class="valores" type="text" id="preco-custo" name="precoCusto" placeholder="0,00"
+                  inputmode="numeric" required>
               </div>
             </div>
             <div class="form-group">
               <label for="preco_venda" class="required">Preço de Venda (R$)</label>
               <div class="input-wrapper">
                 <i class="fas fa-hand-holding-usd input-icon"></i>
-                <input class="valores" type="text" id="preco-venda" name="precoVenda" placeholder="0,00" inputmode="numeric" required>
+                <input class="valores" type="text" id="preco-venda" name="precoVenda" placeholder="0,00"
+                  inputmode="numeric" required>
               </div>
             </div>
           </div>
@@ -108,22 +114,22 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group">
-                <label for="estoque_atual" class="required">Estoque Atual</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-boxes input-icon"></i>
-                  <input type="number" id="estoque-atual" name="estoqueAtual" min="0" placeholder="0" required>
-                </div>
+              <label for="estoque_atual" class="required">Estoque Atual</label>
+              <div class="input-wrapper">
+                <i class="fas fa-boxes input-icon"></i>
+                <input type="number" id="estoque-atual" name="estoqueAtual" min="0" placeholder="0" required>
               </div>
-              <div class="form-group">
-                <label for="estoque_minimo" class="required">Estoque Mínimo</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-exclamation-circle input-icon"></i>
-                  <input type="number" id="estoque-minimo" name="estoqueMinimo" min="0" placeholder="0" required>
-                </div>
+            </div>
+            <div class="form-group">
+              <label for="estoque_minimo" class="required">Estoque Mínimo</label>
+              <div class="input-wrapper">
+                <i class="fas fa-exclamation-circle input-icon"></i>
+                <input type="number" id="estoque-minimo" name="estoqueMinimo" min="0" placeholder="0" required>
               </div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -142,21 +148,23 @@
             <button type="submit" class="btn" disabled><i class="fas fa-save"></i>Salvar Produto</button>
           </div>
         </form>
-		<form id="deleteForm" action="produto-api/apagar" method="post" style="display: none;">
-		    <input type="hidden" name="idProduto" id="deleteId">
-		</form>
+        <form id="deleteForm" action="produto-api/apagar" method="post" style="display: none;">
+          <input type="hidden" name="idProduto" id="deleteId">
+        </form>
       </div>
 
       <div class="table-container">
         <div class="table-header">
           <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
-          <button class="btn btn-primary" id="btn-novo-produto" type="button"><i class="fas fa-plus-circle"></i>Novo Produto</button>
+          <button class="btn btn-primary" id="btn-novo-produto" type="button"><i class="fas fa-plus-circle"></i>Novo
+            Produto</button>
         </div>
 
         <div class="table-actions">
           <input type="text" id="busca" placeholder="Digite para buscar...">
         </div>
-        <table class="appointments-table" id="productsTable"> <thead>
+        <table class="appointments-table" id="productsTable">
+          <thead>
             <tr>
               <th>Nome</th>
               <th>Código</th>
@@ -167,9 +175,9 @@
             </tr>
           </thead>
           <tbody>
-			<tr th:if="${produtos == null or produtos.empty}">
-				<td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
-			</tr>
+            <tr th:if="${produtos == null or produtos.empty}">
+              <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
+            </tr>
             <tr th:each="p : ${produtos}">
               <td class="nome-produto" th:text="${p.nomeProduto}"></td>
               <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
@@ -180,13 +188,16 @@
               <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
               <td class="estoque-atual" th:text="${p.estoqueAtual}"></td>
               <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
-              <td><span class="status-badge status-ok">Em estoque</span></td> <td>
-                <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i class="fas fa-edit"></i></button>
-                <button class="btn-icon btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir"><i class="fas fa-trash"></i></button>
+              <td><span class="status-badge status-ok">Em estoque</span></td>
+              <td>
+                <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i
+                    class="fas fa-edit"></i></button>
+                <button class="btn-icon btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir"><i
+                    class="fas fa-trash"></i></button>
                 <button class="btn-icon btn-view" title="Detalhes"><i class="fas fa-eye"></i></button>
               </td>
             </tr>
-            </tbody>
+          </tbody>
         </table>
         <div class="pagination">
           <button>Anterior</button>
@@ -210,151 +221,152 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-		const form = document.getElementById('formNovoProduto');
-		const formTitulo = document.getElementById('formTitulo');
-		const botaoSalvar = form.querySelector('button[type="submit"]');
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('formNovoProduto');
+      const formTitulo = document.getElementById('formTitulo');
+      const botaoSalvar = form.querySelector('button[type="submit"]');
 
-		const camposObrigatorios = [
-		  'nome-produto',
-		  'preco-custo',
-		  'preco-venda',
-		  'categoria',
-		  'estoque-atual',
-		  'estoque-minimo'
-		];
+      const camposObrigatorios = [
+        'nome-produto',
+        'preco-custo',
+        'preco-venda',
+        'categoria',
+        'estoque-atual',
+        'estoque-minimo'
+      ];
 
-		function verificarCampos() {
-		  let todosPreenchidos = true;
+      function verificarCampos() {
+        let todosPreenchidos = true;
 
-		  camposObrigatorios.forEach(id => {
-		    const campo = document.getElementById(id);
-		    if (campo) {
-		      if (campo.value.trim() === '') {
-		        todosPreenchidos = false;
-		      }
-		    }
-		  });
+        camposObrigatorios.forEach(id => {
+          const campo = document.getElementById(id);
+          if (campo) {
+            if (campo.value.trim() === '') {
+              todosPreenchidos = false;
+            }
+          }
+        });
 
-		  botaoSalvar.disabled = !todosPreenchidos;
-		}
+        botaoSalvar.disabled = !todosPreenchidos;
+      }
 
-		// Executa verificação ao carregar a página
-		verificarCampos();
+      // Executa verificação ao carregar a página
+      verificarCampos();
 
-		// Verifica a cada input
-		camposObrigatorios.forEach(id => {
-		  const campo = document.getElementById(id);
-		  if (campo) {
-		    campo.addEventListener('input', verificarCampos);
-		  }
-		});
+      // Verifica a cada input
+      camposObrigatorios.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) {
+          campo.addEventListener('input', verificarCampos);
+        }
+      });
 
-		// Mostrar e ocultar o formulário
-		const btnNovoProduto = document.getElementById('btn-novo-produto');
-		const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
-		const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
+      // Mostrar e ocultar o formulário
+      const btnNovoProduto = document.getElementById('btn-novo-produto');
+      const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
+      const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
 
-		btnNovoProduto.addEventListener('click', () => {
-			form.querySelector('#idProduto').value = "";
-			formTitulo.innerHTML = '<i class="fas fa-plus"></i> Adicionar Novo Produto';
-			formProdutoContainer.style.display = 'block';
-			form.scrollIntoView({ behavior: 'smooth' });
-		});
+      btnNovoProduto.addEventListener('click', () => {
+        form.querySelector('#idProduto').value = "";
+        formTitulo.innerHTML = '<i class="fas fa-plus"></i> Adicionar Novo Produto';
+        formProdutoContainer.style.display = 'block';
+        form.scrollIntoView({ behavior: 'smooth' });
+      });
 
-		btnCancelarNovoProduto.addEventListener('click', () => {
-		  form.reset();
-		  formProdutoContainer.style.display = 'none';
-		  verificarCampos(); // Desativa o botão novamente
-		});
-		
-	    $('#formNovoProduto').on('submit', function() {
-	        $(this).find('.valores').each(function() {
-	            const valorLimpo = $(this).cleanVal();
-				let valorParaEnviar = (parseFloat(valorLimpo) / 100).toFixed(2);
-	            if (isNaN(valorParaEnviar)) { valorParaEnviar = ''; }
-	            $(this).val(valorParaEnviar);
-	        });
-	        return true;
-	    });
-		
-	  // O restante do script permanece igual
-	  const editButtons = document.querySelectorAll('.btn-edit');
-	  editButtons.forEach(function(button) {
-	    button.addEventListener('click', function() {
-			formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Produto';
-		if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
+      btnCancelarNovoProduto.addEventListener('click', () => {
+        form.reset();
+        formProdutoContainer.style.display = 'none';
+        verificarCampos(); // Desativa o botão novamente
+      });
+
+      $('#formNovoProduto').on('submit', function () {
+        $(this).find('.valores').each(function () {
+          const valorLimpo = $(this).cleanVal();
+          let valorParaEnviar = (parseFloat(valorLimpo) / 100).toFixed(2);
+          if (isNaN(valorParaEnviar)) { valorParaEnviar = ''; }
+          $(this).val(valorParaEnviar);
+        });
+        return true;
+      });
+
+      // O restante do script permanece igual
+      const editButtons = document.querySelectorAll('.btn-edit');
+      editButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Produto';
+          if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
             formProdutoContainer.style.display = 'block';
             formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
-	      const row = button.closest('tr');
-	      const id = button.dataset.id;
-	      const nome = row.querySelector('.nome-produto').textContent.trim();
-	      const codigo = row.querySelector('.codigo-produto').textContent.trim();
-	      const categoria = row.querySelector('.categoria').textContent.trim();
-	      const custo = row.querySelector('.preco-custo').textContent.trim();
-	      const venda = row.querySelector('.preco-venda').textContent.trim();
-	      const fornecedor = row.querySelector('.fornecedor').textContent.trim();
-	      const estoqueA = row.querySelector('.estoque-atual').textContent.trim();
-	      const estoqueM = row.querySelector('.estoque-minimo').textContent.trim();
-	      const descricao = row.querySelector('.descricao').textContent.trim();
-	
-	      document.getElementById('idProduto').value = id;
-	      document.getElementById('codigo-produto').value = codigo;
-	      document.getElementById('nome-produto').value = nome;
-	      document.getElementById('categoria').value = categoria;
-	      document.getElementById('preco-custo').value = custo;
-	      document.getElementById('preco-venda').value = venda;
-	      document.getElementById('fornecedor').value = fornecedor;
-	      document.getElementById('estoque-atual').value = estoqueA;
-	      document.getElementById('estoque-minimo').value = estoqueM;
-	      document.getElementById('descricao').value = descricao;
-		});
-	});
-	
-	const deleteButtons = document.querySelectorAll('.btn-delete');
-		deleteButtons.forEach(function(button) {
-			button.addEventListener('click', function(e) {
-	        e.preventDefault();
-	        const id = button.dataset.id;
-	        Swal.fire({
-				title: 'Você tem certeza?',
-				text: "Esta ação não poderá ser desfeita!",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#d33',
-				cancelButtonColor: '#3085d6',
-				confirmButtonText: 'Sim, excluir!',
-				cancelButtonText: 'Cancelar'
-	        }).then((result) => {
-	          if (result.isConfirmed) {
-	            document.getElementById('deleteId').value = id;
-	            document.getElementById('deleteForm').submit();
-				}
-			});
-		});
-	});
-	
+          const row = button.closest('tr');
+          const id = button.dataset.id;
+          const nome = row.querySelector('.nome-produto').textContent.trim();
+          const codigo = row.querySelector('.codigo-produto').textContent.trim();
+          const categoria = row.querySelector('.categoria').textContent.trim();
+          const custo = row.querySelector('.preco-custo').textContent.trim();
+          const venda = row.querySelector('.preco-venda').textContent.trim();
+          const fornecedor = row.querySelector('.fornecedor').textContent.trim();
+          const estoqueA = row.querySelector('.estoque-atual').textContent.trim();
+          const estoqueM = row.querySelector('.estoque-minimo').textContent.trim();
+          const descricao = row.querySelector('.descricao').textContent.trim();
 
-	//	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
-	const busca = document.getElementById('busca')
-	const tabela = document.querySelector('table');
-	const linhas = tabela.querySelectorAll('tbody tr');
+          document.getElementById('idProduto').value = id;
+          document.getElementById('codigo-produto').value = codigo;
+          document.getElementById('nome-produto').value = nome;
+          document.getElementById('categoria').value = categoria;
+          document.getElementById('preco-custo').value = custo;
+          document.getElementById('preco-venda').value = venda;
+          document.getElementById('fornecedor').value = fornecedor;
+          document.getElementById('estoque-atual').value = estoqueA;
+          document.getElementById('estoque-minimo').value = estoqueM;
+          document.getElementById('descricao').value = descricao;
+        });
+      });
 
-	busca.addEventListener('input', function (){
-		const termoBusca = busca.value.toLowerCase();
-		
-		linhas.forEach(function(linha) {
-	        const textoLinha = linha.textContent.toLowerCase();
+      const deleteButtons = document.querySelectorAll('.btn-delete');
+      deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          const id = button.dataset.id;
+          Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Esta ação não poderá ser desfeita!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4CAF50',
+            cancelButtonColor: '#E0E0E0',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              document.getElementById('deleteId').value = id;
+              document.getElementById('deleteForm').submit();
+            }
+          });
+        });
+      });
 
-	        if (textoLinha.includes(termoBusca)) {
-	            linha.style.display = '';
-	        } else {
-	            linha.style.display = 'none';
-	        }
-		})
-	})
-});
+
+      //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
+      const busca = document.getElementById('busca')
+      const tabela = document.querySelector('table');
+      const linhas = tabela.querySelectorAll('tbody tr');
+
+      busca.addEventListener('input', function () {
+        const termoBusca = busca.value.toLowerCase();
+
+        linhas.forEach(function (linha) {
+          const textoLinha = linha.textContent.toLowerCase();
+
+          if (textoLinha.includes(termoBusca)) {
+            linha.style.display = '';
+          } else {
+            linha.style.display = 'none';
+          }
+        })
+      })
+    });
   </script>
 </body>
+
 </html>
