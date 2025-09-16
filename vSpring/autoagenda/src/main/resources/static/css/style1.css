@@ -433,6 +433,12 @@ table tbody tr:hover {
   margin-bottom: 20px;
 }
 
+/* Padronização da caixa de busca */
+#busca {
+    max-width: 320px;
+    width: 100%;
+}
+
 .table-actions input {
   padding: 8px 12px;
   border: 1px solid var(--cor-borda);
