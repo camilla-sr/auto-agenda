@@ -412,8 +412,11 @@ body {
   color: var(--cor-primaria);
 }
 
-.table-filters {
+.table-filters .form-col{
   margin-bottom: 20px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
 }
 
 .table-responsive {

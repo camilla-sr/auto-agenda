@@ -439,15 +439,15 @@ body {
    width: auto;
 }
 
-.table-actions {
-  margin-bottom: 20px;
-}
 
-.table-actions input {
+
+.table-actions input [type="text"] {
   padding: 8px 12px;
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
-  width: 250px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 15px;
   font-family: 'Poppins', sans-serif;
 }
 
