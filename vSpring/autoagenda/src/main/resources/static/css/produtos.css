@@ -294,17 +294,11 @@ body {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 10px 10px 35px;
   border: 1px solid var(--cor-borda);
   border-radius: 6px;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
-}
-
-.input-wrapper > input,
-.input-wrapper > select,
-.input-wrapper > textarea {
-    padding-left: 35px;
 }
 
 .form-group textarea {
@@ -450,7 +444,7 @@ body {
 }
 
 .table-actions input {
-  padding: 10px 12px;
+  padding: 8px 12px;
   border: 1px solid var(--cor-borda);
   border-radius: 6px;
   width: 250px;

@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* Variáveis de cores */
@@ -277,21 +278,27 @@ body {
   font-weight: 500;
 }
 
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: var(--cor-texto-escuro);
+  opacity: 0.6;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 10px 10px 35px;
   border: 1px solid var(--cor-borda);
   border-radius: 6px;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
-}
-
-.input-wrapper > input,
-.input-wrapper > select,
-.input-wrapper > textarea {
-    padding-left: 35px;
 }
 
 .form-group textarea {
@@ -814,7 +821,5 @@ table tbody tr:hover {
   }
   100% {
     transform: rotate(360deg);
-  
-} 
-
+  }
 }
