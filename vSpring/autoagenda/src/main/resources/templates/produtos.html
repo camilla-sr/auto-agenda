@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/css/main-styles.css">
+  <link rel="stylesheet" href="/css/produtos.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -189,7 +189,7 @@
               <td class="estoque-atual" th:text="${p.estoqueAtual}"></td>
               <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
               <td><span class="status-badge status-ok">Em estoque</span></td>
-              
+
               <td class="action-buttons">
                 <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i
                     class="fas fa-edit"></i></button>
