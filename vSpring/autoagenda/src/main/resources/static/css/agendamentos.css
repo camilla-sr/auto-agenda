@@ -279,7 +279,13 @@ body {
 }
 
 .input-wrapper {
-  position: relative;
+  padding: 8px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 5px;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .input-icon {
