@@ -418,7 +418,8 @@
             badge.style.backgroundColor = 'var(--cor-alerta)';
           } else {
             badge.textContent = 'Em estoque';
-            badge.classList.add('status-ok'); // usa o verde já definido no CSS
+            badge.style.backgroundColor = 'var(--cor-sucesso)';
+            // badge.classList.add('status-ok'); // usa o verde já definido no CSS
           }
         });
       }
