@@ -205,9 +205,11 @@
               <td class="nome-produto" th:text="${p.nomeProduto}"></td>
               <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
               <td class="categoria" th:text="${p.categoria}" style="display:none;"></td>
-              <td class="preco-custo valores" th:text="${'R$ ' + #numbers.formatDecimal(p.precoCusto, 1, 'POINT', 2, 'COMMA')}"
-                style="display:none;"></td>
-              <td class="preco-venda valores"
+              <td class="preco-custo valores" th:attr="data-valor=${p.precoCusto}"
+                th:text="${'R$ '+ #numbers.formatDecimal(p.precoCusto, 1, 'POINT', 2, 'COMMA')}" style="display:none;">
+              </td>
+
+              <td class="preco-venda valores" th:attr="data-valor=${p.precoVenda}"
                 th:text="${'R$ ' + #numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}"></td>
               <td class="fornecedor" th:text="${p.fornecedor}" style="display:none;"></td>
               <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
@@ -324,8 +326,8 @@
           const nome = row.querySelector('.nome-produto').textContent.trim();
           const codigo = row.querySelector('.codigo-produto').textContent.trim();
           const categoria = row.querySelector('.categoria').textContent.trim();
-          const custo = row.querySelector('.preco-custo').textContent.trim();
-          const venda = row.querySelector('.preco-venda').textContent.trim();
+          const custo = row.querySelector('.preco-custo').dataset.valor;
+          const venda = row.querySelector('.preco-venda').dataset.valor;
           const fornecedor = row.querySelector('.fornecedor').textContent.trim();
           const estoqueA = row.querySelector('.estoque-atual').textContent.trim();
           const estoqueM = row.querySelector('.estoque-minimo').textContent.trim();
