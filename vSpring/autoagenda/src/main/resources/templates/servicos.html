@@ -1,220 +1,256 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Serviços - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/fontawesome/css/all.min.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/css/style1.css">
-  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/js/sweetalert2.all.min.js"></script>
-  <script src="/js/validacao.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Serviços - Centro Automotivo JJ</title>
+	<link rel="stylesheet" href="/fontawesome/css/all.min.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="/css/style1.css">
+	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="/js/sweetalert2.all.min.js"></script>
+	<script src="/js/validacao.js"></script>
 </head>
+
 <body>
 
 	<div th:replace="~{barra :: barra}"></div>
 
-  <main class="main-content">
-    <div class="container">
+	<main class="main-content">
+		<div class="container">
 
-      <div class="page-header">
-        <h2><i class="fas fa-tools"></i> Gerenciamento de Serviços</h2>
-        <p>Controle e cadastre novos serviços</p>
-      </div>
+			<div class="page-header">
+				<h2><i class="fas fa-tools"></i> Gerenciamento de Serviços</h2>
+				<p>Controle e cadastre novos serviços</p>
+			</div>
 
-      <div class="table-container">
-        <div class="table-header">
-          <h3><i class="fas fa-clipboard-list"></i> Lista de Serviços</h3>
-		  <button id="btn-novo-servico" class="btn"><i class="fas fa-plus-circle"></i>Novo Serviço</button>
-        </div>
+			<div class="table-container">
+				<div class="table-header">
+					<h3><i class="fas fa-clipboard-list"></i> Lista de Serviços</h3>
+					<button id="btn-novo-servico" class="btn"><i class="fas fa-plus-circle"></i>Novo Serviço</button>
+				</div>
 
-		<div class="table-actions">
-          <input type="text" name="busca" id="busca" placeholder="Digite para buscar...">
-        </div>
-        <table class="table appointments-table">
-          <thead>
-            <tr>
-              <th>Serviço</th>
-              <th>Descrição</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-			<tr th:if="${servicos == null or servicos.empty}">
-				<td colspan="3" style="text-align: center;">Nenhum resultado encontrado</td>
-			</tr>
-            <tr th:each="serv : ${servicos}">
-              <td class="nome-servico" th:text="${serv.nomeServico}"></td>
-              <td class="desc-servico" th:text="${serv.descServico}"></td>
-			  
-              <td class="action-buttons">
-                <button class="btn btn-action edit-btn" th:attr="data-id=${serv.idServico}" title="Editar">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-action delete-btn" th:attr="data-id=${serv.idServico}" title="Excluir">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-	  
-	  <div class="form-container" id="formNovoServicoContainer" style="display: none">
-          <div class="form-header">
-            <h3><i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço</h3>
-          </div>
+				<div class="table-actions">
+					<input type="text" name="busca" id="busca" placeholder="Digite para buscar...">
+				</div>
+				<table class="table appointments-table">
+					<thead>
+						<tr>
+							<th>Serviço</th>
+							<th>Descrição</th>
+							<th>Ações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${servicos == null or servicos.empty}">
+							<td colspan="3" style="text-align: center;">Nenhum resultado encontrado</td>
+						</tr>
+						<tr th:each="serv : ${servicos}">
+							<td class="nome-servico" th:text="${serv.nomeServico}"></td>
+							<td class="desc-servico" th:text="${serv.descServico}"></td>
 
-          <form method="post"action="/servico-api/salvar" id="form-servico">
-  			<input type="hidden" name="idServico" id="idServico" readonly>
-            <div class="form-row">
-              <div class="form-col">
-                <div class="form-group">
-                  <label for="nome-servico">Nome do Serviço</label>
-                  <input type="text" id="nome-servico" name="nomeServico" class="form-input" placeholder="Ex: Troca de óleo" >
-                </div>
-              </div>
-              <div class="form-col">
-                <div class="form-group">
-                  <label for="descricao-servico">Descrição</label>
-                  <input type="text" id="descricao-servico" name="descServico" class="form-input" placeholder="Ex: Troca de óleo do motor" >
-                </div>
-              </div>
-            </div>
+							<td class="action-buttons">
+								<button class="btn btn-action edit-btn" th:attr="data-id=${serv.idServico}"
+									title="Editar">
+									<i class="fas fa-edit"></i>
+								</button>
+								<button class="btn btn-action delete-btn" th:attr="data-id=${serv.idServico}"
+									title="Excluir">
+									<i class="fas fa-trash"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 
-            <div class="form-actions">
-              <button type="reset" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Cancelar
-              </button>
-              <button type="submit" class="btn">
-                <i class="fas fa-save"></i> Salvar Serviço
-              </button>
-            </div>
-          </form>
-  		<form id="deleteForm" action="servico-api/apagar" method="post" style="display: none;">
-  		    <input type="hidden" name="idServico" id="deleteId">
-  		</form>
+			<div class="form-container" id="formNovoServicoContainer" style="display: none">
+				<div class="form-header">
+					<h3><i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço</h3>
+				</div>
 
-    </div>
-  </main>
+				<form method="post" action="/servico-api/salvar" id="form-servico">
+					<input type="hidden" name="idServico" id="idServico" readonly>
+					<div class="form-row">
+						<div class="form-col">
+							<div class="form-group">
+								<label for="nome-servico">Nome do Serviço</label>
+								<input type="text" id="nome-servico" name="nomeServico" class="form-input"
+									placeholder="Ex: Troca de óleo">
+							</div>
+						</div>
+						<div class="form-col">
+							<div class="form-group">
+								<label for="descricao-servico">Descrição</label>
+								<input type="text" id="descricao-servico" name="descServico" class="form-input"
+									placeholder="Ex: Troca de óleo do motor">
+							</div>
+						</div>
+					</div>
 
-  <!-- Rodapé -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <i class="fas fa-car-alt"></i>
-          <span class="logo-highlight">Centro Automotivo</span> JJ
-        </div>
-        <p>&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados 2025.</p>
-      </div>
-    </div>
-  </footer>
-  <script>
-	document.addEventListener('DOMContentLoaded', function() {
-	    const btnNovoServico = document.getElementById('btn-novo-servico');
-	    const formServicoContainer = document.getElementById('formNovoServicoContainer');
-	    const btnCancelarServico = document.querySelector('#form-servico button[type="reset"]');
-	    const tableContainerForScroll = document.querySelector('.table-container');
+					<div class="form-actions">
+						<button type="reset" class="btn btn-secondary">
+							<i class="fas fa-times"></i> Cancelar
+						</button>
+						<button type="submit" class="btn">
+							<i class="fas fa-save"></i> Salvar Serviço
+						</button>
+					</div>
+				</form>
+				<form id="deleteForm" action="servico-api/apagar" method="post" style="display: none;">
+					<input type="hidden" name="idServico" id="deleteId">
+				</form>
 
-	    if (btnNovoServico && formServicoContainer) {
-	      btnNovoServico.addEventListener('click', function () {
-	        if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
-	          formServicoContainer.style.display = 'block';
-	          formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-	        }
-	      });
-	    }
+			</div>
+	</main>
 
-	    if (btnCancelarServico && formServicoContainer && tableContainerForScroll) {
-	      btnCancelarServico.addEventListener('click', function () {
-	        formServicoContainer.style.display = 'none';
-	        const formNovo = document.getElementById('form-servico');
-	        if (formNovo) {
-	          formNovo.reset();
-	        }
-	        tableContainerForScroll.scrollIntoView({ behavior: 'smooth', block: 'start' });
-	      });
-	    }
-		
-	  const formTitulo = document.querySelector('.form-header h3');
-	  const submitBtn = document.querySelector('button[type="submit"]');
-	  const nomeInput = document.getElementById('nome-servico');
-	  const descInput = document.getElementById('descricao-servico');
-	  const idInput = document.getElementById('idServico');
+	<!-- Rodapé -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-logo">
+					<i class="fas fa-car-alt"></i>
+					<span class="logo-highlight">Centro Automotivo</span> JJ
+				</div>
+				<p>&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados 2025.</p>
+			</div>
+		</div>
+	</footer>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const btnNovoServico = document.getElementById('btn-novo-servico');
+			const formServicoContainer = document.getElementById('formNovoServicoContainer');
+			const btnCancelarServico = document.querySelector('#form-servico button[type="reset"]');
+			const tableContainerForScroll = document.querySelector('.table-container');
 
-	  function atualizarEstadoBotao() {
-	    const nomeValido = nomeInput.value.trim() !== '';
-	    const descValida = descInput.value.trim() !== '';
-	    if (!idInput.value) {
-	      submitBtn.disabled = !(nomeValido && descValida);
-	    }
-	  }
+			if (btnNovoServico && formServicoContainer) {
+				btnNovoServico.addEventListener('click', function () {
+					if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
+						formServicoContainer.style.display = 'block';
+						formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				});
+			}
 
-	  nomeInput.addEventListener('input', atualizarEstadoBotao);
-	  descInput.addEventListener('input', atualizarEstadoBotao);
+			if (btnCancelarServico && formServicoContainer && tableContainerForScroll) {
+				btnCancelarServico.addEventListener('click', function () {
+					formServicoContainer.style.display = 'none';
+					const formNovo = document.getElementById('form-servico');
+					if (formNovo) {
+						formNovo.reset();
+					}
+					tableContainerForScroll.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				});
+			}
 
-	  // Modo "novo" (padrão)
-	  function resetFormulario() {
-	    formTitulo.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço';
-	    submitBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Serviço';
-	    submitBtn.disabled = true;
-	  }
+			const formTitulo = document.querySelector('.form-header h3');
+			const submitBtn = document.querySelector('button[type="submit"]');
+			const nomeInput = document.getElementById('nome-servico');
+			const descInput = document.getElementById('descricao-servico');
+			const idInput = document.getElementById('idServico');
 
-	  // Reset quando clicar em "Cancelar"
-	  document.querySelector('button[type="reset"]').addEventListener('click', function() {
-		idInput.value = '';
-	    nomeInput.value = '';
-	    descInput.value = '';
-	    resetFormulario();
-	  });
+			function atualizarEstadoBotao() {
+				const nomeValido = nomeInput.value.trim() !== '';
+				const descValida = descInput.value.trim() !== '';
+				if (!idInput.value) {
+					submitBtn.disabled = !(nomeValido && descValida);
+				}
+			}
 
-	  // Editar
-	  document.querySelectorAll('.edit-btn').forEach(function(button) {
-	    button.addEventListener('click', function() {
-	    if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
-	      formServicoContainer.style.display = 'block';
-	    }
-	    formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		const row = button.closest('tr');
-		const id = button.dataset.id;
-		const nome = row.querySelector('.nome-servico').textContent.trim();
-		const descricao = row.querySelector('.desc-servico').textContent.trim();
+			nomeInput.addEventListener('input', atualizarEstadoBotao);
+			descInput.addEventListener('input', atualizarEstadoBotao);
 
-		idInput.value = id;
-		nomeInput.value = nome;
-		descInput.value = descricao;
+			// Modo "novo" (padrão)
+			function resetFormulario() {
+				formTitulo.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço';
+				submitBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Serviço';
+				submitBtn.disabled = true;
+			}
 
-		formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
-		submitBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
-		submitBtn.disabled = false;
+			// Reset quando clicar em "Cancelar"
+			document.querySelector('button[type="reset"]').addEventListener('click', function () {
+				idInput.value = '';
+				nomeInput.value = '';
+				descInput.value = '';
+				resetFormulario();
+			});
+
+			// Editar
+			document.querySelectorAll('.edit-btn').forEach(function (button) {
+				button.addEventListener('click', function () {
+					if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
+						formServicoContainer.style.display = 'block';
+					}
+					formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					const row = button.closest('tr');
+					const id = button.dataset.id;
+					const nome = row.querySelector('.nome-servico').textContent.trim();
+					const descricao = row.querySelector('.desc-servico').textContent.trim();
+
+					idInput.value = id;
+					nomeInput.value = nome;
+					descInput.value = descricao;
+
+					formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
+					submitBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+					submitBtn.disabled = false;
+				});
+			});
+
+			// Inicializa em modo novo
+			resetFormulario();
+
+
+			//	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
+			const busca = document.getElementById('busca')
+			const tabela = document.querySelector('table');
+			const linhas = tabela.querySelectorAll('tbody tr');
+
+			busca.addEventListener('input', function () {
+				const termoBusca = busca.value.toLowerCase();
+
+				linhas.forEach(function (linha) {
+					const textoLinha = linha.textContent.toLowerCase();
+
+					if (textoLinha.includes(termoBusca)) {
+						linha.style.display = '';
+					} else {
+						linha.style.display = 'none';
+					}
+				})
+			})
+			//=========================================================
+			// CÓDIGO PARA FAZER O BOTÃO DE EXCLUIR FUNCIONAR
+			//=========================================================
+			const deleteButtons = document.querySelectorAll('.delete-btn');
+
+			deleteButtons.forEach(function (button) {
+				button.addEventListener('click', function (e) {
+					e.preventDefault(); // Impede o comportamento padrão do botão
+
+					const id = button.dataset.id;
+
+					Swal.fire({
+						title: 'Você tem certeza?',
+						text: "Esta ação não poderá ser desfeita!",
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonColor: '#4CAF50',
+						cancelButtonColor: '#6F6F6F',
+						confirmButtonText: 'Sim, excluir!',
+						cancelButtonText: 'Cancelar'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							// Se o usuário confirmar, preenche o ID no formulário de exclusão e envia
+							document.getElementById('deleteId').value = id;
+							document.getElementById('deleteForm').submit();
+						}
+					});
+				});
+			});
 		});
-	});
-
-	  // Inicializa em modo novo
-	  resetFormulario();
-	  
-
-	  //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
-	  const busca = document.getElementById('busca')
-	  const tabela = document.querySelector('table');
-	  const linhas = tabela.querySelectorAll('tbody tr');
-
-	  busca.addEventListener('input', function (){
-	  	const termoBusca = busca.value.toLowerCase();
-	  	
-	  	linhas.forEach(function(linha) {
-	          const textoLinha = linha.textContent.toLowerCase();
-
-	          if (textoLinha.includes(termoBusca)) {
-	              linha.style.display = '';
-	          } else {
-	              linha.style.display = 'none';
-	          }
-	  	})
-	  })
-});
-  </script>
+	</script>
 </body>
+
 </html>
