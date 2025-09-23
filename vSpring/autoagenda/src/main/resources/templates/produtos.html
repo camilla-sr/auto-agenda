@@ -347,19 +347,13 @@
       });
 
       // Excluir
-      //=========================================================
-      // SOLUÇÃO 2: DELEGAÇÃO DE EVENTOS (MAIS ROBUSTA)
-      //=========================================================
-      const tabelaProdutos = document.getElementById('productsTable'); // Pega a tabela pelo ID
+      const deleteButtons = document.querySelectorAll('.btn-delete');
 
-      tabelaProdutos.addEventListener('click', function (e) {
-        // Verifica se o elemento clicado (ou seu pai) é um botão de exclusão
-        const deleteButton = e.target.closest('.delete-btn');
+      deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
 
-        if (deleteButton) {
-          e.preventDefault(); // Impede qualquer ação padrão
-
-          const id = deleteButton.dataset.id; // Pega o ID do botão
+          const id = button.dataset.id;
 
           Swal.fire({
             title: 'Você tem certeza?',
@@ -372,11 +366,25 @@
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
-              document.getElementById('deleteId').value = id;
-              document.getElementById('deleteForm').submit();
+              // Usa a API Fetch para enviar a requisição
+              fetch('/produto-api/apagar', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'idProduto=' + id
+              })
+                .then(response => {
+                  // Após a exclusão, recarrega a página para mostrar o resultado
+                  window.location.reload();
+                })
+                .catch(error => {
+                  console.error('Erro ao excluir o produto:', error);
+                  Swal.fire('Erro!', 'Não foi possível excluir o produto.', 'error');
+                });
             }
           });
-        }
+        });
       });
 
       //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
