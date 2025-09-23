@@ -205,7 +205,7 @@
               <td class="nome-produto" th:text="${p.nomeProduto}"></td>
               <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
               <td class="categoria" th:text="${p.categoria}" style="display:none;"></td>
-              <td class="preco-custo valores" th:text="${#numbers.formatDecimal(p.precoCusto, 1, 'POINT', 2, 'COMMA')}"
+              <td class="preco-custo valores" th:text="${'R$ ' + #numbers.formatDecimal(p.precoCusto, 1, 'POINT', 2, 'COMMA')}"
                 style="display:none;"></td>
               <td class="preco-venda valores"
                 th:text="${'R$ ' + #numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}"></td>
