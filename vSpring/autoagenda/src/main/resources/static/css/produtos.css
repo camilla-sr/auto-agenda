@@ -477,29 +477,21 @@ table tbody tr:hover,
   background-color: var(--cor-fundo-claro);
 }
 
-
-/* Status badge - Base (sem cor de fundo) */
-.status-badge {
-  display: inline-block;
+/* Status badge */
+.status-badge 
+.status-badge.status-low  { background-color: var(--cor-alerta); } /* laranja */
+.status-badge.status-zero { background-color: var(--cor-erro); }   /* vermelho */
+	display: inline-block;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 500;
   text-align: center;
-  color: white; /* Mantém o texto branco, funciona bem em fundos coloridos */
+  color: white;
 }
 
-/* Modificador de cor - Agora muito mais seguro e específico */
-.status-badge.status-ok {
+.status-ok {
   background-color: var(--cor-sucesso);
-}
-
-.status-badge.status-alerta {
-    background-color: var(--cor-alerta); /* Laranja para "Estoque baixo" */
-}
-
-.status-badge.status-critico {
-    background-color: var(--cor-erro); /* Vermelho para "Em falta" */
 }
 
 /* Paginação */

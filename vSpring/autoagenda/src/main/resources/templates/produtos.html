@@ -213,11 +213,8 @@
               <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
               <td class="estoque-atual" th:text="${p.estoqueAtual}"></td>
               <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
-              <td th:switch="${p.estoqueStatus}">
-                <span th:case="'ok'" class="status-badge status-ok">Em estoque</span>
-                <span th:case="'alerta'" class="status-badge status-alerta">Estoque Baixo</span>
-                <span th:case="'critico'" class="status-badge status-critico">Em Falta</span>
-              </td>
+              <td><span class="status-badge status-ok">Em estoque</span></td>
+
               <td class="action-buttons">
                 <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i
                     class="fas fa-edit"></i></button>
