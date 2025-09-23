@@ -478,9 +478,7 @@ table tbody tr:hover,
 }
 
 /* Status badge */
-.status-badge 
-.status-badge.status-low  { background-color: var(--cor-alerta); } /* laranja */
-.status-badge.status-zero { background-color: var(--cor-erro); }   /* vermelho */
+.status-badge{
 	display: inline-block;
   padding: 4px 8px;
   border-radius: 4px;
@@ -489,6 +487,9 @@ table tbody tr:hover,
   text-align: center;
   color: white;
 }
+
+.status-badge.status-low  { background-color: var(--cor-alerta); } /* laranja */
+.status-badge.status-zero { background-color: var(--cor-erro); }   /* vermelho */
 
 .status-ok {
   background-color: var(--cor-sucesso);
