@@ -201,6 +201,7 @@
             <tr th:if="${produtos == null or produtos.empty}">
               <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
             </tr>
+            <!--Cria a mascara do preenchimento do valor dos produtos-->
             <tr th:each="p : ${produtos}">
               <td class="nome-produto" th:text="${p.nomeProduto}"></td>
               <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
@@ -343,6 +344,8 @@
           document.getElementById('estoque-atual').value = estoqueA;
           document.getElementById('estoque-minimo').value = estoqueM;
           document.getElementById('descricao').value = descricao;
+
+          verificarCampos(); // Habilita o botão se os campos estiverem preenchidos
         });
       });
 
