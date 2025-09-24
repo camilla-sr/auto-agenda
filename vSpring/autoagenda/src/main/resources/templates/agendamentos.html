@@ -377,9 +377,9 @@
 	  	  	
 	  	  editButtons.forEach(function(button) {
 	  	    button.addEventListener('click', function() {
-	  		if (formProdutoContainer.style.display === 'none' || formProdutoContainer.style.display === '') {
-	              formProdutoContainer.style.display = 'block';
-	              formProdutoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	  		if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+	              formContainer.style.display = 'block';
+	              formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	            }
 				const row = button.closest('tr');
 	  	
