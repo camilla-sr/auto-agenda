@@ -24,6 +24,7 @@ public class Rotas {
 	@Autowired private FuncionarioRepository repoFunc;
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private ProdutoRepository repoProd;
+	@Autowired private ProdutoRepository pRepository;
 	@Autowired private AgendamentoRepository repoAg;
 	
 	@ModelAttribute
@@ -93,10 +94,35 @@ public class Rotas {
     public String produtos(HttpSession session, Model model) {
     	model.addAttribute("totalProdutos", repoProd.count());
     	model.addAttribute("estoqueBaixo", repoProd.countByEstoqueAtualLessThan(5));
+		model.addAttribute("esgotados", repoProd.countByEstoqueAtualEquals(0)); // Conta produtos com estoque exatamente zero
 		model.addAttribute("precoEstoque", somaPrecoCusto());
     	model.addAttribute("produtos", repoProd.findAll());
+
+		// Garante que o valor não seja nulo se não houver produtos
+        BigDecimal precoEstoque = repoProd.sumPrecoVendaEstoque();
+        model.addAttribute("precoEstoque", precoEstoque != null ? precoEstoque : BigDecimal.ZERO);
+
+		
     	return verificaUsuario(session, "produtos");
     }
+
+	// @GetMapping("/produtos")
+    // public String viewProdutos(Model model) {
+        
+    //     // 1. Busca todos os produtos (lógica que estava faltando)
+    //     model.addAttribute("produtos", pRepository.findAll());
+
+    //     // 2. Calcula os totais para os cards usando os novos métodos do repositório
+    //     model.addAttribute("totalProdutos", pRepository.count());
+    //     model.addAttribute("estoqueBaixo", pRepository.countByEstoqueBaixo());
+    //     model.addAttribute("esgotados", pRepository.countByEstoqueAtualEquals(0)); // <-- A VARIÁVEL QUE FALTAVA!
+        
+    //     // Garante que o valor não seja nulo se não houver produtos
+    //     BigDecimal precoEstoque = pRepository.sumPrecoVendaEstoque();
+    //     model.addAttribute("precoEstoque", precoEstoque != null ? precoEstoque : BigDecimal.ZERO);
+
+    //     return "produtos"; // Renderiza a página produtos.html
+    // }
     
     @GetMapping("/agendamentos")
     public String agendamentos(HttpSession session, Model model) {
