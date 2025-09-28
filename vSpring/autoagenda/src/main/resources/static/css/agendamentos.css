@@ -291,16 +291,29 @@ body {
 }
 
 .form-group input,
-.form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px 10px 10px 35px;
+  padding: 10px 10px 10px 35px; /* espaço extra para o ícone */
   border: 1px solid var(--cor-borda);
   border-radius: 6px;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
 }
 
+
+.form-group select {
+  width: 100%;
+  padding: 10px 35px 10px 35px; /* top right bottom left */
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+
+  /* Mantém a seta nativa do navegador */
+  background-color: #fff;
+}
+
+/* Textarea com redimensionamento vertical liberado */
 .form-group textarea {
   resize: vertical;
 }
