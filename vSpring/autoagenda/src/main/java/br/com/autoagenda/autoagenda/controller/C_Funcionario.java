@@ -3,7 +3,6 @@ package br.com.autoagenda.autoagenda.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +17,7 @@ import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
 @Controller
 @RequestMapping("/funcionario-api")
 public class C_Funcionario {
-	@Autowired
-	private FuncionarioRepository repo;
+	@Autowired private FuncionarioRepository repo;
 
 	@PostConstruct
 	private void verificarAdmin() {
@@ -37,13 +35,10 @@ public class C_Funcionario {
 	
 	@PostMapping(value = "/cadastroSistema")
 	public String cadastroFuncionario(@Valid Funcionario func, BindingResult result) {
-		if(result.hasErrors()) {
-			return "redirect:/cadastroSistema?erro=true";
-		}
+		if(result.hasErrors()) { return "redirect:/cadastroSistema?erro=true"; }
 		Funcionario existe = repo.findByUsuario(func.getUsuario());
-		if(existe != null) {
-			return "redirect:/cadastroSistema?erroUsuario=true";
-		}
+		if(existe != null) { return "redirect:/cadastroSistema?erroUsuario=true"; }
+		
 		func.setCpf(func.getCpf().replaceAll("\\D", ""));
 		repo.save(func);
 		return "redirect:/login?sucesso=true";
@@ -52,9 +47,7 @@ public class C_Funcionario {
 	@PostMapping(value = "/logar")
 	public String logar(@RequestParam String usuario, @RequestParam String senha, HttpSession session) {		
 		Funcionario func = repo.findByUsuario(usuario);
-		if(func == null || !func.getSenha().equals(senha)) {
-			return "redirect:/login?usuarioValido=false";
-		}
+		if(func == null || !func.getSenha().equals(senha)) { return "redirect:/login?usuarioValido=false"; }
 		session.setAttribute("usuarioLogado", func);
 	    return "redirect:/";
 	}
@@ -67,10 +60,7 @@ public class C_Funcionario {
 		
 		if(func.getIdFuncionario() != null) {
 			Funcionario usrExistente = repo.findByUsuario(func.getUsuario());
-			if(repo.findByUsuario(func.getUsuario()) != null && !usrExistente.getIdFuncionario().equals(func.getIdFuncionario())) {
-				return "redirect:/funcionarios?erroUsuario=true";
-			}
-						
+			if(repo.findByUsuario(func.getUsuario()) != null && !usrExistente.getIdFuncionario().equals(func.getIdFuncionario())) { return "redirect:/funcionarios?erroUsuario=true"; }
 			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElse(new Funcionario());
 
 			String cpfFormatado = func.getCpf().replaceAll("\\D", "");
@@ -85,19 +75,14 @@ public class C_Funcionario {
 			funcExistente.setUsuario(func.getUsuario());
 			funcExistente.setAcesso(func.getAcesso());
 			
-			if (novaSenha != null && !novaSenha.isEmpty()) {
-				funcExistente.setSenha(novaSenha);
-			}
+			if (novaSenha != null && !novaSenha.isEmpty()) { funcExistente.setSenha(novaSenha); }
 			repo.save(funcExistente);
 			return "redirect:/funcionarios?editado=true";
 		} else {
 			Funcionario existe = repo.findByUsuario(func.getUsuario());
-	        if (existe != null) {
-	            return "redirect:/funcionarios?erroUsuario=true";
-	        }
+	        if (existe != null) { return "redirect:/funcionarios?erroUsuario=true"; }
 			
 			func.setCpf(func.getCpf().replaceAll("\\D", ""));
-			
 			repo.save(func);
 		}
 		return "redirect:/funcionarios?sucesso=true";
@@ -105,9 +90,7 @@ public class C_Funcionario {
 	
 	@PostMapping(value = "/apagar")
 	public String apagarFuncionario(@RequestParam Integer idFuncionario) {
-		if(idFuncionario != null) {
-			repo.deleteById(idFuncionario);
-		}
+		if(idFuncionario != null) { repo.deleteById(idFuncionario); }
 		return "redirect:/funcionarios?apagar=true";
 	}
 }

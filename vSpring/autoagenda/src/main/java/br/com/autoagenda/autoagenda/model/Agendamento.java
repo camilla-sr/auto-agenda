@@ -15,24 +15,14 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "agendamento")
 public class Agendamento {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idAgendamento;
-	@NotNull
-    private LocalDate dataCadastro = LocalDate.now();
-	@NotNull
-    private LocalDate dataPrevisao;
-	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idAgendamento;
+	@NotNull private LocalDate dataCadastro = LocalDate.now();
+	@NotNull private LocalDate dataPrevisao;
     private LocalDate dataConclusao;
-	@NotEmpty
-    private String statusAgendamento;
-	
+	@NotEmpty private String statusAgendamento;
     private String observacao;
-    @NotEmpty
-    private String nomeCliente;
-    @ManyToOne
-    @JoinColumn(name = "fk_servico")
-    private Servico servico;
+    @NotEmpty private String nomeCliente;
+    @ManyToOne @JoinColumn(name = "fk_servico") private Servico servico;
 
     public Agendamento() {}
     
@@ -49,13 +39,10 @@ public class Agendamento {
     
     public Integer getIdAgendamento() { return idAgendamento; }
     public void setIdAgendamento(Integer idAgendamento) { this.idAgendamento = idAgendamento; }
-    
-    
     public String getNomeCliente() { return nomeCliente; }
     public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
     public Servico getServico() { return servico; }
     public void setServico(Servico servico) { this.servico = servico; }
-    
     public LocalDate getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDate dataCadastro) { this.dataCadastro = dataCadastro; }
     public LocalDate getDataPrevisao() { return dataPrevisao; }

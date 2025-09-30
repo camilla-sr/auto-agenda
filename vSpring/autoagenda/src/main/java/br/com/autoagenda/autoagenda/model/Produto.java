@@ -11,26 +11,15 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "produto")
 public class Produto {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idProduto;
-	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idProduto;
 	private String codigoProduto;
-	@NotEmpty
-	private String categoria;
-	@NotEmpty
-	private String nomeProduto;
-	@NotNull
-	private double precoCusto;
-	@NotNull
-	private double precoVenda;
-	
+	@NotEmpty private String categoria;
+	@NotEmpty private String nomeProduto;
+	@NotNull private double precoCusto;
+	@NotNull private double precoVenda;
 	private String fornecedor;
-	@NotNull
-	private int estoqueAtual;
-	@NotNull
-	private int estoqueMinimo;
-	
+	@NotNull private int estoqueAtual;
+	@NotNull private int estoqueMinimo;
 	private String descricao;
 	
 	public Produto() {}

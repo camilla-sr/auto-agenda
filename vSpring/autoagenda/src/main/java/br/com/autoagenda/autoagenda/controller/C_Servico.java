@@ -6,7 +6,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 import jakarta.validation.Valid;
@@ -14,14 +13,11 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/servico-api")
 public class C_Servico {
-	@Autowired
-	private ServicoRepository repo;
+	@Autowired private ServicoRepository repo;
 
 	@PostMapping("/salvar")
 	public String salvar(@Valid Servico serv, BindingResult result) {
-		if(result.hasErrors()) {
-			return "redirect:/servicos?erroServico=true";			
-		}
+		if(result.hasErrors()) { return "redirect:/servicos?erroServico=true"; }
 		
 		if(serv.getIdServico() != null) {
 			Servico existe = repo.findById(serv.getIdServico()).orElse(new Servico());
@@ -29,7 +25,7 @@ public class C_Servico {
 			existe.setDescServico(serv.getDescServico());
 			
 			repo.save(existe);
-			return "redirect:/servicos?editado=true";			
+			return "redirect:/servicos?editado=true";
 		} else {
 			repo.save(serv);
 		}
@@ -38,9 +34,7 @@ public class C_Servico {
 
 	@PostMapping(value = "/apagar")
 	public String apagar(@RequestParam Integer idServico) {
-		if(idServico!= null) {
-			repo.deleteById(idServico);
-		}
+		if(idServico!= null) { repo.deleteById(idServico); }
 		return "redirect:/servicos?apagar=true";
 	}
 }

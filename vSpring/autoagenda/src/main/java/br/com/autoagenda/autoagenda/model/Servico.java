@@ -10,13 +10,9 @@ import jakarta.validation.constraints.NotEmpty;
 @Entity
 @Table(name = "servico")
 public class Servico {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idServico;
-	@NotEmpty
-	private String nomeServico;
-	@NotEmpty
-    private String descServico;
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idServico;
+	@NotEmpty private String nomeServico;
+	@NotEmpty private String descServico;
     
     public Servico() {}
     

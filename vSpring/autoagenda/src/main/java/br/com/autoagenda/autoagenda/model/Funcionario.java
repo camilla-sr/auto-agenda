@@ -10,18 +10,11 @@ import jakarta.validation.constraints.NotEmpty;
 @Entity
 @Table(name = "funcionario")
 public class Funcionario {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idFuncionario;
-	@NotEmpty
-    private String nomeFuncionario;
-	@NotEmpty
-	private String cpf;
-	@NotEmpty
-	private String usuario;
-	@NotEmpty
-	private String senha;
-	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFuncionario;
+	@NotEmpty private String nomeFuncionario;
+	@NotEmpty private String cpf;
+	@NotEmpty private String usuario;
+	@NotEmpty private String senha;
 	private String acesso = "comum";
 	
 	public Funcionario() {}

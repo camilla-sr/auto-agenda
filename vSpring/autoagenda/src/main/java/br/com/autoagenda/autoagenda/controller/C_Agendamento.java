@@ -1,8 +1,6 @@
 package br.com.autoagenda.autoagenda.controller;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.autoagenda.autoagenda.model.Agendamento;
-import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
@@ -26,10 +23,9 @@ public class C_Agendamento {
 	
 	@PostMapping("/salvar")
     public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico, BindingResult result) {
-		if(result.hasErrors()) {
-			return "redirect:/agendamentos?erro=true";
-		}
+		if(result.hasErrors()) { return "redirect:/agendamentos?erro=true"; }
 		Servico servicoSelecionado = repoServ.findById(idServico).orElseThrow();
+		
 		if(ag.getIdAgendamento() != null) {
 			Agendamento existe = repo.findById(ag.getIdAgendamento()).orElse(new Agendamento());
 			
@@ -64,10 +60,7 @@ public class C_Agendamento {
 	
 	@PostMapping(value = "/apagar")
 	public String apagar(@RequestParam Integer idAgendamento) {
-		if(idAgendamento != null) {
-			repo.deleteById(idAgendamento);
-		}
+		if(idAgendamento != null) { repo.deleteById(idAgendamento); }
 		return "redirect:/agendamentos?apagar=true";
 	}
-
 }

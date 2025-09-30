@@ -28,17 +28,15 @@ public class Rotas {
 	
 	@ModelAttribute
     public void usuarioGlobal(HttpSession session, Model model) {
-        if (s.loginAtivo(session)) {
-            model.addAttribute("usuarioLogado", (Funcionario) session.getAttribute("usuarioLogado"));
-        }
+        if (s.loginAtivo(session)) { model.addAttribute("usuarioLogado", (Funcionario) session.getAttribute("usuarioLogado")); }
     }
 	
-	public String verificaUsuario(HttpSession session, String page) {
+	private String verificaUsuario(HttpSession session, String page) {
 		if(!s.loginAtivo(session)) return "login";
 		return page;
 	}
 	
-	public String somaPrecoCusto() {
+	private String somaPrecoCusto() {
 		Float soma = repoProd.sumTotalPrecoCusto();
 		if(soma == null) return "0.00";
 
@@ -51,13 +49,10 @@ public class Rotas {
 	}
 	
 	@GetMapping("/cadastroSistema")
-	public String cadastroSistema() {
-		return "cadastro";
-	}
+	public String cadastroSistema() { return "cadastro"; }
+	
     @GetMapping("/login")
-    public String logar() {
-    	return "login";
-    }
+    public String logar() { return "login"; }
 	
 	@GetMapping("/")
 	public String index(HttpSession session, Model model) {
