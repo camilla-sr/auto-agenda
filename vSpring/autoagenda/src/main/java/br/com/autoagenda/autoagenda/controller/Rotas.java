@@ -93,6 +93,7 @@ public class Rotas {
     public String produtos(HttpSession session, Model model) {
     	model.addAttribute("totalProdutos", repoProd.count());
     	model.addAttribute("estoqueBaixo", repoProd.countByEstoqueAtualLessThan(5));
+    	model.addAttribute("estoqueZerado", repoProd.countByEstoqueAtualLessThan(1));
 		model.addAttribute("precoEstoque", somaPrecoCusto());
     	model.addAttribute("produtos", repoProd.findAll());
     	return verificaUsuario(session, "produtos");
