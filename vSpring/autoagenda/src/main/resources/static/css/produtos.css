@@ -443,6 +443,19 @@ body {
   margin-bottom: 20px;
 }
 
+#busca {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  color: var(--cor-texto-escuro);
+}
+
+
 .table-actions input {
   padding: 8px 12px;
   border: 1px solid var(--cor-borda);
@@ -652,17 +665,7 @@ table tbody tr:hover,
     transform: rotate(360deg);
   }
 }
-#busca {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px 12px;
-  border: 1px solid var(--cor-borda);
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: 'Poppins', sans-serif;
-  background-color: #fff;
-  color: var(--cor-texto-escuro);
-}
+
 @media (max-width: 576px) {
   #busca {
     width: 100%;
