@@ -87,8 +87,8 @@ public class Rotas {
     @GetMapping("/produtos")
     public String produtos(HttpSession session, Model model) {
     	model.addAttribute("totalProdutos", repoProd.count());
-    	model.addAttribute("estoqueBaixo", repoProd.countByEstoqueAtualLessThan(5));
-    	model.addAttribute("estoqueZerado", repoProd.countByEstoqueAtualLessThan(1));
+    	model.addAttribute("estoqueBaixo", repoProd.countByEstoqueAtualBetween(1, 5));		// trocar os valores aqui pra verificar os produtos dentro desse range
+    	model.addAttribute("estoqueZerado", repoProd.countByEstoqueAtual(0));				// trocar o valor aqui pra contar os produtos com valor igual ao passado
 		model.addAttribute("precoEstoque", somaPrecoCusto());
     	model.addAttribute("produtos", repoProd.findAll());
     	return verificaUsuario(session, "produtos");
