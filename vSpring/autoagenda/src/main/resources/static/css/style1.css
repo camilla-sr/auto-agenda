@@ -86,6 +86,10 @@ body {
 }
 
 /* Navegação */
+.logo{
+  text-decoration: none;
+}
+
 .nav-menu {
   display: flex;
 }
