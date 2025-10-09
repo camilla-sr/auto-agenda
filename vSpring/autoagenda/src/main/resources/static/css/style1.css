@@ -83,8 +83,15 @@ body {
 
 }
 
-.logo a{
+.logo a:link a:visited {
   text-decoration: none;
+  color: var(--cor-secundaria);
+  cursor: auto;
+}
+
+.logo a:link:active, a:visited:active {
+  text-decoration: none;
+  color: var(--cor-secundaria);
 }
 
 .logo-highlight {
