@@ -70,6 +70,22 @@ body {
   align-items: center;
 }
 
+.logo .logo-link,
+.logo .logo-link:visited, /* Garante que a cor não mude após o clique */
+.logo .logo-link:active { /* Garante que a cor não mude durante o clique */
+  text-decoration: none; /* Remove o sublinhado */
+  color: inherit;      /* Faz o link herdar a cor do texto do elemento pai (no caso, branco) */
+  transition: opacity 0.2s ease-in-out; /* Adiciona uma transição suave para o efeito de hover */
+}
+
+/*
+ * Adiciona um efeito simples quando o mouse passa por cima do link.
+ * A opacidade diminui um pouco, dando um feedback visual discreto.
+*/
+.logo .logo-link:hover {
+  opacity: 0.8;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -81,17 +97,6 @@ body {
   font-weight: 600;
   text-decoration: none;
 
-}
-
-.logo a:link a:visited {
-  text-decoration: none;
-  color: var(--cor-secundaria);
-  cursor: auto;
-}
-
-.logo a:link:active, a:visited:active {
-  text-decoration: none;
-  color: var(--cor-secundaria);
 }
 
 .logo-highlight {
