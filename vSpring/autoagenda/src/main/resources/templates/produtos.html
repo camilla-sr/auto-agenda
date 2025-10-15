@@ -179,7 +179,40 @@
       </div>
 
 
-      <div class="table-container">
+      <div class="grid-container grid-produtos">
+        <!-- Cabeçalho da Grade -->
+        <div class="grid-header d-none d-md-contents">
+          <div>ID</div>
+          <div>Nome</div>
+          <div>Marca</div>
+          <div>Quantidade</div>
+          <div>Preço</div>
+          <div>Ações</div>
+        </div>
+
+        <!-- Loop do Thymeleaf -->
+        <div class="grid-item" th:each="pr : ${produtos}">
+          <div data-label="ID" th:text="${pr.id_produto}">1</div>
+          <div data-label="Nome" th:text="${pr.nome}">Nome do Produto</div>
+          <div data-label="Marca" th:text="${pr.marca}">Marca</div>
+          <div data-label="Quantidade" th:text="${pr.quantidade}">10</div>
+          <div data-label="Preço" th:text="${'R$ ' + #numbers.formatDecimal(pr.preco, 1, 'POINT', 2, 'COMMA')}">R$ 99,90
+          </div>
+          <div> <!-- Célula de Ações -->
+            <a th:href="@{/produto/editar/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-primary me-1"
+              title="Editar">
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+            <a th:href="@{/produto/remover/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-danger"
+              title="Excluir">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- <div class="table-container">
         <div class="table-header">
           <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
           <button class="btn btn-primary" id="btn-novo-produto" type="button"><i class="fas fa-plus-circle"></i>Novo
@@ -204,8 +237,8 @@
             <tr th:if="${produtos == null or produtos.empty}">
               <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
             </tr>
-            <!--Cria a mascara do preenchimento do valor dos produtos-->
-            <tr th:each="p : ${produtos}">
+            Cria a mascara do preenchimento do valor dos produtos -->
+      <!-- <tr th:each="p : ${produtos}">
               <td class="nome-produto" th:text="${p.nomeProduto}"></td>
               <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
               <td class="categoria" th:text="${p.categoria}" style="display:none;"></td>
@@ -230,13 +263,13 @@
               </td>
             </tr>
           </tbody>
-        </table>
-        <div class="pagination">
-          <button>Anterior</button>
-          <span>Página 1 de X</span>
-          <button>Próximo</button>
-        </div>
+        </table> -->
+      <div class="pagination">
+        <button>Anterior</button>
+        <span>Página 1 de X</span>
+        <button>Próximo</button>
       </div>
+    </div>
     </div>
 
     <div class="bootstrap-iso">
