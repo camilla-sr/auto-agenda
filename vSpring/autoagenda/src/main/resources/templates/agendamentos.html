@@ -5,8 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos - Centro Automotivo JJ</title>
+  <link rel="stylesheet" href="/css/custom.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="/css/agendamentos.css">
+  <link rel="stylesheet" href="/css/custom.css">
+
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/js/sweetalert2.all.min.js"></script>
@@ -123,9 +126,9 @@
                     th:text="${ag.servico.nomeServico}"> </span>
                   <span th:if="${ag.servico == null or ag.servico.nomeServico == null}">
                 </td>
-                <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd/MM/yyyy')}"
+                <!-- <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataCadastro, 'yyyy-MM-dd')}">
-                </td>
+                </td> -->
                 <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
                 </td>

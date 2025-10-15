@@ -1,0 +1,41 @@
+/* Media query para telas menores que 768px (tablets e celulares) */
+@media (max-width: 767.98px) {
+  /* Esconde o cabeçalho da tabela */
+  .table-responsive-cards thead {
+    display: none;
+  }
+
+  /* Transforma a tabela, a linha e as células em blocos */
+  .table-responsive-cards,
+  .table-responsive-cards tbody,
+  .table-responsive-cards tr,
+  .table-responsive-cards td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Transforma cada linha em um card */
+  .table-responsive-cards tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: .25rem;
+    padding: 1rem;
+  }
+
+  .table-responsive-cards td {
+    border: none;
+    padding-left: 50%; /* Espaço para o "label" */
+    position: relative;
+    text-align: left;
+  }
+
+  /* Adiciona o "label" usando o cabeçalho da tabela */
+  .table-responsive-cards td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: .5rem;
+    width: 45%;
+    font-weight: bold;
+    text-align: left;
+  }
+}
