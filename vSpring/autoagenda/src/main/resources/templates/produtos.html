@@ -1,4 +1,122 @@
 <!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Agenda - Produtos</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/css/produtos.css">
+    <link rel="stylesheet" href="/css/main-styles.css">
+    <!-- Adicionando o novo CSS customizado -->
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Barra lateral -->
+        <div th:replace="~{barra :: nav-sidebar}"></div>
+
+        <!-- Conteúdo principal -->
+        <div class="content-area">
+            <div class="container-fluid">
+                <div class="header-bar">
+                    <h2>Gerenciamento de Produtos</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h4 class="card-title">Lista de Produtos</h4>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionarProduto">
+                                <i class="fas fa-plus"></i> Adicionar Produto
+                            </button>
+                        </div>
+                        
+                        <!-- NOVO LAYOUT EM GRADE -->
+                        <div class="grid-container grid-produtos">
+                            <!-- Cabeçalho da Grade (só aparece no desktop) -->
+                            <div class="grid-header d-none d-md-contents">
+                                <div>ID</div>
+                                <div>Nome</div>
+                                <div>Marca</div>
+                                <div>Quantidade</div>
+                                <div>Preço</div>
+                                <div>Ações</div>
+                            </div>
+                        
+                            <!-- Loop do Thymeleaf para os itens -->
+                            <div class="grid-item" th:each="pr : ${produtos}">
+                                <div data-label="ID" th:text="${pr.id_produto}">1</div>
+                                <div data-label="Nome" th:text="${pr.nome}">Nome do Produto</div>
+                                <div data-label="Marca" th:text="${pr.marca}">Marca</div>
+                                <div data-label="Quantidade" th:text="${pr.quantidade}">10</div>
+                                <div data-label="Preço" th:text="${'R$ ' + #numbers.formatDecimal(pr.preco, 1, 'POINT', 2, 'COMMA')}">R$ 99,90</div>
+                                <div> <!-- Célula de Ações -->
+                                    <a th:href="@{/produto/editar/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a th:href="@{/produto/remover/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mensagem para quando não há produtos -->
+                        <div th:if="${#lists.isEmpty(produtos)}" class="text-center p-4">
+                            <p class="text-muted">Nenhum produto cadastrado.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Adicionar Produto -->
+    <div class="modal fade" id="modalAdicionarProduto" tabindex="-1" aria-labelledby="modalAdicionarProdutoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAdicionarProdutoLabel">Adicionar Novo Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/produto/cadastrar" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome do Produto</label>
+                                <input type="text" class="form-control" name="nome" id="nome" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="marca" class="form-label">Marca</label>
+                                <input type="text" class="form-control" name="marca" id="marca">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="quantidade" class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" name="quantidade" id="quantidade" required min="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="preco" class="form-label">Preço (R$)</label>
+                                <input type="text" class="form-control" name="preco" id="preco" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Produto</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/jquery.mask.min.js"></script>
+    <script src="/js/mascaras.js"></script><!-- <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -264,7 +382,7 @@
             </tr>
           </tbody>
         </table> -->
-      <div class="pagination">
+      <!-- <div class="pagination">
         <button>Anterior</button>
         <span>Página 1 de X</span>
         <button>Próximo</button>
@@ -317,7 +435,7 @@
           </div>
         </div>
       </div>
-  </main>
+  </main> --> -->
 
   <footer class="footer">
     <div class="container">

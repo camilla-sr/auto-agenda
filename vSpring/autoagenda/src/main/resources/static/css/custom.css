@@ -10,8 +10,11 @@
   display: contents; /* Essencial para que os filhos do header entrem no grid principal */
   font-weight: 600;
   color: #495057;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #dee2e6;
+}
+
+.grid-header > div {
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dee2e6;
 }
 
 .grid-item {
@@ -92,7 +95,7 @@
   /* Posiciona as ações no canto superior direito do card */
   .grid-item > div:last-child {
     grid-column: 2;
-    grid-row: 1 / 3; /* Ocupa 2 "linhas" para centralizar verticalmente */
+    grid-row: 1 / 4; /* Ocupa as linhas do card para centralizar */
     align-self: center;
   }
   .grid-item > div:last-child:before {
