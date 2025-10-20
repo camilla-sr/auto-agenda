@@ -1,104 +1,64 @@
-/* ESTILOS GERAIS PARA O LAYOUT DE GRADE */
-.grid-container {
-  display: grid;
-  gap: 0.75rem 1rem; /* Espaçamento entre as colunas e linhas */
-  align-items: center;
-  padding: 0;
-}
+/* CSS para transformar tabelas em cards em telas pequenas.
+  Esta abordagem mantém a semântica HTML da tabela, garantindo que o JavaScript 
+  que depende da estrutura (tr, td) continue funcionando.
+*/
 
-.grid-header {
-  display: contents; /* Essencial para que os filhos do header entrem no grid principal */
-  font-weight: 600;
-  color: #495057;
-}
-
-.grid-header > div {
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #dee2e6;
-}
-
-.grid-item {
-  display: contents; /* Essencial para que os filhos do item entrem no grid principal */
-}
-
-.grid-item > div {
-  padding: 0.75rem 0.5rem;
-  background-color: transparent;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.grid-item:last-child > div {
-  border-bottom: none;
-}
-
-/* DEFINIÇÃO DAS COLUNAS PARA CADA PÁGINA (VISUAL DESKTOP) */
-
-/* Para agendamentos.html */
-.grid-agendamentos {
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 100px; /* Cliente | Veículo | Data | Status | Ações */
-}
-
-/* Para produtos.html */
-.grid-produtos {
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 100px; /* ID | Nome | Marca | Qtd | Preço | Ações */
-}
-
-/* Para servicos.html */
-.grid-servicos {
-  grid-template-columns: 0.5fr 1.5fr 2fr 1fr 100px; /* ID | Nome | Descrição | Preço | Ações */
-}
-
-
-/* MÁGICA DA RESPONSIVIDADE (TELAS MENORES QUE 768px) */
+/* Media query para telas menores que 768px (tablets e celulares) */
 @media (max-width: 767.98px) {
-  /* Esconde o cabeçalho original */
-  .grid-header {
-    display: none;
+
+  .appointments-table thead {
+    display: none; /* Esconde o cabeçalho da tabela */
   }
 
-  /* Reseta o grid principal para uma única coluna */
-  .grid-container {
-    grid-template-columns: 1fr;
-    gap: 0;
+  .appointments-table,
+  .appointments-table tbody,
+  .appointments-table tr,
+  .appointments-table td {
+    display: block;
+    width: 100%;
   }
 
-  /* Transforma cada item da lista em um card */
-  .grid-item {
-    display: grid;
-    grid-template-columns: 1fr auto; /* Coluna para info, coluna para ações */
-    gap: 0.5rem 1rem;
-    padding: 1.25rem;
-    border: 1px solid #e9ecef;
+  .appointments-table tr {
+    margin-bottom: 1.5rem;
+    border: 1px solid #dee2e6;
     border-radius: 0.375rem;
-    margin-bottom: 1rem;
+    padding: 1rem;
     background-color: #fff;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   }
 
-  /* Remove bordas internas do card */
-  .grid-item > div {
+  .appointments-table td {
     border: none;
-    padding: 0;
+    padding-left: 50%; /* Espaço para o "label" */
+    position: relative;
+    text-align: right; /* Alinha o valor à direita */
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
   }
 
-  /* Adiciona o "rótulo" (label) antes de cada dado */
-  .grid-item > div:before {
-    content: attr(data-label);
+  .appointments-table td:before {
+    content: attr(data-label); /* Pega o texto do atributo data-label */
+    position: absolute;
+    left: 1rem;
+    width: 45%;
     font-weight: 600;
-    display: block;
-    font-size: 0.75rem;
+    font-size: .8em;
     color: #6c757d;
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
   }
-
-  /* Posiciona as ações no canto superior direito do card */
-  .grid-item > div:last-child {
-    grid-column: 2;
-    grid-row: 1 / 4; /* Ocupa as linhas do card para centralizar */
-    align-self: center;
+  
+  /* Célula das ações */
+  .appointments-table td.action-buttons {
+    padding-left: 0;
+    text-align: center;
+    margin-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
   }
-  .grid-item > div:last-child:before {
-    display: none; /* Não mostra o label para as ações */
+  
+  .appointments-table td.action-buttons:before {
+    display: none; /* Remove o label da célula de ações */
   }
 }
+

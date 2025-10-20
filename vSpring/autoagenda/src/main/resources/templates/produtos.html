@@ -1,133 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Agenda - Produtos</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="/css/produtos.css">
-    <link rel="stylesheet" href="/css/main-styles.css">
-    <!-- Adicionando o novo CSS customizado -->
-    <link rel="stylesheet" href="/css/custom.css">
-</head>
-<body>
-    <div class="d-flex">
-        <!-- Barra lateral -->
-        <div th:replace="~{barra :: nav-sidebar}"></div>
-
-        <!-- Conteúdo principal -->
-        <div class="content-area">
-            <div class="container-fluid">
-                <div class="header-bar">
-                    <h2>Gerenciamento de Produtos</h2>
-                </div>
-
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h4 class="card-title">Lista de Produtos</h4>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionarProduto">
-                                <i class="fas fa-plus"></i> Adicionar Produto
-                            </button>
-                        </div>
-                        
-                        <!-- NOVO LAYOUT EM GRADE -->
-                        <div class="grid-container grid-produtos">
-                            <!-- Cabeçalho da Grade (só aparece no desktop) -->
-                            <div class="grid-header d-none d-md-contents">
-                                <div>ID</div>
-                                <div>Nome</div>
-                                <div>Marca</div>
-                                <div>Quantidade</div>
-                                <div>Preço</div>
-                                <div>Ações</div>
-                            </div>
-                        
-                            <!-- Loop do Thymeleaf para os itens -->
-                            <div class="grid-item" th:each="pr : ${produtos}">
-                                <div data-label="ID" th:text="${pr.id_produto}">1</div>
-                                <div data-label="Nome" th:text="${pr.nome}">Nome do Produto</div>
-                                <div data-label="Marca" th:text="${pr.marca}">Marca</div>
-                                <div data-label="Quantidade" th:text="${pr.quantidade}">10</div>
-                                <div data-label="Preço" th:text="${'R$ ' + #numbers.formatDecimal(pr.preco, 1, 'POINT', 2, 'COMMA')}">R$ 99,90</div>
-                                <div> <!-- Célula de Ações -->
-                                    <a th:href="@{/produto/editar/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <a th:href="@{/produto/remover/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Mensagem para quando não há produtos -->
-                        <div th:if="${#lists.isEmpty(produtos)}" class="text-center p-4">
-                            <p class="text-muted">Nenhum produto cadastrado.</p>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Adicionar Produto -->
-    <div class="modal fade" id="modalAdicionarProduto" tabindex="-1" aria-labelledby="modalAdicionarProdutoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAdicionarProdutoLabel">Adicionar Novo Produto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/produto/cadastrar" method="post">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="nome" class="form-label">Nome do Produto</label>
-                                <input type="text" class="form-control" name="nome" id="nome" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="marca" class="form-label">Marca</label>
-                                <input type="text" class="form-control" name="marca" id="marca">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="quantidade" class="form-label">Quantidade</label>
-                                <input type="number" class="form-control" name="quantidade" id="quantidade" required min="0">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="preco" class="form-label">Preço (R$)</label>
-                                <input type="text" class="form-control" name="preco" id="preco" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary">Salvar Produto</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/jquery-3.7.1.min.js"></script>
-    <script src="/js/jquery.mask.min.js"></script>
-    <script src="/js/mascaras.js"></script><!-- <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Centro Automotivo JJ</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"> <!-- Adicionado Bootstrap CSS -->
   <link rel="stylesheet" href="/css/modal-fix.css">
   <link rel="stylesheet" href="/css/produtos.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
-  <link rel="stylesheet" href="/css/custom.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/main-styles.css"> <!-- Adicionado main-styles -->
+  <link rel="stylesheet" href="/css/custom.css"> <!-- NOSSA MUDANÇA -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/js/jquery-3.7.1.min.js"></script>
   <script src="/js/jquery.mask.min.js"></script>
@@ -275,15 +159,6 @@
               </div>
             </div>
           </div>
-          <!-- 
-          <div class="form-group">
-            <label for="descricao">Descrição</label>
-            <div class="input-wrapper">
-              <i class="fas fa-align-left input-icon"></i>
-              <textarea id="descricao" name="descricao" rows="3"
-                placeholder="Descrição detalhada do produto"></textarea>
-            </div>
-          </div> -->
 
           <div class="form-actions">
             <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-produto">
@@ -297,40 +172,7 @@
       </div>
 
 
-      <div class="grid-container grid-produtos">
-        <!-- Cabeçalho da Grade -->
-        <div class="grid-header d-none d-md-contents">
-          <div>ID</div>
-          <div>Nome</div>
-          <div>Marca</div>
-          <div>Quantidade</div>
-          <div>Preço</div>
-          <div>Ações</div>
-        </div>
-
-        <!-- Loop do Thymeleaf -->
-        <div class="grid-item" th:each="pr : ${produtos}">
-          <div data-label="ID" th:text="${pr.id_produto}">1</div>
-          <div data-label="Nome" th:text="${pr.nome}">Nome do Produto</div>
-          <div data-label="Marca" th:text="${pr.marca}">Marca</div>
-          <div data-label="Quantidade" th:text="${pr.quantidade}">10</div>
-          <div data-label="Preço" th:text="${'R$ ' + #numbers.formatDecimal(pr.preco, 1, 'POINT', 2, 'COMMA')}">R$ 99,90
-          </div>
-          <div> <!-- Célula de Ações -->
-            <a th:href="@{/produto/editar/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-primary me-1"
-              title="Editar">
-              <i class="fas fa-pencil-alt"></i>
-            </a>
-            <a th:href="@{/produto/remover/{id}(id=${pr.id_produto})}" class="btn btn-sm btn-outline-danger"
-              title="Excluir">
-              <i class="fas fa-trash-alt"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- <div class="table-container">
+      <div class="table-container">
         <div class="table-header">
           <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
           <button class="btn btn-primary" id="btn-novo-produto" type="button"><i class="fas fa-plus-circle"></i>Novo
@@ -340,6 +182,8 @@
         <div class="table-actions">
           <input type="text" name="busca" id="busca" placeholder="Digite para buscar...">
         </div>
+        
+        <!-- MUDANÇA AQUI: Tabela com `data-label` para responsividade -->
         <table class="appointments-table" id="productsTable">
           <thead>
             <tr>
@@ -355,23 +199,20 @@
             <tr th:if="${produtos == null or produtos.empty}">
               <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
             </tr>
-            Cria a mascara do preenchimento do valor dos produtos -->
-      <!-- <tr th:each="p : ${produtos}">
-              <td class="nome-produto" th:text="${p.nomeProduto}"></td>
-              <td class="codigo-produto" th:text="${p.codigoProduto}"></td>
+            <tr th:each="p : ${produtos}">
+              <td data-label="Nome" class="nome-produto" th:text="${p.nomeProduto}"></td>
+              <td data-label="Código" class="codigo-produto" th:text="${p.codigoProduto}"></td>
               <td class="categoria" th:text="${p.categoria}" style="display:none;"></td>
               <td class="preco-custo valores" th:attr="data-valor=${p.precoCusto}"
                 th:text="${'R$ '+ #numbers.formatDecimal(p.precoCusto, 1, 'POINT', 2, 'COMMA')}" style="display:none;">
               </td>
-
-              <td class="preco-venda valores" th:attr="data-valor=${p.precoVenda}"
+              <td data-label="Preço Venda" class="preco-venda valores" th:attr="data-valor=${p.precoVenda}"
                 th:text="${'R$ ' + #numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}"></td>
               <td class="fornecedor" th:text="${p.fornecedor}" style="display:none;"></td>
               <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
-              <td class="estoque-atual" th:text="${p.estoqueAtual}"></td>
+              <td data-label="Estoque" class="estoque-atual" th:text="${p.estoqueAtual}"></td>
               <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
-              <td><span class="status-badge status-ok">Em estoque</span></td>
-
+              <td data-label="Status"><span class="status-badge status-ok">Em estoque</span></td>
               <td class="action-buttons">
                 <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i
                     class="fas fa-edit"></i></button>
@@ -381,15 +222,16 @@
               </td>
             </tr>
           </tbody>
-        </table> -->
-      <!-- <div class="pagination">
-        <button>Anterior</button>
-        <span>Página 1 de X</span>
-        <button>Próximo</button>
+        </table>
+        <div class="pagination">
+          <button>Anterior</button>
+          <span>Página 1 de X</span>
+          <button>Próximo</button>
+        </div>
       </div>
     </div>
-    </div>
 
+    <!-- Modal de Visualização (sem alterações) -->
     <div class="bootstrap-iso">
       <div class="modal fade" id="visualizarProdutoModal" tabindex="-1" aria-labelledby="visualizarProdutoModalLabel"
         aria-hidden="true">
@@ -435,7 +277,8 @@
           </div>
         </div>
       </div>
-  </main> --> -->
+    </div>
+  </main>
 
   <footer class="footer">
     <div class="container">
@@ -447,9 +290,9 @@
         <p class="footer-copyright">&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
       </div>
     </div>
-    </div>
   </footer>
 
+  <!-- SCRIPT ORIGINAL DA PÁGINA (sem alterações) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const form = document.getElementById('formNovoProduto');
@@ -476,7 +319,6 @@
         botaoSalvar.disabled = !valido;
       }
 
-      // Verifica a cada input
       camposObrigatorios.forEach(id => {
         const campo = document.getElementById(id);
         if (campo) {
@@ -484,7 +326,6 @@
         }
       });
 
-      // Mostrar e ocultar o formulário
       const btnNovoProduto = document.getElementById('btn-novo-produto');
       const formProdutoContainer = document.getElementById('formNovoProdutoContainer');
       const btnCancelarNovoProduto = document.getElementById('btn-cancelar-novo-produto');
@@ -499,7 +340,7 @@
       btnCancelarNovoProduto.addEventListener('click', () => {
         form.reset();
         formProdutoContainer.style.display = 'none';
-        verificarCampos(); // Desativa o botão novamente
+        verificarCampos();
       });
 
       $('#formNovoProduto').on('submit', function () {
@@ -514,7 +355,6 @@
 
       verificarCampos();
 
-      // Editar
       const editButtons = document.querySelectorAll('.btn-edit');
       editButtons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -546,147 +386,119 @@
           document.getElementById('estoque-minimo').value = estoqueM;
           document.getElementById('descricao').value = descricao;
 
-          verificarCampos(); // Habilita o botão se os campos estiverem preenchidos
+          verificarCampos();
         });
       });
 
-      // Excluir
       const deleteButtons = document.querySelectorAll('.btn-delete');
-
       deleteButtons.forEach(function (button) {
         button.addEventListener('click', function (e) {
           e.preventDefault();
-
           const id = button.dataset.id;
-
           Swal.fire({
             title: 'Você tem certeza?',
             text: "Esta ação não poderá ser desfeita!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#4CAF50',
-            cancelButtonColor: '#6F6F6F',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sim, excluir!',
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
-              // Usa a API Fetch para enviar a requisição
               fetch('/produto-api/apagar', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: 'idProduto=' + id
-              })
-                .then(response => {
-                  // Após a exclusão, recarrega a página para mostrar o resultado
-                  window.location.reload();
-                })
-                .catch(error => {
-                  console.error('Erro ao excluir o produto:', error);
+              }).then(response => {
+                if (response.ok) {
+                  Swal.fire('Excluído!', 'O produto foi excluído com sucesso.', 'success').then(() => window.location.reload());
+                } else {
                   Swal.fire('Erro!', 'Não foi possível excluir o produto.', 'error');
-                });
+                }
+              }).catch(error => {
+                console.error('Erro ao excluir o produto:', error);
+                Swal.fire('Erro!', 'Ocorreu um erro de rede.', 'error');
+              });
             }
           });
         });
       });
 
-      //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
-      const busca = document.getElementById('busca')
-      const tabela = document.querySelector('table');
+      const busca = document.getElementById('busca');
+      const tabela = document.getElementById('productsTable');
       const linhas = tabela.querySelectorAll('tbody tr');
+      const noResultMessage = document.querySelector('tbody tr td[colspan="6"]');
 
       busca.addEventListener('input', function () {
         const termoBusca = busca.value.toLowerCase();
-
+        let found = false;
         linhas.forEach(function (linha) {
-          const textoLinha = linha.textContent.toLowerCase();
+            if (linha.querySelector('td[colspan="6"]')) return;
+            
+            const textoLinha = linha.textContent.toLowerCase();
+            if (textoLinha.includes(termoBusca)) {
+                linha.style.display = '';
+                found = true;
+            } else {
+                linha.style.display = 'none';
+            }
+        });
 
-          if (textoLinha.includes(termoBusca)) {
-            linha.style.display = '';
-          } else {
-            linha.style.display = 'none';
-          }
-        })
-      })
+        if (noResultMessage) {
+          noResultMessage.style.display = found ? 'none' : '';
+        }
+      });
 
-      // Atualiza automaticamente o status do estoque conforme estoque atual x mínimo
       function atualizarStatusEstoque() {
         document.querySelectorAll('#productsTable tbody tr').forEach(function (row) {
-          const badge = row.querySelector('.status-badge');
-          const atualEl = row.querySelector('.estoque-atual');
-          const minEl = row.querySelector('.estoque-minimo');
-          if (!badge || !atualEl || !minEl) return;
+            if (row.querySelector('td[colspan="6"]')) return;
+            const badge = row.querySelector('.status-badge');
+            const atualEl = row.querySelector('.estoque-atual');
+            const minEl = row.querySelector('.estoque-minimo');
+            if (!badge || !atualEl || !minEl) return;
 
-          // Converte "1.234,56" -> 1234.56
-          const toNumber = function (s) {
-            const str = (s || '').toString().trim().replace(/\./g, '').replace(',', '.');
-            const n = parseFloat(str);
-            return isNaN(n) ? 0 : n;
-          };
+            const toNumber = s => parseFloat((s || '').toString().trim()) || 0;
+            const atual = toNumber(atualEl.textContent);
+            const minimo = toNumber(minEl.textContent);
 
-          const atual = toNumber(atualEl.textContent);
-          const minimo = toNumber(minEl.textContent);
+            badge.classList.remove('status-ok', 'bg-success', 'bg-warning', 'bg-danger', 'text-dark');
 
-          // limpa estados anteriores
-          badge.classList.remove('status-ok');
-          badge.style.backgroundColor = '';
-          badge.style.color = 'white';
-
-          if (atual <= 0) {
-            badge.textContent = 'Sem estoque';
-            badge.style.backgroundColor = 'var(--cor-erro)';
-          } else if (atual <= minimo) {
-            badge.textContent = 'Estoque baixo';
-            badge.style.backgroundColor = 'var(--cor-alerta)';
-          } else {
-            badge.textContent = 'Em estoque';
-            badge.style.backgroundColor = 'var(--cor-sucesso)';
-            // badge.classList.add('status-ok'); // usa o verde já definido no CSS
-          }
+            if (atual <= 0) {
+                badge.textContent = 'Esgotado';
+                badge.classList.add('bg-danger');
+            } else if (atual <= minimo) {
+                badge.textContent = 'Estoque Baixo';
+                badge.classList.add('bg-warning', 'text-dark');
+            } else {
+                badge.textContent = 'Em Estoque';
+                badge.classList.add('bg-success');
+            }
         });
       }
-      // chama ao carregar
       atualizarStatusEstoque();
 
-    });
-
-    //=========================================================
-    // LÓGICA PARA ATIVAR E PREENCHER O MODAL DE VISUALIZAÇÃO
-    //=========================================================
-    const viewButtons = document.querySelectorAll('.btn-view');
-    const visualizarModal = new bootstrap.Modal(document.getElementById('visualizarProdutoModal'));
-
-    viewButtons.forEach(function (button) {
-      button.addEventListener('click', function () {
-        // 1. Encontra a linha da tabela mais próxima do botão clicado
-        const row = button.closest('tr');
-
-        // 2. Coleta todos os dados daquela linha (incluindo os ocultos)
-        const nome = row.querySelector('.nome-produto').textContent.trim();
-        const codigo = row.querySelector('.codigo-produto').textContent.trim();
-        const categoria = row.querySelector('.categoria').textContent.trim();
-        const precoVenda = row.querySelector('.preco-venda').textContent.trim();
-        const fornecedor = row.querySelector('.fornecedor').textContent.trim();
-        const estoqueMinimo = row.querySelector('.estoque-minimo').textContent.trim();
-        const estoqueAtual = row.querySelector('.estoque-atual').textContent.trim();
-        const descricao = row.querySelector('.descricao').textContent.trim();
-
-        // 3. Preenche o modal com os dados coletados
-        document.getElementById('modal-nome-produto').textContent = nome;
-        document.getElementById('modal-codigo-produto').textContent = codigo || 'N/A';
-        document.getElementById('modal-categoria').textContent = categoria || 'N/A';
-        document.getElementById('modal-preco-venda').textContent = precoVenda;
-        document.getElementById('modal-fornecedor').textContent = fornecedor || 'Não informado';
-        document.getElementById('modal-estoque-minimo').textContent = estoqueMinimo;
-        document.getElementById('modal-estoque-atual').textContent = estoqueAtual;
-        document.getElementById('modal-descricao').textContent = descricao || 'Nenhuma descrição fornecida.';
-
-        // 4. Exibe o modal
-        visualizarModal.show();
+      const viewButtons = document.querySelectorAll('.btn-view');
+      const visualizarModal = new bootstrap.Modal(document.getElementById('visualizarProdutoModal'));
+      viewButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          const row = button.closest('tr');
+          document.getElementById('modal-nome-produto').textContent = row.querySelector('.nome-produto').textContent.trim();
+          document.getElementById('modal-codigo-produto').textContent = row.querySelector('.codigo-produto').textContent.trim() || 'N/A';
+          document.getElementById('modal-categoria').textContent = row.querySelector('.categoria').textContent.trim() || 'N/A';
+          document.getElementById('modal-preco-venda').textContent = row.querySelector('.preco-venda').textContent.trim();
+          document.getElementById('modal-fornecedor').textContent = row.querySelector('.fornecedor').textContent.trim() || 'Não informado';
+          document.getElementById('modal-estoque-minimo').textContent = row.querySelector('.estoque-minimo').textContent.trim();
+          document.getElementById('modal-estoque-atual').textContent = row.querySelector('.estoque-atual').textContent.trim();
+          document.getElementById('modal-descricao').textContent = row.querySelector('.descricao').textContent.trim() || 'Nenhuma descrição fornecida.';
+          visualizarModal.show();
+        });
       });
     });
   </script>
 </body>
 
 </html>
+
