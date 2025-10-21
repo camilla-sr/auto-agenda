@@ -13,16 +13,18 @@ public class Funcionario {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFuncionario;
 	@NotEmpty private String nomeFuncionario;
 	@NotEmpty private String cpf;
+	@NotEmpty private String email;
 	@NotEmpty private String usuario;
 	@NotEmpty private String senha;
 	private String acesso = "comum";
 	
 	public Funcionario() {}
 
-	public Funcionario(Integer idFuncionario, String nomeFuncionario, String cpf, String usuario, String senha) {
+	public Funcionario(Integer idFuncionario, String nomeFuncionario, String cpf, String email, String usuario, String senha) {
 		this.idFuncionario = idFuncionario;
 		this.nomeFuncionario = nomeFuncionario;
 		this.cpf = cpf;
+		this.email = email;
 		this.usuario = usuario;
 		this.senha = senha;
 	}
@@ -30,6 +32,8 @@ public class Funcionario {
     public Integer getIdFuncionario() { return idFuncionario; }
     public void setIdFuncionario(Integer idFuncionario) { this.idFuncionario = idFuncionario; }
     public String getNomeFuncionario() { return nomeFuncionario; }
+    public void setEmail(String email) { this.email = email; }
+	public String getEmail() { return email; }
     public void setNomeFuncionario(String nomeFuncionario) { this.nomeFuncionario = nomeFuncionario; }
 	public String getUsuario() { return usuario; }
 	public void setUsuario(String usuario) { this.usuario = usuario; }

@@ -26,6 +26,7 @@ public class C_Funcionario {
 			Funcionario adminPadrao = new Funcionario();
 			adminPadrao.setNomeFuncionario("Administrador");
 			adminPadrao.setUsuario("admin");
+			adminPadrao.setEmail("teste@email.com");
 			adminPadrao.setCpf("12345678901");
 			adminPadrao.setSenha("123");
 			adminPadrao.setAcesso("admin");
@@ -72,6 +73,7 @@ public class C_Funcionario {
 			}
 			
 			funcExistente.setNomeFuncionario(func.getNomeFuncionario());
+			funcExistente.setEmail(func.getEmail());
 			funcExistente.setUsuario(func.getUsuario());
 			funcExistente.setAcesso(func.getAcesso());
 			

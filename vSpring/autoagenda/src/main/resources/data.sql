@@ -16,6 +16,7 @@ create table if not exists funcionario (
   id_funcionario int primary key auto_increment,
   nome_funcionario varchar(50) default null,
   usuario       varchar(15) not null unique,
+  email			varchar(255) not null unique,
   cpf			varchar(11) not null,
   senha         varchar(15) not null,
   acesso		varchar(5) default 'comum'
