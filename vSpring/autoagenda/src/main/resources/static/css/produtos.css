@@ -598,6 +598,10 @@ table tbody tr:hover,
   .actions-bar {
     justify-content: center;
   }
+
+  .table-header button{
+    align-self: flex-end;
+  }
 }
 
 @media (max-width: 576px) {
