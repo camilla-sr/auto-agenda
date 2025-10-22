@@ -70,198 +70,19 @@ body {
   align-items: center;
 }
 
-
-/* Reset e estilos gerais */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: var(--cor-fundo-claro);
-  color: var(--cor-texto-escuro);
-  font-family: 'Poppins', sans-serif;
-  line-height: 1.6;
-}
-
-/* Container */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-/* Cabeçalho */
-.header {
-  padding: 10px 0; /* Diminuído o padding para ficar mais compacto */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  /* As propriedades `position`, `width`, `top`, `z-index` são herdadas da classe .fixed-top do Bootstrap */
-}
-
-/* ========================================================================== */
-/* MUDANÇA: Estilização da Logo para se comportar como um botão, não um link  */
-/* ========================================================================== */
-.navbar-brand.logo-link {
-  padding: 0; /* Remove padding padrão do bootstrap */
-  transition: opacity 0.2s ease-in-out;
-}
-
-.navbar-brand.logo-link h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0; /* Remove margem padrão do h1 */
-  color: var(--cor-texto-claro); /* Garante a cor branca */
-}
-
-.navbar-brand.logo-link .logo-highlight {
-  color: var(--cor-primaria);
-  font-weight: 700;
-}
-
-/* Remove qualquer decoração de texto e garante a cor em todos os estados do link */
-.navbar-brand.logo-link,
-.navbar-brand.logo-link:hover,
-.navbar-brand.logo-link:focus {
-  text-decoration: none;
-  box-shadow: none; /* Remove o brilho de foco do Bootstrap */
-  opacity: 1;
-}
-
-.navbar-brand.logo-link:hover h1 {
-  opacity: 0.85; /* Efeito de hover sutil */
-}
-
-/* ========================================================================== */
-/* MUDANÇA: Estilos para o novo dropdown de usuário                           */
-/* ========================================================================== */
-.navbar .dropdown-menu {
-  border-radius: .375rem;
-  border: 1px solid rgba(0,0,0,.15);
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.175);
-}
-.navbar .dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; /* Espaço entre ícone e texto */
-}
-.navbar .dropdown-item i {
-  width: 16px; /* Alinha os ícones */
-  text-align: center;
-}
-
-/* Conteúdo principal (Ajuste no margin-top por causa da navbar fixa) */
-.main-content {
-  margin-top: 90px;
-  padding: 30px 0;
-  min-height: calc(100vh - 160px);
-}
-
-/* Estilos da tabela (mantidos do original) */
-.table-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 30px;
-  border-top: 4px solid var(--cor-primaria);
-}
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--cor-borda);
-}
-.table-header h3 { font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; }
-.table-header h3 i { margin-right: 10px; color: var(--cor-primaria); }
-.table-actions { margin-bottom: 20px; }
-#busca { width: 100%; max-width: 320px; padding: 10px 12px; border: 1px solid var(--cor-borda); border-radius: 6px; font-size: 1rem; }
-.appointments-table { width: 100%; border-collapse: collapse; }
-.appointments-table th { background-color: var(--cor-fundo-claro); text-align: left; padding: 12px; font-weight: 600; border-bottom: 2px solid var(--cor-primaria-light); }
-.appointments-table td { padding: 12px; border-bottom: 1px solid var(--cor-fundo-medio); }
-.appointments-table tbody tr:hover { background-color: var(--cor-fundo-claro); }
-.action-buttons { display: flex; gap: 8px; }
-
-/* ========================================================================== */
-/* MUDANÇA: CSS PARA RESPONSIVIDADE DA TABELA E NAVBAR                       */
-/* ========================================================================== */
-
-/* A partir de telas de tablet para baixo (< 992px), a navbar colapsa */
-@media (max-width: 991.98px) {
-  .main-content {
-    margin-top: 70px; /* Reduz a margem do topo para a navbar mobile */
-  }
-
-  /* Estilos da tabela responsiva */
-  .appointments-table thead {
-    display: none;
-  }
-
-  .appointments-table,
-  .appointments-table tbody,
-  .appointments-table tr,
-  .appointments-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .appointments-table tr {
-    margin-bottom: 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-    padding: 1rem;
-  }
-
-  .appointments-table td {
-    border: none;
-    padding: .5rem 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: right;
-  }
-  
-  .appointments-table td[style*="display:none"] {
-      display: none !important;
-  }
-
-  .appointments-table td:before {
-    content: attr(data-label);
-    font-weight: 600;
-    text-align: left;
-    white-space: nowrap;
-    margin-right: 1rem;
-    color: #6c757d;
-  }
-  
-  .appointments-table td.action-buttons {
-    justify-content: flex-end;
-    padding-top: 1rem;
-    margin-top: 0.5rem;
-    border-top: 1px solid #e9ecef;
-  }
-  
-  .appointments-table td.action-buttons:before {
-    display: none;
-  }
-}
-
-/* .logo .logo-link,
+.logo .logo-link,
 .logo .logo-link:visited, /* Garante que a cor não mude após o clique */
 .logo .logo-link:active { /* Garante que a cor não mude durante o clique */
   text-decoration: none; /* Remove o sublinhado */
   color: inherit;      /* Faz o link herdar a cor do texto do elemento pai (no caso, branco) */
   transition: opacity 0.2s ease-in-out; /* Adiciona uma transição suave para o efeito de hover */
-} */
+}
 
 /*
  * Adiciona um efeito simples quando o mouse passa por cima do link.
  * A opacidade diminui um pouco, dando um feedback visual discreto.
 */
-/* .logo .logo-link:hover {
+.logo .logo-link:hover {
   opacity: 0.8;
 }
 
@@ -281,7 +102,7 @@ body {
 .logo-highlight {
   color: var(--cor-primaria);
   font-weight: 700;
-} */
+}
 
 /* Navegação */
 

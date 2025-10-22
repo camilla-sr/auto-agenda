@@ -1,60 +1,46 @@
-<!-- ==================================================================================== -->
-<!-- ARQUIVO COMPLETO E CORRIGIDO: barra.html                                             -->
-<!-- MUDANÇAS:                                                                            -->
-<!-- 1. Estrutura convertida para uma Navbar padrão do Bootstrap 5.                       -->
-<!-- 2. Adicionado botão "hambúrguer" (toggler) para mobile.                              -->
-<!-- 3. Itens de menu agrupados dentro de um `navbar-collapse`.                           -->
-<!-- 4. Criado um Dropdown para o menu de usuário (Perfil, Funcionários, Sair).           -->
-<!-- 5. Link da logo corrigido para apontar para /dashboard.                              -->
-<!-- ==================================================================================== -->
+<head>
+	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="/css/style1.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<script src="/js/sweetalert2.all.min.js"></script>
+</head>
+
 <div th:fragment="barra">
-    <header class="header navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
+	<header class="header">
+		<div class="container">
 
-            <!-- Logo que funciona como botão Home -->
-            <a class="navbar-brand logo-link" href="/dashboard">
-                <h1><span class="logo-highlight">Centro Automotivo</span> JJ</h1>
-            </a>
+			<div class="logo">
+				<a href="/" class="logo-link">
+					<h1><span class="logo-highlight">Centro Automotivo</span> JJ</h1>
+				</a>
+			</div>
 
-            <!-- Botão Hambúrguer para Mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Itens de Navegação que se recolhem no mobile -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/agendamentos"><i class="fas fa-calendar-check"></i>Agendamentos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/servicos"><i class="fas fa-tools"></i>Serviços</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/produtos"><i class="fas fa-box-open"></i>Produtos</a>
-                    </li>
-
-                    <!-- Sub-menu Dropdown de Usuário -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle"></i> Olá, <span th:text="${usuarioLogado.nome}"></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user-edit me-2"></i>Meu Perfil</a></li>
-                            <li th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
-                                <a class="dropdown-item" href="/funcionarios"><i class="fas fa-address-card me-2"></i>Funcionários</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </header>
+			<nav class="nav-menu">
+				<!-- <div class="nav-item">
+	          		<a href="/" class="nav-link"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+	        	</div> -->
+				<div class="nav-item">
+					<a href="/agendamentos" class="nav-link"><i class="fas fa-calendar-check"></i>Agendamentos</a>
+				</div>
+				<div class="nav-item">
+					<a href="/servicos" class="nav-link"><i class="fas fa-tools"></i>Serviços</a>
+				</div>
+				<div th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
+					<div class="nav-item">
+						<a href="/funcionarios" class="nav-link"><i class="fas fa-address-card"></i>Funcionários</a>
+					</div>
+				</div>
+				<div class="nav-item">
+					<a href="/produtos" class="nav-link"><i class="fas fa-box-open"></i>Produtos</a>
+				</div>
+				<div class="nav-item">
+					<a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i>Sair</a>
+				</div>
+			</nav>
+		</div>
+	</header>
 </div>
 
+</html>
