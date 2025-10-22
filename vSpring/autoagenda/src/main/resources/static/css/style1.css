@@ -92,10 +92,6 @@ body {
   text-decoration: none;
 }
 
-.logo a{
-  text-decoration: none;
-}
-
 .logo h1 {
   font-size: 1.6rem;
   font-weight: 600;
@@ -468,7 +464,6 @@ table tbody tr:hover {
   font-family: 'Poppins', sans-serif;
   background-color: #fff;
   color: var(--cor-texto-escuro);
-  display: inline-block;
 }
 
 .table-actions input {
