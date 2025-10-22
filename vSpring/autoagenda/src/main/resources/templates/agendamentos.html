@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/agendamentos.css">
   <link rel="stylesheet" href="/css/custom.css">
   <link rel="stylesheet" href="/css/style1.css">
+  <link rel="stylesheet" href="/css/main-styles.css">
   
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -144,13 +145,13 @@
                 </td>
                 <td th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
                 <td class="action-buttons">
-                  <button class="btn btn-action edit-btn" th:attr="data-id=${ag.idAgendamento}" title="Editar">
+                  <button class="btn-icon btn-edit" th:attr="data-id=${ag.idAgendamento}" title="Editar">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="btn btn-action delete-btn" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
+                  <button class="btn-icon btn-delete" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
                     <i class="fas fa-trash"></i>
                   </button>
-                  <button class="btn btn-action view-btn" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
+                  <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
                     <i class="fas fa-eye"></i>
                   </button>
                 </td>
@@ -280,7 +281,7 @@
       <div class="footer-content">
         <div class="footer-logo">
           <i class="fas fa-car-alt"></i>
-          <span class="logo-highlight">Centro Automotivo</span> JJ
+          <span class="logo-highlight">Centro Automotivo </span> JJ
         </div>
         <p class="footer-copyright">&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
       </div>
@@ -376,7 +377,7 @@
       }
 
       //		SCRIPT DO BACK, AQUI BOTA PRA FUNCIONAR EDITAR E APAGAR
-      const editButtons = document.querySelectorAll('.edit-btn');
+      const editButtons = document.querySelectorAll('.btn-edit');
 
       editButtons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -408,7 +409,7 @@
         });
       });
 
-      const deleteButtons = document.querySelectorAll('.delete-btn');
+      const deleteButtons = document.querySelectorAll('.btn-delete');
 
       deleteButtons.forEach(function (button) {
         button.addEventListener('click', function (e) {

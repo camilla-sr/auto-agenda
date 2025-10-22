@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/fontawesome/css/all.min.css">
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="/css/style1.css">
+	<link rel="stylesheet" href="/css/main-styles.css">
 	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="/js/sweetalert2.all.min.js"></script>
 	<script src="/js/validacao.js"></script>
@@ -51,11 +52,11 @@
 							<td class="desc-servico" th:text="${serv.descServico}"></td>
 
 							<td class="action-buttons">
-								<button class="btn btn-action edit-btn" th:attr="data-id=${serv.idServico}"
+								<button class="btn-icon btn-edit" th:attr="data-id=${serv.idServico}"
 									title="Editar">
 									<i class="fas fa-edit"></i>
 								</button>
-								<button class="btn btn-action delete-btn" th:attr="data-id=${serv.idServico}"
+								<button class="btn-icon btn-delete" th:attr="data-id=${serv.idServico}"
 									title="Excluir">
 									<i class="fas fa-trash"></i>
 								</button>
@@ -111,7 +112,7 @@
 			<div class="footer-content">
 				<div class="footer-logo">
 					<i class="fas fa-car-alt"></i>
-					<span class="logo-highlight">Centro Automotivo</span> JJ
+					<span class="logo-highlight">Centro Automotivo </span> JJ
 				</div>
 				<p>&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados 2025.</p>
 			</div>
@@ -177,7 +178,7 @@
 			});
 
 			// Editar
-			document.querySelectorAll('.edit-btn').forEach(function (button) {
+			document.querySelectorAll('.btn-edit').forEach(function (button) {
 				button.addEventListener('click', function () {
 					if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
 						formServicoContainer.style.display = 'block';
@@ -223,7 +224,7 @@
 			//=========================================================
 			// CÓDIGO PARA FAZER O BOTÃO DE EXCLUIR FUNCIONAR
 			//=========================================================
-			const deleteButtons = document.querySelectorAll('.delete-btn');
+			const deleteButtons = document.querySelectorAll('.btn-delete');
 
 			deleteButtons.forEach(function (button) {
 				button.addEventListener('click', function (e) {
