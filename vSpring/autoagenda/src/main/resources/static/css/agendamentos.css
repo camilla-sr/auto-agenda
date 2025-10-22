@@ -279,11 +279,12 @@ body {
 }
 
 .input-wrapper {
-  position: relative;
+  display: flex;
+  position: absolute;
 }
 
 .input-icon {
-  position: absolute;
+  position: absolute ;
   left: 12px;
   top: 10px;
   color: var(--cor-texto-escuro);

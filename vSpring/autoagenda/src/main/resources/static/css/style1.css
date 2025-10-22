@@ -468,6 +468,7 @@ table tbody tr:hover {
   font-family: 'Poppins', sans-serif;
   background-color: #fff;
   color: var(--cor-texto-escuro);
+  display: inline-block;
 }
 
 .table-actions input {
