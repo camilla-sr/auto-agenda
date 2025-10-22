@@ -123,7 +123,7 @@
               <tr th:each="ag : ${agendamentos}">
                 <td class="ag-cliente" th:text="${ag.nomeCliente}"></td>
                 <td class="ag-servico">
-                  <span class="status-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
+                  <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
                     th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
                     th:text="${ag.servico.nomeServico}"> </span>
                   <span th:if="${ag.servico == null or ag.servico.nomeServico == null}">
