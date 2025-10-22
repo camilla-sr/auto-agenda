@@ -92,6 +92,10 @@ body {
   text-decoration: none;
 }
 
+.logo a{
+  text-decoration: none;
+}
+
 .logo h1 {
   font-size: 1.6rem;
   font-weight: 600;
