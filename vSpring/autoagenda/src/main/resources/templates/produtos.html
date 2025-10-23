@@ -300,6 +300,8 @@
       const formTitulo = document.getElementById('formTitulo');
       const botaoSalvar = form.querySelector('button[type="submit"]');
 
+      // VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS
+
       const camposObrigatorios = [
         'nome-produto',
         'preco-custo',
@@ -356,6 +358,8 @@
 
       verificarCampos();
 
+      // EDITAR
+
       const editButtons = document.querySelectorAll('.btn-edit');
       editButtons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -390,6 +394,8 @@
           verificarCampos();
         });
       });
+
+      // EXCLUIR
 
       const deleteButtons = document.querySelectorAll('.btn-delete');
       deleteButtons.forEach(function (button) {
@@ -428,6 +434,8 @@
         });
       });
 
+      // BUSCA DINÂMICA CLIENT-SIDE 
+      
       const busca = document.getElementById('busca');
       const tabela = document.getElementById('productsTable');
       const linhas = tabela.querySelectorAll('tbody tr');
@@ -480,6 +488,8 @@
         });
       }
       atualizarStatusEstoque();
+
+      // VISUALIZAR DETALHES DO PRODUTO
 
       const viewButtons = document.querySelectorAll('.btn-view');
       const visualizarModal = new bootstrap.Modal(document.getElementById('visualizarProdutoModal'));

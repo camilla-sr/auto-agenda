@@ -182,6 +182,7 @@
 				button.addEventListener('click', function () {
 					if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
 						formServicoContainer.style.display = 'block';
+						formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 					}
 					formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 					const row = button.closest('tr');
