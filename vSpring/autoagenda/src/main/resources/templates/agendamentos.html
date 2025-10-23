@@ -5,13 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"> <!-- Adicionado Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/modal-fix.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="/css/main-styles.css"> 
   <link rel="stylesheet" href="/css/agendamentos.css">
   <link rel="stylesheet" href="/css/custom.css">
   <link rel="stylesheet" href="/css/style1.css">
-  <link rel="stylesheet" href="/css/main-styles.css">
-  
+
+
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -273,6 +275,50 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal de Visualização (sem alterações) -->
+    <div class="bootstrap-iso">
+      <div class="modal fade" id="visualizarAgendamentoModal" tabindex="-1"
+        aria-labelledby="visualizarAgendamentoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="visualizarAgendametoModalLabel">
+                <i class="fas fa-eye"></i> Detalhes do Produto
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <h4><strong id="modal-cliente-agendamento"></strong></h4>
+                  <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                  <h5>Previsão</h5>
+                  <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
+                </div>
+              </div>
+              <hr>
+              <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
+              <p id="modal-observacao" style="white-space: pre-wrap;"></p>
+              <hr>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p><strong>Status:</strong> <span id="modal-status"></span></p>
+                  <p><strong>Conclusão:</strong> <span id="modal-conclusao"></span></p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times"></i> Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Rodapé -->
@@ -480,6 +526,24 @@
           linha.style.display = 'none';
         }
       })
+
+      // VISUALIZAR DETALHES DO PRODUTO
+
+      const viewButtons = document.querySelectorAll('.btn-view');
+      const visualizarModal = new bootstrap.Modal(document.getElementById('visualizarAgendamentoModal'));
+      viewButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          const row = button.closest('tr');
+          document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
+          document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim() || 'N/A';
+          document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim() || 'N/A';
+          document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
+          document.getElementById('modal-status').textContent = row.querySelector('.ag-status').textContent.trim() || 'Não informado';
+          document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
+
+          visualizarModal.show();
+        });
+      });
     })
   </script>
 </body>

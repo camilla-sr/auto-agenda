@@ -27,12 +27,91 @@
       </div>
 
       <div class="table-container">
+        
+
+        <!-- Seção do formulário de cadastro -->
+        <div class="form-container" id="funcionario-form-container" style="display: none">
+          <div class="form-header">
+            <h3><i class="fas fa-user-plus"></i> Cadastrar Novo Usuário</h3>
+          </div>
+
+          <form method="post" action="/funcionario-api/salvar" id="funcionario-form">
+            <input type="hidden" name="idFuncionario" id="idFuncionario" readonly>
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="nome">Nome Completo</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="nomeFuncionario" name="nomeFuncionario"
+                      placeholder="Nome completo do funcionário" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="cpf">CPF</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-id-card input-icon"></i>
+                    <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="000.000.000-00" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="usuario">Nome de Usuário</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-user-tag input-icon"></i>
+                    <input type="text" id="usuario" name="usuario" placeholder="Nome de usuário para login" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="senha">Senha</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="senha" name="senha" placeholder="Senha de acesso" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="acesso">Tipo de Acesso</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <select id="acesso" name="acesso">
+                      <option value="">Selecione</option>
+                      <option value="admin">Administrador</option>
+                      <option value="comum">Usuário Comum</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i> Cancelar </button>
+              <button type="submit" id="salvarEdit" class="btn"><i class="fas fa-save"></i> Salvar Usuário </button>
+            </div>
+          </form>
+          <form id="deleteForm" action="/funcionario-api/apagar" method="post" style="display: none;">
+            <input type="hidden" name="idFuncionario" id="deleteId">
+          </form>
+        </div>
+
         <div class="table-header">
           <h3><i class="fas fa-clipboard-list"></i> Lista de Usuários</h3>
           <button class="btn btn-primary" id="btn-novo-funcionario"><i class="fas fa-plus-circle"></i>Novo
             Usuário</button>
         </div>
-
+        
         <div class="table-actions">
           <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
         </div>
@@ -71,95 +150,20 @@
             </tbody>
           </table>
         </div>
-
-        <!-- Controles de paginação -->
-        <div class="table-pagination">
-          <button class="btn btn-secondary" id="btn-anterior" disabled>
-            <i class="fas fa-chevron-left"></i> Anterior
-          </button>
-          <span class="pagination-info">Página 1 de 1</span>
-          <button class="btn btn-secondary" id="btn-proximo" disabled>
-            Próximo <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
       </div>
 
-      <!-- Seção do formulário de cadastro -->
-      <div class="form-container" id="funcionario-form-container" style="display: none">
-        <div class="form-header">
-          <h3><i class="fas fa-user-plus"></i> Cadastrar Novo Usuário</h3>
-        </div>
 
-        <form method="post" action="/funcionario-api/salvar" id="funcionario-form">
-          <input type="hidden" name="idFuncionario" id="idFuncionario" readonly>
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label for="nome">Nome Completo</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="nomeFuncionario" name="nomeFuncionario"
-                    placeholder="Nome completo do funcionário" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-col">
-              <div class="form-group">
-                <label for="cpf">CPF</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-id-card input-icon"></i>
-                  <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="000.000.000-00" required>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label for="usuario">Nome de Usuário</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-user-tag input-icon"></i>
-                  <input type="text" id="usuario" name="usuario" placeholder="Nome de usuário para login" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-col">
-              <div class="form-group">
-                <label for="senha">Senha</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-lock input-icon"></i>
-                  <input type="password" id="senha" name="senha" placeholder="Senha de acesso" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-col">
-              <div class="form-group">
-                <label for="acesso">Tipo de Acesso</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-lock input-icon"></i>
-                  <select id="acesso" name="acesso">
-                    <option value="">Selecione</option>
-                    <option value="admin">Administrador</option>
-                    <option value="comum">Usuário Comum</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i> Cancelar </button>
-            <button type="submit" id="salvarEdit" class="btn"><i class="fas fa-save"></i> Salvar Usuário </button>
-          </div>
-        </form>
-        <form id="deleteForm" action="/funcionario-api/apagar" method="post" style="display: none;">
-          <input type="hidden" name="idFuncionario" id="deleteId">
-        </form>
+      <!-- Controles de paginação -->
+      <div class="table-pagination">
+        <button class="btn btn-secondary" id="btn-anterior" disabled>
+          <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+        <span class="pagination-info">Página 1 de 1</span>
+        <button class="btn btn-secondary" id="btn-proximo" disabled>
+          Próximo <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
+
     </div>
   </main>
 
@@ -208,14 +212,14 @@
           form.reset();
           // 2. Garante que o campo ID oculto está vazio (modo de criação)
           if (idInput) {
-             idInput.value = '';
+            idInput.value = '';
           }
           // 3. Define o título para "Cadastrar Novo Usuário"
           formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
           // 4. Garante que o campo senha volte ao estado original (obrigatório e nome 'senha')
           if (campoSenha) {
-             campoSenha.setAttribute("name", "senha");
-             campoSenha.setAttribute("required", "required");
+            campoSenha.setAttribute("name", "senha");
+            campoSenha.setAttribute("required", "required");
           }
           // 5. Mostra o container do formulário
           formFuncionarioContainer.style.display = 'block';
@@ -241,10 +245,10 @@
           // Define o título de volta para o padrão (opcional, mas bom para consistência).
           formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
           // Garante que o campo senha volte ao estado original ao cancelar.
-           if (campoSenha) {
-              campoSenha.setAttribute("name", "senha");
-              campoSenha.setAttribute("required", "required");
-           }
+          if (campoSenha) {
+            campoSenha.setAttribute("name", "senha");
+            campoSenha.setAttribute("required", "required");
+          }
           // Rola de volta para a tabela (opcional)
           const tabelaContainer = document.querySelector('.table-container'); // Encontra o container da tabela
           if (tabelaContainer) {
@@ -255,7 +259,7 @@
 
       // --- LÓGICA DE SUBMISSÃO E MÁSCARAS (Mantido como estava) ---
       form.addEventListener("submit", function () {
-        if(cpfInput) {
+        if (cpfInput) {
           cpfInput.value = cpfInput.value.replace(/\D/g, '');
         }
       });
@@ -301,8 +305,8 @@
 
           // Preenche CPF e reaplica a máscara para garantir formatação
           if (cpfInput) {
-              cpfInput.value = cpf; // Coloca o valor com máscara
-              // Inputmask("999.999.999-99").mask(cpfInput); // Reaplicar a máscara pode ser útil
+            cpfInput.value = cpf; // Coloca o valor com máscara
+            // Inputmask("999.999.999-99").mask(cpfInput); // Reaplicar a máscara pode ser útil
           }
 
 
@@ -364,26 +368,27 @@
         let found = false;
 
         linhas.forEach(function (linha) {
-            // Ignora a linha de "Nenhum resultado" se ela existir
-            if (linha.querySelector('td[colspan]')) return;
+          // Ignora a linha de "Nenhum resultado" se ela existir
+          if (linha.querySelector('td[colspan]')) return;
 
-            const textoLinha = linha.textContent.toLowerCase();
+          const textoLinha = linha.textContent.toLowerCase();
 
-            if (textoLinha.includes(termoBusca)) {
-                linha.style.display = ''; // Mostra a linha
-                found = true;
-            } else {
-                linha.style.display = 'none'; // Esconde a linha
-            }
+          if (textoLinha.includes(termoBusca)) {
+            linha.style.display = ''; // Mostra a linha
+            found = true;
+          } else {
+            linha.style.display = 'none'; // Esconde a linha
+          }
         });
 
         // Mostra ou esconde a mensagem "Nenhum resultado encontrado"
         if (noResultMessage) {
-            noResultMessage.parentElement.style.display = found ? 'none' : '';
+          noResultMessage.parentElement.style.display = found ? 'none' : '';
         }
       });
 
     }); // Fim do DOMContentLoaded
-</script></body>
+  </script>
+</body>
 
 </html>
