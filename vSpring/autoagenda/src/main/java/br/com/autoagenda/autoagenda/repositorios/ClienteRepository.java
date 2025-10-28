@@ -7,6 +7,4 @@ import br.com.autoagenda.autoagenda.model.Cliente;
 public interface ClienteRepository extends CrudRepository<Cliente, Integer>{
 	Iterable<Cliente> findAll();
 	Optional<Cliente> findById(Integer id);
-	Long deleteById(Long id);
-	Optional<Cliente> findEmailById(Integer id);
 }

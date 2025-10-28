@@ -34,7 +34,7 @@ public class C_Cliente {
     }
 
 	@PostMapping("/apagarCliente")
-    public String apagarCliente(@RequestParam Long idCliente) {
+    public String apagarCliente(@RequestParam Integer idCliente) {
 		if(idCliente != null) { repo.deleteById(idCliente); }
 		return "mensagem de retorno de deu bom";
     }
