@@ -27,7 +27,7 @@ public class C_Funcionario {
 			adminPadrao.setNomeFuncionario("Administrador");
 			adminPadrao.setUsuario("admin");
 			adminPadrao.setEmail("teste@email.com");
-			adminPadrao.setCpf("12345678901");
+			adminPadrao.setCpf("88461726049");
 			adminPadrao.setSenha("123");
 			adminPadrao.setAcesso("admin");
 			repo.save(adminPadrao);

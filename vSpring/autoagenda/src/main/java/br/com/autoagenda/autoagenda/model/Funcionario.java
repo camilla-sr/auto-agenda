@@ -1,5 +1,7 @@
 package br.com.autoagenda.autoagenda.model;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +14,7 @@ import jakarta.validation.constraints.NotEmpty;
 public class Funcionario {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFuncionario;
 	@NotEmpty private String nomeFuncionario;
-	@NotEmpty private String cpf;
+	@CPF private String cpf;
 	@NotEmpty private String email;
 	@NotEmpty private String usuario;
 	@NotEmpty private String senha;
