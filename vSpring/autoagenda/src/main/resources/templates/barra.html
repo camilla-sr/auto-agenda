@@ -27,16 +27,33 @@
 				<div class="nav-item">
 					<a href="/servicos" class="nav-link"><i class="fas fa-tools"></i>Serviços</a>
 				</div>
-				<div th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
-					<div class="nav-item">
-						<a href="/funcionarios" class="nav-link"><i class="fas fa-address-card"></i>Funcionários</a>
-					</div>
-				</div>
 				<div class="nav-item">
 					<a href="/produtos" class="nav-link"><i class="fas fa-box-open"></i>Produtos</a>
 				</div>
-				<div class="nav-item">
-					<a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i>Sair</a>
+				<div class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="fas fa-user"></i>Usuário
+					</a>
+					<ul class="dropdown-menu">
+						<li th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
+							<a class="dropdown-item" href="/funcionarios">
+								<i class="fas fa-address-card"></i>Funcionários
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="/perfil">
+								<i class="fas fa-user-edit"></i>Perfil
+							</a>
+						</li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li>
+							<a class="dropdown-item" href="/logout">
+								<i class="fas fa-sign-out-alt"></i>Sair
+							</a>
+						</li>
+					</ul>
 				</div>
 			</nav>
 		</div>

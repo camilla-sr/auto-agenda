@@ -1,4 +1,33 @@
-/* Removidos os position: absolute problemáticos */
+/* Variáveis de cores */
+:root {
+  --cor-primaria: #FFD700;
+  --cor-primaria-hover: #E6C200;
+  --cor-primaria-light: #FFF0B3;
+  --cor-secundaria: #000000;
+  --cor-secundaria-light: #333333;
+  --cor-texto-claro: #FFFFFF;
+  --cor-texto-escuro: #333333;
+  --cor-fundo-claro: #F5F5F5;
+  --cor-fundo-medio: #E0E0E0;
+  --cor-borda: #CCCCCC;
+  --cor-sucesso: #4CAF50;
+  --cor-sucesso-light: #E8F5E9;
+  --cor-alerta: #FF9800;
+  --cor-alerta-light: #FFF3E0;
+  --cor-erro: #F44336;
+  --cor-erro-light: #FFEBEE;
+  --cor-info: #2196F3;
+  --cor-info-light: #E3F2FD;
+
+  /* Status de agendamentos (de agendamentos.css) */
+  --status-agendado: #3498db;
+  --status-confirmado: #9b59b6;
+  --status-em-andamento: #FF9800;
+  --status-concluido: #4CAF50;
+  --status-cancelado: #F44336;
+}
+
+
 .mensagem {
     font-size: 20pt;
     font-weight: bolder;
