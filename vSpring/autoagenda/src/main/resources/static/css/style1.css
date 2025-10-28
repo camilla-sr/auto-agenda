@@ -19,7 +19,7 @@
   --cor-alerta-light: #FFF3E0;
   --cor-erro: #F44336;
   --cor-erro-light: #FFEBEE;
-  
+
   /* Categorias de produtos */
   --categoria-oleo: #3498db;
   --categoria-filtros: #9b59b6;
@@ -71,11 +71,16 @@ body {
 }
 
 .logo .logo-link,
-.logo .logo-link:visited, /* Garante que a cor não mude após o clique */
-.logo .logo-link:active { /* Garante que a cor não mude durante o clique */
-  text-decoration: none; /* Remove o sublinhado */
-  color: inherit;      /* Faz o link herdar a cor do texto do elemento pai (no caso, branco) */
-  transition: opacity 0.2s ease-in-out; /* Adiciona uma transição suave para o efeito de hover */
+.logo .logo-link:visited,
+/* Garante que a cor não mude após o clique */
+.logo .logo-link:active {
+  /* Garante que a cor não mude durante o clique */
+  text-decoration: none;
+  /* Remove o sublinhado */
+  color: inherit;
+  /* Faz o link herdar a cor do texto do elemento pai (no caso, branco) */
+  transition: opacity 0.2s ease-in-out;
+  /* Adiciona uma transição suave para o efeito de hover */
 }
 
 /*
@@ -92,7 +97,7 @@ body {
   text-decoration: none;
 }
 
-.logo a{
+.logo a {
   text-decoration: none;
 }
 
@@ -133,7 +138,7 @@ body {
   margin-right: 6px;
 }
 
-.nav-link:hover, 
+.nav-link:hover,
 .nav-link.active {
   background-color: var(--cor-primaria);
   color: var(--cor-secundaria);
@@ -253,6 +258,16 @@ body {
   border-top: 4px solid var(--cor-primaria);
 }
 
+.form-container h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
 .form-header {
   margin-bottom: 20px;
   padding-bottom: 15px;
@@ -270,6 +285,12 @@ body {
   margin-right: 10px;
   color: var(--cor-primaria);
 }
+
+.form-container h3 i {
+  margin-right: 10px;
+  color: var(--cor-primaria);
+}
+
 
 .form-row {
   display: flex;
@@ -612,24 +633,24 @@ table tbody tr:hover {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .nav-menu {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
   }
-  
+
   .form-col {
     flex: 100%;
     margin-bottom: 15px;
   }
-  
+
   .table-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
-  
+
   .table-header button {
     align-self: flex-end;
   }
@@ -639,19 +660,19 @@ table tbody tr:hover {
   .main-content {
     padding: 20px 0;
   }
-  
+
   .stats-container {
     grid-template-columns: 1fr;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .form-actions button {
     width: 100%;
   }
-  
+
   .btn {
     width: 100%;
   }

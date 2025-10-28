@@ -26,10 +26,47 @@
 				<p>Controle e cadastre novos serviços</p>
 			</div>
 
+			<div class="form-container" id="formNovoServicoContainer" style="display: none;">
+				<h3 id="formTitulo"><i class="fas fa-plus"></i> Cadastrar Novo Serviço</h3>
+
+				<form method="post" action="/servico-api/salvar" id="form-servico">
+					<input type="hidden" name="idServico" id="idServico" readonly>
+					<div class="form-row">
+						<div class="form-col">
+							<div class="form-group">
+								<label for="nome-servico">Nome do Serviço</label>
+								<input type="text" id="nome-servico" name="nomeServico" class="form-input"
+									placeholder="Ex: Troca de óleo">
+							</div>
+						</div>
+						<div class="form-col">
+							<div class="form-group">
+								<label for="descricao-servico">Descrição</label>
+								<input type="text" id="descricao-servico" name="descServico" class="form-input"
+									placeholder="Ex: Troca de óleo do motor">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" id="btn-cancelar-novo-servico" class="btn btn-secondary">
+							<i class="fas fa-times"></i> Cancelar
+						</button>
+						<button type="submit" class="btn">
+							<i class="fas fa-save"></i> Salvar Serviço
+						</button>
+					</div>
+				</form>
+				<form id="deleteForm" action="servico-api/apagar" method="post" style="display: none;">
+					<input type="hidden" name="idServico" id="deleteId">
+				</form>
+
+			</div>
+
 			<div class="table-container">
 				<div class="table-header">
 					<h3><i class="fas fa-clipboard-list"></i> Lista de Serviços</h3>
-					<button id="btn-novo-servico" class="btn"><i class="fas fa-plus-circle"></i>Novo Serviço</button>
+					<button id="btn-novo-servico" class="btn"><i class="fas fa-plus"></i>Novo Serviço</button>
 				</div>
 
 				<div class="table-actions">
@@ -66,44 +103,7 @@
 				</table>
 			</div>
 
-			<div class="form-container" id="formNovoServicoContainer" style="display: none">
-				<div class="form-header">
-					<h3><i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço</h3>
-				</div>
-
-				<form method="post" action="/servico-api/salvar" id="form-servico">
-					<input type="hidden" name="idServico" id="idServico" readonly>
-					<div class="form-row">
-						<div class="form-col">
-							<div class="form-group">
-								<label for="nome-servico">Nome do Serviço</label>
-								<input type="text" id="nome-servico" name="nomeServico" class="form-input"
-									placeholder="Ex: Troca de óleo">
-							</div>
-						</div>
-						<div class="form-col">
-							<div class="form-group">
-								<label for="descricao-servico">Descrição</label>
-								<input type="text" id="descricao-servico" name="descServico" class="form-input"
-									placeholder="Ex: Troca de óleo do motor">
-							</div>
-						</div>
-					</div>
-
-					<div class="form-actions">
-						<button type="reset" class="btn btn-secondary">
-							<i class="fas fa-times"></i> Cancelar
-						</button>
-						<button type="submit" class="btn">
-							<i class="fas fa-save"></i> Salvar Serviço
-						</button>
-					</div>
-				</form>
-				<form id="deleteForm" action="servico-api/apagar" method="post" style="display: none;">
-					<input type="hidden" name="idServico" id="deleteId">
-				</form>
-
-			</div>
+		</div>
 	</main>
 
 	<!-- Rodapé -->
@@ -120,119 +120,83 @@
 	</footer>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			const btnNovoServico = document.getElementById('btn-novo-servico');
-			const formServicoContainer = document.getElementById('formNovoServicoContainer');
-			const btnCancelarServico = document.querySelector('#form-servico button[type="reset"]');
-			const tableContainerForScroll = document.querySelector('.table-container');
+			const form = document.getElementById('form-servico');
+			const formTitulo = document.getElementById('formTitulo');
+			const botaoSalvar = form.querySelector('button[type="submit"]');
 
-			if (btnNovoServico && formServicoContainer) {
-				btnNovoServico.addEventListener('click', function () {
-					if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
-						formServicoContainer.style.display = 'block';
-						formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			// VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS
+
+			const camposObrigatorios = [
+				'nome-servico',
+				'descricao-servico'
+			];
+
+			function verificarCampos() {
+				let valido = true;
+				camposObrigatorios.forEach(id => {
+					const campo = document.getElementById(id);
+					if (!campo || !campo.value || campo.value === '') {
+						valido = false;
 					}
 				});
+				botaoSalvar.disabled = !valido;
 			}
 
-			if (btnCancelarServico && formServicoContainer && tableContainerForScroll) {
-				btnCancelarServico.addEventListener('click', function () {
-					formServicoContainer.style.display = 'none';
-					const formNovo = document.getElementById('form-servico');
-					if (formNovo) {
-						formNovo.reset();
-					}
-					tableContainerForScroll.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				});
-			}
-
-			const formTitulo = document.querySelector('.form-header h3');
-			const submitBtn = document.querySelector('button[type="submit"]');
-			const nomeInput = document.getElementById('nome-servico');
-			const descInput = document.getElementById('descricao-servico');
-			const idInput = document.getElementById('idServico');
-
-			function atualizarEstadoBotao() {
-				const nomeValido = nomeInput.value.trim() !== '';
-				const descValida = descInput.value.trim() !== '';
-				if (!idInput.value) {
-					submitBtn.disabled = !(nomeValido && descValida);
+			camposObrigatorios.forEach(id => {
+				const campo = document.getElementById(id);
+				if (campo) {
+					campo.addEventListener('input', verificarCampos);
 				}
-			}
-
-			nomeInput.addEventListener('input', atualizarEstadoBotao);
-			descInput.addEventListener('input', atualizarEstadoBotao);
-
-			// Modo "novo" (padrão)
-			function resetFormulario() {
-				formTitulo.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar Novo Serviço';
-				submitBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Serviço';
-				submitBtn.disabled = true;
-			}
-
-			// Reset quando clicar em "Cancelar"
-			document.querySelector('button[type="reset"]').addEventListener('click', function () {
-				idInput.value = '';
-				nomeInput.value = '';
-				descInput.value = '';
-				resetFormulario();
 			});
 
-			// Editar
-			document.querySelectorAll('.btn-edit').forEach(function (button) {
+			const btnNovoServico = document.getElementById('btn-novo-servico');
+			const formServicoContainer = document.getElementById('formNovoServicoContainer');
+			const btnCancelarNovoServico = document.getElementById('btn-cancelar-novo-servico');
+
+			btnNovoServico.addEventListener('click', () => {
+				form.querySelector('#idServico').value = "";
+				formTitulo.innerHTML = '<i class="fas fa-plus"></i> Cadastrar Novo Serviço';
+				formServicoContainer.style.display = 'block';
+				formServicoContainer.scrollIntoView({ behavior: 'smooth' });
+			});
+
+			btnCancelarNovoServico.addEventListener('click', () => {
+				form.reset();
+				formServicoContainer.style.display = 'none';
+				verificarCampos();
+			});
+
+			verificarCampos();
+
+			// EDITAR
+
+			const editButtons = document.querySelectorAll('.btn-edit');
+			editButtons.forEach(function (button) {
 				button.addEventListener('click', function () {
+					formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
 					if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
 						formServicoContainer.style.display = 'block';
-						formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 					}
-					formServicoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 					const row = button.closest('tr');
 					const id = button.dataset.id;
 					const nome = row.querySelector('.nome-servico').textContent.trim();
 					const descricao = row.querySelector('.desc-servico').textContent.trim();
 
-					idInput.value = id;
-					nomeInput.value = nome;
-					descInput.value = descricao;
+					document.getElementById('idServico').value = id;
+					document.getElementById('nome-servico').value = nome;
+					document.getElementById('descricao-servico').value = descricao;
 
-					formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
-					submitBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
-					submitBtn.disabled = false;
+					verificarCampos();
 				});
 			});
 
-			// Inicializa em modo novo
-			resetFormulario();
+			// EXCLUIR
 
-
-			//	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
-			const busca = document.getElementById('busca')
-			const tabela = document.querySelector('table');
-			const linhas = tabela.querySelectorAll('tbody tr');
-
-			busca.addEventListener('input', function () {
-				const termoBusca = busca.value.toLowerCase();
-
-				linhas.forEach(function (linha) {
-					const textoLinha = linha.textContent.toLowerCase();
-
-					if (textoLinha.includes(termoBusca)) {
-						linha.style.display = '';
-					} else {
-						linha.style.display = 'none';
-					}
-				})
-			})
-			//=========================================================
-			// CÓDIGO PARA FAZER O BOTÃO DE EXCLUIR FUNCIONAR
-			//=========================================================
 			const deleteButtons = document.querySelectorAll('.btn-delete');
-
 			deleteButtons.forEach(function (button) {
 				button.addEventListener('click', function (e) {
-					e.preventDefault(); // Impede o comportamento padrão do botão
-
+					e.preventDefault();
 					const id = button.dataset.id;
-
 					Swal.fire({
 						title: 'Você tem certeza?',
 						text: "Esta ação não poderá ser desfeita!",
@@ -249,6 +213,26 @@
 							document.getElementById('deleteForm').submit();
 						}
 					});
+				});
+			});
+
+			// BUSCA DINÂMICA CLIENT-SIDE 
+			
+			const busca = document.getElementById('busca');
+			const tabela = document.querySelector('table');
+			const linhas = tabela.querySelectorAll('tbody tr');
+
+			busca.addEventListener('input', function () {
+				const termoBusca = busca.value.toLowerCase();
+
+				linhas.forEach(function (linha) {
+					const textoLinha = linha.textContent.toLowerCase();
+
+					if (textoLinha.includes(termoBusca)) {
+						linha.style.display = '';
+					} else {
+						linha.style.display = 'none';
+					}
 				});
 			});
 		});
