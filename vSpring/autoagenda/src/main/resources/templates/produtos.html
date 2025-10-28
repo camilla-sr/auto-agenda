@@ -384,8 +384,8 @@
           document.getElementById('codigo-produto').value = codigo;
           document.getElementById('nome-produto').value = nome;
           document.getElementById('categoria').value = categoria;
-          document.getElementById('preco-custo').value = custo;
-          document.getElementById('preco-venda').value = venda;
+          document.getElementById('preco-custo').value = parseFloat(custo).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          document.getElementById('preco-venda').value = parseFloat(venda).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           document.getElementById('fornecedor').value = fornecedor;
           document.getElementById('estoque-atual').value = estoqueA;
           document.getElementById('estoque-minimo').value = estoqueM;
