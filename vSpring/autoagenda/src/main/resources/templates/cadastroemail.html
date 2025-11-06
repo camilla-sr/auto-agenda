@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário - Centro Automotivo JJ</title>
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="validacaoemail.js"></script>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="dashboard.html" class="logo-link">
+                    <h1>Centro <span class="logo-highlight">Automotivo JJ</span></h1>
+                </a>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i>Dashboard
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="login.html" class="nav-link">
+                        <i class="fas fa-sign-in-alt"></i>Login
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <h2>
+                    <i class="fas fa-user-plus"></i>
+                    Cadastro de Usuário
+                </h2>
+                <p>Preencha os dados abaixo para criar sua conta</p>
+            </div>
+
+            <!-- Container do Formulário -->
+            <div class="form-container">
+                <div class="form-header">
+                    <h3>
+                        <i class="fas fa-envelope"></i>
+                        Informações de Acesso
+                    </h3>
+                </div>
+
+                <form id="cadastroForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="nomeCompleto">
+                                    <i class="fas fa-user"></i> Nome Completo
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input 
+                                        type="text" 
+                                        id="nomeCompleto" 
+                                        name="nomeCompleto" 
+                                        placeholder="Digite seu nome completo"
+                                    >
+                                </div>
+                                <div id="nomeError" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Por favor, insira seu nome completo</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="email">
+                                    <i class="fas fa-envelope"></i> E-mail
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input 
+                                        type="text" 
+                                        id="email" 
+                                        name="email" 
+                                        placeholder="seu.email@exemplo.com"
+                                    >
+                                </div>
+                                <div id="emailError" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Por favor, insira um e-mail válido</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="senha">
+                                    <i class="fas fa-lock"></i> Senha
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input 
+                                        type="password" 
+                                        id="senha" 
+                                        name="senha" 
+                                        placeholder="Crie uma senha segura"
+                                    >
+                                </div>
+                                <div id="senhaError" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>A senha deve ter pelo menos 6 caracteres</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="confirmarSenha">
+                                    <i class="fas fa-lock"></i> Confirmar Senha
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input 
+                                        type="password" 
+                                        id="confirmarSenha" 
+                                        name="confirmarSenha" 
+                                        placeholder="Digite a senha novamente"
+                                    >
+                                </div>
+                                <div id="confirmarSenhaError" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>As senhas não coincidem</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="telefone">
+                                    <i class="fas fa-phone"></i> Telefone
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-phone input-icon"></i>
+                                    <input 
+                                        type="text" 
+                                        id="telefone" 
+                                        name="telefone" 
+                                        placeholder="(11) 99999-9999"
+                                    >
+                                </div>
+                                <div id="telefoneError" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Por favor, insira um telefone válido</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="tipoUsuario">
+                                    <i class="fas fa-user-tag"></i> Tipo de Usuário
+                                </label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user-tag input-icon"></i>
+                                    <select id="tipoUsuario" name="tipoUsuario">
+                                        <option value="">Selecione o tipo</option>
+                                        <option value="cliente">Cliente</option>
+                                        <option value="funcionario">Funcionário</option>
+                                        <option value="administrador">Administrador</option>
+                                    </select>
+                                </div>
+                                <div id="tipoUsuarioError" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Por favor, selecione um tipo de usuário</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações do Formulário -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="btnLimpar">
+                            <i class="fas fa-eraser"></i> Limpar
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnCadastrar">
+                            <i class="fas fa-user-plus"></i> Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Link para Login -->
+            <div style="text-align: center; margin-top: 20px;">
+                <p>Já possui uma conta? 
+                    <a href="login.html" style="color: var(--cor-primaria); text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-sign-in-alt"></i> Faça login aqui
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-car"></i>
+                    <span>Centro Automotivo JJ</span>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2024 Centro Automotivo JJ. Todos os direitos reservados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript de Validação -->
+    <script>
+        // Inicialização quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referências aos elementos
+            const form = document.getElementById('cadastroForm');
+            const emailInput = document.getElementById('email');
+            const nomeInput = document.getElementById('nomeCompleto');
+            const senhaInput = document.getElementById('senha');
+            const confirmarSenhaInput = document.getElementById('confirmarSenha');
+            const telefoneInput = document.getElementById('telefone');
+            const tipoUsuarioInput = document.getElementById('tipoUsuario');
+            const btnLimpar = document.getElementById('btnLimpar');
+
+            // Configurar validações em tempo real
+            configurarValidacoesTempoReal();
+
+            // Evento de submit do formulário
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validarFormulario()) {
+                    // Se todas as validações passarem
+                    alert('Cadastro realizado com sucesso!');
+                    // Aqui você pode adicionar o código para enviar os dados para o servidor
+                    // form.submit(); // Descomente esta linha quando integrar com backend
+                }
+            });
+
+            // Evento do botão limpar
+            btnLimpar.addEventListener('click', function() {
+                limparFormulario();
+            });
+
+            // Configurar máscara de telefone
+            telefoneInput.addEventListener('input', function(e) {
+                aplicarMascaraTelefone(e.target);
+            });
+
+            function configurarValidacoesTempoReal() {
+                // Validação de nome
+                nomeInput.addEventListener('blur', function() {
+                    validarNome(this.value);
+                });
+
+                // Validação de e-mail
+                emailInput.addEventListener('blur', function() {
+                    validarEmail(this.value);
+                });
+
+                // Validação de senha
+                senhaInput.addEventListener('blur', function() {
+                    validarSenha(this.value);
+                });
+
+                // Validação de confirmação de senha
+                confirmarSenhaInput.addEventListener('input', function() {
+                    validarConfirmacaoSenha(senhaInput.value, this.value);
+                });
+
+                // Validação de telefone
+                telefoneInput.addEventListener('blur', function() {
+                    validarTelefone(this.value);
+                });
+
+                // Validação de tipo de usuário
+                tipoUsuarioInput.addEventListener('change', function() {
+                    validarTipoUsuario(this.value);
+                });
+            }
+
+            function validarFormulario() {
+                const nomeValido = validarNome(nomeInput.value);
+                const emailValido = validarEmail(emailInput.value);
+                const senhaValida = validarSenha(senhaInput.value);
+                const confirmacaoValida = validarConfirmacaoSenha(senhaInput.value, confirmarSenhaInput.value);
+                const telefoneValido = validarTelefone(telefoneInput.value);
+                const tipoUsuarioValido = validarTipoUsuario(tipoUsuarioInput.value);
+
+                return nomeValido && emailValido && senhaValida && confirmacaoValida && telefoneValido && tipoUsuarioValido;
+            }
+
+            function validarNome(nome) {
+                const errorElement = document.getElementById('nomeError');
+                
+                if (!nome || nome.trim().length < 2) {
+                    mostrarErro('nomeCompleto', 'Por favor, insira seu nome completo');
+                    return false;
+                } else {
+                    ocultarErro('nomeCompleto');
+                    return true;
+                }
+            }
+
+            function validarEmail(email) {
+                const errorElement = document.getElementById('emailError');
+                
+                if (!email) {
+                    mostrarErro('email', 'Por favor, insira um e-mail');
+                    return false;
+                }
+                
+                const resultado = validadorEmail.validarParaFormulario(email);
+                
+                if (!resultado.valido) {
+                    mostrarErro('email', resultado.mensagem);
+                    return false;
+                } else {
+                    ocultarErro('email');
+                    return true;
+                }
+            }
+
+            function validarSenha(senha) {
+                if (!senha || senha.length < 6) {
+                    mostrarErro('senha', 'A senha deve ter pelo menos 6 caracteres');
+                    return false;
+                } else {
+                    ocultarErro('senha');
+                    return true;
+                }
+            }
+
+            function validarConfirmacaoSenha(senha, confirmacao) {
+                if (senha !== confirmacao) {
+                    mostrarErro('confirmarSenha', 'As senhas não coincidem');
+                    return false;
+                } else {
+                    ocultarErro('confirmarSenha');
+                    return true;
+                }
+            }
+
+            function validarTelefone(telefone) {
+                // Remove caracteres não numéricos
+                const telefoneLimpo = telefone.replace(/\D/g, '');
+                
+                if (telefone && telefoneLimpo.length < 10) {
+                    mostrarErro('telefone', 'Por favor, insira um telefone válido');
+                    return false;
+                } else {
+                    ocultarErro('telefone');
+                    return true;
+                }
+            }
+
+            function validarTipoUsuario(tipo) {
+                if (!tipo) {
+                    mostrarErro('tipoUsuario', 'Por favor, selecione um tipo de usuário');
+                    return false;
+                } else {
+                    ocultarErro('tipoUsuario');
+                    return true;
+                }
+            }
+
+            function aplicarMascaraTelefone(input) {
+                let value = input.value.replace(/\D/g, '');
+                
+                if (value.length <= 11) {
+                    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                    input.value = value;
+                }
+            }
+
+            function mostrarErro(campoId, mensagem) {
+                const errorElement = document.getElementById(campoId + 'Error');
+                const inputElement = document.getElementById(campoId);
+                
+                if (errorElement && inputElement) {
+                    errorElement.querySelector('span').textContent = mensagem;
+                    errorElement.style.display = 'flex';
+                    inputElement.style.borderColor = 'var(--cor-erro)';
+                }
+            }
+
+            function ocultarErro(campoId) {
+                const errorElement = document.getElementById(campoId + 'Error');
+                const inputElement = document.getElementById(campoId);
+                
+                if (errorElement && inputElement) {
+                    errorElement.style.display = 'none';
+                    inputElement.style.borderColor = 'var(--cor-borda)';
+                }
+            }
+
+            function limparFormulario() {
+                form.reset();
+                
+                // Limpar mensagens de erro
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach(error => {
+                    error.style.display = 'none';
+                });
+                
+                // Resetar bordas dos inputs
+                const inputs = document.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    input.style.borderColor = 'var(--cor-borda)';
+                });
+            }
+        });
+    </script>
+
+    <style>
+        /* Estilos específicos para a página de cadastro */
+        .error-message {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: var(--cor-erro);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            padding: 8px 12px;
+            background-color: var(--cor-erro-light);
+            border-radius: 4px;
+            border-left: 3px solid var(--cor-erro);
+        }
+
+        .error-message i {
+            font-size: 0.9rem;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: var(--cor-primaria);
+        }
+    </style>
+</body>
+</html>
