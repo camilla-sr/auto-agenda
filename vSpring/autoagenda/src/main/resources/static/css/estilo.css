@@ -31,7 +31,7 @@
 .mensagem {
     font-size: 20pt;
     font-weight: bolder;
-    color: white;
+    color: var(--cor-texto-claro);
     margin-bottom: 20px;
 }
 
@@ -56,14 +56,26 @@
     background-color: transparent;
 }
 
+.login {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: solid 1px rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 40px 50px;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+}
+
 .cadastro{
 	max-width: 500px;
-    padding: 20px 30px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: solid 3px;
+    padding: 40px 50px;
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: solid 1px rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    background-color: transparent;
+    backdrop-filter: blur(10px);
 }
 
 .cad-inputs .form-control {
@@ -76,11 +88,11 @@
 }
 
 .form-control {
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.1);
     border: none;
-    border-bottom: solid 1px white;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.5);
     transition: all 0.3s ease;
-    color: white;
+    color: var(--cor-texto-claro);
 }
 
 .form-control:hover {
@@ -89,14 +101,15 @@
 
 .form-control:focus {
     transition: all 0.3s ease;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.2);
     border: none;
-    border-bottom: solid 2px yellow;
+    border-bottom: solid 2px var(--cor-primaria);
     box-shadow: none;
+    color: var(--cor-texto-claro);
 }
 
 span {
-    color: white;
+    color: var(--cor-texto-claro);
     font-weight: bold;
     font-size: 12pt;
     text-align: left;
