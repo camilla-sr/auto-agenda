@@ -19,7 +19,7 @@
   --cor-alerta-light: #FFF3E0;
   --cor-erro: #F44336;
   --cor-erro-light: #FFEBEE;
-  
+
   /* Categorias de produtos */
   --categoria-oleo: #3498db;
   --categoria-filtros: #9b59b6;
@@ -71,11 +71,16 @@ body {
 }
 
 .logo .logo-link,
-.logo .logo-link:visited, /* Garante que a cor não mude após o clique */
-.logo .logo-link:active { /* Garante que a cor não mude durante o clique */
-  text-decoration: none; /* Remove o sublinhado */
-  color: inherit;      /* Faz o link herdar a cor do texto do elemento pai (no caso, branco) */
-  transition: opacity 0.2s ease-in-out; /* Adiciona uma transição suave para o efeito de hover */
+.logo .logo-link:visited,
+/* Garante que a cor não mude após o clique */
+.logo .logo-link:active {
+  /* Garante que a cor não mude durante o clique */
+  text-decoration: none;
+  /* Remove o sublinhado */
+  color: inherit;
+  /* Faz o link herdar a cor do texto do elemento pai (no caso, branco) */
+  transition: opacity 0.2s ease-in-out;
+  /* Adiciona uma transição suave para o efeito de hover */
 }
 
 /*
@@ -89,6 +94,10 @@ body {
 .logo {
   display: flex;
   align-items: center;
+  text-decoration: none;
+}
+
+.logo a {
   text-decoration: none;
 }
 
@@ -129,10 +138,38 @@ body {
   margin-right: 6px;
 }
 
-.nav-link:hover, 
+.nav-link:hover,
 .nav-link.active {
   background-color: var(--cor-primaria);
   color: var(--cor-secundaria);
+}
+
+/* Dropdown menu styles */
+.dropdown-menu {
+  background-color: var(--cor-secundaria);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  color: var(--cor-texto-claro);
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--cor-primaria);
+  color: var(--cor-secundaria);
+}
+
+.dropdown-item i {
+  margin-right: 6px;
+  width: 16px;
+}
+
+.dropdown-divider {
+  border-top-color: var(--cor-borda);
 }
 
 /* Conteúdo principal */
@@ -249,6 +286,16 @@ body {
   border-top: 4px solid var(--cor-primaria);
 }
 
+.form-container h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
 .form-header {
   margin-bottom: 20px;
   padding-bottom: 15px;
@@ -266,6 +313,12 @@ body {
   margin-right: 10px;
   color: var(--cor-primaria);
 }
+
+.form-container h3 i {
+  margin-right: 10px;
+  color: var(--cor-primaria);
+}
+
 
 .form-row {
   display: flex;
@@ -464,6 +517,7 @@ table tbody tr:hover {
   font-family: 'Poppins', sans-serif;
   background-color: #fff;
   color: var(--cor-texto-escuro);
+  display: inline-block;
 }
 
 .table-actions input {
@@ -607,24 +661,24 @@ table tbody tr:hover {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .nav-menu {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
   }
-  
+
   .form-col {
     flex: 100%;
     margin-bottom: 15px;
   }
-  
+
   .table-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
-  
+
   .table-header button {
     align-self: flex-end;
   }
@@ -634,19 +688,19 @@ table tbody tr:hover {
   .main-content {
     padding: 20px 0;
   }
-  
+
   .stats-container {
     grid-template-columns: 1fr;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .form-actions button {
     width: 100%;
   }
-  
+
   .btn {
     width: 100%;
   }

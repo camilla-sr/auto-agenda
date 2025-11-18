@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - AutoAgenda</title>
+    <title>Cadastro - Centro Automotivo JJ</title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -15,7 +15,7 @@
 	<script src="/js/script.js"></script>
 </head>
 
-<body class="bg-secondary text-white d-flex align-items-center justify-content-center min-vh-100">
+<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100" style="background: linear-gradient(135deg, #000000 0%, #333333 100%);">
     <div class="container">
         <div class="cadastro">
             <img src="/img/logo.png" class="logo-login">
@@ -36,6 +36,11 @@
                 <span>CPF</span>
                 <div class="input-group mb-3">
                     <input type="text" id="cpf" name="cpf" class="form-control">
+                </div>
+
+                <span>E-mail</span>
+                <div class="input-group mb-3">
+                    <input type="email" name="email" class="form-control" required>
                 </div>
 			
                 <span>Senha</span>
@@ -67,6 +72,18 @@
 				clearMaskOnLostFocus: false,
 		    }).mask(cpfInput);
 		}
+
+		// Validação básica de email
+		const form = document.querySelector('form');
+		form.addEventListener('submit', function(e) {
+		    const emailInput = document.querySelector('input[name="email"]');
+		    const email = emailInput.value;
+		    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		    if (!emailRegex.test(email)) {
+		        e.preventDefault();
+		        alert('Por favor, insira um e-mail válido.');
+		    }
+		});
 	});
 	</script>
 </body>

@@ -5,10 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos - Centro Automotivo JJ</title>
-  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"> <!-- Adicionado Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/modal-fix.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="/css/main-styles.css"> 
   <link rel="stylesheet" href="/css/agendamentos.css">
   <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="/css/style1.css">
+
+
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -60,119 +65,10 @@
 
 
 
-      <!-- Tabela de Agendamentos -->
-      <div class="table-container" id="lista-agendamentos-container">
-        <div class="table-header">
-          <h3><i class="fas fa-list"></i> Lista de Agendamentos</h3>
-          <button class="btn btn-primary" id="btn-novo-agendamento">
-            <i class="fas fa-plus"></i> Novo Agendamento
-          </button>
-        </div>
-
-        <div class="table-filters">
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label for="busca">Buscar Agendamento</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-search input-icon"></i>
-                  <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
-                </div>
-              </div>
-            </div>
-
-            <div class="form-col">
-              <div class="form-group">
-                <label for="filtro_status">Filtrar por Status</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-filter input-icon"></i>
-                  <select id="filtro_status" name="filtro_status">
-                    <option value="">Todos os status</option>
-                    <option value="Agendado">Agendado</option>
-                    <option value="Confirmado">Confirmado</option>
-                    <option value="Em_Andamento">Em Andamento</option>
-                    <option value="Concluido">Concluído</option>
-                    <option value="Cancelado">Cancelado</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Tipo de Serviço</th>
-                <!-- <th>Data do Agendamento</th> -->
-                <th>Previsão</th>
-                <th>Conclusão</th>
-                <th>Status</th>
-                <th>Observação</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:if="${agendamentos == null or agendamentos.empty}">
-                <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
-              </tr>
-              <tr th:each="ag : ${agendamentos}">
-                <td class="ag-cliente" th:text="${ag.nomeCliente}"></td>
-                <td class="ag-servico">
-                  <span class="status-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
-                    th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
-                    th:text="${ag.servico.nomeServico}"> </span>
-                  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}">
-                </td>
-                <!-- <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd/MM/yyyy')}"
-                  th:data-date="${#temporals.format(ag.dataCadastro, 'yyyy-MM-dd')}">
-                </td> -->
-                <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
-                  th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
-                </td>
-                <td class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}"
-                  th:data-date="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}">
-                </td>
-                <td class="ag-status">
-                  <span class="status-badge"
-                    th:classappend="' ' + ${#strings.replace(ag.statusAgendamento.toLowerCase(), ' ', '-')}"
-                    th:text="${ag.statusAgendamento}"></span>
-                </td>
-                <td th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
-                <td class="action-buttons">
-                  <button class="btn btn-action edit-btn" th:attr="data-id=${ag.idAgendamento}" title="Editar">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-action delete-btn" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                  <button class="btn btn-action view-btn" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="table-pagination">
-          <button class="btn btn-secondary" id="btn-anterior" disabled>
-            <i class="fas fa-chevron-left"></i> Anterior
-          </button>
-          <span class="pagination-info">Página 1 de 1</span>
-          <button class="btn btn-secondary" id="btn-proximo" disabled>
-            Próximo <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-
-
       <!-- Formulário de Agendamento -->
       <div class="form-container" id="agendamento-form-container" style="display: none;">
         <div class="form-header">
-          <h3><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
+          <h3 id="formTitulo"><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
         </div>
 
         <form method="post" action="/agendamento-api/salvar" id="agendamento-form">
@@ -269,6 +165,160 @@
           <input type="hidden" name="idAgendamento" id="deleteId">
         </form>
       </div>
+
+      <!-- Tabela de Agendamentos -->
+      <div class="table-container" id="lista-agendamentos-container">
+        <div class="table-header">
+          <h3><i class="fas fa-list"></i> Lista de Agendamentos</h3>
+          <button class="btn btn-primary" id="btn-novo-agendamento">
+            <i class="fas fa-plus"></i> Novo Agendamento
+          </button>
+        </div>
+
+        <div class="table-filters">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="busca">Buscar Agendamento</label>
+                <div class="input-wrapper">
+                  <!-- <i class="fas fa-search input-icon"></i> -->
+                  <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="filtro_status">Filtrar por Status</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-filter input-icon"></i>
+                  <select id="filtro_status" name="filtro_status">
+                    <option value="">Todos os status</option>
+                    <option value="Agendado">Agendado</option>
+                    <option value="Confirmado">Confirmado</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluido">Concluído</option>
+                    <option value="Cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Tipo de Serviço</th>
+                <!-- <th>Data do Agendamento</th> -->
+                <th>Previsão</th>
+                <th>Conclusão</th>
+                <th>Status</th>
+                <th>Observação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${agendamentos == null or agendamentos.empty}">
+                <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
+              </tr>
+              <tr th:each="ag : ${agendamentos}">
+                <td class="ag-cliente" th:text="${ag.nomeCliente}"></td>
+                <td class="ag-servico">
+                  <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
+                    th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
+                    th:text="${ag.servico.nomeServico}"> </span>
+                  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}">
+                </td>
+                <!-- <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd/MM/yyyy')}"
+                  th:data-date="${#temporals.format(ag.dataCadastro, 'yyyy-MM-dd')}">
+                </td> -->
+                <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
+                  th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
+                </td>
+                <td class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}"
+                  th:data-date="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}">
+                </td>
+                <td class="ag-status">
+                  <span class="status-badge"
+                    th:classappend="' ' + ${#strings.replace(ag.statusAgendamento.toLowerCase(), ' ', '-')}"
+                    th:text="${ag.statusAgendamento}"></span>
+                </td>
+                <td th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
+                <td class="action-buttons">
+                  <button class="btn-icon btn-edit" th:attr="data-id=${ag.idAgendamento}" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn-icon btn-delete" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-pagination">
+          <button class="btn btn-secondary" id="btn-anterior" disabled>
+            <i class="fas fa-chevron-left"></i> Anterior
+          </button>
+          <span class="pagination-info">Página 1 de 1</span>
+          <button class="btn btn-secondary" id="btn-proximo" disabled>
+            Próximo <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- Modal de Visualização (sem alterações) -->
+    <div class="bootstrap-iso">
+      <div class="modal fade" id="visualizarAgendamentoModal" tabindex="-1"
+        aria-labelledby="visualizarAgendamentoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="visualizarAgendamentoModalLabel">
+                <i class="fas fa-eye"></i> Detalhes do Agendamento
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <h4><strong id="modal-cliente-agendamento"></strong></h4>
+                  <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                  <h5>Previsão</h5>
+                  <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
+                </div>
+              </div>
+              <hr>
+              <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
+              <p id="modal-observacao" style="white-space: pre-wrap;"></p>
+              <hr>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p><strong>Status:</strong> <span id="modal-status"></span></p>
+                  <p><strong>Conclusão:</strong> <span id="modal-conclusao"></span></p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times"></i> Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
@@ -278,7 +328,7 @@
       <div class="footer-content">
         <div class="footer-logo">
           <i class="fas fa-car-alt"></i>
-          <span class="logo-highlight">Centro Automotivo</span> JJ
+          <span class="logo-highlight">Centro Automotivo </span> JJ
         </div>
         <p class="footer-copyright">&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
       </div>
@@ -320,18 +370,14 @@
       if (btnNovoAgendamento && formContainer) {
         // Adiciona um evento de clique ao botão
         btnNovoAgendamento.addEventListener('click', function () {
+          // Limpa o ID do agendamento
+          document.getElementById('idAgendamento').value = "";
+          // Altera o título do formulário
+          document.getElementById('formTitulo').innerHTML = '<i class="fas fa-plus"></i> Novo Agendamento';
           // Mostra o container do formulário
-          if (formContainer.style.display === 'none' || formContainer.style.display === '') {
-            formContainer.style.display = 'block'; // 
-
-
-            // Scrolla a tela para o container do formulário
-            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          } else {
-            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // formContainer.style.display = 'none';
-
-          }
+          formContainer.style.display = 'block';
+          // Scrolla a tela para o container do formulário
+          formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       } else {
         if (!btnNovoAgendamento) {
@@ -353,9 +399,9 @@
           formContainer.style.display = 'none';
 
           // Reseta os campos do formulário
-          const formNovo = document.getElementById('formNovoAgendamento');
-          if (formNovo) {
-            formNovo.reset();
+          const formAgendamento = document.getElementById('agendamento-form');
+          if (formAgendamento) {
+            formAgendamento.reset();
           }
 
           // Scrolla a tela de volta para a lista de agendamentos
@@ -366,7 +412,7 @@
           console.error('Botão "Cancelar Novo Agendamento" (btn-cancelar-novo-agendamento) não encontrado.');
         }
         if (!formContainer) {
-          console.error('Container do formulário de novo agendamento (formNovoAgendamentoContainer) não encontrado para o botão Cancelar.');
+          console.error('Container do formulário de novo agendamento (agendamento-form-container) não encontrado para o botão Cancelar.');
         }
         if (!containerListaAgendamentos) {
           console.error('Container da lista de agendamentos (lista-agendamentos-container) não encontrado para scroll no Cancelar.');
@@ -374,10 +420,12 @@
       }
 
       //		SCRIPT DO BACK, AQUI BOTA PRA FUNCIONAR EDITAR E APAGAR
-      const editButtons = document.querySelectorAll('.edit-btn');
+      const editButtons = document.querySelectorAll('.btn-edit');
 
       editButtons.forEach(function (button) {
         button.addEventListener('click', function () {
+          // Altera o título do formulário para editar
+          document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
           if (formContainer.style.display === 'none' || formContainer.style.display === '') {
             formContainer.style.display = 'block';
             formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -397,16 +445,17 @@
           document.getElementById('idAgendamento').value = id;
 
           document.getElementById('nome-cliente').value = nome;
-          document.getElementById('statusAgendamento').value = status;
+          document.getElementById('status').value = status;
           document.getElementById('data-previsao').value = dataPrevisao;
           document.getElementById('data-conclusao').value = dataConclusao || '';
           document.getElementById('observacao').value = observacao;
-          document.getElementById('data-conclusao-container').style.display = 'block';
+          // Preencher o select de serviço se necessário, mas como não temos o ID na linha, talvez deixar vazio ou buscar
+          // Para simplificar, deixar como está
 
         });
       });
 
-      const deleteButtons = document.querySelectorAll('.delete-btn');
+      const deleteButtons = document.querySelectorAll('.btn-delete');
 
       deleteButtons.forEach(function (button) {
         button.addEventListener('click', function (e) {
@@ -434,6 +483,23 @@
 
     });
 
+    // VISUALIZAR DETALHES DO AGENDAMENTO
+
+    const viewButtons = document.querySelectorAll('.btn-view');
+    const visualizarModal = new bootstrap.Modal(document.getElementById('visualizarAgendamentoModal'));
+    viewButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const row = button.closest('tr');
+        document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
+        document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim() || 'N/A';
+        document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim() || 'N/A';
+        document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
+        document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim() || 'Não informado';
+        document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
+
+        visualizarModal.show();
+      });
+    });
 
     //	ESSE BLOCO VAI VERIFICAR A DATA INSERIDA NO 'AGENDAMENTO PARA' NO FORMULÁRIO
     const inputData = document.getElementById('data-previsao');
