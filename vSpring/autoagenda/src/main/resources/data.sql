@@ -46,3 +46,11 @@ create table if not exists agendamento (
   observacao text default null,
   foreign key (fk_servico) references servico (id_servico)
 );
+
+create table if not exists fotos_agendamento (
+  id_foto int primary key auto_increment,
+  agendamento_id int not null,
+  caminho varchar(300) not null,
+  data_criacao datetime default current_timestamp,
+  foreign key (agendamento_id) references agendamento (id_agendamento)
+);

@@ -29,7 +29,6 @@ public class Agendamento {
     	this.idAgendamento = idAgendamento;
     	this.nomeCliente = nomeCliente;
     	this.servico = new Servico();
-    	this.dataCadastro = LocalDate.now();
     	this.dataPrevisao = dataPrevisao;
     	this.dataConclusao = dataConclusao;
     	this.statusAgendamento = statusAgendamento;

@@ -11,8 +11,5 @@ public class AutoagendaApplication {
 		SpringApplication.run(AutoagendaApplication.class, args);
 	}
 	
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+	@Bean public RestTemplate restTemplate() { return new RestTemplate(); }
 }
