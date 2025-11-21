@@ -1,11 +1,12 @@
 package com.ms_email.email.dtos;
 
+import org.springframework.beans.factory.annotation.Value;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class EmailDto {
 	@NotBlank @Email private String destinatario;
-	@NotBlank @Email private String remetente;
+	@Value("${spring.mail.username}") private String remetente;
 	@NotBlank private String assunto;
 	@NotBlank private String texto;
 		
