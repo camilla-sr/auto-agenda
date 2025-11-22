@@ -204,7 +204,22 @@ body {
 }
 
 .hamburger-menu.active .hamburger-line:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Mostra o menu quando o botão hambúrguer está ativo */
+.nav-menu.active {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  max-height: 500px; /* Altura suficiente para o conteúdo */
+  padding: 10px 0;
+}
+
+
+/* Dropdown */
+.dropdown {
+  position: relative;
 }
 
 /* Responsividade da navegação */
