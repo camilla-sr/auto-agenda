@@ -111,7 +111,7 @@
               </div>
             </div>
 
-            <div class="form-col" style="visibility: hidden">
+            <div class="form-col" style="display: none" id="data_conclusao_container">
               <div class="form-group">
                 <label for="data-conclusao">Data de Conclusão</label>
                 <div class="input-wrapper">
@@ -207,7 +207,7 @@
         </div>
 
         <div class="table-responsive">
-          <table>
+          <table class="appointments-table">
             <thead>
               <tr>
                 <th>Cliente</th>
@@ -225,8 +225,8 @@
                 <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
               </tr>
               <tr th:each="ag : ${agendamentos}">
-                <td class="ag-cliente" th:text="${ag.nomeCliente}"></td>
-                <td class="ag-servico">
+                <td data-label="Cliente" class="ag-cliente" th:text="${ag.nomeCliente}"></td>
+                <td data-label="Tipo de Serviço" class="ag-servico">
                   <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
                     th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
                     th:text="${ag.servico.nomeServico}"> </span>
@@ -235,18 +235,18 @@
                 <!-- <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataCadastro, 'yyyy-MM-dd')}">
                 </td> -->
-                <td class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
+                <td data-label="Previsão" class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
                 </td>
-                <td class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}"
+                <td data-label="Conclusão" class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}">
                 </td>
-                <td class="ag-status">
+                <td data-label="Status" class="ag-status">
                   <span class="status-badge"
                     th:classappend="' ' + ${#strings.replace(ag.statusAgendamento.toLowerCase(), ' ', '-')}"
                     th:text="${ag.statusAgendamento}"></span>
                 </td>
-                <td th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
+                <td data-label="Observação" th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
                 <td class="action-buttons">
                   <button class="btn-icon btn-edit" th:attr="data-id=${ag.idAgendamento}" title="Editar">
                     <i class="fas fa-edit"></i>
@@ -544,6 +544,25 @@
         }
       })
     })
+
+    // LÓGICA PARA SETAR DATA DE CONCLUSÃO AUTOMATICAMENTE QUANDO STATUS FOR CONCLUÍDO
+    const statusSelect = document.getElementById('status');
+    const dataConclusaoInput = document.getElementById('data-conclusao');
+    const dataConclusaoGroup = document.querySelector('.form-col[style*="display: none"]');
+
+    if (statusSelect) {
+      statusSelect.addEventListener('change', function() {
+        if (statusSelect.value === 'Concluido') {
+          const hoje = new Date();
+          const dataFormatada = hoje.toISOString().split('T')[0];
+          if (dataConclusaoInput) dataConclusaoInput.value = dataFormatada;
+          if (dataConclusaoGroup) dataConclusaoGroup.style.display = 'block';
+        } else {
+          if (dataConclusaoInput) dataConclusaoInput.value = '';
+          if (dataConclusaoGroup) dataConclusaoGroup.style.display = 'none';
+        }
+      });
+    }
   </script>
 </body>
 
