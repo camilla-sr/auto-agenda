@@ -150,6 +150,18 @@ body {
   margin-bottom: 30px;
 }
 
+/* Novo container para cards do dashboard */
+.dashboard-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.dashboard-cards-container .stat-card {
+  flex: 1 1 300px; /* Flex-grow, flex-shrink, flex-basis */
+}
+
 .stat-card {
   display: flex;
   align-items: center;
@@ -325,6 +337,10 @@ body {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .dashboard-cards-container {
+    flex-direction: column;
   }
 
   .stats-container {
