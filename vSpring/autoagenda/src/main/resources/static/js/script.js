@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger-menu');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+
+            // Update ARIA attribute
+            const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', !isExpanded);
+        });
+    }
+
 	document.querySelectorAll('.cpf-mask').forEach(function(element) {
         let cpf = element.textContent.trim();
         element.textContent = formatarCPF(cpf);

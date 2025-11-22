@@ -87,8 +87,8 @@
 							<td colspan="3" style="text-align: center;">Nenhum resultado encontrado</td>
 						</tr>
 						<tr th:each="serv : ${servicos}">
-							<td class="nome-servico" th:text="${serv.nomeServico}"></td>
-							<td class="desc-servico" th:text="${serv.descServico}"></td>
+							<td class="nome-servico" th:text="${serv.nomeServico}" data-label="Serviço"></td>
+							<td class="desc-servico" th:text="${serv.descServico}" data-label="Descrição"></td>
 
 							<td class="action-buttons">
 								<button class="btn-icon btn-edit" th:attr="data-id=${serv.idServico}" title="Editar">
