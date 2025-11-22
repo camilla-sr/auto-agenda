@@ -1,5 +1,6 @@
 package br.com.autoagenda.autoagenda.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +13,7 @@ import jakarta.validation.constraints.NotEmpty;
 public class Servico {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idServico;
 	@NotEmpty private String nomeServico;
-	@NotEmpty private String descServico;
+	@Column(length = 1000) @NotEmpty private String descServico;
     
     public Servico() {}
     

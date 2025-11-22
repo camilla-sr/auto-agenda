@@ -1,6 +1,8 @@
 package br.com.autoagenda.autoagenda.model;
 
 import java.time.LocalDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +21,7 @@ public class Agendamento {
 	@NotNull private LocalDate dataPrevisao;
     private LocalDate dataConclusao;
 	@NotEmpty private String statusAgendamento;
-    private String observacao;
+    @Column(length = 1000) private String observacao;
     @NotEmpty private String nomeCliente;
     @ManyToOne @JoinColumn(name = "fk_servico") private Servico servico;
 
