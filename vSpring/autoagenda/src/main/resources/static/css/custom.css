@@ -29,47 +29,72 @@
 
   .appointments-table td {
     border: none;
-    padding-left: 50%; /* Espaço para o "label" */
+    padding: 0.5rem 1rem;
     position: relative;
-    text-align: right; /* Alinha o valor à direita */
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 2.5rem;
+    word-break: break-word;
   }
 
   .appointments-table td:before {
-    content: attr(data-label); /* Pega o texto do atributo data-label */
-    position: absolute;
-    left: 1rem;
-    width: 45%;
+    content: attr(data-label);
     font-weight: 600;
-    font-size: .8em;
+    font-size: .85em;
     color: #6c757d;
-    text-align: left;
-    white-space: nowrap;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    min-width: fit-content;
   }
 
   /* Ajustes específicos para células com badges */
   .appointments-table .ag-status,
   .appointments-table .ag-servico {
-    text-align: left;
-    padding-left: 40%;
+    display: flex;
+    justify-content: space-between;
   }
 
-  .appointments-table .ag-status:before,
-  .appointments-table .ag-servico:before {
-    width: 35%;
+  /* Status badges em mobile (produtos) */
+  .appointments-table td[data-label="Status"] {
+    display: flex;
+    justify-content: space-between;
   }
 
   /* Ajuste para células de ação */
   .appointments-table .action-buttons {
-    text-align: center;
-    padding-left: 1rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    justify-content: center;
+    padding: 0.75rem 1rem;
   }
 
   .appointments-table .action-buttons:before {
     display: none; /* Remove o label para ações */
+  }
+
+  /* Células vazias ou sem data-label (hidden fields) */
+  .appointments-table td:not([data-label]):before {
+    content: none;
+  }
+
+  /* Melhor aparência para badges de status */
+  .appointments-table .status-badge {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* Primeira célula de cada card (geralmente o nome) */
+  .appointments-table td:first-child {
+    font-weight: 600;
+    font-size: 1rem;
+    padding-top: 0.75rem;
+  }
+
+  /* Última célula (botões de ação) */
+  .appointments-table td:last-child {
+    padding-bottom: 0.75rem;
+    border-top: 1px solid #e9ecef;
+    margin-top: 0.5rem;
   }
 }
 
@@ -114,6 +139,12 @@
     flex-direction: column;
   }
 
+  .form-group {
+    min-width: 100%;
+    flex: 1 1 100%;
+    margin-bottom: 15px;
+  }
+
   .form-col {
     flex: 1 1 100%;
     margin-bottom: 15px;
@@ -126,6 +157,15 @@
 
   .form-actions button {
     width: 100%;
+  }
+
+  /* Container do formulário */
+  .form-container {
+    padding: 20px 15px;
+  }
+
+  .form-container h3 {
+    font-size: 1.2rem;
   }
 
   /* Cabeçalho da página */
@@ -151,6 +191,18 @@
   .table-header button {
     align-self: stretch;
     text-align: center;
+    width: 100%;
+  }
+
+  /* Ações da tabela (busca) */
+  .table-actions {
+    margin-bottom: 15px;
+  }
+
+  .table-actions input[type="text"],
+  .table-actions #busca {
+    width: 100%;
+    max-width: 100%;
   }
 
   /* Botões de ação - Mantém layout horizontal no mobile */
@@ -169,12 +221,24 @@
 
   /* Paginação */
   .pagination {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
+    justify-content: center;
+    align-items: center;
   }
 
   .pagination button {
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 100px;
+    max-width: 150px;
+  }
+
+  .pagination span {
+    flex: 1 1 100%;
+    text-align: center;
+    order: -1;
+    margin-bottom: 5px;
   }
 }
 
@@ -197,11 +261,63 @@
     margin-bottom: 20px;
   }
 
+  .page-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .page-header p {
+    font-size: 0.85rem;
+  }
+
   .form-container {
     padding: 15px;
   }
 
+  .form-container h3 {
+    font-size: 1.1rem;
+  }
+
   .table-container {
     overflow-x: auto;
+  }
+
+  /* Ajustes adicionais para cards de estatísticas */
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-icon i {
+    font-size: 1.1rem;
+  }
+
+  .stat-info h3 {
+    font-size: 1.2rem;
+  }
+
+  .stat-info p {
+    font-size: 0.8rem;
+  }
+
+  /* Tabela responsiva - melhor espaçamento em telas pequenas */
+  .appointments-table tr {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  .appointments-table td {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+    min-height: 2.2rem;
+  }
+
+  .appointments-table td:before {
+    font-size: 0.8em;
+  }
+
+  /* Botões de ação menores em telas muito pequenas */
+  .action-buttons .btn-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
   }
 }
