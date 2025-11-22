@@ -64,6 +64,8 @@
   .appointments-table .action-buttons {
     text-align: center;
     padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .appointments-table .action-buttons:before {
@@ -162,16 +164,18 @@
     text-align: center;
   }
 
-  /* Botões de ação */
+  /* Botões de ação - Mantém layout horizontal no mobile */
   .action-buttons {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex-direction: row;
+    gap: 3px;
+    justify-content: center;
   }
 
   .action-buttons .btn-icon {
-    width: 100%;
-    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
   }
 
   /* Paginação */
