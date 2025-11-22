@@ -199,49 +199,35 @@
     margin-bottom: 15px;
   }
 
-  .table-actions input[type="text"],
-  .table-actions #busca {
+  /* Filtros da tabela de agendamentos */
+  .table-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .table-filters .filter-group {
+    flex-direction: column;
     width: 100%;
-    max-width: 100%;
-  }
-
-  /* Botões de ação - Mantém layout horizontal no mobile */
-  .action-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 3px;
-    justify-content: center;
-  }
-
-  .action-buttons .btn-icon {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-  }
-
-  /* Paginação */
-  .pagination {
-    flex-direction: row;
-    flex-wrap: wrap;
     gap: 10px;
-    justify-content: center;
-    align-items: center;
   }
 
-  .pagination button {
-    flex: 1 1 auto;
-    min-width: 100px;
-    max-width: 150px;
-  }
-
-  .pagination span {
-    flex: 1 1 100%;
-    text-align: center;
-    order: -1;
+  .table-filters .filter-group label {
+    text-align: left;
     margin-bottom: 5px;
+  }
+
+  .table-filters .filter-group input,
+  .table-filters .filter-group select {
+    width: 100%;
+  }
+
+  .table-filters .btn-filter {
+    width: 100%;
   }
 }
 
+/* Media query para telas muito pequenas (celulares em modo retrato) */
 @media (max-width: 576px) {
   /* Para telas muito pequenas */
   .stats-container {

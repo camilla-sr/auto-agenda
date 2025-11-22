@@ -388,6 +388,11 @@ body {
   color: var(--cor-erro);
 }
 
+.btn-action.concluir-btn {
+  background-color: var(--cor-sucesso-light);
+  color: var(--cor-sucesso);
+}
+
 .btn:disabled {
   background-color: var(--cor-fundo-medio);
   color: var(--cor-borda);

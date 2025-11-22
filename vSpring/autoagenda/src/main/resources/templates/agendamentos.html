@@ -238,8 +238,9 @@
                 <td data-label="Previsão" class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
                 </td>
-                <td data-label="Conclusão" class="ag-conclusao" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}"
-                  th:data-date="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}">
+                <td data-label="Conclusão" class="ag-conclusao">
+                  <span th:if="${ag.dataConclusao != null}" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}" th:data-date="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}"></span>
+                  <span th:unless="${ag.dataConclusao != null}">-</span>
                 </td>
                 <td data-label="Status" class="ag-status">
                   <span class="status-badge"
@@ -256,6 +257,10 @@
                   </button>
                   <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
                     <i class="fas fa-eye"></i>
+                  </button>
+                  <button th:if="${ag.statusAgendamento != 'Concluido' and ag.statusAgendamento != 'Cancelado'}"
+                          class="btn-icon btn-concluir" th:attr="data-id=${ag.idAgendamento}" title="Concluir">
+                    <i class="fas fa-check"></i>
                   </button>
                 </td>
               </tr>
@@ -592,6 +597,69 @@
           }
         });
       }
+    });
+  </script>
+  <script>
+    // LÓGICA PARA CONCLUIR AGENDAMENTO
+    document.querySelectorAll('.btn-concluir').forEach(button => {
+      button.addEventListener('click', function () {
+        const agendamentoId = this.dataset.id;
+        
+        Swal.fire({
+          title: 'Concluir Agendamento?',
+          text: "Deseja realmente marcar este agendamento como concluído?",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#4CAF50',
+          cancelButtonColor: '#6F6F6F',
+          confirmButtonText: 'Sim, concluir!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(`/agendamento-api/concluir/` + agendamentoId, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Falha ao concluir o agendamento.');
+              }
+              return response.json();
+            })
+            .then(data => {
+              Swal.fire(
+                'Concluído!',
+                'O agendamento foi marcado como concluído.',
+                'success'
+              ).then(() => {
+                // Atualiza a UI
+                const row = this.closest('tr');
+                const statusCell = row.querySelector('.ag-status .status-badge');
+                const conclusaoCell = row.querySelector('.ag-conclusao span:first-child');
+
+                statusCell.textContent = 'Concluido';
+                statusCell.className = 'status-badge concluido';
+                
+                const today = new Date();
+                const formattedDate = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+                conclusaoCell.textContent = formattedDate;
+
+                this.remove(); // Remove o botão de concluir
+              });
+            })
+            .catch(error => {
+              console.error('Erro:', error);
+              Swal.fire(
+                'Erro!',
+                'Não foi possível concluir o agendamento.',
+                'error'
+              );
+            });
+          }
+        });
+      });
     });
   </script>
 </body>
