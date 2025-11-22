@@ -564,6 +564,36 @@
       });
     }
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const hamburgerMenu = document.getElementById('hamburger-menu');
+      const navMenu = document.getElementById('nav-menu');
+
+      if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener('click', function() {
+          navMenu.classList.toggle('active');
+          hamburgerMenu.classList.toggle('active');
+        });
+
+        // Fecha o menu ao clicar em um link
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            navMenu.classList.remove('active');
+            hamburgerMenu.classList.remove('active');
+          });
+        });
+
+        // Fecha o menu ao clicar fora dele
+        document.addEventListener('click', function(event) {
+          if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+            navMenu.classList.remove('active');
+            hamburgerMenu.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>

@@ -80,19 +80,8 @@
     gap: 10px;
   }
 
-  .nav-menu {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .nav-item {
-    margin: 5px 0;
-  }
-
-  .nav-link {
-    padding: 8px 12px;
-    font-size: 14px;
+  .header-left {
+    gap: 10px;
   }
 }
 

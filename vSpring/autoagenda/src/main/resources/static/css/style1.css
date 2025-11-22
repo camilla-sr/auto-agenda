@@ -209,8 +209,16 @@ body {
 
 /* Responsividade da navegação */
 @media (max-width: 768px) {
+  .header .container {
+    position: relative;
+  }
+
   .hamburger-menu {
     display: flex;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .nav-menu {
@@ -259,6 +267,9 @@ body {
     border: none;
     box-shadow: none;
     margin-top: 10px;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .dropdown-item {
@@ -269,6 +280,10 @@ body {
 
   .dropdown-item:hover {
     background-color: var(--cor-primaria);
+  }
+
+  .dropdown-toggle::after {
+    display: none;
   }
 }
 
