@@ -115,7 +115,7 @@
           <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
         </div>
         <div class="table-responsive">
-          <table>
+          <table class="appointments-table">
             <thead>
               <tr>
                 <th>ID</th>
@@ -131,11 +131,11 @@
                 <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
               </tr>
               <tr th:each="func : ${funcionarios}">
-                <td><span class="employee-id" th:text="${func.idFuncionario}"></span></td>
-                <td class="nome-funcionario" th:text="${func.nomeFuncionario}"></td>
-                <td class="usuario-funcionario" th:text="${func.usuario}"></td>
-                <td class="acesso-funcionario" th:text="${func.acesso}"></td>
-                <td class="cpf-funcionario" th:text="${func.cpf}"></td>
+                <td data-label="ID"><span class="employee-id" th:text="${func.idFuncionario}"></span></td>
+                <td class="nome-funcionario" th:text="${func.nomeFuncionario}" data-label="Nome"></td>
+                <td class="usuario-funcionario" th:text="${func.usuario}" data-label="Usuário"></td>
+                <td class="acesso-funcionario" th:text="${func.acesso}" data-label="Acesso"></td>
+                <td class="cpf-funcionario" th:text="${func.cpf}" data-label="CPF"></td>
 
                 <td class="action-buttons">
                   <button class="btn-icon btn-edit" th:attr="data-id=${func.idFuncionario}" title="Editar"><i
