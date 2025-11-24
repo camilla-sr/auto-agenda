@@ -10,7 +10,7 @@ public interface AgendamentoRepository extends CrudRepository<Agendamento, Integ
 	@Query("select count(*) from Agendamento where statusAgendamento = 'agendado'")
     long agpendentes();
 	
-	@Query("select count(*) from Agendamento where statusAgendamento = 'em_andamento'")
+	@Query("select count(*) from Agendamento where statusAgendamento = 'em andamento'")
     long agandamento();
 	
 	@Query("select count(*) from Agendamento where statusAgendamento = 'concluido'")

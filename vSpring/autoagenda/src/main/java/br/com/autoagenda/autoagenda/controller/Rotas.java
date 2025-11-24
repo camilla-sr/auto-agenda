@@ -59,7 +59,9 @@ public class Rotas {
 		model.addAttribute("precoEstoque", somaPrecoCusto());
 		model.addAttribute("totalAgenda", repoAg.count());
 		model.addAttribute("agendaPendente", repoAg.agpendentes());
+		model.addAttribute("agendaAndamento", repoAg.agandamento());
 		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
+		model.addAttribute("agendaConcluidoHoje", repoAg.agconcluidohoje());
 		return verificaUsuario(session, "dashboard");
 	}
 	
