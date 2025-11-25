@@ -226,7 +226,7 @@
               </tr>
               <tr th:each="ag : ${agendamentos}">
                 <td data-label="Cliente" class="ag-cliente" th:text="${ag.nomeCliente}"></td>
-                <td data-label="Tipo de Serviço" class="ag-servico">
+                <td data-label="Tipo de Serviço" class="ag-servico" th:attr="data-servico-id=${ag.servico.idServico}">
                   <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
                     th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
                     th:text="${ag.servico.nomeServico}"> </span>
@@ -439,24 +439,24 @@
           const row = button.closest('tr');
 
           const id = button.dataset.id;
+		  
           const nome = row.querySelector('.ag-cliente').textContent.trim();
           const status = row.querySelector('.ag-status span').textContent.trim();
           const observacao = row.querySelector('.ag-observacao').textContent.trim();
-
+		  const servico = row.querySelector('.ag-servico').dataset.servicoId;
+		  
           const previsaoCell = row.querySelector('.ag-previsao');
           const conclusaoCell = row.querySelector('.ag-conclusao');
           const dataPrevisao = previsaoCell ? previsaoCell.dataset.date : '';
           const dataConclusao = conclusaoCell ? conclusaoCell.dataset.date : '';
 
           document.getElementById('idAgendamento').value = id;
-
+		  document.getElementById('nome-servico').value = servico;
           document.getElementById('nome-cliente').value = nome;
           document.getElementById('status').value = status;
           document.getElementById('data-previsao').value = dataPrevisao;
           document.getElementById('data-conclusao').value = dataConclusao || '';
           document.getElementById('observacao').value = observacao;
-          // Preencher o select de serviço se necessário, mas como não temos o ID na linha, talvez deixar vazio ou buscar
-          // Para simplificar, deixar como está
 
         });
       });
