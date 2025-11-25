@@ -183,6 +183,16 @@
             </div>
           </div>
 
+          <div class="form-group mt-3">
+            <label for="agendamento-imagens"><i class="fas fa-camera"></i> Imagens do Serviço</label>
+            <div class="input-wrapper">
+                <input type="file" id="agendamento-imagens" name="imagens" multiple accept="image/*" class="form-control" style="padding-left: 10px;">
+            </div>
+            <div id="form-preview-imagens" class="d-flex flex-wrap gap-2 mt-2">
+                <!-- Preview das imagens aqui -->
+            </div>
+          </div>
+
           <div class="form-actions">
             <input type="hidden" name="idAgendamento" id="idAgendamento" readonly>
             <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-agendamento">
@@ -417,6 +427,35 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="button" class="btn btn-primary" id="btn-salvar-novo-veiculo">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Anexar Imagens -->
+      <div class="modal fade" id="anexarImagensModal" tabindex="-1" aria-labelledby="anexarImagensModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="anexarImagensModalLabel"><i class="fas fa-images"></i> Anexar Imagens</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-anexar-imagens">
+                <input type="hidden" id="id-agendamento-imagens">
+                <div class="mb-3">
+                  <label for="input-imagens" class="form-label">Selecione as imagens</label>
+                  <input class="form-control" type="file" id="input-imagens" multiple accept="image/*">
+                </div>
+                <div id="preview-imagens" class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
+                    <!-- Preview das imagens aqui -->
+                    <p class="text-muted w-100 text-center">Nenhuma imagem selecionada</p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btn-salvar-imagens">Salvar Anexos</button>
             </div>
           </div>
         </div>
@@ -830,6 +869,53 @@
         }
       });
     }
+  </script>
+  <script>
+    // LÓGICA PARA O PREVIEW DE IMAGENS NO FORMULÁRIO
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputImagens = document.getElementById('agendamento-imagens');
+        const previewContainer = document.getElementById('form-preview-imagens');
+
+        if(inputImagens && previewContainer) {
+            inputImagens.addEventListener('change', function() {
+                previewContainer.innerHTML = '';
+                if (this.files && this.files.length > 0) {
+                    Array.from(this.files).forEach(file => {
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const imgDiv = document.createElement('div');
+                                imgDiv.className = 'position-relative border rounded p-1';
+                                imgDiv.style.width = '80px';
+                                imgDiv.style.height = '80px';
+                                
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'w-100 h-100';
+                                img.style.objectFit = 'cover';
+                                
+                                imgDiv.appendChild(img);
+                                previewContainer.appendChild(imgDiv);
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Limpar imagens ao cancelar/novo
+        const btnNovo = document.getElementById('btn-novo-agendamento');
+        const btnCancelar = document.getElementById('btn-cancelar-novo-agendamento');
+        
+        function limparImagens() {
+            if(inputImagens) inputImagens.value = '';
+            if(previewContainer) previewContainer.innerHTML = '';
+        }
+        
+        if(btnNovo) btnNovo.addEventListener('click', limparImagens);
+        if(btnCancelar) btnCancelar.addEventListener('click', limparImagens);
+    });
   </script>
 </body>
 
