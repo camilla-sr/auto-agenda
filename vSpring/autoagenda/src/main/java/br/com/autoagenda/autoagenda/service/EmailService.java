@@ -13,7 +13,7 @@ public class EmailService {
 
     @Async
     public void enviarEmailConclusao(Agendamento agendamento) {
-    	//String emailCliente = agendamento.getNomeCliente();
+    	String emailCliente = agendamento.getNomeCliente();
     	String nomeCliente = agendamento.getNomeCliente();
     	String assunto = "AutoAgenda: Seu serviço foi concluído!";
     	String texto = String.format(
@@ -23,7 +23,7 @@ public class EmailService {
 		agendamento.getDataConclusao().toString());
     	
     	EmailDto email = new EmailDto();
-    	email.setDestinatario("email do cliente");
+    	email.setDestinatario(emailCliente);
     	email.setAssunto(assunto);
     	email.setTexto(texto);
     	
