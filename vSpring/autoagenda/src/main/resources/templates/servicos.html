@@ -45,7 +45,10 @@
 							<div class="form-group">
 								<label for="descricao-servico">Descrição</label>
 								<input type="text" id="descricao-servico" name="descServico" class="form-input"
-									placeholder="Ex: Troca de óleo do motor">
+									placeholder="Ex: Troca de óleo do motor" maxlength="200">
+								<div id="descricao-servico-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+									<small>0/200</small>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -237,31 +240,56 @@
 			});
 		});
 	</script>
-  <script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const hamburgerMenu = document.getElementById('hamburger-menu');
+			const navMenu = document.getElementById('nav-menu');
+
+			if (hamburgerMenu && navMenu) {
+				hamburgerMenu.addEventListener('click', function() {
+					navMenu.classList.toggle('active');
+					hamburgerMenu.classList.toggle('active');
+				});
+
+				// Fecha o menu ao clicar em um link
+				const navLinks = navMenu.querySelectorAll('.nav-link');
+				navLinks.forEach(link => {
+					link.addEventListener('click', function() {
+						navMenu.classList.remove('active');
+						hamburgerMenu.classList.remove('active');
+					});
+				});
+
+				// Fecha o menu ao clicar fora dele
+				document.addEventListener('click', function(event) {
+					if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+						navMenu.classList.remove('active');
+						hamburgerMenu.classList.remove('active');
+					}
+				});
+			}
+		});
+	</script>
+	<script>
+    // CONTADOR DE CARACTERES PARA DESCRIÇÃO DO SERVIÇO
     document.addEventListener('DOMContentLoaded', function() {
-      const hamburgerMenu = document.getElementById('hamburger-menu');
-      const navMenu = document.getElementById('nav-menu');
+      const descricaoInput = document.getElementById('descricao-servico');
+      const descricaoCounter = document.getElementById('descricao-servico-counter');
 
-      if (hamburgerMenu && navMenu) {
-        hamburgerMenu.addEventListener('click', function() {
-          navMenu.classList.toggle('active');
-          hamburgerMenu.classList.toggle('active');
-        });
-
-        // Fecha o menu ao clicar em um link
-        const navLinks = navMenu.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-          link.addEventListener('click', function() {
-            navMenu.classList.remove('active');
-            hamburgerMenu.classList.remove('active');
-          });
-        });
-
-        // Fecha o menu ao clicar fora dele
-        document.addEventListener('click', function(event) {
-          if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
-            navMenu.classList.remove('active');
-            hamburgerMenu.classList.remove('active');
+      if (descricaoInput && descricaoCounter) {
+        descricaoInput.addEventListener('input', function() {
+          const currentLength = this.value.length;
+          const maxLength = this.getAttribute('maxlength');
+          
+          descricaoCounter.querySelector('small').textContent = `${currentLength}/${maxLength}`;
+          
+          if (currentLength >= maxLength) {
+            descricaoCounter.classList.remove('text-muted');
+            descricaoCounter.classList.add('text-danger');
+            descricaoCounter.querySelector('small').textContent = `${currentLength}/${maxLength} - Limite de caracteres atingido!`;
+          } else {
+            descricaoCounter.classList.add('text-muted');
+            descricaoCounter.classList.remove('text-danger');
           }
         });
       }

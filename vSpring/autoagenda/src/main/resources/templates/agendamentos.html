@@ -175,8 +175,11 @@
             <label for="observacao">Observações</label>
             <div class="input-wrapper">
               <i class="fas fa-comment-alt input-icon"></i>
-              <textarea id="observacao" name="observacao" rows="3"
+              <textarea id="observacao" name="observacao" rows="3" maxlength="200"
                 placeholder="Observações adicionais sobre o agendamento"></textarea>
+            </div>
+            <div id="observacao-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+              <small>0/200</small>
             </div>
           </div>
 
@@ -288,7 +291,7 @@
                   <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
                     <i class="fas fa-eye"></i>
                   </button>
-                  <button th:if="${ag.statusAgendamento != 'Concluido' and ag.statusAgendamento != 'Cancelado'}"
+                  <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
                           class="btn-icon btn-concluir" th:attr="data-id=${ag.idAgendamento}" title="Concluir">
                     <i class="fas fa-check"></i>
                   </button>
@@ -797,6 +800,30 @@
             Swal.fire('Erro', 'Preencha modelo e placa', 'error');
         }
     });
+  </script>
+  <script>
+    // CONTADOR DE CARACTERES PARA OBSERVAÇÃO
+    const observacaoInput = document.getElementById('observacao');
+    const observacaoCounter = document.getElementById('observacao-counter');
+    // const btnSalvarAgendamento = document.getElementById('salvarAg'); // Já declarado anteriormente ou não necessário se maxlength funcionar
+
+    if (observacaoInput && observacaoCounter) {
+      observacaoInput.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = this.getAttribute('maxlength');
+        
+        observacaoCounter.querySelector('small').textContent = `${currentLength}/${maxLength}`;
+        
+        if (currentLength >= maxLength) {
+          observacaoCounter.classList.remove('text-muted');
+          observacaoCounter.classList.add('text-danger');
+          observacaoCounter.querySelector('small').textContent = `${currentLength}/${maxLength} - Limite de caracteres atingido!`;
+        } else {
+          observacaoCounter.classList.add('text-muted');
+          observacaoCounter.classList.remove('text-danger');
+        }
+      });
+    }
   </script>
 </body>
 
