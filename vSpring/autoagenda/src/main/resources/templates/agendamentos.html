@@ -12,7 +12,12 @@
   <link rel="stylesheet" href="/css/agendamentos.css">
   <link rel="stylesheet" href="/css/custom.css">
   <link rel="stylesheet" href="/css/style1.css">
-
+  <style>
+    /* Correção para padronizar a capitalização dos badges */
+    .status-badge {
+      text-transform: capitalize;
+    }
+  </style>
 
 
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -158,7 +163,7 @@
                   <select id="status" name="statusAgendamento" required>
                     <option value="Agendado">Agendado</option>
                     <option value="Confirmado">Confirmado</option>
-                    <option value="Em_Andamento">Em Andamento</option>
+                    <option value="Em Andamento">Em Andamento</option>
                     <option value="Concluido">Concluído</option>
                     <option value="Cancelado">Cancelado</option>
                   </select>
@@ -270,8 +275,8 @@
                 </td>
                 <td data-label="Status" class="ag-status">
                   <span class="status-badge"
-                    th:classappend="' ' + ${#strings.replace(ag.statusAgendamento.toLowerCase(), ' ', '-')}"
-                    th:text="${ag.statusAgendamento}"></span>
+                    th:classappend="' ' + ${#strings.replace(ag.statusAgendamento.toLowerCase(), ' ', '_')}"
+                    th:text="${#strings.replace(ag.statusAgendamento, '_', ' ')}"></span>
                 </td>
                 <td data-label="Observação" th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
                 <td class="action-buttons">
@@ -441,7 +446,7 @@
       statusSelect.addEventListener('change', checkStatus);
 
       function checkStatus() {
-        if (statusSelect.value === 'concluido') {
+        if (statusSelect.value === 'Concluido') {
           dataConclusaoContainer.style.display = 'block';
           document.getElementById('data_conclusao').required = true;
         } else {
@@ -727,7 +732,7 @@
                 const statusCell = row.querySelector('.ag-status .status-badge');
                 const conclusaoCell = row.querySelector('.ag-conclusao span:first-child');
 
-                statusCell.textContent = 'Concluido';
+                statusCell.textContent = 'Concluído';
                 statusCell.className = 'status-badge concluido';
                 
                 const today = new Date();
