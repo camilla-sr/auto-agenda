@@ -1,15 +1,14 @@
 create table if not exists cliente (
-  id_cliente int primary key auto_increment,
-  nome_cliente varchar(80) not null,
-  whatsapp_cliente varchar(15) not null,
-  modelo_carro varchar(30) not null,
-  ano_carro int default 0
+  id_cliente 	int primary key auto_increment,
+  nome_cliente 	varchar(80) not null,
+  telefone		varchar(15) not null,
+  email			varchar(255) not null unique
 );
 
 create table if not exists servico (
-  id_servico int primary key auto_increment,
+  id_servico 		int primary key auto_increment,
   nome_servico		varchar(30) not null,
-  desc_servico varchar(200)
+  desc_servico 		varchar(200)
 );
 
 create table if not exists funcionario (

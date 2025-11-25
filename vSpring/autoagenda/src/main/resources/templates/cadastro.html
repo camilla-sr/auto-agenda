@@ -20,7 +20,7 @@
         <div class="cadastro">
             <img src="/img/logo.png" class="logo-login">
 
-			<form method="post" action="/funcionario-api/cadastroSistema">
+			<form method="post" action="/funcionario-api/salvar">
                 <div class="cad-inputs">
 										
                 <span>Nome Completo</span>
@@ -58,6 +58,7 @@
                 <button type="submit" class="btnSalvar">Salvar</button>
                 <button type="button" class="btnVoltar" onclick="window.location.href = '/login'">Voltar</button>
 			</div>
+			<input type="hidden" name="cadastroInicial" value="true">
             </form>
         </div>
     </div>
