@@ -2,12 +2,23 @@
 ```
 escrito por HectorSemenssato
 ```
+## :thinking: O que é esse projeto?
 
-## :grey_question: O que há de novo
+Este projeto trata-se de um sistema de oficina mecânica para gerenciamento de agendamentos e estoque que será utilizado pelos colaboradores da oficina. 
+
+O gerenciamento de agendamentos consiste em uma funcionalidade que armazenará em banco de dados informações sobre os agendamentos de serviços realizados pela oficina mecânica contendo tipo de serviço que será feito no veículo, dados do cliente (nome, e-mail e telefone para contato, veículo), observações, data da realização do agendamento, previsão de conclusão e a conclusão. 
+
+Para o gerenciamento de estoque, temos informações dos produtos contendo nome, código, categoria, preço de compra e venda, fornecedor, descrição e a quantidade existente no estoque atual.
+
+O sistema possui 5 páginas de navegação: "Dashboard", "Agendamentos", "Serviços", "Funcionários" (acesso restrito ao(s) administrador(es) do sistema) e "Produtos". Elas ficam disponíveis para acesso via barra de navegação na parte superior de todas as páginas. 
+
+> É obrigatório ter usuário e senha criados para realizar acesso a qualquer funcionalidade existente desse sistema.
+
+## :question: O que há de novo
 
 Na versão 1.5 temos a inserção do Spring Boot com a linguagem HTML (criação de páginas na web), JavaScript (mais interatividade para as páginas), Thymeleaf (dinamismo em páginas e integração back-end e front-end) e CSS (estilização de páginas) sob a frame Bootstrap v5.3.6. É usada a arquitetura de software no padrão MVC (Model, View e Controller) para a separação do projeto em camadas garantindo benefícios como a organização, a facilidade de manutenção e a reutilização de código.
 
-E com a versão 2.0, será trazida a inserção de imagens dos veículos nos agendamentos — garantindo que o cliente e o funcionário tenham registros do veículo antes e depois do serviço —, inclusão dos microserviços e as melhorias e correções da versão v1.5.
+E com a versão 2.0, é trazida a inserção de imagens dos veículos nos agendamentos — garantindo que o cliente e o funcionário tenham registros do veículo antes e depois do serviço —, inclusão dos microserviços e as correções e melhorias da versão anterior.
 
 :scissors: O uso de script de Banco de Dados foi abandonado deste projeto com o uso da dependência "H2 Database".
 
@@ -25,11 +36,16 @@ O projeto __versão com Spring Boot__ fica localizado na pasta `vSpring` enquant
 
 #### :computer: Abrindo pela primeira vez 
 
-Na plataforma Eclipse:
+Na IDE Eclipse:
 ```
 Importar projeto > Maven > "Existing Maven Projects" > Localizar e selecionar caminho do projeto > Finalize clicando em "Finish" 
 ```
 
+Na IDE IntelliJ:
+
+```
+File > New > "Import Project from Existing Sources..." > Localizar e selecionar caminho do projeto > Escolha "Import project from external model" + "Eclipse" > Siga com "Next" e, por fim, "Create".
+```
 
 > **:bulb: Dica de uso com VS Code:**
 >
