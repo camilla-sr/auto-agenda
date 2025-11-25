@@ -22,9 +22,8 @@ public class C_Cliente {
 		if(cl.getIdCliente() != null) {
 			Cliente existe = repo.findById(cl.getIdCliente()).orElse(new Cliente());
 			existe.setNomeCliente(cl.getNomeCliente());
-			existe.setCelular(cl.getCelular());
+			existe.setTelefone(cl.getTelefone());
 			existe.setEmailCliente(cl.getEmailCliente());
-			existe.setModeloCarro(cl.getModeloCarro());
 			repo.save(existe);
 			return "?editado=true";
 		} else {

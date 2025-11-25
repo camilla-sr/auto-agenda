@@ -1,5 +1,6 @@
 package com.autoagenda.auth_api.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,13 +15,8 @@ import com.autoagenda.auth_api.service.AuthService;
 @RestController
 @RequestMapping("/2fa")
 public class AuthController {
-	private final AuthService service;
-	private final EmailClient client;
-	
-	public AuthController(AuthService service, EmailClient client) {
-		this.service = service;
-		this.client = client;
-	}
+	@Autowired private AuthService service;
+	@Autowired private EmailClient client;
 	
 	@PostMapping("/gerar")
 	public ResponseEntity<?> gerarCodigo(@RequestBody RequisicaoCodigo req){

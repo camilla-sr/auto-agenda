@@ -1,7 +1,6 @@
 package br.com.autoagenda.autoagenda.controller;
 
 import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
+import br.com.autoagenda.autoagenda.service.EmailService;
 import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
 import jakarta.validation.Valid;
 
@@ -25,6 +24,7 @@ public class C_Agendamento {
 	@Autowired private AgendamentoRepository repo;
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private FotosAgendamentoService fotoService;
+	@Autowired private EmailService mailServ;
 	
 	@PostMapping("/salvar")
     public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico,
@@ -88,8 +88,10 @@ public class C_Agendamento {
         Agendamento agendamento = repo.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
         
-        agendamento.setStatusAgendamento("Concluido");
+        agendamento.setStatusAgendamento("concluido");
         agendamento.setDataConclusao(LocalDate.now());
+        
+        //mailServ.enviarEmailConclusao(agendamento);
         
         return repo.save(agendamento);
     }
