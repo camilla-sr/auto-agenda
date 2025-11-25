@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="stat-card danger">
+        <div th:if="${estoqueZerado} > 0" class="stat-card danger">
           <div class="stat-icon">
             <i class="fas fa-times-circle"></i>
           </div>
@@ -217,7 +217,8 @@
               <td class="action-buttons">
                 <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar"><i
                     class="fas fa-edit"></i></button>
-                <button class="btn-icon btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir"><i
+                <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}" 
+				class="btn-icon btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir"><i
                     class="fas fa-trash"></i></button>
                 <button class="btn-icon btn-view" title="Detalhes"><i class="fas fa-eye"></i></button>
               </td>

@@ -252,7 +252,8 @@
                   <button class="btn-icon btn-edit" th:attr="data-id=${ag.idAgendamento}" title="Editar">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="btn-icon btn-delete" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
+                  <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}"
+				  class="btn-icon btn-delete" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
                     <i class="fas fa-trash"></i>
                   </button>
                   <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
