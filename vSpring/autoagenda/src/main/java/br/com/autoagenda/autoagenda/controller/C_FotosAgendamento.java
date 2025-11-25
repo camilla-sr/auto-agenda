@@ -13,7 +13,7 @@ import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
 
 @RestController
 @RequestMapping("/fotos")
-public class FotosAgendamentoController {
+public class C_FotosAgendamento {
 	@Autowired private FotosAgendamentoService service;
 	
 	@PostMapping("/upload/{agendamentoId}")
