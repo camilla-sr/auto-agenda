@@ -376,6 +376,10 @@
                   <label for="novo-cliente-telefone" class="form-label">Telefone/Celular</label>
                   <input type="tel" class="form-control" id="novo-cliente-telefone" required>
                 </div>
+                <div class="mb-3">
+                  <label for="novo-cliente-email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="novo-cliente-email" placeholder="nome@exemplo.com">
+                </div>
               </form>
             </div>
             <div class="modal-footer">
@@ -758,6 +762,8 @@
     // LÓGICA PARA SALVAR NOVO CLIENTE (SIMULAÇÃO FRONT-END)
     document.getElementById('btn-salvar-novo-cliente').addEventListener('click', function() {
         const nome = document.getElementById('novo-cliente-nome').value;
+        const email = document.getElementById('novo-cliente-email').value;
+        
         if(nome) {
             // Aqui entraria a chamada AJAX para salvar no backend
             // Como é simulação, vamos apenas preencher o campo principal e fechar o modal
