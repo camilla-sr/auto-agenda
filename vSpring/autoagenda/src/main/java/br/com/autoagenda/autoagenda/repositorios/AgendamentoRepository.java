@@ -7,10 +7,10 @@ import br.com.autoagenda.autoagenda.model.Agendamento;
 public interface AgendamentoRepository extends CrudRepository<Agendamento, Integer>{
 	Iterable<Agendamento> findAll();
 	
-	@Query("select count(*) from Agendamento where statusAgendamento = 'agendado'")
+	@Query("select count(*) from Agendamento where statusAgendamento = 'Agendado'")
     long agpendentes();
 	
-	@Query("select count(*) from Agendamento where statusAgendamento = 'em andamento'")
+	@Query("select count(*) from Agendamento where statusAgendamento = 'Em Andamento'")
     long agandamento();
 	
 	@Query("select count(*) from Agendamento where statusAgendamento = 'concluido'")
