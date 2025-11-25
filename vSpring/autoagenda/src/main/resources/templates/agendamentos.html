@@ -72,12 +72,9 @@
 
       <!-- Formulário de Agendamento -->
       <div class="form-container" id="agendamento-form-container" style="display: none;">
-        <div class="form-header">
-          <h3 id="formTitulo"><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
-        </div>
+        <h3 id="formTitulo"><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
 
         <form method="post" action="/agendamento-api/salvar" id="agendamento-form">
-          <input type="hidden" name="idAgendamento" id="idAgendamento" readonly>
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -184,6 +181,7 @@
           </div>
 
           <div class="form-actions">
+            <input type="hidden" name="idAgendamento" id="idAgendamento" readonly>
             <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-agendamento">
               <i class="fas fa-times"></i> Cancelar
             </button>
