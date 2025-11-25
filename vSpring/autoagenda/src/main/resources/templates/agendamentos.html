@@ -77,10 +77,36 @@
             <div class="form-col">
               <div class="form-group">
                 <label for="nome_cliente">Nome do Cliente</label>
-                <div class="input-wrapper">
-                  <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="nome-cliente" name="nomeCliente" placeholder="Nome completo do cliente"
-                    required>
+                <div class="d-flex">
+                  <div class="input-wrapper flex-grow-1">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="nome-cliente" name="nomeCliente" list="lista-clientes" placeholder="Nome completo do cliente" required>
+                    <datalist id="lista-clientes">
+                      <!-- Preencher com dados do backend -->
+                      <option th:each="cliente : ${clientes}" th:value="${cliente.nome}"></option>
+                    </datalist>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#cadastrarClienteModal" title="Cadastrar Novo Cliente">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="veiculo">Veículo</label>
+                <div class="d-flex">
+                  <div class="input-wrapper flex-grow-1">
+                    <i class="fas fa-car input-icon"></i>
+                    <input type="text" id="veiculo" name="veiculo" list="lista-veiculos" placeholder="Modelo/Placa do veículo">
+                    <datalist id="lista-veiculos">
+                       <!-- Preencher com dados do backend -->
+                    </datalist>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#cadastrarVeiculoModal" title="Cadastrar Novo Veículo">
+                    <i class="fas fa-plus"></i>
+                  </button>
                 </div>
               </div>
             </div>
@@ -325,6 +351,67 @@
           </div>
         </div>
       </div>
+
+      <!-- Modal Cadastrar Cliente -->
+      <div class="modal fade" id="cadastrarClienteModal" tabindex="-1" aria-labelledby="cadastrarClienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cadastrarClienteModalLabel"><i class="fas fa-user-plus"></i> Novo Cliente</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-novo-cliente">
+                <div class="mb-3">
+                  <label for="novo-cliente-nome" class="form-label">Nome Completo</label>
+                  <input type="text" class="form-control" id="novo-cliente-nome" required>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-cliente-telefone" class="form-label">Telefone/Celular</label>
+                  <input type="tel" class="form-control" id="novo-cliente-telefone" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btn-salvar-novo-cliente">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Cadastrar Veículo -->
+      <div class="modal fade" id="cadastrarVeiculoModal" tabindex="-1" aria-labelledby="cadastrarVeiculoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cadastrarVeiculoModalLabel"><i class="fas fa-car"></i> Novo Veículo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-novo-veiculo">
+                <div class="mb-3">
+                  <label for="novo-veiculo-modelo" class="form-label">Modelo</label>
+                  <input type="text" class="form-control" id="novo-veiculo-modelo" placeholder="Ex: Gol, Civic..." required>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-veiculo-placa" class="form-label">Placa</label>
+                  <input type="text" class="form-control" id="novo-veiculo-placa" placeholder="ABC-1234" required>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-veiculo-marca" class="form-label">Marca</label>
+                  <input type="text" class="form-control" id="novo-veiculo-marca" placeholder="Ex: VW, Honda...">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btn-salvar-novo-veiculo">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -661,6 +748,51 @@
           }
         });
       });
+    });
+    // LÓGICA PARA SALVAR NOVO CLIENTE (SIMULAÇÃO FRONT-END)
+    document.getElementById('btn-salvar-novo-cliente').addEventListener('click', function() {
+        const nome = document.getElementById('novo-cliente-nome').value;
+        if(nome) {
+            // Aqui entraria a chamada AJAX para salvar no backend
+            // Como é simulação, vamos apenas preencher o campo principal e fechar o modal
+            document.getElementById('nome-cliente').value = nome;
+            
+            // Fechar modal
+            const modalEl = document.getElementById('cadastrarClienteModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            
+            // Limpar form
+            document.getElementById('form-novo-cliente').reset();
+            
+            Swal.fire('Sucesso', 'Cliente cadastrado (Simulação)', 'success');
+        } else {
+            Swal.fire('Erro', 'Preencha o nome do cliente', 'error');
+        }
+    });
+
+    // LÓGICA PARA SALVAR NOVO VEÍCULO (SIMULAÇÃO FRONT-END)
+    document.getElementById('btn-salvar-novo-veiculo').addEventListener('click', function() {
+        const modelo = document.getElementById('novo-veiculo-modelo').value;
+        const placa = document.getElementById('novo-veiculo-placa').value;
+        
+        if(modelo && placa) {
+            // Aqui entraria a chamada AJAX para salvar no backend
+            const veiculoString = `${modelo} - ${placa}`;
+            document.getElementById('veiculo').value = veiculoString;
+            
+            // Fechar modal
+            const modalEl = document.getElementById('cadastrarVeiculoModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            
+            // Limpar form
+            document.getElementById('form-novo-veiculo').reset();
+            
+            Swal.fire('Sucesso', 'Veículo cadastrado (Simulação)', 'success');
+        } else {
+            Swal.fire('Erro', 'Preencha modelo e placa', 'error');
+        }
     });
   </script>
 </body>
