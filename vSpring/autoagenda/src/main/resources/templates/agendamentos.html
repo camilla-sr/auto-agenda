@@ -846,27 +846,46 @@
 
     // LÓGICA PARA SALVAR NOVO VEÍCULO (SIMULAÇÃO FRONT-END)
     document.getElementById('btn-salvar-novo-veiculo').addEventListener('click', function() {
-        const modelo = document.getElementById('novo-veiculo-modelo').value;
-        const placa = document.getElementById('novo-veiculo-placa').value;
-        
-        if(modelo && placa) {
-            // Aqui entraria a chamada AJAX para salvar no backend
-            const veiculoString = `${modelo} - ${placa}`;
-            document.getElementById('veiculo').value = veiculoString;
-            
-            // Fechar modal
-            const modalEl = document.getElementById('cadastrarVeiculoModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-            
-            // Limpar form
-            document.getElementById('form-novo-veiculo').reset();
-            
-            Swal.fire('Sucesso', 'Veículo cadastrado (Simulação)', 'success');
-        } else {
-            Swal.fire('Erro', 'Preencha modelo e placa', 'error');
-        }
-    });
+		const idCliente = document.getElementById('idCliente').value;
+		const modelo = document.getElementById('novo-veiculo-modelo').value;
+	    const placa = document.getElementById('novo-veiculo-placa').value;
+	    const marca = document.getElementById('novo-veiculo-marca').value;
+
+	    if(!modelo || !placa) {
+	        Swal.fire('Erro', 'Preencha os campos de modelo e placa', 'error');
+	        return;
+	    }
+
+		fetch('/veiculo-api/salvar', {
+		        method: 'POST',
+		        headers: { 'Content-Type': 'application/json' },
+		        body: JSON.stringify({
+					cliente: { idCliente: idCliente },
+		            modelo: modelo,
+		            marca: marca, 
+		            placa: placa 
+		        })
+		    })
+		    .then(r => {
+		        if (!r.ok) throw new Error('Erro ao salvar');
+		        return r.json(); // Agora o Java vai devolver o JSON corretamente
+		    })
+		    .then(veiculo => {
+		        document.getElementById('veiculo').value = veiculo.modelo;
+
+		        const modalEl = document.getElementById('cadastrarVeiculoModal');
+		        const modal = bootstrap.Modal.getInstance(modalEl);
+		        modal.hide();
+	
+		        document.getElementById('form-novo-veiculo').reset();
+	
+		        Swal.fire('Sucesso', 'Veículo cadastrado!', 'success');
+		    })
+		    .catch((e) => {
+		        console.error(e);
+		        Swal.fire('Erro', 'Não foi possível cadastrar o veículo', 'error');
+		    });
+  	  });
   </script>
   <script>
     // CONTADOR DE CARACTERES PARA OBSERVAÇÃO

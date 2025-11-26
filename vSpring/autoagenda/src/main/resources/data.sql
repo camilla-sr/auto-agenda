@@ -7,9 +7,9 @@ create table if not exists cliente (
 
 create table if not exists veiculo(
 	id_veiculo	int primary key auto_increment,
-	fk_cliente			int,
+	fk_cliente	int,
 	modelo		varchar(35) not null,
-	ano			varchar(4) not null,
+	marca		varchar(4) not null,
 	placa		varchar(7) not null,
 	foreign key (fk_cliente) references cliente (id_cliente)
 );
