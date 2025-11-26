@@ -13,8 +13,8 @@ public class EmailService {
 
     @Async
     public void enviarEmailConclusao(Agendamento agendamento) {
-    	String emailCliente = agendamento.getNomeCliente();
-    	String nomeCliente = agendamento.getNomeCliente();
+    	String emailCliente = agendamento.getCliente().getEmail();
+    	String nomeCliente = agendamento.getCliente().getNomeCliente();
     	String assunto = "AutoAgenda: Seu serviço foi concluído!";
     	String texto = String.format(
 		"Olá, %s!\n\nSeu agendamento para o serviço '%s' foi concluído com sucesso em %s.\n\nObrigado por escolher nossa oficina!",

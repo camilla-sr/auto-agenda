@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
+import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
 import br.com.autoagenda.autoagenda.repositorios.ProdutoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
+import br.com.autoagenda.autoagenda.repositorios.VeiculoRepository;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -23,6 +25,8 @@ public class Rotas {
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private ProdutoRepository repoProd;
 	@Autowired private AgendamentoRepository repoAg;
+	@Autowired private ClienteRepository repoCl;
+	@Autowired private VeiculoRepository repoVe;
 	
 	@ModelAttribute
     public void usuarioGlobal(HttpSession session, Model model) {
@@ -98,6 +102,7 @@ public class Rotas {
     public String agendamentos(HttpSession session, Model model) {
     	model.addAttribute("servicos", repoServ.findAll());
     	model.addAttribute("agendamentos", repoAg.findAll());
+    	model.addAttribute("clientes", repoCl.findAll());
 		model.addAttribute("agendaPendente", repoAg.agpendentes());
 		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
 		model.addAttribute("agendaAndamento", repoAg.agandamento());

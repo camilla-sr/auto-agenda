@@ -22,14 +22,16 @@ public class Agendamento {
     private LocalDate dataConclusao;
 	@NotEmpty private String statusAgendamento;
     @Column(length = 1000) private String observacao;
-    @NotEmpty private String nomeCliente;
     @ManyToOne @JoinColumn(name = "fk_servico") private Servico servico;
+    @ManyToOne @JoinColumn(name = "fk_cliente") private Cliente cliente;
+    @ManyToOne @JoinColumn(name = "fk_veiculo") private Veiculo veiculo;
 
     public Agendamento() {}
     
-    public Agendamento(Integer idAgendamento, String nomeCliente, LocalDate dataCadastro, LocalDate dataPrevisao, LocalDate dataConclusao, String statusAgendamento, String observacao) {
+    public Agendamento(Integer idAgendamento, Cliente cliente, Veiculo veiculo, LocalDate dataCadastro, LocalDate dataPrevisao, LocalDate dataConclusao, String statusAgendamento, String observacao) {
     	this.idAgendamento = idAgendamento;
-    	this.nomeCliente = nomeCliente;
+    	this.cliente = cliente;
+    	this.veiculo= veiculo;
     	this.servico = new Servico();
     	this.dataPrevisao = dataPrevisao;
     	this.dataConclusao = dataConclusao;
@@ -39,8 +41,10 @@ public class Agendamento {
     
     public Integer getIdAgendamento() { return idAgendamento; }
     public void setIdAgendamento(Integer idAgendamento) { this.idAgendamento = idAgendamento; }
-    public String getNomeCliente() { return nomeCliente; }
-    public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Veiculo getVeiculo() { return veiculo; }
+    public void setVeiculo(Veiculo veiculo) { this.veiculo = veiculo; }
     public Servico getServico() { return servico; }
     public void setServico(Servico servico) { this.servico = servico; }
     public LocalDate getDataCadastro() { return dataCadastro; }

@@ -74,7 +74,9 @@
       <div class="form-container" id="agendamento-form-container" style="display: none;">
         <h3 id="formTitulo"><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
 
-        <form method="post" action="/agendamento-api/salvar" id="agendamento-form">
+        <form method="post" action="/agendamento-api/salvar" id="agendamento-form" enctype="multipart/form-data">
+		  <input type="hidden" id="idCliente" name="idCliente"> 
+		  <input type="hidden" id="idVeiculo" name="idVeiculo">
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -85,7 +87,7 @@
                     <input type="text" id="nome-cliente" name="nomeCliente" list="lista-clientes" placeholder="Nome completo do cliente" required>
                     <datalist id="lista-clientes">
                       <!-- Preencher com dados do backend -->
-                      <option th:each="cliente : ${clientes}" th:value="${cliente.nome}"></option>
+                      <option th:each="cliente : ${clientes}" th:value="${cliente.nomeCliente}" ></option>
                     </datalist>
                   </div>
                   <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#cadastrarClienteModal" title="Cadastrar Novo Cliente">
@@ -101,7 +103,7 @@
                 <div class="d-flex">
                   <div class="input-wrapper flex-grow-1">
                     <i class="fas fa-car input-icon"></i>
-                    <input type="text" id="veiculo" name="veiculo" list="lista-veiculos" placeholder="Modelo/Placa do veículo">
+                    <input type="text" id="veiculo" name="veiculoNome" list="lista-veiculos" placeholder="Modelo/Placa do veículo">
                     <datalist id="lista-veiculos">
                        <!-- Preencher com dados do backend -->
                     </datalist>
@@ -267,12 +269,14 @@
                 <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
               </tr>
               <tr th:each="ag : ${agendamentos}">
-                <td data-label="Cliente" class="ag-cliente" th:text="${ag.nomeCliente}"></td>
+                <td data-label="Cliente" class="ag-cliente">
+					<span th:text="${ag.cliente.nomeCliente}"></span>
+				</td>
                 <td data-label="Tipo de Serviço" class="ag-servico" th:attr="data-servico-id=${ag.servico.idServico}">
                   <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
                     th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
                     th:text="${ag.servico.nomeServico}"> </span>
-                  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}">
+                  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}"></span>
                 </td>
                 <!-- <td class="ag-cadastro" th:text="${#temporals.format(ag.dataCadastro, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataCadastro, 'yyyy-MM-dd')}">
@@ -873,6 +877,9 @@
 		    .then(veiculo => {
 		        document.getElementById('veiculo').value = veiculo.modelo;
 
+				const idHidden = document.getElementById('idVeiculo');
+				if(idHidden) idHidden.value = veiculo.idVeiculo;
+				
 		        const modalEl = document.getElementById('cadastrarVeiculoModal');
 		        const modal = bootstrap.Modal.getInstance(modalEl);
 		        modal.hide();

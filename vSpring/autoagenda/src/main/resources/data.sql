@@ -9,7 +9,7 @@ create table if not exists veiculo(
 	id_veiculo	int primary key auto_increment,
 	fk_cliente	int,
 	modelo		varchar(35) not null,
-	marca		varchar(4) not null,
+	marca		varchar(20) not null,
 	placa		varchar(7) not null,
 	foreign key (fk_cliente) references cliente (id_cliente)
 );
@@ -44,15 +44,18 @@ create table if not exists produto (
 );
 
 create table if not exists agendamento (
-  id_agendamento int primary key auto_increment,
-  nome_cliente	varchar(80) not null,
-  fk_servico int,
-  data_cadastro date,
-  data_previsao date,
-  data_conclusao date,
-  status_agendamento varchar(20) default 'agendado',
-  observacao text default null,
-  foreign key (fk_servico) references servico (id_servico)
+  id_agendamento 		int primary key auto_increment,
+  fk_cliente 			int,
+  fk_veiculo			int,
+  fk_servico 			int,
+  data_cadastro 		date,
+  data_previsao 		date,
+  data_conclusao 		date,
+  status_agendamento 	varchar(20) default 'agendado',
+  observacao 			text default null,
+  foreign key (fk_servico) references servico (id_servico),
+  foreign key (fk_cliente) references cliente (id_cliente),
+  foreign key (fk_veiculo) references veiculo (id_veiculo)
 );
 
 create table if not exists fotos_agendamento (
