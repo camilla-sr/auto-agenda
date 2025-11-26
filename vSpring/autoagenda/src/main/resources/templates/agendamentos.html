@@ -87,7 +87,9 @@
                     <input type="text" id="nome-cliente" name="nomeCliente" list="lista-clientes" placeholder="Nome completo do cliente" required>
                     <datalist id="lista-clientes">
                       <!-- Preencher com dados do backend -->
-                      <option th:each="cliente : ${clientes}" th:value="${cliente.nomeCliente}" ></option>
+					  <!-- Preenchido :D -->
+                      <option th:each="c : ${clientes}" th:value="${c.nomeCliente}"
+					  th:data-id="${c.idCliente}"></option>
                     </datalist>
                   </div>
                   <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#cadastrarClienteModal" title="Cadastrar Novo Cliente">
@@ -105,7 +107,10 @@
                     <i class="fas fa-car input-icon"></i>
                     <input type="text" id="veiculo" name="veiculoNome" list="lista-veiculos" placeholder="Modelo/Placa do veículo">
                     <datalist id="lista-veiculos">
-                       <!-- Preencher com dados do backend -->
+						<option th:each="v : ${veiculos}" 
+				          th:value="${v.modelo + ' - ' + v.placa}" th:data-id="${v.idVeiculo}"
+				          th:data-cliente-id="${v.cliente != null ? v.cliente.idCliente : ''}">
+				        </option>
                     </datalist>
                   </div>
                   <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#cadastrarVeiculoModal" title="Cadastrar Novo Veículo">

@@ -103,6 +103,7 @@ public class Rotas {
     	model.addAttribute("servicos", repoServ.findAll());
     	model.addAttribute("agendamentos", repoAg.findAll());
     	model.addAttribute("clientes", repoCl.findAll());
+    	model.addAttribute("veiculos", repoVe.findAll());
 		model.addAttribute("agendaPendente", repoAg.agpendentes());
 		model.addAttribute("agendaConcluido", repoAg.agconcluidos());
 		model.addAttribute("agendaAndamento", repoAg.agandamento());
