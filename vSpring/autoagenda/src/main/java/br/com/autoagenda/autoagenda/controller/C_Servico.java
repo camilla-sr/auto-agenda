@@ -20,7 +20,7 @@ public class C_Servico {
 		if(result.hasErrors()) { return "redirect:/servicos?erroServico=true"; }
 		
 		if(serv.getIdServico() != null) {
-			Servico existe = repo.findById(serv.getIdServico()).orElse(new Servico());
+			Servico existe = repo.findById(serv.getIdServico()).orElseThrow();
 			existe.setNomeServico(serv.getNomeServico());
 			existe.setDescServico(serv.getDescServico());
 			

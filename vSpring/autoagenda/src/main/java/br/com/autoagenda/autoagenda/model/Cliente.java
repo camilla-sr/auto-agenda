@@ -12,23 +12,23 @@ public class Cliente {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idCliente;
     private String nomeCliente;
     private String telefone;
-    private String emailCliente;
+    private String email;
 
     public Cliente() {}
     
-    public Cliente(Integer idCliente, String nomeCliente, String telefone, String emailCliente) {
+    public Cliente(Integer idCliente, String nomeCliente, String telefone, String email) {
     	this.idCliente = idCliente;
     	this.nomeCliente = nomeCliente;
     	this.telefone = telefone;
-    	this.emailCliente = emailCliente;
+    	this.email= email;
     }
 
     public Integer getIdCliente() { return idCliente; }
     public void setIdCliente(Integer idCliente) { this.idCliente = idCliente; }
     public String getNomeCliente() { return nomeCliente; }
     public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
-    public String getEmailCliente() { return emailCliente; }
-    public void setEmailCliente(String emailCliente) { this.emailCliente = emailCliente; }
+    public String getEmail() { return email; }
+    public void setEmail(String emailCliente) { this.email = emailCliente; }
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
 }

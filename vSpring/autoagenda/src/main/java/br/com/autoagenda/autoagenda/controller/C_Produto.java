@@ -20,7 +20,7 @@ public class C_Produto {
 		if(result.hasErrors()) { return "redirect:/produtos?erro=true"; }
 		
 		if(prod.getIdProduto() != null) {
-			Produto existe = repo.findById(prod.getIdProduto()).orElse(new Produto());
+			Produto existe = repo.findById(prod.getIdProduto()).orElseThrow();
 			if(!prod.getCodigoProduto().isEmpty()) { existe.setCodigoProduto(prod.getCodigoProduto()); }
 			if(!prod.getCategoria().isEmpty()) { existe.setCategoria(prod.getCategoria()); }
 			if(!prod.getNomeProduto().isEmpty()) { existe.setNomeProduto(prod.getNomeProduto()); }

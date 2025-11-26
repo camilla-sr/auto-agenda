@@ -1,40 +1,45 @@
 package br.com.autoagenda.autoagenda.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/cliente-api")
+@ResponseBody
 public class C_Cliente {
 	@Autowired private ClienteRepository repo;
 
-	@PostMapping("/cadastrarCliente")
-    public String salvar(@Valid Cliente cl, BindingResult result) {
-		if(result.hasErrors()) { return "?erro=true"; }
+	@PostMapping("/salvar")
+    public ResponseEntity<Cliente> salvar(@RequestBody Cliente cl) {
+		Cliente clienteSalvo;
 		
 		if(cl.getIdCliente() != null) {
-			Cliente existe = repo.findById(cl.getIdCliente()).orElse(new Cliente());
-			existe.setNomeCliente(cl.getNomeCliente());
-			existe.setTelefone(cl.getTelefone());
-			existe.setEmailCliente(cl.getEmailCliente());
-			repo.save(existe);
-			return "?editado=true";
+			Cliente existe = repo.findById(cl.getIdCliente()).orElse(null);
+			if(existe != null) {
+				existe.setNomeCliente(cl.getNomeCliente());
+				existe.setTelefone(cl.getTelefone());
+				existe.setEmail(cl.getEmail());
+				clienteSalvo = repo.save(existe);	
+			}else {
+				clienteSalvo = repo.save(cl);
+			}
 		} else {
-			repo.save(cl);
+			clienteSalvo = repo.save(cl);
 		}
-		return "?sucesso=true";
+		return ResponseEntity.ok(clienteSalvo);
     }
 
 	@PostMapping("/apagarCliente")
     public String apagarCliente(@RequestParam Integer idCliente) {
 		if(idCliente != null) { repo.deleteById(idCliente); }
-		return "mensagem de retorno de deu bom";
+		return "redirect:/agendamentos?sucesso=true";
     }
 }

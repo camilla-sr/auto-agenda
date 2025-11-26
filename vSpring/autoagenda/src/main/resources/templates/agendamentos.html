@@ -367,7 +367,7 @@
           </div>
         </div>
       </div>
-
+		
       <!-- Modal Cadastrar Cliente -->
       <div class="modal fade" id="cadastrarClienteModal" tabindex="-1" aria-labelledby="cadastrarClienteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -410,6 +410,7 @@
             </div>
             <div class="modal-body">
               <form id="form-novo-veiculo">
+				<input type="hidden" id="idCliente">
                 <div class="mb-3">
                   <label for="novo-veiculo-modelo" class="form-label">Modelo</label>
                   <input type="text" class="form-control" id="novo-veiculo-modelo" placeholder="Ex: Gol, Civic..." required>
@@ -800,27 +801,48 @@
     });
     // LÓGICA PARA SALVAR NOVO CLIENTE (SIMULAÇÃO FRONT-END)
     document.getElementById('btn-salvar-novo-cliente').addEventListener('click', function() {
-        const nome = document.getElementById('novo-cliente-nome').value;
-        const email = document.getElementById('novo-cliente-email').value;
-        
-        if(nome) {
-            // Aqui entraria a chamada AJAX para salvar no backend
-            // Como é simulação, vamos apenas preencher o campo principal e fechar o modal
-            document.getElementById('nome-cliente').value = nome;
-            
-            // Fechar modal
-            const modalEl = document.getElementById('cadastrarClienteModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-            
-            // Limpar form
-            document.getElementById('form-novo-cliente').reset();
-            
-            Swal.fire('Sucesso', 'Cliente cadastrado (Simulação)', 'success');
-        } else {
-            Swal.fire('Erro', 'Preencha o nome do cliente', 'error');
-        }
-    });
+		const nome = document.getElementById('novo-cliente-nome').value;
+	    const tel = document.getElementById('novo-cliente-telefone').value;
+	    const email = document.getElementById('novo-cliente-email').value;
+
+	    if(!nome) {
+	        Swal.fire('Erro', 'Preencha o nome do cliente', 'error');
+	        return;
+	    }
+
+		fetch('/cliente-api/salvar', {
+		        method: 'POST',
+		        headers: { 'Content-Type': 'application/json' },
+		        body: JSON.stringify({ 
+		            nomeCliente: nome,
+		            email: email, 
+		            telefone: tel 
+		        })
+		    })
+		    .then(r => {
+		        if (!r.ok) throw new Error('Erro ao salvar');
+		        return r.json(); // Agora o Java vai devolver o JSON corretamente
+		    })
+		    .then(cliente => {
+		        document.getElementById('nome-cliente').value = cliente.nomeCliente;
+		        
+		        // DICA EXTRA: Salve o ID num campo hidden para usar depois (no cadastro do veículo)
+		        const idHidden = document.getElementById('idCliente');
+		        if(idHidden) idHidden.value = cliente.idCliente;
+	
+		        const modalEl = document.getElementById('cadastrarClienteModal');
+		        const modal = bootstrap.Modal.getInstance(modalEl);
+		        modal.hide();
+	
+		        document.getElementById('form-novo-cliente').reset();
+	
+		        Swal.fire('Sucesso', 'Cliente cadastrado!', 'success');
+		    })
+		    .catch((e) => {
+		        console.error(e);
+		        Swal.fire('Erro', 'Não foi possível cadastrar o cliente', 'error');
+		    });
+   		});
 
     // LÓGICA PARA SALVAR NOVO VEÍCULO (SIMULAÇÃO FRONT-END)
     document.getElementById('btn-salvar-novo-veiculo').addEventListener('click', function() {

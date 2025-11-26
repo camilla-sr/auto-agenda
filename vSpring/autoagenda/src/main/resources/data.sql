@@ -5,6 +5,15 @@ create table if not exists cliente (
   email			varchar(255) not null unique
 );
 
+create table if not exists veiculo(
+	id_veiculo	int primary key auto_increment,
+	fk_cliente			int,
+	modelo		varchar(35) not null,
+	ano			varchar(4) not null,
+	placa		varchar(7) not null,
+	foreign key (fk_cliente) references cliente (id_cliente)
+);
+
 create table if not exists servico (
   id_servico 		int primary key auto_increment,
   nome_servico		varchar(30) not null,
@@ -36,7 +45,7 @@ create table if not exists produto (
 
 create table if not exists agendamento (
   id_agendamento int primary key auto_increment,
-  nome_cliente	varchar(30) not null,
+  nome_cliente	varchar(80) not null,
   fk_servico int,
   data_cadastro date,
   data_previsao date,

@@ -52,7 +52,7 @@ public class C_Funcionario {
 			Funcionario usrExistente = repo.findByUsuario(func.getUsuario());
 			if(repo.findByUsuario(func.getUsuario()) != null && !usrExistente.getIdFuncionario().equals(func.getIdFuncionario())) { return "redirect:/funcionarios?erroUsuario=true"; }
 
-			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElse(new Funcionario());
+			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElseThrow();
 			String cpfFormatado = func.getCpf().replaceAll("\\D", "");
 			funcExistente.setCpf(cpfFormatado);
 			

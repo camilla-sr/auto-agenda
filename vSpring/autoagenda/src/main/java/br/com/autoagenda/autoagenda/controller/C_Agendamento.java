@@ -35,13 +35,13 @@ public class C_Agendamento {
 		Servico servicoSelecionado = repoServ.findById(idServico).orElseThrow();
 		
 		if(ag.getIdAgendamento() != null) {
-			Agendamento existe = repo.findById(ag.getIdAgendamento()).orElse(new Agendamento());
+			Agendamento existe = repo.findById(ag.getIdAgendamento()).orElseThrow();
 			
 			existe.setNomeCliente(ag.getNomeCliente());
 			existe.setServico(servicoSelecionado);
 			existe.setDataPrevisao(ag.getDataPrevisao());
 			existe.setStatusAgendamento(ag.getStatusAgendamento());
-			existe.setDataConclusao("concluido".equals(ag.getStatusAgendamento()) ? LocalDate.now() : null);
+			existe.setDataConclusao(ag.getDataConclusao());
 			existe.setObservacao(ag.getObservacao());
 			repo.save(existe);
 			
