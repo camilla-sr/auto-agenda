@@ -57,7 +57,7 @@ public class C_Agendamento {
 			if(fotos != null && fotos.length > 0) {
 				for(MultipartFile foto : fotos) {
 					if (foto != null && !foto.isEmpty()) {
-						fotoService.salvarFoto(existe.getIdAgendamento(), foto);
+						fotoService.salvarFoto(existe, foto);
 					}
 				}
 			}
@@ -73,7 +73,7 @@ public class C_Agendamento {
 			if(fotos != null && fotos.length > 0) {
 				for(MultipartFile foto : fotos) {
 					if (foto != null && !foto.isEmpty()) {
-						fotoService.salvarFoto(agSalvo.getIdAgendamento(), foto);						
+						fotoService.salvarFoto(agSalvo, foto);						
 					}
 				}
 			}

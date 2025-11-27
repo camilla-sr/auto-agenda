@@ -6,29 +6,31 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "fotos_agendamento")
 public class FotosAgendamento {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFoto;
-	@Column(nullable = false) private Integer agendamentoId;
-	@Column(nullable = false) private String caminho;
+	@ManyToOne @JoinColumn(name = "fk_agendamento") private Agendamento agendamento;
+	@Column(nullable = false) private String nomeArquivo;
 	@Column(nullable = false) private LocalDateTime dataCriacao = LocalDateTime.now();
 	
 	public FotosAgendamento() {}
 	
-	public FotosAgendamento(Integer agendamentoId, String caminho) {
-		this.agendamentoId = agendamentoId;
-		this.caminho = caminho;
+	public FotosAgendamento(Agendamento agendamento, String nomeArquivo) {
+		this.agendamento = agendamento;
+		this.nomeArquivo = nomeArquivo;
 	}
 
 	public Integer getIdFoto() { return idFoto; }
 	public void setIdFoto(Integer idFoto) { this.idFoto = idFoto; }
-	public Integer getAgendamentoId() { return agendamentoId; }
-	public void setAgendamentoId(Integer agendamentoId) { this.agendamentoId = agendamentoId; }
-	public String getCaminho() { return caminho; }
-	public void setCaminho(String caminho) { this.caminho = caminho; }
+	public Agendamento getAgendamento() { return agendamento; }
+	public void setAgendamento(Agendamento agendamento) { this.agendamento = agendamento; }
+	public String getNomeArquivo() { return nomeArquivo; }
+	public void setNomeArquivo(String nomeArquivo) { this.nomeArquivo = nomeArquivo; }
 	public LocalDateTime getDataCriacao() { return dataCriacao; }
 	public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
 }

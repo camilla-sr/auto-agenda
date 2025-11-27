@@ -649,6 +649,32 @@
         document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim() || 'Não informado';
         document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
 
+		const agenda = button.dataset.id
+		// ----------------------------------------------
+		// COMO O FRONT DEVE BUSCAR AS FOTOS DO AGENDAMENTO
+		// ----------------------------------------------
+		//
+		// Existem DOIS endpoints importantes:
+		//
+		// 1) /fotos-api/listar/{idAgendamento}
+		//    → Retorna um array com objetos no formato:
+		//       [
+		//         { id_foto: 12, caminho: "uploads/abc.jpg" },
+		//         { id_foto: 13, caminho: "uploads/xyz.png" },
+		//         ...
+		//       ]
+		//
+		// 2) /fotos-api/imagem/{idFoto}
+		//    → Retorna o arquivo da imagem (binário) para o <img src="">
+		//
+		// Fluxo correto:
+		// - Primeiro chamar /listar passando o ID do agendamento
+		// - Percorrer o array retornado
+		// - Para cada foto, montar a tag <img> usando:
+		//        img.src = `/fotos-api/imagem/${foto.id_foto}`;
+		//
+		// Observação: no loop, “foto” é o item individual do array "listaFotos".
+		// ----------------------------------------------		
         visualizarModal.show();
       });
     });
@@ -808,7 +834,7 @@
         });
       });
     });
-    // LÓGICA PARA SALVAR NOVO CLIENTE (SIMULAÇÃO FRONT-END)
+    // LÓGICA PARA SALVAR NOVO CLIENTE
     document.getElementById('btn-salvar-novo-cliente').addEventListener('click', function() {
 		const nome = document.getElementById('novo-cliente-nome').value;
 	    const tel = document.getElementById('novo-cliente-telefone').value;
@@ -853,7 +879,7 @@
 		    });
    		});
 
-    // LÓGICA PARA SALVAR NOVO VEÍCULO (SIMULAÇÃO FRONT-END)
+    // LÓGICA PARA SALVAR NOVO VEÍCULO
     document.getElementById('btn-salvar-novo-veiculo').addEventListener('click', function() {
 		const idCliente = document.getElementById('idCliente').value;
 		const modelo = document.getElementById('novo-veiculo-modelo').value;

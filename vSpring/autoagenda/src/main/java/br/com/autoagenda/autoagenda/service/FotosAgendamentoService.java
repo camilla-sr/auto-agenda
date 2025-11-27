@@ -5,10 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.FotosAgendamento;
 import br.com.autoagenda.autoagenda.repositorios.FotosAgendamentoRepository;
 
@@ -17,7 +19,7 @@ public class FotosAgendamentoService {
 	@Value("${app.upload.dir}") private String pastaFotos;
 	@Autowired private FotosAgendamentoRepository repo;
 	
-	public FotosAgendamento salvarFoto(Integer agendamentoId, MultipartFile file){
+	public FotosAgendamento salvarFoto(Agendamento ag, MultipartFile file){
 		try {
 			Path diretorio = Paths.get(pastaFotos);
 			if (!Files.exists(diretorio)) {
@@ -26,16 +28,20 @@ public class FotosAgendamentoService {
 			
 			String nomeOriginal = file.getOriginalFilename();
 			String ext = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
-			String novoNome = agendamentoId + "_" + gerarCodigo() + ext;
+			String novoNome = ag.getIdAgendamento() + "_" + gerarCodigo() + ext;
 			Path destino = diretorio.resolve(novoNome);
 			
 			Files.copy(file.getInputStream(), destino);
-			FotosAgendamento foto = new FotosAgendamento(agendamentoId, destino.toString());
+			FotosAgendamento foto = new FotosAgendamento(ag, novoNome);
 			return repo.save(foto);			
 		}catch(IOException e) {
 			throw new RuntimeException("Erro ao salvar imagem", e);
 		}
 	}
+	
+	public List<FotosAgendamento> buscarPorAgendamento(Integer idAgendamento) {
+        return repo.findByAgendamento_IdAgendamento(idAgendamento);
+    }
 	
 	private static String gerarCodigo() {
 		String alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
