@@ -8,4 +8,6 @@ public interface FotosAgendamentoRepository extends CrudRepository<FotosAgendame
 	List<FotosAgendamento> findByAgendamento_IdAgendamento(Integer agendamentoId);
 	
 	List<String> findNomeArquivoByAgendamento_IdAgendamento(Integer agendamentoId);
+	
+	List<FotosAgendamento> findByTokenTemp(String tokenTemp);
 }

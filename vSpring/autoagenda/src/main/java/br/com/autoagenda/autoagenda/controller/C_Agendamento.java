@@ -35,6 +35,7 @@ public class C_Agendamento {
 	@PostMapping("/salvar")
     public String salvar(@Valid Agendamento ag, @RequestParam("idServico") Integer idServico,
     		@RequestParam("idCliente") Integer idCliente, @RequestParam("idVeiculo") Integer idVeiculo,
+    		@RequestParam(value = "tokenMobile", required = false) String tokenMobile,
     		@RequestParam(value = "imagens", required = false) MultipartFile[] fotos,
     		BindingResult result) {
 		
@@ -53,15 +54,16 @@ public class C_Agendamento {
 			existe.setStatusAgendamento(ag.getStatusAgendamento());
 			existe.setDataConclusao(ag.getDataConclusao());
 			existe.setObservacao(ag.getObservacao());
+			repo.save(existe);
 			
 			if(fotos != null && fotos.length > 0) {
 				for(MultipartFile foto : fotos) {
-					if (foto != null && !foto.isEmpty()) {
-						fotoService.salvarFoto(existe, foto);
-					}
+					if (foto != null && !foto.isEmpty()) { fotoService.salvarFoto(existe, foto); }
 				}
-			}
-			repo.save(existe);
+			}			
+			if(tokenMobile != null && !tokenMobile.isEmpty()) {
+                fotoService.vincularFotosAoAgendamento(tokenMobile, existe);
+            }
 			return "redirect:/agendamentos?editado=true";
 		} else {
 			ag.setServico(servicoSelecionado);
@@ -72,11 +74,12 @@ public class C_Agendamento {
 			
 			if(fotos != null && fotos.length > 0) {
 				for(MultipartFile foto : fotos) {
-					if (foto != null && !foto.isEmpty()) {
-						fotoService.salvarFoto(agSalvo, foto);						
-					}
+					if (foto != null && !foto.isEmpty()) { fotoService.salvarFoto(agSalvo, foto); }
 				}
 			}
+			if(tokenMobile != null && !tokenMobile.isEmpty()) {
+                fotoService.vincularFotosAoAgendamento(tokenMobile, agSalvo);
+            }
 		}
 		return "redirect:/agendamentos?sucesso=true";
     }
@@ -101,8 +104,7 @@ public class C_Agendamento {
 	@PostMapping("/concluir/{id}")
     @ResponseBody
     public Agendamento concluirAgendamento(@PathVariable("id") Integer id) {
-        Agendamento agendamento = repo.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
+        Agendamento agendamento = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
         
         agendamento.setStatusAgendamento("concluido");
         agendamento.setDataConclusao(LocalDate.now());

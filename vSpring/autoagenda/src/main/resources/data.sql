@@ -59,9 +59,10 @@ create table if not exists agendamento (
 );
 
 create table if not exists fotos_agendamento (
-  id_foto int primary key auto_increment,
-  fk_agendamento int not null,
-  nome_arquivo varchar(100) not null,
-  data_criacao datetime default current_timestamp,
+  id_foto 			int primary key auto_increment,
+  fk_agendamento 	int null,
+  nome_arquivo 		varchar(100) not null,
+  data_criacao 		datetime default current_timestamp,
+  token_temp 		varchar(50) null,
   foreign key (fk_agendamento) references agendamento (id_agendamento)
 );

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Upload Mobile</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/js/sweetalert2.all.min.js"></script>
+    
+    <style>
+        body { background-color: #f0f2f5; padding: 20px; min-height: 100vh; font-family: sans-serif; }
+        .main-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* Grid de Fotos */
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .photo-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; background: #eee; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Botão de Remover (X) */
+        .btn-remove { position: absolute; top: 2px; right: 2px; background: rgba(220, 53, 69, 0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
+        
+        /* Botão Flutuante de Adicionar */
+        .btn-add-photo { width: 100%; padding: 20px; border: 2px dashed #0d6efd; background: #f8f9fa; color: #0d6efd; font-weight: bold; border-radius: 10px; margin-top: 15px; cursor: pointer; }
+        
+        /* Botão Enviar */
+        .btn-send-all { width: 100%; margin-top: 20px; padding: 12px; font-size: 1.1rem; font-weight: 600; }
+        
+        /* Tela de Sucesso */
+        #success-screen { display: none; text-align: center; padding-top: 40px; }
+        .success-icon { font-size: 80px; color: #198754; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="main-container" id="upload-screen">
+        <div class="text-center mb-3">
+            <h4><i class="fas fa-camera"></i> Anexar Fotos</h4>
+            <p class="text-muted small">Adicione fotos e envie tudo de uma vez.</p>
+        </div>
+
+        <input type="file" id="fotoInput" accept="image/*" multiple style="display: none;">
+
+        <div id="preview-container" class="photo-grid"></div>
+
+        <button type="button" class="btn-add-photo" id="btnAdd">
+            <span style="font-size: 24px;">+</span><br>
+            Adicionar Foto
+        </button>
+
+        <button type="button" class="btn btn-primary btn-send-all" id="btnEnviar" disabled>
+            Enviar 0 fotos
+        </button>
+    </div>
+
+    <div class="main-container" id="success-screen">
+        <div class="success-icon">✓</div>
+        <h3>Sucesso!</h3>
+        <p>Fotos enviadas para o computador.</p>
+        <button class="btn btn-outline-secondary mt-3" onclick="window.close()">Fechar Tela</button>
+    </div>
+
+    <script>
+        const token = "[[${token}]]";
+        const input = document.getElementById('fotoInput');
+        const btnAdd = document.getElementById('btnAdd');
+        const previewContainer = document.getElementById('preview-container');
+        const btnEnviar = document.getElementById('btnEnviar');
+        const uploadScreen = document.getElementById('upload-screen');
+        const successScreen = document.getElementById('success-screen');
+        
+        let filaDeArquivos = [];
+        btnAdd.addEventListener('click', () => input.click());
+		
+        input.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                Array.from(this.files).forEach(file => { filaDeArquivos.push(file); });
+                renderizarPreview();
+                atualizarBotao();
+                this.value = '';
+            }
+        });
+
+        function renderizarPreview() {
+            previewContainer.innerHTML = '';
+            
+            filaDeArquivos.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                
+                const img = document.createElement('img');
+                const reader = new FileReader();
+                reader.onload = (e) => img.src = e.target.result;
+                reader.readAsDataURL(file);
+                
+                const btnX = document.createElement('button');
+                btnX.className = 'btn-remove';
+                btnX.innerHTML = '×';
+                btnX.onclick = () => {
+                    filaDeArquivos.splice(index, 1);
+                    renderizarPreview();
+                    atualizarBotao();
+                };
+
+                item.appendChild(img);
+                item.appendChild(btnX);
+                previewContainer.appendChild(item);
+            });
+        }
+
+        function atualizarBotao() {
+            const qtd = filaDeArquivos.length;
+            btnEnviar.innerText = `Enviar ${qtd} foto${qtd !== 1 ? 's' : ''}`;
+            btnEnviar.disabled = qtd === 0;
+        }
+
+        btnEnviar.addEventListener('click', function() {
+            if (filaDeArquivos.length === 0) return;
+            btnEnviar.disabled = true;
+            btnAdd.disabled = true;
+            const textoOriginal = btnEnviar.innerText;
+            btnEnviar.innerText = "Enviando...";
+            const formData = new FormData();
+            
+            filaDeArquivos.forEach(file => { formData.append('fotos', file); });
+
+            fetch(`/mobile/enviar/${token}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if(response.ok) {
+                    mostrarSucessoEFechar();
+                } else {
+                    throw new Error('Erro no upload');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Falha ao enviar fotos. Tente novamente.',
+                    confirmButtonColor: '#d33'
+                });
+                btnEnviar.disabled = false;
+                btnAdd.disabled = false;
+                btnEnviar.innerText = textoOriginal;
+            });
+        });
+
+        function mostrarSucessoEFechar() {
+            uploadScreen.style.display = 'none';
+            successScreen.style.display = 'block';
+            setTimeout(() => {
+                try { window.close(); } catch(e){}
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

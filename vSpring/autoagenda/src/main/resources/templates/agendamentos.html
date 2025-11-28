@@ -24,6 +24,7 @@
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/js/sweetalert2.all.min.js"></script>
   <script src="/js/validacao.js"></script>
+  <script src="/js/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -77,6 +78,7 @@
         <form method="post" action="/agendamento-api/salvar" id="agendamento-form" enctype="multipart/form-data">
 		  <input type="hidden" id="idCliente" name="idCliente"> 
 		  <input type="hidden" id="idVeiculo" name="idVeiculo">
+		  <input type="hidden" name="tokenMobile" id="tokenMobile">
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
@@ -192,12 +194,27 @@
 
           <div class="form-group mt-3">
             <label for="agendamento-imagens"><i class="fas fa-camera"></i> Imagens do Serviço</label>
-            <div class="input-wrapper">
-                <input type="file" id="agendamento-imagens" name="imagens" multiple accept="image/*" class="form-control" style="padding-left: 10px;">
-            </div>
+			
+			<div class="d-flex gap-2">
+	            <div class="input-wrapper flex-grow-1">
+	                <input type="file" id="agendamento-imagens" name="imagens" multiple accept="image/*" class="form-control" style="padding-left: 10px;">				
+	            </div>			
+				<button type="button" class="btn btn-outline-dark text-nowrap" id="btn-abrir-qrcode" title="Usar Câmera do Celular">
+	                <i class="fas fa-qrcode"></i> Enviar pelo Celular
+	            </button>
+			</div>
             <div id="form-preview-imagens" class="d-flex flex-wrap gap-2 mt-2">
                 <!-- Preview das imagens aqui -->
             </div>
+			
+			<div id="aviso-token-mobile" class="alert alert-info mt-2 p-2 align-items-center justify-content-between" style="display: none;">
+			    <div>
+			        <small><i class="fas fa-mobile-alt"></i> Sessão mobile ativa. Fotos do celular serão vinculadas ao salvar.</small>
+			    </div>
+			    <button type="button" id="btn-cancelar-mobile" class="btn btn-sm btn-outline-danger ms-2" style="padding: 0 8px; font-size: 0.75rem; line-height: 1.5;">
+			        <i class="fas fa-times"></i> Cancelar
+			    </button>
+			</div>
           </div>
 
           <div class="form-actions">
@@ -334,6 +351,31 @@
 
     </div>
 
+	<!-- QR CODE -->
+	<div class="modal fade" id="modalQrCode" tabindex="-1" aria-labelledby="modalQrCodeLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="modalQrCodeLabel"><i class="fas fa-mobile-alt"></i> Enviar fotos pelo celular</h5>
+	          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	        <div class="modal-body text-center">
+	          <p class="text-muted">Escaneie o código abaixo com a câmera do seu celular para anexar fotos.</p>
+	          
+	          <div id="qrcode-container" class="d-flex justify-content-center my-3"></div>
+	          
+	          <div class="alert alert-warning small">
+	            <i class="fas fa-exclamation-triangle"></i> Mantenha essa tela aberta no PC enquanto envia as fotos pelo celular.
+	            <br>Depois, clique em <strong>Fechar</strong> e salve o agendamento.
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar e Voltar</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	
     <!-- Modal de Visualização (sem alterações) -->
     <div class="bootstrap-iso">
       <div class="modal fade" id="visualizarAgendamentoModal" tabindex="-1"
@@ -996,6 +1038,71 @@
         if(btnCancelar) btnCancelar.addEventListener('click', limparImagens);
     });
   </script>
-</body>
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const btnQrCode = document.getElementById('btn-abrir-qrcode');
+          const modalQrCode = new bootstrap.Modal(document.getElementById('modalQrCode'));
+          const qrcodeContainer = document.getElementById('qrcode-container');
+          const inputToken = document.getElementById('tokenMobile');
+          const avisoMobile = document.getElementById('aviso-token-mobile');
+		  const btnCancelarMobile = document.getElementById('btn-cancelar-mobile');
 
+          // Função para gerar UUID (Token único)
+          function uuidv4() {
+              return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+              );
+          }
+
+          btnQrCode.addEventListener('click', function() {
+              if(!inputToken.value) {
+                  inputToken.value = uuidv4();
+				  if(avisoMobile) {
+			          avisoMobile.style.display = 'flex';
+			          avisoMobile.classList.add('d-flex');
+			      }
+              }
+              
+	          const token = inputToken.value;
+	          const urlMobile = `http://192.168.23.107:8080/mobile/upload-fotos/${token}`; //<<<--- TOMAR CUIDADO COM URL
+			  
+	          qrcodeContainer.innerHTML = "";
+	          new QRCode(qrcodeContainer, {
+	              text: urlMobile,
+	              width: 200,
+	              height: 200
+	          });
+	          modalQrCode.show();
+          });
+
+          const btnNovo = document.getElementById('btn-novo-agendamento');
+          if(btnNovo) {
+              btnNovo.addEventListener('click', () => {
+                  inputToken.value = '';
+                  if(avisoMobile) avisoMobile.style.display = 'none';
+              });
+          }
+		  
+		  if(btnCancelarMobile) {
+		      btnCancelarMobile.addEventListener('click', function() {
+		          const tokenAtual = inputToken.value;
+
+		          if (tokenAtual) {
+		              fetch(`/mobile/cancelar/${tokenAtual}`, { method: 'DELETE' })
+		                  .then(r => console.log('Sessão mobile limpa no servidor'))
+		                  .catch(e => console.error('Erro ao limpar sessão', e));
+		          }
+		          inputToken.value = "";
+		          avisoMobile.classList.remove('d-flex');
+		          avisoMobile.style.display = 'none';
+		          if(qrcodeContainer) qrcodeContainer.innerHTML = "";
+		          
+		          // Opcional: Feedback visual rápido
+		          const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
+		          Toast.fire({ icon: 'info', title: 'Envio mobile cancelado' });
+		      });
+		  }
+      });
+    </script>
+</body>
 </html>

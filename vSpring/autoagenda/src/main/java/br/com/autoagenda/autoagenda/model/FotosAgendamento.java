@@ -16,12 +16,18 @@ public class FotosAgendamento {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFoto;
 	@ManyToOne @JoinColumn(name = "fk_agendamento") private Agendamento agendamento;
 	@Column(nullable = false) private String nomeArquivo;
+	private String tokenTemp;
 	@Column(nullable = false) private LocalDateTime dataCriacao = LocalDateTime.now();
 	
 	public FotosAgendamento() {}
 	
 	public FotosAgendamento(Agendamento agendamento, String nomeArquivo) {
 		this.agendamento = agendamento;
+		this.nomeArquivo = nomeArquivo;
+	}
+	
+	public FotosAgendamento(String tokenTemp, String nomeArquivo) {
+		this.tokenTemp = tokenTemp;
 		this.nomeArquivo = nomeArquivo;
 	}
 
@@ -31,6 +37,8 @@ public class FotosAgendamento {
 	public void setAgendamento(Agendamento agendamento) { this.agendamento = agendamento; }
 	public String getNomeArquivo() { return nomeArquivo; }
 	public void setNomeArquivo(String nomeArquivo) { this.nomeArquivo = nomeArquivo; }
+	public String getTokenTemp() { return tokenTemp; }
+	public void setTokenTemp(String tokenTemp) { this.tokenTemp = tokenTemp; }
 	public LocalDateTime getDataCriacao() { return dataCriacao; }
 	public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
 }
