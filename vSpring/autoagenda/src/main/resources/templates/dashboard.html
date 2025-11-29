@@ -10,6 +10,82 @@
   <link rel="stylesheet" href="/css/index.css">
   <link rel="stylesheet" href="/css/style1.css">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sweetalert2.all.min.js"></script>
+  <style>
+    /* Estilos para o modal de redefinição de senha */
+    #modalRedefinirSenha .modal-content {
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 20px;
+    }
+    
+    #modalRedefinirSenha .modal-header {
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      padding: 1.5rem;
+    }
+    
+    #modalRedefinirSenha .modal-title {
+      color: var(--cor-primaria, #FFD700);
+    }
+    
+    #modalRedefinirSenha .modal-title i {
+      margin-right: 10px;
+    }
+    
+    #modalRedefinirSenha .modal-body {
+      padding: 2rem;
+    }
+    
+    #modalRedefinirSenha label {
+      color: #fff;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    #modalRedefinirSenha .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    #modalRedefinirSenha .form-control:focus {
+      border-color: var(--cor-primaria, #FFD700);
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    
+    #modalRedefinirSenha .btn-salvar-senha {
+      background-color: var(--cor-primaria, #FFD700);
+      border: none;
+      color: #000;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    #modalRedefinirSenha .btn-salvar-senha:hover {
+      background-color: #E6C200;
+      transform: translateY(-2px);
+    }
+    
+    #modalRedefinirSenha .btn-salvar-senha:disabled {
+      background-color: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Backdrop com blur */
+    .modal-backdrop-blur {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
 </head>
 <body>
   <!-- Cabeçalho -->
@@ -154,6 +230,125 @@
       </div>
     </div>
   </footer>
+
+  <!-- Modal de Redefinição de Senha (Primeiro Login) -->
+  <div class="modal fade" id="modalRedefinirSenha" data-bs-backdrop="static" 
+       data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalRedefinirSenhaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalRedefinirSenhaLabel">
+            <i class="fas fa-key"></i> Redefinir sua senha
+          </h5>
+        </div>
+        <div class="modal-body">
+          <form id="formRedefinirSenha" method="post" action="/funcionario-api/redefinir-senha">
+            <div class="mb-3">
+              <label for="novaSenha" class="form-label">Nova Senha</label>
+              <input type="password" class="form-control" id="novaSenha" name="novaSenha" 
+                     required minlength="6" placeholder="Mínimo 6 caracteres">
+            </div>
+            <div class="mb-3">
+              <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
+              <input type="password" class="form-control" id="confirmarSenha" 
+                     required minlength="6" placeholder="Digite a senha novamente">
+              <small id="senhaFeedback" class="text-danger" style="display:none;"></small>
+            </div>
+            <button type="submit" class="btn btn-salvar-senha" id="btnSalvarSenha">
+              <i class="fas fa-save"></i> Salvar Senha
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script para validação de senhas e controle do modal -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const formRedefinirSenha = document.getElementById('formRedefinirSenha');
+      const novaSenha = document.getElementById('novaSenha');
+      const confirmarSenha = document.getElementById('confirmarSenha');
+      const senhaFeedback = document.getElementById('senhaFeedback');
+      const btnSalvarSenha = document.getElementById('btnSalvarSenha');
+      
+      // Verifica se é primeiro login (Thymeleaf irá definir esta variável)
+      const primeiroLogin = /*[[${primeiroLogin != null ? primeiroLogin : false}]]*/ false;
+      
+      if (primeiroLogin && formRedefinirSenha) {
+        // Abre o modal automaticamente
+        const modal = new bootstrap.Modal(document.getElementById('modalRedefinirSenha'));
+        modal.show();
+        
+        // Adiciona classe de blur ao backdrop
+        document.querySelector('.modal-backdrop')?.classList.add('modal-backdrop-blur');
+      }
+      
+      // Validação de equivalência de senhas
+      function validarEquivalencia() {
+        const senha1 = novaSenha.value;
+        const senha2 = confirmarSenha.value;
+        
+        if (senha2.length === 0) {
+          senhaFeedback.style.display = 'none';
+          confirmarSenha.classList.remove('is-invalid');
+          return true;
+        }
+        
+        if (senha1 !== senha2) {
+          senhaFeedback.textContent = 'As senhas não coincidem';
+          senhaFeedback.style.display = 'block';
+          confirmarSenha.classList.add('is-invalid');
+          return false;
+        } else {
+          senhaFeedback.style.display = 'none';
+          confirmarSenha.classList.remove('is-invalid');
+          return true;
+        }
+      }
+      
+      // Event listeners
+      if (confirmarSenha) {
+        confirmarSenha.addEventListener('input', validarEquivalencia);
+      }
+      
+      if (novaSenha) {
+        novaSenha.addEventListener('input', function() {
+          if (confirmarSenha.value.length > 0) {
+            validarEquivalencia();
+          }
+        });
+      }
+      
+      // Validação no submit
+      if (formRedefinirSenha) {
+        formRedefinirSenha.addEventListener('submit', function(e) {
+          if (!validarEquivalencia()) {
+            e.preventDefault();
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro',
+              text: 'As senhas não coincidem. Por favor, verifique.',
+              confirmButtonColor: '#FFD700'
+            });
+            return;
+          }
+          
+          if (novaSenha.value.length < 6) {
+            e.preventDefault();
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro',
+              text: 'A senha deve ter no mínimo 6 caracteres.',
+              confirmButtonColor: '#FFD700'
+            });
+            return;
+          }
+        });
+      }
+    });
+  </script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const hamburgerMenu = document.getElementById('hamburger-menu');
