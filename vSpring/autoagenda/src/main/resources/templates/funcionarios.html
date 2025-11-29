@@ -71,10 +71,11 @@
 
             <div class="form-col">
               <div class="form-group">
-                <label for="senha">Senha</label>
+                <label for="email">E-mail</label>
                 <div class="input-wrapper">
-                  <i class="fas fa-lock input-icon"></i>
-                  <input type="password" id="senha" name="senha" placeholder="Senha de acesso" required>
+                  <i class="fas fa-envelope input-icon"></i>
+                  <input type="email" id="email" name="email" placeholder="email@exemplo.com" required>
+                  <small id="email-feedback" class="text-danger" style="display:none;"></small>
                 </div>
               </div>
             </div>
@@ -121,6 +122,7 @@
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Usuário</th>
+                <th>E-mail</th>
                 <th>Tipo de Acesso</th>
                 <th>CPF</th>
                 <th>Ações</th>
@@ -128,12 +130,13 @@
             </thead>
             <tbody>
               <tr th:if="${funcionarios == null or funcionarios.empty}">
-                <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
+                <td colspan="7" style="text-align: center;">Nenhum resultado encontrado</td>
               </tr>
               <tr th:each="func : ${funcionarios}">
                 <td data-label="ID"><span class="employee-id" th:text="${func.idFuncionario}"></span></td>
                 <td class="nome-funcionario" th:text="${func.nomeFuncionario}" data-label="Nome"></td>
                 <td class="usuario-funcionario" th:text="${func.usuario}" data-label="Usuário"></td>
+                <td class="email-funcionario" th:text="${func.email}" data-label="E-mail"></td>
                 <td class="acesso-funcionario" th:text="${func.acesso}" data-label="Acesso"></td>
                 <td class="cpf-funcionario" th:text="${func.cpf}" data-label="CPF"></td>
 
@@ -201,7 +204,8 @@
       const btnCancelar = document.querySelector("#funcionario-form button[type='reset']"); // Botão Cancelar/Reset
       const idInput = document.getElementById("idFuncionario"); // Campo hidden do ID
       const cpfInput = document.getElementById("cpf"); // Campo CPF
-      const campoSenha = document.getElementById('senha'); // Campo Senha
+      const campoEmail = document.getElementById('email'); // Campo E-mail
+      const emailFeedback = document.getElementById('email-feedback'); // Feedback de validação
 
       // --- AÇÃO DO BOTÃO "NOVO FUNCIONÁRIO" ---
       // Modificado para replicar a lógica de produtos.html: resetar form, limpar ID, ajustar título.
@@ -215,10 +219,12 @@
           }
           // 3. Define o título para "Cadastrar Novo Usuário"
           formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
-          // 4. Garante que o campo senha volte ao estado original (obrigatório e nome 'senha')
-          if (campoSenha) {
-            campoSenha.setAttribute("name", "senha");
-            campoSenha.setAttribute("required", "required");
+          // 4. Limpa feedback de validação do e-mail
+          if (emailFeedback) {
+            emailFeedback.style.display = 'none';
+          }
+          if (campoEmail) {
+            campoEmail.classList.remove('is-invalid');
           }
           // 5. Mostra o container do formulário
           formFuncionarioContainer.style.display = 'block';
@@ -243,10 +249,12 @@
           formFuncionarioContainer.style.display = 'none';
           // Define o título de volta para o padrão (opcional, mas bom para consistência).
           formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
-          // Garante que o campo senha volte ao estado original ao cancelar.
-          if (campoSenha) {
-            campoSenha.setAttribute("name", "senha");
-            campoSenha.setAttribute("required", "required");
+          // Limpa feedback de validação do e-mail ao cancelar.
+          if (emailFeedback) {
+            emailFeedback.style.display = 'none';
+          }
+          if (campoEmail) {
+            campoEmail.classList.remove('is-invalid');
           }
           // Rola de volta para a tabela (opcional)
           const tabelaContainer = document.querySelector('.table-container'); // Encontra o container da tabela
@@ -295,6 +303,7 @@
           const id = button.dataset.id;
           const nome = row.querySelector('.nome-funcionario').textContent.trim();
           const usuario = row.querySelector('.usuario-funcionario').textContent.trim();
+          const email = row.querySelector('.email-funcionario').textContent.trim();
           const acesso = row.querySelector('.acesso-funcionario').textContent.trim();
           const cpf = row.querySelector('.cpf-funcionario').textContent.trim(); // Pega CPF com máscara
 
@@ -302,6 +311,7 @@
           document.getElementById('idFuncionario').value = id;
           document.getElementById('nomeFuncionario').value = nome;
           document.getElementById('usuario').value = usuario;
+          document.getElementById('email').value = email;
           document.getElementById('acesso').value = acesso; // Assume que o valor do <select> bate com o texto
 
           // Preenche CPF e reaplica a máscara para garantir formatação
@@ -310,23 +320,12 @@
             // Inputmask("999.999.999-99").mask(cpfInput); // Reaplicar a máscara pode ser útil
           }
 
-
-          // Lógica específica do campo senha para edição (mantido como estava)
-          if (campoSenha) {
-            campoSenha.setAttribute('name', 'novaSenha'); // Muda o nome para indicar que é opcional/nova
-            campoSenha.value = ''; // Limpa o campo senha ao editar
-            campoSenha.removeAttribute('required'); // Senha não é obrigatória ao editar
-
-            // Listener para tornar obrigatório SOMENTE se algo for digitado
-            campoSenha.addEventListener('input', function handleSenhaInput() {
-              if (campoSenha.value.trim() === '') {
-                campoSenha.removeAttribute('required');
-              } else {
-                campoSenha.setAttribute('required', 'required');
-              }
-              // Remove o listener após a primeira interação para evitar múltiplos listeners
-              // campoSenha.removeEventListener('input', handleSenhaInput); // Removido - Deixe o listener ativo para caso o usuário apague a senha
-            });
+          // Limpa feedback de validação do e-mail ao editar
+          if (emailFeedback) {
+            emailFeedback.style.display = 'none';
+          }
+          if (campoEmail) {
+            campoEmail.classList.remove('is-invalid');
           }
         });
       });
@@ -388,6 +387,48 @@
 
     }); // Fim do DOMContentLoaded
   </script>
+  
+  <!-- Script de validação de e-mail -->
+  <script src="/js/validacaoemail.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Validação de e-mail usando o módulo ValidadorEmail
+      const campoEmail = document.getElementById('email');
+      const emailFeedback = document.getElementById('email-feedback');
+      
+      if (campoEmail && typeof ValidadorEmail !== 'undefined') {
+        const validadorEmail = new ValidadorEmail();
+        
+        campoEmail.addEventListener('blur', function() {
+          const email = this.value.trim();
+          
+          if (!email) {
+            emailFeedback.style.display = 'none';
+            campoEmail.classList.remove('is-invalid');
+            return;
+          }
+          
+          const resultado = validadorEmail.validarCompleto(email);
+          
+          if (!resultado.valido) {
+            emailFeedback.textContent = resultado.mensagem || 'E-mail inválido';
+            emailFeedback.style.display = 'block';
+            campoEmail.classList.add('is-invalid');
+          } else {
+            emailFeedback.style.display = 'none';
+            campoEmail.classList.remove('is-invalid');
+          }
+        });
+        
+        // Limpa o feedback quando o usuário começa a digitar
+        campoEmail.addEventListener('input', function() {
+          emailFeedback.style.display = 'none';
+          campoEmail.classList.remove('is-invalid');
+        });
+      }
+    });
+  </script>
+  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const hamburgerMenu = document.getElementById('hamburger-menu');
