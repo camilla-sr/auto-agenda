@@ -747,23 +747,44 @@
     });
 
     //	LÓGICA A BUSCA DINÂMICA USANDO ABORDAGEM CLIENT-SIDE
-    const busca = document.getElementById('busca')
+    const busca = document.getElementById('busca');
+    const filtroStatus = document.getElementById('filtro_status');
     const tabela = document.querySelector('table');
     const linhas = tabela.querySelectorAll('tbody tr');
 
-    busca.addEventListener('input', function () {
-      const termoBusca = busca.value.toLowerCase();
+    // Função para normalizar texto (remove acentos e converte para minúsculo)
+    function normalizarTexto(texto) {
+      return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
+    // Função unificada de filtragem
+    function filtrarAgendamentos() {
+      const termoBusca = normalizarTexto(busca.value);
+      const statusSelecionado = normalizarTexto(filtroStatus.value);
 
       linhas.forEach(function (linha) {
-        const textoLinha = linha.textContent.toLowerCase();
+        const textoLinha = normalizarTexto(linha.textContent);
+        const statusBadge = linha.querySelector('.status-badge');
+        const statusLinha = statusBadge ? normalizarTexto(statusBadge.textContent) : '';
 
-        if (textoLinha.includes(termoBusca)) {
+        // Verifica se passa no filtro de busca
+        const passaBusca = !termoBusca || textoLinha.includes(termoBusca);
+        
+        // Verifica se passa no filtro de status
+        const passaStatus = !statusSelecionado || statusLinha.includes(statusSelecionado);
+
+        // Mostra a linha apenas se passar em ambos os filtros
+        if (passaBusca && passaStatus) {
           linha.style.display = '';
         } else {
           linha.style.display = 'none';
         }
-      })
-    })
+      });
+    }
+
+    // Event listeners para ambos os filtros
+    busca.addEventListener('input', filtrarAgendamentos);
+    filtroStatus.addEventListener('change', filtrarAgendamentos);
 
     // LÓGICA PARA SETAR DATA DE CONCLUSÃO AUTOMATICAMENTE QUANDO STATUS FOR CONCLUÍDO
     const statusSelect = document.getElementById('status');
