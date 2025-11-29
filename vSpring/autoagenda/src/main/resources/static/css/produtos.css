@@ -33,9 +33,9 @@
 
 /* Marcação de campos obrigatórios */
 label.required::after {
-    content: " *";
-    color: red;
-    font-weight: bold;
+  content: " *";
+  color: red;
+  font-weight: bold;
 }
 
 /* Reset e estilos gerais */
@@ -117,7 +117,7 @@ body {
   margin-right: 6px;
 }
 
-.nav-link:hover, 
+.nav-link:hover,
 .nav-link.active {
   background-color: var(--cor-primaria);
   color: var(--cor-secundaria);
@@ -183,6 +183,21 @@ body {
 .stat-card.success {
   border-left-color: var(--cor-sucesso);
 }
+
+/* CORREÇÃO DO BUG 3 */
+.stat-card.danger {
+  border-left-color: var(--cor-erro);
+}
+
+.stat-card.danger .stat-icon {
+  background-color: var(--cor-erro-light);
+}
+
+.stat-card.danger .stat-icon i {
+  color: var(--cor-erro);
+}
+/* FIM DA CORREÇÃO DO BUG 3 */
+
 
 .stat-icon {
   width: 50px;
@@ -369,38 +384,38 @@ body {
 }
 
 .btn-edit {
-  background-color: var(--cor-primaria-light); 
-  color: var(--cor-secundaria);       
-  border:none;        
+  background-color: var(--cor-primaria-light);
+  color: var(--cor-secundaria);
+  border: none;
 }
 
 .btn-edit:hover {
-  background-color: var(--cor-primaria);      
-  color: var(--cor-secundaria);     
-  border:none;             
+  background-color: var(--cor-primaria);
+  color: var(--cor-secundaria);
+  border: none;
 }
 
 .btn-delete {
-  background-color: var(--cor-erro-light);   
-  color: var(--cor-erro);   
-  border:none;                     
-}
+  background-color: var(--cor-erro-light);
+  color: var(--cor-erro);
+  border: none;
+} /* <-- CHAVE DE FECHAMENTO CORRIGIDA AQUI */
 
 .btn-delete:hover {
-  filter: brightness(95%);     
-  border:none;                  
+  filter: brightness(95%);
+  border: none;
 }
 
 .btn-view {
-  background-color: var(--cor-info-light);    
-  color: var(--cor-info); 
-  border:none;                       
+  background-color: var(--cor-info-light);
+  color: var(--cor-info);
+  border: none;
 }
 
 .btn-view:hover {
-  background-color: var(--cor-info);          
-  color: var(--cor-texto-claro);     
-  border:none;            
+  background-color: var(--cor-info);
+  color: var(--cor-texto-claro);
+  border: none;
 }
 
 /* Tabela */
@@ -436,7 +451,7 @@ body {
 
 
 .table-header .btn {
-   width: auto;
+  width: auto;
 }
 
 .table-actions {
@@ -492,7 +507,7 @@ table tbody tr:hover,
 
 /* Status badge */
 .status-badge{
-	display: inline-block;
+  display: inline-block;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -501,8 +516,8 @@ table tbody tr:hover,
   color: white;
 }
 
-.status-badge.status-low  { background-color: var(--cor-alerta); } /* laranja */
-.status-badge.status-zero { background-color: var(--cor-erro); }   /* vermelho */
+.status-badge.status-low  { background-color: var(--cor-alerta); } /* laranja */
+.status-badge.status-zero { background-color: var(--cor-erro); }   /* vermelho */
 
 .status-ok {
   background-color: var(--cor-sucesso);
@@ -631,5 +646,3 @@ table tbody tr:hover,
     width: 100%;
   }
 }
-
-
