@@ -1,6 +1,8 @@
 package br.com.autoagenda.autoagenda.model;
 
 import org.hibernate.validator.constraints.br.CPF;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,10 +16,11 @@ public class Funcionario {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFuncionario;
 	@NotEmpty private String nomeFuncionario;
 	@CPF private String cpf;
-	@NotEmpty private String email;
+	@Column(nullable = false, unique = true) private String email;
 	@NotEmpty private String usuario;
-	@NotEmpty private String senha;
+	@Column(nullable = true) private String senha;
 	private String acesso = "comum";
+	@Column(nullable = false) boolean primeiroLogin = false;
 	
 	public Funcionario() {}
 
@@ -29,7 +32,7 @@ public class Funcionario {
 		this.usuario = usuario;
 		this.senha = senha;
 	}
-    
+	
     public Integer getIdFuncionario() { return idFuncionario; }
     public void setIdFuncionario(Integer idFuncionario) { this.idFuncionario = idFuncionario; }
     public String getNomeFuncionario() { return nomeFuncionario; }
@@ -44,4 +47,6 @@ public class Funcionario {
 	public void setAcesso(String acesso) { this.acesso = acesso; }
 	public String getCpf() { return cpf; }
 	public void setCpf(String cpf) { this.cpf = cpf; }
+	public boolean isPrimeiroLogin() { return primeiroLogin; }
+	public void setPrimeiroLogin(boolean primeiroLogin) { this.primeiroLogin = primeiroLogin; }
 }

@@ -273,7 +273,7 @@
       const btnSalvarSenha = document.getElementById('btnSalvarSenha');
       
       // Verifica se é primeiro login (Thymeleaf irá definir esta variável)
-      const primeiroLogin = /*[[${primeiroLogin != null ? primeiroLogin : false}]]*/ false;
+      const primeiroLogin = [[${usuarioLogado.primeiroLogin}]];
       
       if (primeiroLogin && formRedefinirSenha) {
         // Abre o modal automaticamente

@@ -7,84 +7,62 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpSession;
 import br.com.autoagenda.autoagenda.model.Funcionario;
-import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
+import br.com.autoagenda.autoagenda.service.FuncionarioService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/funcionario-api")
 public class C_Funcionario {
-	@Autowired private FuncionarioRepository repo;
-
-	@PostConstruct
-	private void verificarAdmin() {
-		Funcionario admin = repo.findByUsuario("admin");
-		if(admin == null) {
-			Funcionario adminPadrao = new Funcionario();
-			adminPadrao.setNomeFuncionario("Administrador");
-			adminPadrao.setUsuario("admin");
-			adminPadrao.setEmail("teste@email.com");
-			adminPadrao.setCpf("88461726049");
-			adminPadrao.setSenha("123");
-			adminPadrao.setAcesso("admin");
-			repo.save(adminPadrao);
-		}
-	}
+	@Autowired FuncionarioService service;
 	
 	@PostMapping(value = "/logar")
-	public String logar(@RequestParam String usuario, @RequestParam String senha, HttpSession session) {		
-		Funcionario func = repo.findByUsuario(usuario);
-		if(func == null || !func.getSenha().equals(senha)) { return "redirect:/login?usuarioValido=false"; }
-		session.setAttribute("usuarioLogado", func);
-	    return "redirect:/";
-	}
-	
-	@PostMapping(value = "/salvar")
-	public String salvarFuncionario(@ModelAttribute Funcionario func, @RequestParam(required = false) String novaSenha,
-			@RequestParam(required = false, defaultValue="false") boolean cadastroInicial, BindingResult result) {
-		
-		if(result.hasErrors()) {
-			return cadastroInicial ? "redirect:/cadastroSistema?erro=true" : "redirect:/funcionarios?erro=true";
-		}
-		
-		if(func.getIdFuncionario() != null) {
-			Funcionario usrExistente = repo.findByUsuario(func.getUsuario());
-			if(repo.findByUsuario(func.getUsuario()) != null && !usrExistente.getIdFuncionario().equals(func.getIdFuncionario())) { return "redirect:/funcionarios?erroUsuario=true"; }
+    public String logar(@RequestParam String usuario, @RequestParam String senha, HttpSession session) {        
+        Funcionario func = service.autenticar(usuario, senha);
+        
+        if(func == null) { return "redirect:/login?usuarioValido=false"; }
+        
+        session.setAttribute("primeiroLogin", func.isPrimeiroLogin());            
+        session.setAttribute("usuarioLogado", func);
+        
+        return "redirect:/";
+    }
+    
+    @PostMapping("/redefinir-senha")
+    public String redefinirSenha(@RequestParam String novaSenha, HttpSession session) {
+        Funcionario func = (Funcionario) session.getAttribute("usuarioLogado");
+        if(func != null) {
+            service.atualizarSenha(func, novaSenha);
+            
+            session.setAttribute("usuarioLogado", func);
+            session.setAttribute("primeiroLogin", false);
+        }
+        return "redirect:/";
+    }
+    
+    @PostMapping(value = "/salvar")
+    public String salvarFuncionario(@ModelAttribute Funcionario func, 
+            @RequestParam(required = false) String novaSenha,
+            @RequestParam(required = false, defaultValue="false") boolean cadastroInicial, 
+            BindingResult result) {
+        
+        String paginaErro = cadastroInicial ? "redirect:/cadastroSistema" : "redirect:/funcionarios";
+        String paginaSucesso = cadastroInicial ? "redirect:/login?sucesso=true" : "redirect:/funcionarios?sucesso=true";
+        String flagEditado = "redirect:/funcionarios?editado=true";
 
-			Funcionario funcExistente = repo.findById(func.getIdFuncionario()).orElseThrow();
-			String cpfFormatado = func.getCpf().replaceAll("\\D", "");
-			funcExistente.setCpf(cpfFormatado);
-			
-			Funcionario cpfExistente = repo.findByCpf(cpfFormatado);
-			if(cpfExistente != null && !cpfExistente.getIdFuncionario().equals(func.getIdFuncionario())) {
-				return "redirect:/funcionarios?erroCPF=true";
-			}
-			
-			funcExistente.setNomeFuncionario(func.getNomeFuncionario());
-			funcExistente.setEmail(func.getEmail());
-			funcExistente.setUsuario(func.getUsuario());
-			funcExistente.setAcesso(func.getAcesso());
-			
-			if (novaSenha != null && !novaSenha.isEmpty()) { funcExistente.setSenha(novaSenha); }
-			repo.save(funcExistente);
-			return "redirect:/funcionarios?editado=true";
-		} else {
-			Funcionario existe = repo.findByUsuario(func.getUsuario());
-			
-			if(existe != null) {
-				return cadastroInicial ? "redirect:/cadastroSistema?erro=true" : "redirect:/funcionarios?erro=true";
-			}
-			
-			func.setCpf(func.getCpf().replaceAll("\\D", ""));
-			repo.save(func);
-		}
-		return cadastroInicial ? "redirect:/login?sucesso=true" : "redirect:/funcionarios?sucesso=true";
-	}
-	
-	@PostMapping(value = "/apagar")
-	public String apagarFuncionario(@RequestParam Integer idFuncionario) {
-		if(idFuncionario != null) { repo.deleteById(idFuncionario); }
-		return "redirect:/funcionarios?apagar=true";
-	}
+        if(result.hasErrors()) { return paginaErro + "?erro=true"; }
+        
+        try {
+            service.salvarOuAtualizar(func, novaSenha, cadastroInicial);
+            return (func.getIdFuncionario() != null && !cadastroInicial) ? flagEditado : paginaSucesso;
+        } catch (IllegalArgumentException e) {
+            return paginaErro + "?" + e.getMessage() + "=true";
+        }
+    }
+    
+    @PostMapping(value = "/apagar")
+    public String apagarFuncionario(@RequestParam Integer idFuncionario) {
+        service.excluir(idFuncionario);
+        return "redirect:/funcionarios?apagar=true";
+    }
 }

@@ -58,6 +58,10 @@ public class Rotas {
 	
 	@GetMapping("/")
 	public String index(HttpSession session, Model model) {
+		if(s.loginAtivo(session)) {
+			Boolean primeiroLogin = (Boolean) session.getAttribute("primerioLogin");			
+			model.addAttribute("primerioLogin", primeiroLogin != null ? primeiroLogin : false);
+		}		
 		model.addAttribute("totalProdutos", repoProd.count());
 		model.addAttribute("estoqueBaixo", repoProd.countByEstoqueAtualLessThan(5));	//aqui passa o de corte pra considerar baixo
 		model.addAttribute("precoEstoque", somaPrecoCusto());
@@ -80,12 +84,6 @@ public class Rotas {
     public String servicos(HttpSession session, Model model) {
     	model.addAttribute("servicos", repoServ.findAll());
     	return verificaUsuario(session, "servicos");
-    }
-    
-    @GetMapping("/clientes")
-    public String clientes(HttpSession session) {
-    	return "erro";
-    	//return verificaUsuario(session, "clientes");
     }
     
     @GetMapping("/produtos")
