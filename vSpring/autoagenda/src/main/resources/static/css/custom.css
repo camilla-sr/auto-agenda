@@ -341,3 +341,7 @@
   margin: 0;
   flex-shrink: 0;
 }
+/* Correção para evitar linha de divisão duplicada no card de funcionários */
+.form-container h3 {
+  border-bottom: none;
+}
