@@ -10,10 +10,12 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/style1.css">
     <link rel="stylesheet" href="/css/main-styles.css">
-    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/custom.css"> <!-- Seu arquivo CSS customizado -->
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/js/sweetalert2.all.min.js"></script>
     <script src="/js/validacao.js"></script>
+    
+    <!-- O BLOCO <style> COM A CORREÇÃO FOI REMOVIDO DAQUI -->
 </head>
 
 <body>
@@ -24,7 +26,7 @@
         <div class="container">
 
             <div class="page-header" id="pageHeaderScrollTarget">
-                <h2><i class="fas fa-tools"></i> Gerenciamento de Serviços </h2>
+                <h2><i class="fas fa-tools"></i> Gerenciamento de Serviços </h2>
                 <p>Controle e cadastre novos serviços</p>
             </div>
 
@@ -197,6 +199,12 @@
                     document.getElementById('nome-servico').value = nome;
                     document.getElementById('descricao-servico').value = descricao;
 
+                    // Atualiza o contador de caracteres
+                    const descricaoInput = document.getElementById('descricao-servico');
+                    if (descricaoInput) {
+                        descricaoInput.dispatchEvent(new Event('input'));
+                    }
+
                     verificarCampos();
                 });
             });
@@ -237,6 +245,14 @@
                 const termoBusca = busca.value.toLowerCase();
 
                 linhas.forEach(function (linha) {
+                    // Ignora a linha de "Nenhum resultado encontrado"
+                    if (linha.querySelector('td[colspan="3"]')) {
+                        // Linha de aviso: sempre visível se a busca estiver vazia, caso contrário, escondida
+                        const isSearchEmpty = termoBusca.trim() === '';
+                        linha.style.display = isSearchEmpty ? '' : 'none';
+                        return;
+                    }
+                    
                     const textoLinha = linha.textContent.toLowerCase();
 
                     if (textoLinha.includes(termoBusca)) {
@@ -245,7 +261,26 @@
                         linha.style.display = 'none';
                     }
                 });
+                
+                // Verifica se há linhas visíveis após a busca
+                const linhasVisiveis = Array.from(linhas).some(linha => 
+                    linha.style.display !== 'none' && !linha.querySelector('td[colspan="3"]')
+                );
+                
+                // Controla a visibilidade da linha "Nenhum resultado"
+                const linhaVazia = tabela.querySelector('tbody tr td[colspan="3"]')?.closest('tr');
+                if (linhaVazia) {
+                    // Mostra a linha de aviso apenas se a busca não estiver vazia E não houver resultados.
+                    if (termoBusca.trim() !== '' && !linhasVisiveis) {
+                         linhaVazia.style.display = '';
+                    } else {
+                         linhaVazia.style.display = 'none'; // Esconde se a busca está vazia ou se há resultados.
+                    }
+                }
             });
+            // Ativa o contador de caracteres na inicialização se já houver texto
+            document.getElementById('descricao-servico')?.dispatchEvent(new Event('input'));
+
         });
     </script>
     <script>
