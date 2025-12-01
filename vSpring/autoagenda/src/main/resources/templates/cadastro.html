@@ -25,17 +25,19 @@
 										
                 <span>Nome Completo</span>
                 <div class="input-group mb-3">
-                    <input type="text" name="nomeFuncionario" class="form-control">
+                    <input type="text" name="nomeFuncionario" class="form-control" required>
                 </div>
 
                 <span>Usuário</span>
                 <div class="input-group mb-3">
-                    <input type="text" name="usuario" class="form-control">
+                    <input type="text" name="usuario" class="form-control" required>
                 </div>
 
                 <span>CPF</span>
                 <div class="input-group mb-3">
-                    <input type="text" id="cpf" name="cpf" class="form-control">
+                    <input type="text" id="cpf" name="cpf" class="form-control"
+						maxlength="14"
+			           	autocomplete="off" required>
                 </div>
 
                 <span>E-mail</span>
@@ -45,12 +47,12 @@
 			
                 <span>Senha</span>
                 <div class="input-group mb-3">
-                    <input type="password" id="senha" class="form-control">
+                    <input type="password" id="senha" class="form-control" required>
                 </div>
 
                 <span>Confirme sua senha</span>
                 <div class="input-group mb-3">
-                    <input type="password" id="confirmarSenha" class="form-control">
+                    <input type="password" id="confirmarSenha" class="form-control" required>
                 </div>
 				<input type="hidden" name="senha" id="senhaValida" readOnly>
 
@@ -64,14 +66,55 @@
     </div>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-		const cpfInput = document.getElementById("cpf");
-		if (cpfInput) {
-		    Inputmask({
-		        mask: "999.999.999-99",
-		        showMaskOnHover: false,
-		        clearIncomplete: true,
-				clearMaskOnLostFocus: false,
-		    }).mask(cpfInput);
+			const inputCPF = document.getElementById('cpf');
+		    inputCPF.addEventListener('input', function(e) {
+		        let value = e.target.value;
+		        value = value.replace(/\D/g, "");
+		        
+		        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+		        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+		        value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+		        
+		        e.target.value = value;
+		        inputCPF.classList.remove('is-invalid');
+		        inputCPF.classList.remove('is-valid');
+		    });
+
+		    inputCPF.addEventListener('input', function() {
+		        const cpfLimpo = this.value.replace(/\D/g, '');
+		        if (cpfLimpo === '') return;
+
+		        if (validarCPF(cpfLimpo)) {
+		            this.classList.add('is-valid');
+		            this.classList.remove('is-invalid');
+		        } else {
+		            this.classList.add('is-invalid');
+		            this.classList.remove('is-valid');
+		        }
+		    });
+		
+
+		function validarCPF(cpf) {
+		    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+	
+		    let soma = 0;
+		    let resto;
+	
+		    for (let i = 1; i <= 9; i++) {
+		        soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+		    }
+		    resto = (soma * 10) % 11;
+		    if ((resto === 10) || (resto === 11)) resto = 0;
+		    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+		    soma = 0;
+		    for (let i = 1; i <= 10; i++) {
+		        soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+		    }
+		    resto = (soma * 10) % 11;
+		    if ((resto === 10) || (resto === 11)) resto = 0;
+		    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+	
+		    return true;
 		}
 
 		// Validação básica de email
