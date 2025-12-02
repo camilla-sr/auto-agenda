@@ -51,10 +51,15 @@ public class C_Funcionario {
         String flagEditado = "redirect:/funcionarios?editado=true";
 
         if(result.hasErrors()) { return paginaErro + "?erro=true"; }
+        boolean edicao = func.getIdFuncionario() != null;
         
         try {
             service.salvarOuAtualizar(func, novaSenha, cadastroInicial);
-            return (func.getIdFuncionario() != null && !cadastroInicial) ? flagEditado : paginaSucesso;
+            if (edicao) {
+                return flagEditado;
+            } else {
+                return paginaSucesso;
+            }
         } catch (IllegalArgumentException e) {
             return paginaErro + "?" + e.getMessage() + "=true";
         }
