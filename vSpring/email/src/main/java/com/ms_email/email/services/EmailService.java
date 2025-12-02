@@ -2,6 +2,7 @@ package com.ms_email.email.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,6 +18,7 @@ import jakarta.transaction.Transactional;
 public class EmailService {
 	@Autowired EmailRepository repo;
 	@Autowired JavaMailSender emailSender;
+	@Value("${spring.mail.username}") private String remetentePadrao;
 	
 	private static final int MAX_TENTATIVAS = 3;
 	
@@ -25,8 +27,9 @@ public class EmailService {
 		email.setDataCriacao(LocalDateTime.now());
 		email.setStatusEnvio(StatusEnvio.PENDENTE);
         email.setTentativas(0);
+        
+        if (email.getRemetente() == null || email.getRemetente().isEmpty()) { email.setRemetente(remetentePadrao); }
 		return repo.save(email);
-	
 	}
 
 	@Scheduled(fixedDelay = 60000)
