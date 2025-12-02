@@ -215,7 +215,22 @@
             const buscaInput = document.getElementById("busca");
 
             // --- FUNÇÕES DE VALIDAÇÃO ---
-            function isNomeValido() { return nomeInput.value.trim().length > 0; }
+			function isNomeValido() { 
+	            return obterErroNome(nomeInput.value.trim()) === null;
+	        }
+
+	        function obterErroNome(nome) {
+	            if (nome.length === 0) return "Nome é obrigatório.";
+	            const partes = nome.split(' ').filter(parte => parte.length > 0);
+	            
+	            if (partes.length < 2) {
+	                return "Digite o nome e o sobrenome.";
+	            }
+	            if (partes[0].length < 2 || partes[1].length < 1) {
+	               return "Nome muito curto.";
+	            }
+	            return null;
+	        }
 			
             function isUsuarioValido() { 
                 const user = usuarioInput.value;
@@ -337,7 +352,7 @@
                 });
             }
 
-            configurarCampo(nomeInput, isNomeValido);
+            configurarCampo(nomeInput, isNomeValido, obterErroNome);
             configurarCampo(usuarioInput, isUsuarioValido);
             configurarCampo(cpfInput, isCpfValido);
             configurarCampo(emailInput, isEmailValido, obterErroEmail);

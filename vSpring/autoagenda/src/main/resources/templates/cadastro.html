@@ -25,7 +25,8 @@
 										
                 <span>Nome Completo</span>
                 <div class="input-group mb-3">
-                    <input type="text" name="nomeFuncionario" class="form-control" required>
+                    <input type="text" id="nomeFuncionario" name="nomeFuncionario" class="form-control" required>
+					<div id="nome-feedback" class="invalid-feedback">Digite seu nome e sobrenome.</div>
                 </div>
 
                 <span>Usuário</span>
@@ -69,6 +70,8 @@
 	<script>
 	    document.addEventListener('DOMContentLoaded', function() {
 	        const form = document.querySelector('form');
+			const nomeInput = document.getElementById('nomeFuncionario');
+			const nomeFeedback = document.getElementById('nome-feedback');
 	        const cpfInput = document.getElementById('cpf');
 	        const emailInput = document.getElementById('email');
 	        const senhaInput = document.getElementById('senha');
@@ -78,6 +81,38 @@
 	        const usuarioInput = document.getElementById('usuario');
 	        const usuarioFeedback = document.getElementById('usuario-feedback');
 
+			function obterErroNome(nome) {
+	            const valor = nome.trim();
+	            if (valor.length === 0) return "Nome é obrigatório.";
+	            const partes = valor.split(' ').filter(parte => parte.length > 0);
+	            
+	            if (partes.length < 2) {
+	                return "Digite seu nome e sobrenome.";
+	            }
+	            if (partes[0].length < 2) {
+	                return "Nome muito curto.";
+	            }
+	            return null;
+	        }
+	
+	        if (nomeInput && nomeFeedback) {
+	            nomeInput.addEventListener('input', function() {
+	                this.classList.remove('is-invalid');
+	                nomeFeedback.style.display = 'none';
+	            });
+	            nomeInput.addEventListener('blur', function() {
+	                const erro = obterErroNome(this.value);
+	                if (erro) {
+	                    this.classList.add('is-invalid');
+	                    nomeFeedback.textContent = erro;
+	                    nomeFeedback.style.display = 'block';
+	                } else {
+	                    this.classList.remove('is-invalid');
+	                    nomeFeedback.style.display = 'none';
+	                }
+	            });
+	        }
+			
 	        // --- VALIDAÇÃO DE USUÁRIO (SEM ESPAÇOS) ---
 	        if (usuarioInput) {
 	            usuarioInput.addEventListener('input', function() {
@@ -199,7 +234,16 @@
 	        }
 
 	        form.addEventListener('submit', function(e) {
-
+				const erroNome = obterErroNome(nomeInput.value);
+	            if (erroNome) {
+	                e.preventDefault();
+	                nomeInput.focus();
+	                nomeInput.classList.add('is-invalid');
+	                nomeFeedback.textContent = erroNome;
+	                nomeFeedback.style.display = 'block';
+	                return;
+	            }
+				
 	            if (cpfInput.classList.contains('is-invalid')) {
 	                e.preventDefault(); cpfInput.focus(); return;
 	            }
