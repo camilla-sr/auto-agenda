@@ -659,7 +659,7 @@ table tbody tr:hover {
   gap: 15px;
 }
 
-/* Container principal que segura os botões e a pista de imagens */
+/* Container principal do carrossel */
 .gallery-carousel-wrapper {
     position: relative;
     width: 100%;
@@ -668,9 +668,9 @@ table tbody tr:hover {
     background: #f8f9fa;
     border-radius: 8px;
     padding: 10px 0;
+    border: 1px solid #dee2e6;
 }
 
-/* A "pista" onde as imagens ficam */
 .gallery-track {
     display: flex;
     gap: 10px;
@@ -678,14 +678,9 @@ table tbody tr:hover {
     scroll-behavior: smooth;
     padding: 0 10px;
     width: 100%;
-    
-    /* Esconde a barra de rolagem (estética) */
     scrollbar-width: none;
-    -ms-overflow-style: none;
 }
-.gallery-track::-webkit-scrollbar {
-    display: none;
-}
+.gallery-track::-webkit-scrollbar { display: none; }
 
 .gallery-item {
     flex: 0 0 auto;
@@ -697,19 +692,9 @@ table tbody tr:hover {
     border: 1px solid #dee2e6;
     transition: transform 0.2s;
 }
+.gallery-item:hover { transform: scale(1.05); border-color: #0d6efd; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
 
-.gallery-item:hover {
-    transform: scale(1.05);
-    border-color: #0d6efd;
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Botões de Navegação */
 .gallery-nav {
     position: absolute;
     top: 50%;
@@ -724,30 +709,14 @@ table tbody tr:hover {
     justify-content: center;
     cursor: pointer;
     z-index: 10;
-    transition: background 0.3s;
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.3s;
 }
-
-.gallery-nav.visible {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.gallery-nav:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.gallery-prev {
-	left: 0;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
-}
-.gallery-next {
-	right: 0;
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
-}
+.gallery-nav.visible { opacity: 1; pointer-events: auto; }
+.gallery-nav:hover { background-color: rgba(0, 0, 0, 0.8); }
+.gallery-prev { left: 0; border-radius: 0 5px 5px 0; }
+.gallery-next { right: 0; border-radius: 5px 0 0 5px; }
 
 /* Detalhes do agendamento */
 .agendamento-detalhes {

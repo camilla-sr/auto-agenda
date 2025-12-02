@@ -310,7 +310,9 @@
                     <i class="fas fa-trash"></i>
                   </button>
                   <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento},
-				  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo}" title="Visualizar">
+												  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
+												  data-cliente-email=${ag.cliente.email},
+												  data-cliente-telefone=${ag.cliente.telefone}" title="Visualizar">
                     <i class="fas fa-eye"></i>
                   </button>
                   <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
@@ -378,6 +380,12 @@
               <div class="row">
                 <div class="col-md-8">
                   <h4><strong id="modal-cliente-agendamento"></strong></h4>
+				  
+				  <div class="mb-2 text-muted small">
+			        <span class="me-3"><i class="fas fa-phone-alt me-1"></i><span id="modal-cliente-telefone"></span></span>
+			        <span><i class="fas fa-envelope me-1"></i><span id="modal-cliente-email"></span></span>
+			      </div>
+				  
                   <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
 				  <p class="text-muted mb-0" style="font-size: 0.95rem;">
 	                  <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
@@ -974,98 +982,111 @@
   		      });
   		  }
 
-          // ============================================================
-          // VISUALIZAR IMAGENS
-          // ============================================================
-		  const modalVisEl = document.getElementById('visualizarAgendamentoModal');
-		  if (modalVisEl) {
-		      const modalVis = new bootstrap.Modal(modalVisEl);
-		      const track = document.getElementById('galeria-visualizacao');
-		      const btnPrev = document.getElementById('btn-galeria-prev');
-		      const btnNext = document.getElementById('btn-galeria-next');
-		      const scrollAmount = 300; // Quantos pixels rola por clique
+		// ============================================================
+        // VISUALIZAR IMAGENS (CORREÇÃO DAS SETAS/CARROSSEL)
+        // ============================================================
+        const modalVisEl = document.getElementById('visualizarAgendamentoModal');
+        if (modalVisEl) {
+            const modalVis = new bootstrap.Modal(modalVisEl);
+            const track = document.getElementById('galeria-visualizacao');
+            const btnPrev = document.getElementById('btn-galeria-prev');
+            const btnNext = document.getElementById('btn-galeria-next');
+            const scrollAmount = 300; 
 
-		      if(btnPrev && btnNext && track) {
-		          btnPrev.addEventListener('click', () => {
-		              track.scrollLeft -= scrollAmount;
-		              setTimeout(atualizarBotoes, 300); // Atualiza visibilidade após rolar
-		          });
-		          btnNext.addEventListener('click', () => {
-		              track.scrollLeft += scrollAmount;
-		              setTimeout(atualizarBotoes, 300);
-		          });
-		          track.addEventListener('scroll', atualizarBotoes);
-		      }
+            function atualizarBotoes() {
+                if(!track) return;
+                const precisaRolagem = track.scrollWidth > track.clientWidth;
 
-		      function atualizarBotoes() {
-		          if(!track) return;
-		          // Esquerda: Se scrollLeft > 0, mostra botão voltar
-		          if (track.scrollLeft > 5) {
-		              btnPrev.classList.add('visible');
-		          } else {
-		              btnPrev.classList.remove('visible');
-		          }
+                if (!precisaRolagem) {
+                    btnPrev.classList.remove('visible');
+                    btnNext.classList.remove('visible');
+                    return;
+                }
 
-		          // Direita: Se (scrollLeft + larguraVisivel) < larguraTotal, mostra botão avançar
-		          if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) {
-		              btnNext.classList.remove('visible');
-		          } else {
-		              btnNext.classList.add('visible');
-		          }
-		      }
+                if (track.scrollLeft > 5) btnPrev.classList.add('visible');
+                else btnPrev.classList.remove('visible');
 
-		      document.querySelectorAll('.btn-view').forEach(btn => {
-		          btn.addEventListener('click', function () {
-		              const row = this.closest('tr');
-		              const idAgendamento = this.dataset.id;
-					  const infoVeiculo = this.getAttribute('data-veiculo-info');
+                if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) {
+                    btnNext.classList.remove('visible');
+                } else {
+                    btnNext.classList.add('visible');
+                }
+            }
 
-		              document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
-		              document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
-					  document.getElementById('modal-veiculo-agendamento').textContent = infoVeiculo;
-		              document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim();
-		              document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
-		              document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim();
-		              document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
+            if(btnPrev && btnNext && track) {
+                btnPrev.addEventListener('click', () => {
+                    track.scrollLeft -= scrollAmount;
+                    setTimeout(atualizarBotoes, 350); 
+                });
+                btnNext.addEventListener('click', () => {
+                    track.scrollLeft += scrollAmount;
+                    setTimeout(atualizarBotoes, 350);
+                });
+                track.addEventListener('scroll', atualizarBotoes);
+            }
+            modalVisEl.addEventListener('shown.bs.modal', atualizarBotoes);
 
-		              track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Carregando...</p>';
-		              btnPrev.classList.remove('visible');
-		              btnNext.classList.remove('visible');
+            // Evento de Clique no Botão "Visualizar"
+            document.querySelectorAll('.btn-view').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const idAgendamento = this.dataset.id;
+                    const infoVeiculo = this.getAttribute('data-veiculo-info') || '-';
+                    const email = this.getAttribute('data-cliente-email') || '-';
+                    const telefone = this.getAttribute('data-cliente-telefone') || '-';
 
-		              fetch(`/fotos-api/listar/${idAgendamento}`)
-		              .then(r => r.status === 204 ? [] : r.json())
-		              .then(fotos => {
-		                  track.innerHTML = "";
-		                  
-		                  if(!fotos || fotos.length === 0) {
-		                      track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Nenhuma foto anexada.</p>';
-		                      return;
-		                  }
+                    document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
+                    document.getElementById('modal-cliente-email').textContent = email;
+                    document.getElementById('modal-cliente-telefone').textContent = telefone;
+                    document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
+                    document.getElementById('modal-veiculo-agendamento').textContent = infoVeiculo;
+                    document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim();
+                    document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
+                    document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim();
+                    document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
 
-		                  fotos.forEach(f => {
-		                      const div = document.createElement('div');
-		                      div.className = 'gallery-item';
-		                      const img = document.createElement('img');
-		                      img.src = `/fotos-api/imagem/${f.id}`;
-		                      img.alt = "Foto do serviço";
-		                      img.title = "Clique para ampliar";
-		                      
-		                      div.onclick = () => window.open(img.src, '_blank');
-		                      
-		                      div.appendChild(img);
-		                      track.appendChild(div);
-		                  });
-		                  setTimeout(atualizarBotoes, 100);
-		              })
-		              .catch(e => {
-		                  console.error(e);
-		                  track.innerHTML = '<p class="text-danger small w-100 text-center">Erro ao carregar imagens.</p>';
-		              });
-		              modalVis.show();
-		              setTimeout(() => { track.scrollLeft = 0; }, 200);
-		          });
-		      });
-		  }
+                    track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Carregando...</p>';
+                    btnPrev.classList.remove('visible');
+                    btnNext.classList.remove('visible');
+                    track.scrollLeft = 0;
+
+                    fetch(`/fotos-api/listar/${idAgendamento}`)
+                    .then(r => r.status === 204 ? [] : r.json())
+                    .then(fotos => {
+                        track.innerHTML = "";
+                        
+                        if(!fotos || fotos.length === 0) {
+                            track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Nenhuma foto anexada.</p>';
+                            atualizarBotoes();
+                            return;
+                        }
+
+                        fotos.forEach(f => {
+                            const div = document.createElement('div');
+                            div.className = 'gallery-item';
+                            
+                            const img = document.createElement('img');
+                            img.src = `/fotos-api/imagem/${f.id}`;
+                            img.alt = "Foto";
+                            img.title = "Clique para ampliar";
+                            img.onload = () => atualizarBotoes();
+                            div.onclick = () => window.open(img.src, '_blank');
+                            div.appendChild(img);
+                            track.appendChild(div);
+                        });
+
+                        atualizarBotoes(); 
+                        setTimeout(atualizarBotoes, 500);
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        track.innerHTML = '<p class="text-danger small w-100 text-center">Erro ao carregar imagens.</p>';
+                    });
+
+                    modalVis.show();
+                });
+            });
+        }
 
           // ============================================================
           // UTILITÁRIOS (Status, Filtros, Delete, Modais Rápidos)
