@@ -881,53 +881,64 @@
 		      });
 		  }
 
-      function renderizarFotoMobile(foto) {
-          const div = document.createElement('div');
-          div.className = 'preview-wrapper db-photo mobile-photo'; 
-          div.style.borderColor = '#198754';
+		function renderizarFotoMobile(foto) {
+        const div = document.createElement('div');
+        // Adicionamos a classe 'mobile-photo' para rastrear
+        div.className = 'preview-wrapper db-photo mobile-photo'; 
+        div.style.borderColor = '#198754';
 
-          const img = document.createElement('img');
-          img.src = `/fotos-api/imagem/${foto.id}`;
-          img.className = 'preview-img';
-          
-          const btnDel = document.createElement('div');
-          btnDel.className = 'btn-delete-img';
-          btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>';
-          btnDel.title = 'Apagar foto';
+        const img = document.createElement('img');
+        img.src = `/fotos-api/imagem/${foto.id}`;
+        img.className = 'preview-img';
+        
+        const btnDel = document.createElement('div');
+        btnDel.className = 'btn-delete-img';
+        btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        btnDel.title = 'Apagar foto';
 
-          btnDel.onclick = function() {
-               fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
-               .then(r => {
-                   if(r.ok) {
-                       div.remove();
-                       idsFotosRenderizadas.delete(foto.id);
-                   }
-               });
-          };
+        btnDel.onclick = function() {
+             // Chama a API para apagar do banco/disco
+             fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
+             .then(r => {
+                 if(r.ok) {
+                     // 1. Remove visualmente
+                     div.remove();
+                     idsFotosRenderizadas.delete(foto.id);
 
-          const iconMobile = document.createElement('div');
-          iconMobile.innerHTML = '<i class="fas fa-mobile-alt"></i>';
-          iconMobile.style.cssText = "position: absolute; bottom: -5px; right: -5px; background: #198754; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px;";
+                     // 2. NOVA LÓGICA: Verifica se ainda existem fotos mobile na tela
+                     const fotosRestantes = document.querySelectorAll('.mobile-photo').length;
+                     
+                     if (fotosRestantes === 0) {
+                         // Se não sobrou nenhuma, mata a sessão mobile do formulário
+                         const inputToken = document.getElementById('tokenMobile');
+                         const aviso = document.getElementById('aviso-token-mobile');
+                         
+                         if(inputToken) inputToken.value = "";
+                         
+                         if(aviso) {
+                             aviso.classList.remove('d-flex');
+                             aviso.style.display = 'none';
+                         }
+                         
+                         // Opcional: Feedback visual discreto
+                         const Toast = Swal.mixin({
+                            toast: true, position: 'top-end', showConfirmButton: false, timer: 3000
+                         });
+                         Toast.fire({ icon: 'info', title: 'Sessão mobile finalizada (sem fotos)' });
+                     }
+                 }
+             });
+        };
 
-          div.appendChild(img);
-          div.appendChild(btnDel);
-          div.appendChild(iconMobile);          
-          prevDiv.appendChild(div);
-      }
+        const iconMobile = document.createElement('div');
+        iconMobile.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+        iconMobile.style.cssText = "position: absolute; bottom: -5px; right: -5px; background: #198754; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px;";
 
-      if(btnCancelarMobile) {
-          btnCancelarMobile.addEventListener('click', function() {
-              const tok = inputToken.value;
-              document.querySelectorAll('.mobile-photo').forEach(el => el.remove());
-              idsFotosRenderizadas.clear();
-
-              if(tok) fetch(`/mobile/cancelar/${tok}`, { method: 'DELETE' });
-              
-              inputToken.value = "";
-              avisoMobile.classList.remove('d-flex');
-              avisoMobile.style.display = 'none';
-          });
-      }
+        div.appendChild(img);
+        div.appendChild(btnDel);
+        div.appendChild(iconMobile);          
+        prevDiv.appendChild(div);
+    }
 
           // Preview de Imagens Desktop
 		  const inpImg = document.getElementById('agendamento-imagens');

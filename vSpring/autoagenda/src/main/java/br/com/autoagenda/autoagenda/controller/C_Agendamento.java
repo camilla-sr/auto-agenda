@@ -26,8 +26,8 @@ public class C_Agendamento {
         if (result.hasErrors()) { return "redirect:/agendamentos?erro=true"; }
 
         try {
-            service.salvarAgendamento(ag, idServico, idCliente, idVeiculo, fotos, tokenMobile);
             boolean isEdicao = ag.getIdAgendamento() != null;
+            service.salvarAgendamento(ag, idServico, idCliente, idVeiculo, fotos, tokenMobile);
             return isEdicao ? "redirect:/agendamentos?editado=true" : "redirect:/agendamentos?sucesso=true";
         } catch (Exception e) {
             return "redirect:/agendamentos?erro=true";

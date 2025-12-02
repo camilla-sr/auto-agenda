@@ -59,7 +59,6 @@ public class FuncionarioService {
             }
         }
 
-        // --- EDIÇÃO ---
         if (func.getIdFuncionario() != null) {
             Funcionario funcBanco = repo.findById(func.getIdFuncionario()).orElseThrow();
             funcBanco.setCpf(cpfLimpo);
@@ -72,13 +71,9 @@ public class FuncionarioService {
             
             repo.save(funcBanco);
         } else {
-            // --- NOVO ---
-
             if (cadastroInicial) {
-                // cadastro vindo da tela de cadastro fora do sistema
                 if (novaSenha != null && !novaSenha.isEmpty()) { func.setSenha(novaSenha); }
             } else {
-                // cadastro interno na tela de funcionários
             	func.setPrimeiroLogin(true);
                 String senhaProvisoria = gerarSenhaAleatoria();
                 func.setSenha(senhaProvisoria);
