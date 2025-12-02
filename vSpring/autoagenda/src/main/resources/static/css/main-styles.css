@@ -172,8 +172,8 @@ body {
 .form-header {
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid var(--cor-borda);
-}
+  /*border-bottom: 1px solid var(--cor-borda);
+*/}
 
 .form-header h3 {
   font-size: 1.4rem;
