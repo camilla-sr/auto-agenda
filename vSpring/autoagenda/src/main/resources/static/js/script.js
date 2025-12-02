@@ -1,30 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // ========== NAVBAR ACTIVE STATE ==========
-    const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-link, .dropdown-item');
-
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (!href || href === '#') return;
-        
-        // Match exato ou início da rota (para sub-rotas como /funcionarios/editar)
-        if (currentPath === href || 
-            (href !== '/' && currentPath.startsWith(href))) {
-            link.classList.add('active');
-            
-            // Se for dropdown-item, também marca o dropdown-toggle pai
-            if (link.classList.contains('dropdown-item')) {
-                const dropdown = link.closest('.dropdown');
-                if (dropdown) {
-                    const toggle = dropdown.querySelector('.dropdown-toggle');
-                    if (toggle) toggle.classList.add('active');
-                }
-            }
-        }
-    });
-
-    // ========== HAMBURGER MENU TOGGLE ==========
+    // Hamburger menu toggle
     const hamburger = document.getElementById('hamburger-menu');
     const navMenu = document.getElementById('nav-menu');
 
@@ -82,9 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 	
-	// CORREÇÃO: Só adiciona listeners se os elementos existirem
-	if (inputSenha && inputConfSenha) {
-		inputSenha.addEventListener('input', verificarSenha);
-		inputConfSenha.addEventListener('input', verificarSenha);
-	}
+	inputSenha.addEventListener('input', verificarSenha);
+	inputConfSenha.addEventListener('input', verificarSenha);
 });
