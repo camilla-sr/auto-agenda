@@ -98,19 +98,29 @@ public class FotosAgendamentoService {
     
     public void limparFotosTemporarias(String token) {
         List<FotosAgendamento> fotos = repo.findByTokenTemp(token);
-        Path diretorioBase = Paths.get(pastaFotos);
-
         for (FotosAgendamento foto : fotos) {
-            try {
-                Path arquivo = diretorioBase.resolve(foto.getNomeArquivo());
-                Files.deleteIfExists(arquivo);
-                repo.delete(foto);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            excluirArquivoFisicoERegistro(foto);
         }
     }
-	
+    
+    public void apagarFotosDoAgendamento(Agendamento agendamento) {
+        List<FotosAgendamento> fotos = repo.findByAgendamento_IdAgendamento(agendamento.getIdAgendamento());
+        for (FotosAgendamento foto : fotos) {
+            excluirArquivoFisicoERegistro(foto);
+        }
+    }
+    
+    private void excluirArquivoFisicoERegistro(FotosAgendamento foto) {
+        try {
+            Path arquivo = Paths.get(pastaFotos).resolve(foto.getNomeArquivo());
+            Files.deleteIfExists(arquivo);
+            
+            repo.delete(foto);
+        } catch (IOException e) {
+        	throw new RuntimeException("Erro ao excluir imagens", e);
+        }
+    }
+    
 	private static String gerarCodigo() {
 		String alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		int tamanho = 9;
