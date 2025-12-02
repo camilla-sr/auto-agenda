@@ -43,6 +43,10 @@ public class FotosAgendamentoService {
 	public List<FotosAgendamento> buscarPorAgendamento(Integer idAgendamento) {
         return repo.findByAgendamento_IdAgendamento(idAgendamento);
     }
+	
+	public List<FotosAgendamento> buscarPorToken(String token) {
+        return repo.findByTokenTemp(token);
+    }
 
     public FotosAgendamento salvarFotoMobile(String token, MultipartFile file){
         try {
@@ -93,6 +97,17 @@ public class FotosAgendamentoService {
                 e.printStackTrace(); 
                 throw new RuntimeException("Erro ao renomear foto mobile", e);
             }
+        }
+    }
+    
+    public void apagarFotoPorId(Integer idFoto) {
+        FotosAgendamento foto = repo.findById(idFoto).orElseThrow();
+        try {
+            Path arquivo = Paths.get(pastaFotos).resolve(foto.getNomeArquivo());
+            Files.deleteIfExists(arquivo);
+            repo.delete(foto);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao apagar arquivo físico", e);
         }
     }
     

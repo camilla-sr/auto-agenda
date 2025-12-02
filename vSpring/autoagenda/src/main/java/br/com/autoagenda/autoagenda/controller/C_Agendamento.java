@@ -16,8 +16,7 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/agendamento-api")
 public class C_Agendamento {
-	@Autowired
-    private AgendamentoService service;
+	@Autowired private AgendamentoService service;
 
     @PostMapping("/salvar")
     public String salvar(@Valid Agendamento ag,  @RequestParam("idServico") Integer idServico,

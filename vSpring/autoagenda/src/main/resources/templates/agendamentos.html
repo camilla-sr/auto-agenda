@@ -309,7 +309,8 @@
 				  class="btn-icon btn-delete" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
                     <i class="fas fa-trash"></i>
                   </button>
-                  <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento}" title="Visualizar">
+                  <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento},
+				  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo}" title="Visualizar">
                     <i class="fas fa-eye"></i>
                   </button>
                   <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
@@ -355,13 +356,13 @@
 	          </div>
 	        </div>
 	        <div class="modal-footer">
-	          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar e Voltar</button>
+	          <button type="button" id="btn-fechar-qrcode" class="btn btn-secondary" data-bs-dismiss="modal">Fechar e Voltar</button>
 	        </div>
 	      </div>
 	    </div>
 	  </div>
 	
-    <!-- Modal de Visualização (sem alterações) -->
+    <!-- Modal de Visualização -->
     <div class="bootstrap-iso">
       <div class="modal fade" id="visualizarAgendamentoModal" tabindex="-1"
         aria-labelledby="visualizarAgendamentoModalLabel" aria-hidden="true">
@@ -378,23 +379,36 @@
                 <div class="col-md-8">
                   <h4><strong id="modal-cliente-agendamento"></strong></h4>
                   <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+				  <p class="text-muted mb-0" style="font-size: 0.95rem;">
+	                  <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
+	                </p>
                 </div>
                 <div class="col-md-4 text-md-end">
                   <h5>Previsão</h5>
                   <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
                 </div>
-				<div id="galeria-visualizacao" class="d-flex flex-wrap gap-2 mt-3 justify-content-end"></div>
+				<div class="mt-3">
+				    <h6><i class="fas fa-camera me-2"></i>Fotos do Serviço</h6>
+				    <div class="gallery-carousel-wrapper">
+				        <button type="button" class="gallery-nav gallery-prev" id="btn-galeria-prev">
+				            <i class="fas fa-chevron-left"></i>
+				        </button>
+				        <div id="galeria-visualizacao" class="gallery-track"></div>
+				        <button type="button" class="gallery-nav gallery-next" id="btn-galeria-next">
+				            <i class="fas fa-chevron-right"></i>
+				        </button>
+				    </div>
+				</div>
               </div>
               <hr>
               <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
               <p id="modal-observacao" style="white-space: pre-wrap;"></p>
               <hr>
-              <div class="row">
-                <div class="col-sm-6">
-                  <p><strong>Status:</strong> <span id="modal-status"></span></p>
-                  <p><strong>Conclusão:</strong> <span id="modal-conclusao"></span></p>
-                </div>
-              </div>
+			  <div class="d-flex justify-content-around align-items-center">
+				<p class="mb-0"><strong>Status:</strong> <span id="modal-status"></span></p>
+				<div class="vr text-muted mx-2" style="height: 20px;"></div> 
+				<p class="mb-0"><strong>Conclusão:</strong> <span id="modal-conclusao"></span></p>
+			 </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -524,18 +538,14 @@
           // ============================================================
           // 1. DADOS E VARIÁVEIS GLOBAIS
           // ============================================================
-          
-          // Dados vindos do Java (Thymeleaf)
           const todosClientes = /*[[${clientes}]]*/ []; 
           const todosVeiculos = /*[[${veiculos}]]*/ []; 
 
-          // Elementos do Formulário Principal
           const formContainer = document.getElementById('agendamento-form-container');
           const formAgendamento = document.getElementById('agendamento-form');
           const btnNovoAgendamento = document.getElementById('btn-novo-agendamento');
           const btnCancelar = document.getElementById('btn-cancelar-novo-agendamento');
           
-          // Campos de Cliente e Veículo
           const inputNome = document.getElementById('nome-cliente');
           const inputId = document.getElementById('idCliente');
           const datalistCli = document.getElementById('lista-clientes');
@@ -544,7 +554,6 @@
           const datalistVeic = document.getElementById('lista-veiculos');
           const btnAddVeiculo = document.getElementById('add-veiculo');
 
-          // Elementos Mobile/QR Code
           const btnQrCode = document.getElementById('btn-abrir-qrcode');
           const inputToken = document.getElementById('tokenMobile');
           const avisoMobile = document.getElementById('aviso-token-mobile');
@@ -667,9 +676,12 @@
           // =================================================
           // CONTROLE DO FORMULÁRIO (NOVO / CANCELAR / EDITAR)
           // =================================================
-
           if (btnNovoAgendamento) {
               btnNovoAgendamento.addEventListener('click', function () {
+				  dt = new DataTransfer();
+				  idsFotosRenderizadas.clear();
+				  prevDiv.innerHTML = "";
+				  
                   document.getElementById('idAgendamento').value = "";
                   document.getElementById('formTitulo').innerHTML = '<i class="fas fa-plus"></i> Novo Agendamento';
                   
@@ -700,177 +712,360 @@
           }
 
           // Editar
-          document.querySelectorAll('.btn-edit').forEach(btn => {
-              btn.addEventListener('click', function () {
-                  const row = this.closest('tr');
-                  const id = this.dataset.id;
-				  
-				  const veiculoId = this.getAttribute('data-veiculo-id');
-				  const veiculoNome = this.getAttribute('data-veiculo-nome');
-                  
-                  document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
-                  document.getElementById('idAgendamento').value = id;
-                  
-                  if(inputNome) inputNome.value = row.querySelector('.ag-cliente span').textContent.trim();
-                  const nomeNaTabela = inputNome.value;
-                  const cliObj = todosClientes.find(c => c.nomeCliente === nomeNaTabela);
-                  if(cliObj) {
-                      inputId.value = cliObj.idCliente;
-                      toggleCamposVeiculo(true);
-                  }
-				  
-				  if (veiculoId && veiculoNome) {
-                      document.getElementById('veiculo').value = veiculoNome;
-                      document.getElementById('idVeiculo').value = veiculoId;
-                  } else {
-                      document.getElementById('veiculo').value = "";
-                      document.getElementById('idVeiculo').value = "";
-                  }
+		  document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const id = this.dataset.id;
+                const veiculoId = this.getAttribute('data-veiculo-id');
+                const veiculoNome = this.getAttribute('data-veiculo-nome');
+                
+                document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
+                document.getElementById('idAgendamento').value = id;
+                
+                dt = new DataTransfer();
+                if(inpImg) inpImg.files = dt.files;
+                prevDiv.innerHTML = "";
+                
+                if(inputNome) inputNome.value = row.querySelector('.ag-cliente span').textContent.trim();
+                const nomeNaTabela = inputNome.value;
+                const cliObj = todosClientes.find(c => c.nomeCliente === nomeNaTabela);
+                if(cliObj) {
+                    inputId.value = cliObj.idCliente;
+                    toggleCamposVeiculo(true);
+                }
+                
+                if (veiculoId && veiculoNome) {
+                    document.getElementById('veiculo').value = veiculoNome;
+                    document.getElementById('idVeiculo').value = veiculoId;
+                } else {
+                    document.getElementById('veiculo').value = "";
+                    document.getElementById('idVeiculo').value = "";
+                }
 
-                  // ... Resto dos campos (Serviço, Status, Data, Obs) ...
-                  document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
-                  const statusTxt = row.querySelector('.ag-status span').textContent.trim();
-                  const statusSel = document.getElementById('status');
-                  // Tenta achar o option pelo texto
-                  for(let i=0; i<statusSel.options.length; i++) {
-                      if(statusSel.options[i].text.replace(/\s/g, '') === statusTxt.replace(/\s/g, '')) {
-                          statusSel.selectedIndex = i; break;
-                      }
+                document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
+                const statusTxt = row.querySelector('.ag-status span').textContent.trim();
+                const statusSel = document.getElementById('status');
+                for(let i=0; i<statusSel.options.length; i++) {
+                    if(statusSel.options[i].text.replace(/\s/g, '') === statusTxt.replace(/\s/g, '')) {
+                        statusSel.selectedIndex = i; break;
+                    }
+                }
+                checkStatus();
+
+                const prev = row.querySelector('.ag-previsao');
+                if(prev) document.getElementById('data-previsao').value = prev.dataset.date;
+                const conc = row.querySelector('.ag-conclusao');
+                if(conc) document.getElementById('data-conclusao').value = conc.dataset.date || '';
+                
+                document.getElementById('observacao').value = row.querySelector('.ag-observacao').textContent.trim();
+
+                // Carrega Imagens Existentes no Banco
+				fetch(`/fotos-api/listar/${id}`)
+	              .then(r => r.status === 204 ? [] : r.json())
+	              .then(fotos => {
+	                  if(fotos && fotos.length > 0) {
+	                      fotos.forEach(foto => {
+	                          const div = document.createElement('div');
+	                          div.className = 'preview-wrapper db-photo'; 
+	                          
+	                          div.style.borderColor = '#0d6efd'; 
+	
+	                          const img = document.createElement('img');
+	                          img.src = `/fotos-api/imagem/${foto.id}`;
+	                          img.className = 'preview-img';
+	                          
+	                          const btnDel = document.createElement('div');
+	                          btnDel.className = 'btn-delete-img';
+	                          btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>'; 
+	                          btnDel.title = 'Excluir foto permanentemente';
+	
+	                          btnDel.onclick = function() {
+	                              Swal.fire({
+	                                  title: 'Excluir imagem?',
+	                                  text: "Essa foto será apagada permanentemente.",
+	                                  icon: 'warning',
+	                                  showCancelButton: true,
+	                                  confirmButtonColor: '#d33',
+	                                  confirmButtonText: 'Sim, apagar!'
+	                              }).then((result) => {
+	                                  if (result.isConfirmed) {
+	                                      fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
+	                                      .then(response => {
+	                                          if(response.ok) {
+	                                              div.remove(); 
+	                                              Swal.fire('Apagado!', 'Imagem removida.', 'success');
+	                                          } else {
+	                                              Swal.fire('Erro', 'Erro ao apagar.', 'error');
+	                                          }
+	                                      });
+	                                  }
+	                              });
+	                          };
+	
+	                          div.appendChild(img);
+	                          div.appendChild(btnDel);
+	                          prevDiv.appendChild(div);
+	                      });
+	                  }
+	              })
+	              .catch(err => console.error("Erro ao carregar fotos:", err));
+                formContainer.style.display = 'block';
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+		  
+	  // ============================================================
+      // LÓGICA MOBILE (BUSCA AO FECHAR O MODAL)
+      // ============================================================
+      let idsFotosRenderizadas = new Set(); 
+      const btnFecharQr = document.getElementById('btn-fechar-qrcode');
+
+      if(btnQrCode) {
+          btnQrCode.addEventListener('click', function() {
+              if(!inputToken.value) {
+                  inputToken.value = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+                  );
+                  if(avisoMobile) {
+                      avisoMobile.style.display = 'flex';
+                      avisoMobile.classList.add('d-flex');
                   }
-                  checkStatus();
+              }
 
-                  const prev = row.querySelector('.ag-previsao');
-                  if(prev) document.getElementById('data-previsao').value = prev.dataset.date;
-                  const conc = row.querySelector('.ag-conclusao');
-                  if(conc) document.getElementById('data-conclusao').value = conc.dataset.date || '';
-                  
-                  document.getElementById('observacao').value = row.querySelector('.ag-observacao').textContent.trim();
-
-                  formContainer.style.display = 'block';
-                  formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              });
+              // Gera QR Code
+              const token = inputToken.value;
+              const url = `http://192.168.23.107:8080/mobile/upload-fotos/${token}`; // Ajuste seu IP se mudar
+              
+              if(qrcodeContainer) {
+                  qrcodeContainer.innerHTML = "";
+                  new QRCode(qrcodeContainer, { text: url, width: 200, height: 200 });
+              }
+              if(modalQrCode) modalQrCode.show();
           });
+      }
 
-          // ============================================================
-          // LÓGICA MOBILE / UPLOAD
-          // ============================================================
+      if(btnFecharQr) {
+          btnFecharQr.addEventListener('click', function() {
+              const token = inputToken.value;
+              if(!token) return;
 
-          function uuidv4() {
-              return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-                  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-              );
-          }
-
-          if(btnQrCode) {
-              btnQrCode.addEventListener('click', function() {
-                  if(!inputToken.value) {
-                      inputToken.value = uuidv4();
-                      if(avisoMobile) {
-                          avisoMobile.style.display = 'flex';
-                          avisoMobile.classList.add('d-flex');
+              fetch(`/fotos-api/listar-temp/${token}`)
+                  .then(r => r.json())
+                  .then(fotos => {
+                      if(fotos && fotos.length > 0) {
+                          fotos.forEach(foto => {
+                              if(!idsFotosRenderizadas.has(foto.id)) {
+                                  renderizarFotoMobile(foto);
+                                  idsFotosRenderizadas.add(foto.id);
+                              }
+                          });
+                          Swal.fire({
+                              title: 'Fotos Recebidas!',
+                              text: `${fotos.length} imagens foram identificadas.`,
+                              icon: 'success',
+                              timer: 2000,
+                              showConfirmButton: false
+                          });
                       }
-                  }
-                  const url = `http://192.168.23.107:8080/mobile/upload-fotos/${inputToken.value}`;
-                  
-                  if(qrcodeContainer) {
-                      qrcodeContainer.innerHTML = "";
-                      new QRCode(qrcodeContainer, { text: url, width: 200, height: 200 });
-                  }
-                  if(modalQrCode) modalQrCode.show();
-              });
-          }
+                  })
+                  .catch(e => console.error("Erro ao buscar fotos mobile:", e));
+		      });
+		  }
 
-          if(btnCancelarMobile) {
-              btnCancelarMobile.addEventListener('click', function() {
-                  const tok = inputToken.value;
-                  if(tok) fetch(`/mobile/cancelar/${tok}`, { method: 'DELETE' });
-                  
-                  inputToken.value = "";
-                  avisoMobile.classList.remove('d-flex');
-                  avisoMobile.style.display = 'none';
-              });
-          }
+      function renderizarFotoMobile(foto) {
+          const div = document.createElement('div');
+          div.className = 'preview-wrapper db-photo mobile-photo'; 
+          div.style.borderColor = '#198754';
+
+          const img = document.createElement('img');
+          img.src = `/fotos-api/imagem/${foto.id}`;
+          img.className = 'preview-img';
+          
+          const btnDel = document.createElement('div');
+          btnDel.className = 'btn-delete-img';
+          btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>';
+          btnDel.title = 'Apagar foto';
+
+          btnDel.onclick = function() {
+               fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
+               .then(r => {
+                   if(r.ok) {
+                       div.remove();
+                       idsFotosRenderizadas.delete(foto.id);
+                   }
+               });
+          };
+
+          const iconMobile = document.createElement('div');
+          iconMobile.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+          iconMobile.style.cssText = "position: absolute; bottom: -5px; right: -5px; background: #198754; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px;";
+
+          div.appendChild(img);
+          div.appendChild(btnDel);
+          div.appendChild(iconMobile);          
+          prevDiv.appendChild(div);
+      }
+
+      if(btnCancelarMobile) {
+          btnCancelarMobile.addEventListener('click', function() {
+              const tok = inputToken.value;
+              document.querySelectorAll('.mobile-photo').forEach(el => el.remove());
+              idsFotosRenderizadas.clear();
+
+              if(tok) fetch(`/mobile/cancelar/${tok}`, { method: 'DELETE' });
+              
+              inputToken.value = "";
+              avisoMobile.classList.remove('d-flex');
+              avisoMobile.style.display = 'none';
+          });
+      }
 
           // Preview de Imagens Desktop
-          const inpImg = document.getElementById('agendamento-imagens');
-          const prevDiv = document.getElementById('form-preview-imagens');
-          if(inpImg && prevDiv) {
-              inpImg.addEventListener('change', function() {
-                  prevDiv.innerHTML = "";
-                  Array.from(this.files).forEach(f => {
-                      if(f.type.startsWith('image/')) {
-                          const r = new FileReader();
-                          r.onload = e => {
-                              const i = document.createElement('img');
-                              i.src = e.target.result;
-                              i.style.width = '80px'; i.style.height = '80px';
-                              i.className = 'border rounded p-1 object-fit-cover me-2';
-                              prevDiv.appendChild(i);
-                          };
-                          r.readAsDataURL(f);
-                      }
-                  });
-              });
-          }
+		  const inpImg = document.getElementById('agendamento-imagens');
+		  const prevDiv = document.getElementById('form-preview-imagens');
+		  let dt = new DataTransfer(); 
+
+		  if(inpImg && prevDiv) {
+  		      inpImg.addEventListener('change', function() {
+  		          for(let file of this.files){
+  		              dt.items.add(file);
+  		          }
+  		          this.files = dt.files;
+                  const fotosDoBanco = Array.from(prevDiv.querySelectorAll('.db-photo'));
+  		          prevDiv.innerHTML = "";
+
+                  fotosDoBanco.forEach(div => prevDiv.appendChild(div));
+
+  		          Array.from(dt.files).forEach((file, index) => {
+  		              if(file.type.startsWith('image/')) {
+  		                  const reader = new FileReader();
+  		                  reader.onload = e => {
+  		                      const div = document.createElement('div');
+  		                      div.className = 'preview-wrapper';
+
+  		                      const img = document.createElement('img');
+  		                      img.src = e.target.result;
+  		                      img.className = 'preview-img';
+  		                      
+  		                      const btn = document.createElement('div');
+  		                      btn.className = 'btn-delete-img';
+  		                      btn.innerHTML = 'X';
+  		                      btn.title = 'Remover envio';
+
+  		                      btn.onclick = () => {
+  		                          const novoDt = new DataTransfer();
+  		                          Array.from(dt.files).forEach((f, i) => {
+  		                              if(i !== index) novoDt.items.add(f);
+  		                          });
+  		                          
+  		                          dt = novoDt;
+  		                          inpImg.files = dt.files;
+  		                          div.remove(); 
+  		                      };
+
+  		                      div.appendChild(img);
+  		                      div.appendChild(btn);
+  		                      prevDiv.appendChild(div);
+  		                  };
+  		                  reader.readAsDataURL(file);
+  		              }
+  		          });
+  		      });
+  		  }
 
           // ============================================================
-          // VISUALIZAR (COM FOTOS DO BANCO)
+          // VISUALIZAR IMAGENS
           // ============================================================
-          
-          const modalVisEl = document.getElementById('visualizarAgendamentoModal');
-          if (modalVisEl) {
-              const modalVis = new bootstrap.Modal(modalVisEl);
+		  const modalVisEl = document.getElementById('visualizarAgendamentoModal');
+		  if (modalVisEl) {
+		      const modalVis = new bootstrap.Modal(modalVisEl);
+		      const track = document.getElementById('galeria-visualizacao');
+		      const btnPrev = document.getElementById('btn-galeria-prev');
+		      const btnNext = document.getElementById('btn-galeria-next');
+		      const scrollAmount = 300; // Quantos pixels rola por clique
 
-              document.querySelectorAll('.btn-view').forEach(btn => {
-                  btn.addEventListener('click', function () {
-                      const row = this.closest('tr');
-                      const idAgendamento = this.dataset.id;
-					  const galeriaVis = document.getElementById('galeria-visualizacao')
+		      if(btnPrev && btnNext && track) {
+		          btnPrev.addEventListener('click', () => {
+		              track.scrollLeft -= scrollAmount;
+		              setTimeout(atualizarBotoes, 300); // Atualiza visibilidade após rolar
+		          });
+		          btnNext.addEventListener('click', () => {
+		              track.scrollLeft += scrollAmount;
+		              setTimeout(atualizarBotoes, 300);
+		          });
+		          track.addEventListener('scroll', atualizarBotoes);
+		      }
 
-                      // Preenche textos
-                      document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
-                      document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
-                      document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim();
-                      document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
-                      document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim();
-                      document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
+		      function atualizarBotoes() {
+		          if(!track) return;
+		          // Esquerda: Se scrollLeft > 0, mostra botão voltar
+		          if (track.scrollLeft > 5) {
+		              btnPrev.classList.add('visible');
+		          } else {
+		              btnPrev.classList.remove('visible');
+		          }
 
-                      // Busca Fotos
-                      galeriaVis.innerHTML = '<p class="text-muted small w-100 text-center">Carregando imagens...</p>';
-                      
-                      fetch(`/fotos-api/listar/${idAgendamento}`)
-                      .then(r => {
-                          if(r.status === 204) return [];
-                          return r.json();
-                      })
-                      .then(fotos => {
-                          galeriaVis.innerHTML = "";
-                          if(!fotos || fotos.length === 0) {
-                              galeriaVis.innerHTML = '<p class="text-muted small w-100 text-center">Sem fotos anexadas.</p>';
-                              return;
-                          }
-                          fotos.forEach(f => {
-                              const div = document.createElement('div');
-                              div.className = 'border rounded p-1';
-                              const img = document.createElement('img');
-                              // Endpoint de Visualização
-                              img.src = `/fotos-api/imagem/${f.id}`;
-                              img.style.width = '100px'; img.style.height = '100px';
-                              img.style.objectFit = 'cover'; img.style.cursor = 'pointer';
-                              img.onclick = () => window.open(img.src, '_blank');
-                              div.appendChild(img);
-                              galeriaVis.appendChild(div);
-                          });
-                      })
-                      .catch(e => {
-                          console.error(e);
-                          galeriaVis.innerHTML = '<p class="text-danger small">Erro ao carregar.</p>';
-                      });
+		          // Direita: Se (scrollLeft + larguraVisivel) < larguraTotal, mostra botão avançar
+		          if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) {
+		              btnNext.classList.remove('visible');
+		          } else {
+		              btnNext.classList.add('visible');
+		          }
+		      }
 
-                      modalVis.show();
-                  });
-              });
-          }
+		      document.querySelectorAll('.btn-view').forEach(btn => {
+		          btn.addEventListener('click', function () {
+		              const row = this.closest('tr');
+		              const idAgendamento = this.dataset.id;
+					  const infoVeiculo = this.getAttribute('data-veiculo-info');
+
+		              document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
+		              document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
+					  document.getElementById('modal-veiculo-agendamento').textContent = infoVeiculo;
+		              document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim();
+		              document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
+		              document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim();
+		              document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
+
+		              track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Carregando...</p>';
+		              btnPrev.classList.remove('visible');
+		              btnNext.classList.remove('visible');
+
+		              fetch(`/fotos-api/listar/${idAgendamento}`)
+		              .then(r => r.status === 204 ? [] : r.json())
+		              .then(fotos => {
+		                  track.innerHTML = "";
+		                  
+		                  if(!fotos || fotos.length === 0) {
+		                      track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Nenhuma foto anexada.</p>';
+		                      return;
+		                  }
+
+		                  fotos.forEach(f => {
+		                      const div = document.createElement('div');
+		                      div.className = 'gallery-item';
+		                      const img = document.createElement('img');
+		                      img.src = `/fotos-api/imagem/${f.id}`;
+		                      img.alt = "Foto do serviço";
+		                      img.title = "Clique para ampliar";
+		                      
+		                      div.onclick = () => window.open(img.src, '_blank');
+		                      
+		                      div.appendChild(img);
+		                      track.appendChild(div);
+		                  });
+		                  setTimeout(atualizarBotoes, 100);
+		              })
+		              .catch(e => {
+		                  console.error(e);
+		                  track.innerHTML = '<p class="text-danger small w-100 text-center">Erro ao carregar imagens.</p>';
+		              });
+		              modalVis.show();
+		              setTimeout(() => { track.scrollLeft = 0; }, 200);
+		          });
+		      });
+		  }
 
           // ============================================================
           // UTILITÁRIOS (Status, Filtros, Delete, Modais Rápidos)

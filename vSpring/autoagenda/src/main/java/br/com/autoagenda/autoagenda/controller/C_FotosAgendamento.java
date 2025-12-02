@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,8 +46,17 @@ public class C_FotosAgendamento {
 		List<FotosAgendamento> fotos = service.buscarPorAgendamento(idAgendamento);
 	    var resposta = fotos.stream().map(f -> Map.of("id", f.getIdFoto(),"nomeArquivo", f.getNomeArquivo())).toList();
 	    return resposta.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(resposta);
-		
 	}
+	
+	@GetMapping("/listar-temp/{token}")
+    @ResponseBody
+    public ResponseEntity<?> listarFotosTemporarias(@PathVariable String token) {
+        List<FotosAgendamento> fotos = service.buscarPorToken(token);
+        var resposta = fotos.stream()
+            .map(f -> Map.of("id", f.getIdFoto(), "nomeArquivo", f.getNomeArquivo())).toList();
+        
+        return resposta.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(resposta);
+    }
 	
 	@GetMapping("/imagem/{idFoto}")
 	public ResponseEntity<byte[]> mostrarImagem(@PathVariable Integer idFoto) throws IOException {
@@ -67,6 +77,17 @@ public class C_FotosAgendamento {
 
 	    } catch (IOException e) {
 	        return ResponseEntity.status(500).build();
+	    }
+	}
+	
+	@DeleteMapping("/apagar/{idFoto}")
+	@ResponseBody
+	public ResponseEntity<?> removerFotoUnica(@PathVariable Integer idFoto) {
+	    try {
+	        service.apagarFotoPorId(idFoto);
+	        return ResponseEntity.ok().build();
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Erro ao excluir");
 	    }
 	}
 
