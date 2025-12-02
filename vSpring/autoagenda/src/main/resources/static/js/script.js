@@ -60,3 +60,36 @@ document.addEventListener('DOMContentLoaded', function() {
 	inputSenha.addEventListener('input', verificarSenha);
 	inputConfSenha.addEventListener('input', verificarSenha);
 });
+const filtroStatus = document.getElementById('filtro-status');
+filtroStatus.addEventListener('change', aplicarFiltros);
+
+function aplicarFiltros() {
+  const termoBusca = busca.value.toLowerCase();
+  const statusSelecionado = filtroStatus.value;
+
+  let found = false;
+
+  linhas.forEach(function (linha) {
+    if (linha.querySelector('td[colspan="6"]')) return;
+
+    const textoLinha = linha.textContent.toLowerCase();
+    const statusLinha = linha.querySelector('.status-badge')?.textContent.trim();
+
+    const correspondeBusca = textoLinha.includes(termoBusca);
+    const correspondeStatus = !statusSelecionado || statusLinha === statusSelecionado;
+
+    if (correspondeBusca && correspondeStatus) {
+      linha.style.display = '';
+      found = true;
+    } else {
+      linha.style.display = 'none';
+    }
+  });
+
+  if (noResultMessage) {
+    noResultMessage.style.display = found ? 'none' : '';
+  }
+}
+
+// Garante que o filtro de texto também usa aplicarFiltros
+busca.addEventListener('input', aplicarFiltros);
