@@ -313,6 +313,11 @@ body {
   background-color: #fff;
 }
 
+.dropdown-menu-scrollable {
+	max-height: 250px;
+	overflow-y: auto;
+}
+
 /* Textarea com redimensionamento vertical liberado */
 .form-group textarea {
   resize: vertical;
