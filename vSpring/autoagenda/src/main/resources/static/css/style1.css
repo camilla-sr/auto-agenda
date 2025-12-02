@@ -138,10 +138,21 @@ body {
   margin-right: 6px;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  background-color: var(--cor-primaria);
+/* Hover - Cor mais clara (feedback de interação) */
+.nav-link:hover {
+  background-color: var(--cor-primaria);  /* #FFD700 */
   color: var(--cor-secundaria);
+}
+
+/* Active - Cor mais escura (página atual) */
+.nav-link.active {
+  background-color: #C9A000;
+  color: var(--cor-secundaria);
+}
+
+/* Hover sobrepõe active para manter feedback visual */
+.nav-link.active:hover {
+  background-color: var(--cor-primaria);
 }
 
 /* Dropdown menu styles */
@@ -161,6 +172,16 @@ body {
 .dropdown-item:hover {
   background-color: var(--cor-primaria);
   color: var(--cor-secundaria);
+}
+
+/* Active state para dropdown items */
+.dropdown-item.active {
+  background-color: #C9A000;
+  color: var(--cor-secundaria);
+}
+
+.dropdown-item.active:hover {
+  background-color: var(--cor-primaria);
 }
 
 .dropdown-item i {

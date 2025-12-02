@@ -117,9 +117,13 @@ body {
   margin-right: 6px;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.nav-link:hover {
   background-color: var(--cor-primaria);
+  color: var(--cor-secundaria);
+}
+
+.nav-link.active {
+  background-color: #C9A000;
   color: var(--cor-secundaria);
 }
 
