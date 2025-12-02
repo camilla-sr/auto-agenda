@@ -198,264 +198,254 @@
   </div>
 
   <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          // --- REFERÊNCIAS ---
-          const btnNovo = document.getElementById("btn-novo-funcionario");
-          const formContainer = document.getElementById("funcionario-form-container");
-          const form = document.getElementById("funcionario-form");
-          const formTitulo = document.getElementById('formTitulo');
-          const btnCancelar = document.querySelector("#funcionario-form button[type='reset']");
-          const btnSalvar = document.getElementById("salvarEdit");
-          
-          const idInput = document.getElementById("idFuncionario");
-          const nomeInput = document.getElementById("nomeFuncionario");
-          const cpfInput = document.getElementById("cpf");
-          const usuarioInput = document.getElementById("usuario");
-          const emailInput = document.getElementById("email");
-          const acessoInput = document.getElementById("acesso");
-          const buscaInput = document.getElementById("busca");
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnNovo = document.getElementById("btn-novo-funcionario");
+            const formContainer = document.getElementById("funcionario-form-container");
+            const form = document.getElementById("funcionario-form");
+            const formTitulo = document.getElementById('formTitulo');
+            const btnCancelar = document.querySelector("#funcionario-form button[type='reset']");
+            const btnSalvar = document.getElementById("salvarEdit");
+            
+            const idInput = document.getElementById("idFuncionario");
+            const nomeInput = document.getElementById("nomeFuncionario");
+            const cpfInput = document.getElementById("cpf");
+            const usuarioInput = document.getElementById("usuario");
+            const emailInput = document.getElementById("email");
+            const acessoInput = document.getElementById("acesso");
+            const buscaInput = document.getElementById("busca");
 
-          // --- FUNÇÕES DE VALIDAÇÃO (RETORNAM TRUE/FALSE) ---
+            // --- FUNÇÕES DE VALIDAÇÃO ---
+            function isNomeValido() { return nomeInput.value.trim().length > 0; }
+			
+            function isUsuarioValido() { 
+                const user = usuarioInput.value;
+                return user.trim().length > 0 && !user.includes(" "); 
+            }
+            
+            function isAcessoValido() { return acessoInput.value !== ""; }
 
-          function isNomeValido() { return nomeInput.value.trim().length > 0; }
-          function isUsuarioValido() { return usuarioInput.value.trim().length > 0; }
-          function isAcessoValido() { return acessoInput.value !== ""; }
+            function isCpfValido() {
+                const cpfLimpo = cpfInput.value.replace(/\D/g, '');
+                if (cpfLimpo.length !== 11 || /^(\d)\1+$/.test(cpfLimpo)) return false;
+                let soma = 0, resto;
+                for (let i = 1; i <= 9; i++) soma += parseInt(cpfLimpo.substring(i - 1, i)) * (11 - i);
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpfLimpo.substring(9, 10))) return false;
+                soma = 0;
+                for (let i = 1; i <= 10; i++) soma += parseInt(cpfLimpo.substring(i - 1, i)) * (12 - i);
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                return resto === parseInt(cpfLimpo.substring(10, 11));
+            }
 
-          function isCpfValido() {
-              const cpfLimpo = cpfInput.value.replace(/\D/g, '');
-              if (cpfLimpo.length !== 11 || /^(\d)\1+$/.test(cpfLimpo)) return false;
-              let soma = 0, resto;
-              for (let i = 1; i <= 9; i++) soma += parseInt(cpfLimpo.substring(i - 1, i)) * (11 - i);
-              resto = (soma * 10) % 11;
-              if (resto === 10 || resto === 11) resto = 0;
-              if (resto !== parseInt(cpfLimpo.substring(9, 10))) return false;
-              soma = 0;
-              for (let i = 1; i <= 10; i++) soma += parseInt(cpfLimpo.substring(i - 1, i)) * (12 - i);
-              resto = (soma * 10) % 11;
-              if (resto === 10 || resto === 11) resto = 0;
-              return resto === parseInt(cpfLimpo.substring(10, 11));
-          }
+            function isEmailValido() {
+                const erro = obterErroEmail(emailInput.value.trim());
+                return erro === null;
+            }
+            
+            // Gera a mensagem de erro específica do E-mail
+            function obterErroEmail(email) {
+                if (email === "") return "O e-mail é obrigatório.";
+                if (email.includes(" ")) return "O e-mail não pode conter espaços.";
+                
+                const partes = email.split('@');
+                if (partes.length !== 2 || partes[0] === "" || partes[1] === "") {
+                    return "O e-mail deve ter usuário e domínio separados por '@'.";
+                }
+                
+                if (!partes[1].includes('.')) {
+                    return "Falta o domínio (ex: .com, .br) após o '@'.";
+                }
+                
+                if (partes[1].startsWith('.') || partes[1].endsWith('.')) {
+                    return "O ponto não pode estar no início ou fim do domínio.";
+                }
+                // Regex para validar caracteres permitidos
+                if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                    return "Formato inválido ou caracteres especiais não permitidos.";
+                }
+                return null;
+            }
 
-		  function isEmailValido() {
-              const erro = obterErroEmail(emailInput.value.trim());
-              return erro === null;
-          }
-		  
-		  function obterErroEmail(email) {
-              if (email === "") return "O e-mail é obrigatório.";
-              if (email.includes(" ")) return "O e-mail não pode conter espaços.";
-              
-              const partes = email.split('@');
-              if (partes.length !== 2 || partes[0] === "" || partes[1] === "") {
-                  return "O e-mail deve ter usuário e domínio separados por '@'.";
-              }
-              
-              if (!partes[1].includes('.')) {
-                  return "Falta o domínio (ex: .com, .br) após o '@'.";
-              }
-              
-              if (partes[1].startsWith('.') || partes[1].endsWith('.')) {
-                  return "O ponto não pode estar no início ou fim do domínio.";
-              }
-              if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-                  return "Formato inválido ou caracteres especiais não permitidos.";
-              }
-              return null;
-          }
+            // MONITOR CENTRAL (HABILITA/DESABILITA BOTÃO)
+            function validarFormulario() {
+                const nomeOk = isNomeValido();
+                const usuarioOk = isUsuarioValido();
+                const acessoOk = isAcessoValido();
+                const cpfOk = isCpfValido();
+                const emailOk = isEmailValido();
 
-          // MONITOR CENTRAL (HABILITA/DESABILITA BOTÃO)
-          function validarFormulario() {
-              const nomeOk = isNomeValido();
-              const usuarioOk = isUsuarioValido();
-              const acessoOk = isAcessoValido();
-              const cpfOk = isCpfValido();
-              const emailOk = isEmailValido();
+                const tudoCerto = nomeOk && usuarioOk && acessoOk && cpfOk && emailOk;
+                btnSalvar.disabled = !tudoCerto;
+                return tudoCerto;
+            }
 
-              const tudoCerto = nomeOk && usuarioOk && acessoOk && cpfOk && emailOk;
-              btnSalvar.disabled = !tudoCerto;
-              return tudoCerto;
-          }
+            // LIMPAR ERROS VISUAIS
+            function limparErros() {
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                document.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
+                validarFormulario();
+            }
 
-          // LIMPAR ERROS VISUAIS
-          function limparErros() {
-              document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-              document.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
-              validarFormulario();
-          }
+            // --- CONFIGURAÇÃO DOS EVENTOS NOS CAMPOS ---
+            function configurarCampo(input, validacaoFn, msgErroFn = null) {
+                if(!input) return;
 
-          // --- CONFIGURAÇÃO DOS EVENTOS NOS CAMPOS ---
-		  function configurarCampo(input, validacaoFn, msgErroFn = null) {
-              if(!input) return;
+                input.addEventListener('input', function() {
+                    if(input === emailInput && this.value.includes(" ")) {
+                        this.value = this.value.replace(/\s/g, "");
+                    }
+                    if(input === cpfInput) {
+                        let v = this.value.replace(/\D/g, "");
+                        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                        this.value = v;
+                    }
+                    if(input === usuarioInput && this.value.includes(" ")) {
+                        this.value = this.value.replace(/\s/g, "");
+                    }
 
-              input.addEventListener('input', function() {
-                  if(input === emailInput && this.value.includes(" ")) {
-                      this.value = this.value.replace(/\s/g, "");
-                  }
-                  if(input === cpfInput) {
-                      let v = this.value.replace(/\D/g, "");
-                      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-                      this.value = v;
-                  }
-                  this.classList.remove('is-invalid');
-                  validarFormulario();
-              });
-              input.addEventListener('blur', function() {
-                  const isVazio = this.value.trim() === "";
-                  
-                  if(isVazio) {
-                      this.classList.add('is-invalid');
-                      if(msgErroFn) {
-                          const msg = msgErroFn(this.value.trim());
-                          const divErro = this.parentElement.querySelector('.invalid-feedback');
-                          if(divErro && msg) divErro.textContent = msg;
-                      }
-                  } 
-                  else if (!validacaoFn()) {
-                      this.classList.add('is-invalid');
-                      if(msgErroFn) {
-                          const msg = msgErroFn(this.value.trim());
-                          const divErro = this.parentElement.querySelector('.invalid-feedback');
-                          if(divErro && msg) divErro.textContent = msg;
-                      }
-                  } else {
-                      this.classList.remove('is-invalid');
-                      this.classList.add('is-valid');
-                  }
-                  validarFormulario();
-              });
-          }
+                    this.classList.remove('is-invalid');
+                    validarFormulario();
+                });
 
-          // Configurações
-          configurarCampo(nomeInput, isNomeValido);
-          configurarCampo(usuarioInput, isUsuarioValido);
-          configurarCampo(cpfInput, isCpfValido);
-          
-          // No email, passamos a função que gera as frases
-          configurarCampo(emailInput, isEmailValido, obterErroEmail);
+                input.addEventListener('blur', function() {
+                    const isVazio = this.value.trim() === "";
+                    
+                    if(isVazio) {
+                        this.classList.add('is-invalid');
+                        if(msgErroFn) {
+                            const msg = msgErroFn(this.value.trim());
+                            const divErro = this.parentElement.querySelector('.invalid-feedback');
+                            if(divErro && msg) divErro.textContent = msg;
+                        }
+                    } 
+                    else if (!validacaoFn()) {
+                        this.classList.add('is-invalid');
+                        if(msgErroFn) {
+                            const msg = msgErroFn(this.value.trim());
+                            const divErro = this.parentElement.querySelector('.invalid-feedback');
+                            if(divErro && msg) divErro.textContent = msg;
+                        }
+                    } else {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    }
+                    validarFormulario();
+                });
+            }
 
-          if(acessoInput) {
-              acessoInput.addEventListener('change', function() {
-                  if(!isAcessoValido()) this.classList.add('is-invalid');
-                  else { 
-                      this.classList.remove('is-invalid'); 
-                      this.classList.add('is-valid'); 
-                  }
-                  validarFormulario();
-              });
-          }
-          configurarCampo(nomeInput, isNomeValido);
-          configurarCampo(usuarioInput, isUsuarioValido);
-          configurarCampo(cpfInput, isCpfValido);
-          configurarCampo(emailInput, isEmailValido);
+            configurarCampo(nomeInput, isNomeValido);
+            configurarCampo(usuarioInput, isUsuarioValido);
+            configurarCampo(cpfInput, isCpfValido);
+            configurarCampo(emailInput, isEmailValido, obterErroEmail);
 
-          if(acessoInput) {
-              acessoInput.addEventListener('change', function() {
-                  if(!isAcessoValido()) this.classList.add('is-invalid');
-                  else { 
-                      this.classList.remove('is-invalid'); 
-                      this.classList.add('is-valid'); 
-                  }
-                  validarFormulario();
-              });
-          }
+            if(acessoInput) {
+                acessoInput.addEventListener('change', function() {
+                    if(!isAcessoValido()) this.classList.add('is-invalid');
+                    else { 
+                        this.classList.remove('is-invalid'); 
+                        this.classList.add('is-valid'); 
+                    }
+                    validarFormulario();
+                });
+            }
 
-          // --- CONTROLE DE TELA (NOVO / CANCELAR / EDITAR) ---
-          if (btnNovo) {
-              btnNovo.addEventListener('click', function () {
-                  form.reset();
-                  if(idInput) idInput.value = '';
-                  formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
-                  
-                  document.querySelectorAll('.is-invalid, .is-valid').forEach(el => el.classList.remove('is-invalid', 'is-valid'));
-                  btnSalvar.disabled = true; 
-                  
-                  formContainer.style.display = 'block';
-                  formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              });
-          }
+            // --- CONTROLE DE TELA (NOVO / CANCELAR / EDITAR) ---
+            if (btnNovo) {
+                btnNovo.addEventListener('click', function () {
+                    form.reset();
+                    if(idInput) idInput.value = '';
+                    formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Cadastrar Novo Usuário';
+                    
+                    limparErros();
+                    btnSalvar.disabled = true; 
+                    
+                    formContainer.style.display = 'block';
+                    formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
 
-          if (btnCancelar) {
-              btnCancelar.addEventListener('click', function () {
-                  formContainer.style.display = 'none';
-                  const tabela = document.querySelector('.table-container');
-                  if(tabela) tabela.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              });
-          }
+            if (btnCancelar) {
+                btnCancelar.addEventListener('click', function () {
+                    formContainer.style.display = 'none';
+                    const tabela = document.querySelector('.table-container');
+                    if(tabela) tabela.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
 
-          document.querySelectorAll('.btn-edit').forEach(btn => {
-              btn.addEventListener('click', function () {
-                  const row = this.closest('tr');
-                  formTitulo.innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário';
-                  
-                  document.querySelectorAll('.is-invalid, .is-valid').forEach(el => el.classList.remove('is-invalid', 'is-valid'));
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    formTitulo.innerHTML = '<i class="fas fa-user-edit"></i> Editar Usuário';
+                    
+                    limparErros();
 
-                  if(idInput) idInput.value = this.dataset.id;
-                  nomeInput.value = row.querySelector('.nome-funcionario').textContent.trim();
-                  usuarioInput.value = row.querySelector('.usuario-funcionario').textContent.trim();
-                  emailInput.value = row.querySelector('.email-funcionario').textContent.trim();
-                  acessoInput.value = row.querySelector('.acesso-funcionario').textContent.trim();
-                  cpfInput.value = row.querySelector('.cpf-funcionario').textContent.trim();
+                    if(idInput) idInput.value = this.dataset.id;
+                    nomeInput.value = row.querySelector('.nome-funcionario').textContent.trim();
+                    usuarioInput.value = row.querySelector('.usuario-funcionario').textContent.trim();
+                    emailInput.value = row.querySelector('.email-funcionario').textContent.trim();
+                    acessoInput.value = row.querySelector('.acesso-funcionario').textContent.trim();
+                    cpfInput.value = row.querySelector('.cpf-funcionario').textContent.trim();
+                    validarFormulario();
 
-                  validarFormulario();
+                    formContainer.style.display = 'block';
+                    formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
 
-                  formContainer.style.display = 'block';
-                  formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              });
-          });
+            // --- OUTROS (EXCLUIR / BUSCA / MENU / SUBMIT) ---
 
-          // --- OUTROS (EXCLUIR / BUSCA / MENU / SUBMIT) ---
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const id = this.dataset.id;
+                    Swal.fire({
+                        title: 'Tem certeza?',
+                        text: "Não será possível reverter essa ação!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sim, excluir!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('deleteId').value = id;
+                            document.getElementById('deleteForm').submit();
+                        }
+                    });
+                });
+            });
 
-          document.querySelectorAll('.btn-delete').forEach(btn => {
-              btn.addEventListener('click', function (e) {
-                  e.preventDefault();
-                  const id = this.dataset.id;
-                  Swal.fire({
-                      title: 'Tem certeza?',
-                      text: "Não será possível reverter essa ação!",
-                      icon: 'warning',
-                      showCancelButton: true,
-                      confirmButtonColor: '#d33',
-                      cancelButtonColor: '#3085d6',
-                      confirmButtonText: 'Sim, excluir!'
-                  }).then((result) => {
-                      if (result.isConfirmed) {
-                          document.getElementById('deleteId').value = id;
-                          document.getElementById('deleteForm').submit();
-                      }
-                  });
-              });
-          });
+            // Submit Final
+            form.addEventListener("submit", function (e) {
+                if (cpfInput) cpfInput.value = cpfInput.value.replace(/\D/g, '');
+            });
 
-          // Submit Final
-          form.addEventListener("submit", function (e) {
-              if (cpfInput) cpfInput.value = cpfInput.value.replace(/\D/g, '');
-          });
+            if (buscaInput) {
+                buscaInput.addEventListener('input', function () {
+                    const termo = this.value.toLowerCase();
+                    document.querySelectorAll('tbody tr').forEach(linha => {
+                        if (linha.querySelector('td[colspan]')) return;
+                        const texto = linha.textContent.toLowerCase();
+                        linha.style.display = texto.includes(termo) ? '' : 'none';
+                    });
+                });
+            }
 
-          if (buscaInput) {
-              buscaInput.addEventListener('input', function () {
-                  const termo = this.value.toLowerCase();
-                  document.querySelectorAll('tbody tr').forEach(linha => {
-                      if (linha.querySelector('td[colspan]')) return;
-                      const texto = linha.textContent.toLowerCase();
-                      linha.style.display = texto.includes(termo) ? '' : 'none';
-                  });
-              });
-          }
-
-          const ham = document.getElementById('hamburger-menu');
-          const nav = document.getElementById('nav-menu');
-          if(ham && nav) {
-              ham.addEventListener('click', () => { nav.classList.toggle('active'); ham.classList.toggle('active'); });
-              document.addEventListener('click', (e) => {
-                  if(!nav.contains(e.target) && !ham.contains(e.target)) {
-                      nav.classList.remove('active'); ham.classList.remove('active');
-                  }
-              });
-          }
-      });
-  </script>
+            const ham = document.getElementById('hamburger-menu');
+            const nav = document.getElementById('nav-menu');
+            if(ham && nav) {
+                ham.addEventListener('click', () => { nav.classList.toggle('active'); ham.classList.toggle('active'); });
+                document.addEventListener('click', (e) => {
+                    if(!nav.contains(e.target) && !ham.contains(e.target)) {
+                        nav.classList.remove('active'); ham.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
-
 </html>

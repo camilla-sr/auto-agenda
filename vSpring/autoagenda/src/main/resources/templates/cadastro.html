@@ -30,7 +30,8 @@
 
                 <span>Usuário</span>
                 <div class="input-group mb-3">
-                    <input type="text" name="usuario" class="form-control" required>
+                    <input type="text" id="usuario" name="usuario" class="form-control" required>
+					<div id="usuario-feedback" class="invalid-feedback">O usuário não pode conter espaços.</div>
                 </div>
 
                 <span>CPF</span>
@@ -42,7 +43,8 @@
 
                 <span>E-mail</span>
                 <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" required>
+                    <input type="email" id="email" name="email" class="form-control" required>
+					<div id="email-feedback" class="invalid-feedback">E-mail inválido</div>
                 </div>
 			
                 <span>Senha</span>
@@ -65,70 +67,164 @@
         </div>
     </div>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const inputCPF = document.getElementById('cpf');
-		    inputCPF.addEventListener('input', function(e) {
-		        let value = e.target.value;
-		        value = value.replace(/\D/g, "");
-		        
-		        value = value.replace(/(\d{3})(\d)/, "$1.$2");
-		        value = value.replace(/(\d{3})(\d)/, "$1.$2");
-		        value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-		        
-		        e.target.value = value;
-		        inputCPF.classList.remove('is-invalid');
-		        inputCPF.classList.remove('is-valid');
-		    });
+	    document.addEventListener('DOMContentLoaded', function() {
+	        const form = document.querySelector('form');
+	        const cpfInput = document.getElementById('cpf');
+	        const emailInput = document.getElementById('email');
+	        const senhaInput = document.getElementById('senha');
+	        const confirmarSenhaInput = document.getElementById('confirmarSenha');
+	        const senhaValidaInput = document.getElementById('senhaValida');
+	        const emailFeedback = document.getElementById('email-feedback');
+	        const usuarioInput = document.getElementById('usuario');
+	        const usuarioFeedback = document.getElementById('usuario-feedback');
 
-		    inputCPF.addEventListener('input', function() {
-		        const cpfLimpo = this.value.replace(/\D/g, '');
-		        if (cpfLimpo === '') return;
+	        // --- VALIDAÇÃO DE USUÁRIO (SEM ESPAÇOS) ---
+	        if (usuarioInput) {
+	            usuarioInput.addEventListener('input', function() {
+	                if (this.value.includes(" ")) {
+	                    this.value = this.value.replace(/\s/g, "");
+	                    
+	                    this.classList.add('is-invalid');
+	                    if(usuarioFeedback) usuarioFeedback.style.display = 'block';
+	                    
+	                    setTimeout(() => {
+	                        this.classList.remove('is-invalid');
+	                        if(usuarioFeedback) usuarioFeedback.style.display = 'none';
+	                    }, 2000);
+	                } else {
+	                    this.classList.remove('is-invalid');
+	                    if(usuarioFeedback) usuarioFeedback.style.display = 'none';
+	                }
+	            });
+	        }
 
-		        if (validarCPF(cpfLimpo)) {
-		            this.classList.add('is-valid');
-		            this.classList.remove('is-invalid');
-		        } else {
-		            this.classList.add('is-invalid');
-		            this.classList.remove('is-valid');
-		        }
-		    });
-		
+	        // --- MÁSCARA E VALIDAÇÃO DE CPF ---
+	        if (cpfInput) {
+	            cpfInput.addEventListener('input', function(e) {
+	                let v = e.target.value.replace(/\D/g, "");
+	                v = v.replace(/(\d{3})(\d)/, "$1.$2");
+	                v = v.replace(/(\d{3})(\d)/, "$1.$2");
+	                v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+	                e.target.value = v;
+	                this.classList.remove('is-invalid', 'is-valid');
+	            });
 
-		function validarCPF(cpf) {
-		    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-	
-		    let soma = 0;
-		    let resto;
-	
-		    for (let i = 1; i <= 9; i++) {
-		        soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
-		    }
-		    resto = (soma * 10) % 11;
-		    if ((resto === 10) || (resto === 11)) resto = 0;
-		    if (resto !== parseInt(cpf.substring(9, 10))) return false;
-		    soma = 0;
-		    for (let i = 1; i <= 10; i++) {
-		        soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
-		    }
-		    resto = (soma * 10) % 11;
-		    if ((resto === 10) || (resto === 11)) resto = 0;
-		    if (resto !== parseInt(cpf.substring(10, 11))) return false;
-	
-		    return true;
-		}
+	            cpfInput.addEventListener('blur', function() {
+	                const cpfLimpo = this.value.replace(/\D/g, '');
+	                if (cpfLimpo === '') return;
 
-		// Validação básica de email
-		const form = document.querySelector('form');
-		form.addEventListener('submit', function(e) {
-		    const emailInput = document.querySelector('input[name="email"]');
-		    const email = emailInput.value;
-		    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		    if (!emailRegex.test(email)) {
-		        e.preventDefault();
-		        alert('Por favor, insira um e-mail válido.');
-		    }
-		});
-	});
+	                if (validarCPF(cpfLimpo)) {
+	                    this.classList.remove('is-invalid');
+	                    this.classList.add('is-valid');
+	                } else {
+	                    this.classList.remove('is-valid');
+	                    this.classList.add('is-invalid');
+	                }
+	            });
+	        }
+
+	        function validarCPF(cpf) {
+	            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+	            let soma = 0, resto;
+	            for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+	            resto = (soma * 10) % 11;
+	            if (resto === 10 || resto === 11) resto = 0;
+	            if (resto !== parseInt(cpf.substring(9, 10))) return false;
+	            soma = 0;
+	            for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+	            resto = (soma * 10) % 11;
+	            if (resto === 10 || resto === 11) resto = 0;
+	            return resto === parseInt(cpf.substring(10, 11));
+	        }
+
+	        // --- VALIDAÇÃO DE E-MAIL ---
+	        if (emailInput && emailFeedback) {
+	            emailInput.addEventListener('input', function() {
+	                if (this.value.includes(" ")) {
+	                    this.value = this.value.replace(/\s/g, "");
+	                }
+	                this.classList.remove('is-invalid');
+	                emailFeedback.style.display = 'none';
+	            });
+
+	            emailInput.addEventListener('blur', function() {
+	                const email = this.value;
+	                if (email === "") return;
+
+	                let msgErro = "";
+	                let valido = true;
+	                const partes = email.split('@');
+
+	                if (partes.length !== 2 || !partes[0] || !partes[1]) {
+	                    valido = false; msgErro = "Falta o '@' ou usuário/domínio.";
+	                } else if (!partes[1].includes('.')) {
+	                    valido = false; msgErro = "Falta o domínio (.com).";
+	                } else if (partes[1].startsWith('.') || partes[1].endsWith('.')) {
+	                    valido = false; msgErro = "Ponto em local inválido.";
+	                } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+	                    valido = false; msgErro = "Caracteres inválidos.";
+	                }
+
+	                if (!valido) {
+	                    this.classList.add('is-invalid');
+	                    emailFeedback.textContent = msgErro;
+	                    emailFeedback.style.display = 'block';
+	                } else {
+	                    this.classList.remove('is-invalid');
+	                    emailFeedback.style.display = 'none';
+	                }
+	            });
+	        }
+
+	        // --- VALIDAÇÃO DE SENHAS ---
+	        function verificarSenhas() {
+	            const s1 = senhaInput.value;
+	            const s2 = confirmarSenhaInput.value;
+	            
+	            if (s1 && s2) {
+	                if (s1 !== s2) {
+	                    confirmarSenhaInput.classList.add('is-invalid');
+	                    senhaValidaInput.value = "";
+	                } else {
+	                    confirmarSenhaInput.classList.remove('is-invalid');
+	                    confirmarSenhaInput.classList.add('is-valid');
+	                    senhaValidaInput.value = s1;
+	                }
+	            }
+	        }
+
+	        if(senhaInput && confirmarSenhaInput) {
+	            senhaInput.addEventListener('input', verificarSenhas);
+	            confirmarSenhaInput.addEventListener('input', verificarSenhas);
+	        }
+
+	        form.addEventListener('submit', function(e) {
+
+	            if (cpfInput.classList.contains('is-invalid')) {
+	                e.preventDefault(); cpfInput.focus(); return;
+	            }
+
+	            if (emailInput.classList.contains('is-invalid')) {
+	                e.preventDefault(); emailInput.focus(); return;
+	            }
+	            
+	            if (usuarioInput.value.includes(" ")) {
+	                 e.preventDefault(); 
+	                 usuarioInput.focus(); 
+	                 usuarioInput.classList.add('is-invalid');
+	                 return;
+	            }
+	            
+	            if (senhaInput.value !== confirmarSenhaInput.value) {
+	                e.preventDefault();
+	                confirmarSenhaInput.classList.add('is-invalid');
+	                confirmarSenhaInput.focus();
+	                return;
+	            }
+	            cpfInput.value = cpfInput.value.replace(/\D/g, '');
+	            senhaValidaInput.value = senhaInput.value;
+	        });
+	    });
 	</script>
 </body>
 
