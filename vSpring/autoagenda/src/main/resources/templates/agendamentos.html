@@ -1183,7 +1183,7 @@
         const inpTelCli = document.getElementById('novo-cliente-telefone');
         const inpEmailCli = document.getElementById('novo-cliente-email');
 
-        if (btnSalvarCli && inpNomeCli && inpTelCli) {
+		if (btnSalvarCli && inpNomeCli && inpTelCli) {
             btnSalvarCli.disabled = true;
 
             function isNomeCliValido() {
@@ -1192,7 +1192,10 @@
                 return partes.length >= 2;
             }
 
-            function isTelCliValido() { return inpTelCli.value.trim().length >= 14; }
+            function isTelCliValido() { 
+                const raw = inpTelCli.value.replace(/\D/g, "");
+                return raw.length === 10 || raw.length === 11;
+            }
 
             function isEmailCliValido() {
                 const valor = inpEmailCli.value.trim();
@@ -1219,15 +1222,21 @@
 
             inpTelCli.addEventListener('input', (e) => {
                 let v = e.target.value.replace(/\D/g, "");
+                
                 if (v.length > 11) v = v.substring(0, 11);
                 v = v.replace(/^(\d\d)(\d)/g, "($1) $2");
-                if (v.length > 10) v = v.replace(/(\d{5})(\d{4})$/, "$1-$2");
-                else v = v.replace(/(\d{4})(\d{0,4})$/, "$1-$2");
-                e.target.value = v;
+				                
+                if (v.replace(/\D/g, "").length === 11) {
+                    v = v.replace(/(\d{5})(\d{4})$/, "$1-$2");
+                } else {
+                    v = v.replace(/(\d{4})(\d{0,4})$/, "$1-$2");
+                }
                 
+                e.target.value = v;
                 inpTelCli.classList.remove('is-invalid');
                 monitorarModalCliente();
             });
+
             inpTelCli.addEventListener('blur', () => {
                 if(!isTelCliValido()) inpTelCli.classList.add('is-invalid');
                 monitorarModalCliente();
