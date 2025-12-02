@@ -418,14 +418,17 @@
                 <div class="mb-3">
                   <label for="novo-cliente-nome" class="form-label">Nome Completo</label>
                   <input type="text" class="form-control" id="novo-cliente-nome" required>
+				  <div id="erro-nome-cli" class="invalid-feedback">Digite nome e sobrenome.</div>
                 </div>
                 <div class="mb-3">
                   <label for="novo-cliente-telefone" class="form-label">Telefone/Celular</label>
-                  <input type="tel" class="form-control" id="novo-cliente-telefone" required>
+                  <input type="tel" class="form-control" id="novo-cliente-telefone" maxlength="15" required>
+				  <div class="invalid-feedback">Telefone incompleto (mínimo 10 dígitos + DDD).</div>
                 </div>
                 <div class="mb-3">
                   <label for="novo-cliente-email" class="form-label">Email</label>
                   <input type="email" class="form-control" id="novo-cliente-email" placeholder="nome@exemplo.com">
+				  <div class="invalid-feedback">E-mail inválido.</div>
                 </div>
               </form>
             </div>
@@ -450,15 +453,16 @@
 				<input type="hidden" id="idCliente">
                 <div class="mb-3">
                   <label for="novo-veiculo-modelo" class="form-label">Modelo</label>
-                  <input type="text" class="form-control" id="novo-veiculo-modelo" placeholder="Ex: Gol, Civic..." required>
+                  <input type="text" class="form-control" id="novo-veiculo-modelo" placeholder="Ex: Gol, Civic..." maxlength="35" required>
                 </div>
                 <div class="mb-3">
                   <label for="novo-veiculo-placa" class="form-label">Placa</label>
-                  <input type="text" class="form-control" id="novo-veiculo-placa" placeholder="ABC-1234" required>
+                  <input type="text" class="form-control" id="novo-veiculo-placa" placeholder="ABC-1234" maxlength="7" required>
+				  <div class="invalid-feedback">Placa obrigatória (7 caracteres).</div>
                 </div>
                 <div class="mb-3">
                   <label for="novo-veiculo-marca" class="form-label">Marca</label>
-                  <input type="text" class="form-control" id="novo-veiculo-marca" placeholder="Ex: VW, Honda...">
+                  <input type="text" class="form-control" id="novo-veiculo-marca" placeholder="Ex: VW, Honda..." maxlength="20">
                 </div>
               </form>
             </div>
@@ -707,13 +711,12 @@
                   document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
                   document.getElementById('idAgendamento').value = id;
                   
-                  // Preencher campos
                   if(inputNome) inputNome.value = row.querySelector('.ag-cliente span').textContent.trim();
                   const nomeNaTabela = inputNome.value;
                   const cliObj = todosClientes.find(c => c.nomeCliente === nomeNaTabela);
                   if(cliObj) {
                       inputId.value = cliObj.idCliente;
-                      toggleCamposVeiculo(true); // Destrava veículo na edição
+                      toggleCamposVeiculo(true);
                   }
 				  
 				  if (veiculoId && veiculoNome) {
@@ -726,8 +729,6 @@
 
                   // ... Resto dos campos (Serviço, Status, Data, Obs) ...
                   document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
-                  
-                  // Status e Data Conclusão
                   const statusTxt = row.querySelector('.ag-status span').textContent.trim();
                   const statusSel = document.getElementById('status');
                   // Tenta achar o option pelo texto
@@ -736,7 +737,7 @@
                           statusSel.selectedIndex = i; break;
                       }
                   }
-                  checkStatus(); // Atualiza visibilidade da data conclusão
+                  checkStatus();
 
                   const prev = row.querySelector('.ag-previsao');
                   if(prev) document.getElementById('data-previsao').value = prev.dataset.date;
@@ -947,66 +948,210 @@
           const nav = document.getElementById('nav-menu');
           if(ham && nav) ham.addEventListener('click', () => { nav.classList.toggle('active'); ham.classList.toggle('active'); });
 
-          // Cadastro Rápido Cliente (Modal)
-          const btnSalvarCli = document.getElementById('btn-salvar-novo-cliente');
-          if(btnSalvarCli) {
-              btnSalvarCli.addEventListener('click', function() {
-                  const n = document.getElementById('novo-cliente-nome').value;
-                  const t = document.getElementById('novo-cliente-telefone').value;
-                  const e = document.getElementById('novo-cliente-email').value;
-                  if(!n) return Swal.fire('Erro', 'Nome obrigatório', 'error');
+		// ============================================================
+        // CADASTRO RÁPIDO CLIENTE
+        // ============================================================
+        const btnSalvarCli = document.getElementById('btn-salvar-novo-cliente');
+        const inpNomeCli = document.getElementById('novo-cliente-nome');
+        const inpTelCli = document.getElementById('novo-cliente-telefone');
+        const inpEmailCli = document.getElementById('novo-cliente-email');
 
-                  fetch('/cliente-api/salvar', {
-                      method: 'POST', headers: {'Content-Type': 'application/json'},
-                      body: JSON.stringify({nomeCliente: n, telefone: t, email: e})
-                  }).then(r => r.ok ? r.json() : Promise.reject())
-                  .then(cli => {
-                      // Atualiza lista global e campos
-                      todosClientes.push(cli);
-                      inputNome.value = cli.nomeCliente;
-                      inputId.value = cli.idCliente;
-                      
-                      // Adiciona na lista visual
-                      const opt = document.createElement('option'); opt.value = cli.nomeCliente;
-                      datalistCli.appendChild(opt);
-                      
-                      toggleCamposVeiculo(true);
-                      
-                      bootstrap.Modal.getInstance(document.getElementById('cadastrarClienteModal')).hide();
-                      document.getElementById('form-novo-cliente').reset();
-                      Swal.fire('Sucesso', 'Cliente cadastrado', 'success');
-                  }).catch(() => Swal.fire('Erro', 'Falha ao salvar', 'error'));
-              });
+        if (btnSalvarCli && inpNomeCli && inpTelCli) {
+            btnSalvarCli.disabled = true;
+
+            function isNomeCliValido() {
+                const valor = inpNomeCli.value.trim();
+                const partes = valor.split(' ').filter(p => p.length > 0);
+                return partes.length >= 2;
+            }
+
+            function isTelCliValido() { return inpTelCli.value.trim().length >= 14; }
+
+            function isEmailCliValido() {
+                const valor = inpEmailCli.value.trim();
+                if (valor === "") return true; 
+                return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(valor);
+            }
+
+            function monitorarModalCliente() {
+                const nomeOk = isNomeCliValido();
+                const telOk = isTelCliValido();
+                const emailOk = isEmailCliValido();
+                
+                btnSalvarCli.disabled = !(nomeOk && telOk && emailOk);
+            }
+
+            inpNomeCli.addEventListener('input', () => {
+                inpNomeCli.classList.remove('is-invalid');
+                monitorarModalCliente();
+            });
+            inpNomeCli.addEventListener('blur', () => {
+                if(!isNomeCliValido()) inpNomeCli.classList.add('is-invalid');
+                monitorarModalCliente();
+            });
+
+            inpTelCli.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, "");
+                if (v.length > 11) v = v.substring(0, 11);
+                v = v.replace(/^(\d\d)(\d)/g, "($1) $2");
+                if (v.length > 10) v = v.replace(/(\d{5})(\d{4})$/, "$1-$2");
+                else v = v.replace(/(\d{4})(\d{0,4})$/, "$1-$2");
+                e.target.value = v;
+                
+                inpTelCli.classList.remove('is-invalid');
+                monitorarModalCliente();
+            });
+            inpTelCli.addEventListener('blur', () => {
+                if(!isTelCliValido()) inpTelCli.classList.add('is-invalid');
+                monitorarModalCliente();
+            });
+
+            if(inpEmailCli) {
+                inpEmailCli.addEventListener('input', function() {
+                    if(this.value.includes(' ')) this.value = this.value.replace(/\s/g, '');
+                    this.classList.remove('is-invalid');
+                    monitorarModalCliente();
+                });
+                inpEmailCli.addEventListener('blur', function() {
+                    if(this.value.trim() !== "" && !isEmailCliValido()) {
+                        this.classList.add('is-invalid');
+                    }
+                    monitorarModalCliente();
+                });
+            }
+			
+            btnSalvarCli.addEventListener('click', function() {
+                const nome = inpNomeCli.value.trim();
+                const tel = inpTelCli.value.trim();
+                const email = inpEmailCli.value.trim();
+
+                fetch('/cliente-api/salvar', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({nomeCliente: nome, telefone: tel, email: email})
+                }).then(r => r.ok ? r.json() : Promise.reject())
+                .then(cli => {
+                    todosClientes.push(cli);
+                    
+                    const inputNomePrincipal = document.getElementById('nome-cliente');
+                    const inputIdPrincipal = document.getElementById('idCliente');
+                    const datalistCli = document.getElementById('lista-clientes');
+                    
+                    if(inputNomePrincipal) {
+                        inputNomePrincipal.value = cli.nomeCliente;
+                        inputNomePrincipal.classList.add('is-valid');
+                        inputNomePrincipal.classList.remove('is-invalid');
+                    }
+                    if(inputIdPrincipal) inputIdPrincipal.value = cli.idCliente;
+                    
+                    if(datalistCli) {
+                        const opt = document.createElement('option'); opt.value = cli.nomeCliente;
+                        datalistCli.appendChild(opt);
+                    }
+                    
+                    toggleCamposVeiculo(true);
+                    
+                    bootstrap.Modal.getInstance(document.getElementById('cadastrarClienteModal')).hide();
+                    document.getElementById('form-novo-cliente').reset();
+                    btnSalvarCli.disabled = true;
+                    [inpNomeCli, inpTelCli, inpEmailCli].forEach(el => el.classList.remove('is-invalid'));
+
+                    Swal.fire('Sucesso', 'Cliente cadastrado', 'success');
+                }).catch(() => Swal.fire('Erro', 'Falha ao salvar cliente', 'error'));
+            });
+        }
+
+	  // ============================================================
+      // CADASTRO RÁPIDO VEÍCULO
+      // ============================================================
+      const btnSalvarVeic = document.getElementById('btn-salvar-novo-veiculo');
+      const inpModVeic = document.getElementById('novo-veiculo-modelo');
+      const inpPlaVeic = document.getElementById('novo-veiculo-placa');
+      const inpMarVeic = document.getElementById('novo-veiculo-marca');
+
+      if (btnSalvarVeic && inpModVeic && inpPlaVeic) {
+          btnSalvarVeic.disabled = true;
+
+          function isModeloValido() { return inpModVeic.value.trim().length > 0; }
+          function isPlacaValida() { return inpPlaVeic.value.trim().length === 7; }
+
+          function monitorarModalVeiculo() {
+              const modOk = isModeloValido();
+              const plaOk = isPlacaValida();
+              btnSalvarVeic.disabled = !(modOk && plaOk);
           }
 
-          // Cadastro Rápido Veículo (Modal)
-          const btnSalvarVeic = document.getElementById('btn-salvar-novo-veiculo');
-          if(btnSalvarVeic) {
-              btnSalvarVeic.addEventListener('click', function() {
-                  const idCli = inputId.value;
-                  const mod = document.getElementById('novo-veiculo-modelo').value;
-                  const pla = document.getElementById('novo-veiculo-placa').value;
-                  const mar = document.getElementById('novo-veiculo-marca').value;
+          inpModVeic.addEventListener('input', () => {
+              inpModVeic.classList.remove('is-invalid');
+              monitorarModalVeiculo();
+          });
+          inpModVeic.addEventListener('blur', () => {
+              if(!isModeloValido()) inpModVeic.classList.add('is-invalid');
+              monitorarModalVeiculo();
+          });
+
+          inpPlaVeic.addEventListener('input', function() {
+              let v = this.value.toUpperCase().replace(/\s/g, '');
+              v = v.replace(/[^A-Z0-9]/g, '');
+              this.value = v;
+              this.classList.remove('is-invalid');
+              monitorarModalVeiculo();
+          });
+          
+          inpPlaVeic.addEventListener('blur', () => {
+              if(!isPlacaValida()) inpPlaVeic.classList.add('is-invalid');
+              monitorarModalVeiculo();
+          });
+
+          btnSalvarVeic.addEventListener('click', function() {
+              const idCli = document.getElementById('idCliente').value;
+              const mod = inpModVeic.value.trim();
+              const pla = inpPlaVeic.value.trim();
+              const mar = inpMarVeic.value.trim();
+              
+              if(!idCli) {
+                  Swal.fire('Atenção', 'Selecione um cliente no formulário principal antes de cadastrar o veículo.', 'warning');
+                  bootstrap.Modal.getInstance(document.getElementById('cadastrarVeiculoModal')).hide();
+                  return;
+              }
+
+              fetch('/veiculo-api/salvar', {
+                  method: 'POST', headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({
+                      cliente: {idCliente: idCli},
+                      modelo: mod,
+                      placa: pla,
+                      marca: mar
+                  })
+              }).then(r => r.ok ? r.json() : Promise.reject())
+              .then(v => {
+                  todosVeiculos.push(v);
                   
-                  if(!mod || !pla) return Swal.fire('Erro', 'Preencha modelo e placa', 'error');
+                  const inputVeiculo = document.getElementById('veiculo');
+                  const inputIdVeiculo = document.getElementById('idVeiculo');
+                  const datalistVeic = document.getElementById('lista-veiculos');
 
-                  fetch('/veiculo-api/salvar', {
-                      method: 'POST', headers: {'Content-Type': 'application/json'},
-                      body: JSON.stringify({
-                          cliente: {idCliente: idCli}, modelo: mod, placa: pla, marca: mar
-                      })
-                  }).then(r => r.ok ? r.json() : Promise.reject())
-                  .then(v => {
-                      todosVeiculos.push(v);
+                  if(inputVeiculo) {
                       inputVeiculo.value = v.modelo + " - " + v.placa;
-                      if(inputIdVeiculo) inputIdVeiculo.value = v.idVeiculo;
-                      
-                      bootstrap.Modal.getInstance(document.getElementById('cadastrarVeiculoModal')).hide();
-                      document.getElementById('form-novo-veiculo').reset();
-                      Swal.fire('Sucesso', 'Veículo salvo', 'success');
-                  }).catch(() => Swal.fire('Erro', 'Falha ao salvar', 'error'));
-              });
-          }
+                      inputVeiculo.classList.add('is-valid');
+                      inputVeiculo.setAttribute('list', 'lista-veiculos');
+                  }
+                  if(inputIdVeiculo) inputIdVeiculo.value = v.idVeiculo;
+                  if(datalistVeic) {
+                      const opt = document.createElement('option');
+                      opt.value = v.modelo + " - " + v.placa;
+                      datalistVeic.appendChild(opt);
+                  }
+                  
+                  bootstrap.Modal.getInstance(document.getElementById('cadastrarVeiculoModal')).hide();
+                  document.getElementById('form-novo-veiculo').reset();
+                  
+                  [inpModVeic, inpPlaVeic].forEach(el => el.classList.remove('is-invalid'));
+                  btnSalvarVeic.disabled = true;
+
+                  Swal.fire('Sucesso', 'Veículo salvo', 'success');
+              }).catch(() => Swal.fire('Erro', 'Falha ao salvar veículo', 'error'));
+          });
+      }
       });
     </script>
 </body>
