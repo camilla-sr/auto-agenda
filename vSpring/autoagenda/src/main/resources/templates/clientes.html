@@ -18,10 +18,6 @@
     <script src="/js/jquery.mask.min.js"></script>
 	<script src="/js/sweetalert2.all.min.js"></script>
 	<style>
-        /* Cores Específicas */
-        .btn-veiculos { background-color: #0dcaf0; color: #fff; } /* Azul Ciano para Carros */
-        .btn-veiculos:hover { background-color: #0bb5d8; color: #fff; }
-
         /* === ESTILOS DO MODAL === */
         .table-input { 
             border: 1px solid #ced4da; 
@@ -190,17 +186,17 @@
 	                        <td class="email-cliente" th:text="${c.email}" data-label="Email"></td>
 	                        
 	                        <td class="action-buttons text-center">
-	                            <button class="btn-icon btn-veiculos" th:attr="data-id=${c.idCliente}, data-nome=${c.nomeCliente}" title="Gerenciar Veículos">
-	                                <i class="fas fa-car"></i>
-	                            </button>
-	                            
 	                            <button class="btn-icon btn-edit" th:attr="data-id=${c.idCliente}" title="Editar">
-	                                <i class="fas fa-pen"></i>
+	                                <i class="fas fa-edit"></i>
 	                            </button>
 	                            
 	                            <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}" 
 	                                    class="btn-icon btn-delete" th:attr="data-id=${c.idCliente}" title="Excluir">
 	                                <i class="fas fa-trash"></i>
+	                            </button>
+	                            
+	                            <button class="btn-icon btn-veiculos" th:attr="data-id=${c.idCliente}, data-nome=${c.nomeCliente}" title="Gerenciar Veículos">
+	                                <i class="fas fa-car"></i>
 	                            </button>
 	                       </td>
 	                    </tr>
