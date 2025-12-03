@@ -1,8 +1,9 @@
 package br.com.autoagenda.autoagenda.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * GlobalControllerAdvice - Intercepta todas as requisições e injeta dados globais no modelo.
