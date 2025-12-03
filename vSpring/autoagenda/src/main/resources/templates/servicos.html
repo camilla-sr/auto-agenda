@@ -35,7 +35,10 @@
                             <div class="form-group">
                                 <label for="nome-servico">Nome do Serviço</label>
                                 <input type="text" id="nome-servico" name="nomeServico" class="form-input"
-                                    placeholder="Ex: Troca de óleo">
+                                    placeholder="Ex: Troca de óleo" maxlength="110">
+                                <div id="nome-servico-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+                                    <small>0/110</small>
+                                </div>
                             </div>
                         </div>
                         <div class="form-col">
@@ -93,12 +96,14 @@
                             <td class="nome-servico" th:text="${serv.nomeServico}" data-label="Serviço"></td>
                             <td class="desc-servico" th:text="${serv.descServico}" data-label="Descrição"></td>
                             <td class="action-buttons">
-                                <button class="btn-icon btn-edit" th:attr="data-id=${serv.idServico}" title="Editar">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-icon btn-delete" th:attr="data-id=${serv.idServico}" title="Excluir">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <div class="button-wrapper">
+                                    <button class="btn-icon btn-edit" th:attr="data-id=${serv.idServico}" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete" th:attr="data-id=${serv.idServico}" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -166,8 +171,26 @@
                 formServicoContainer.style.display = 'block';
                 
                 verificarCampos(); 
-                atualizarContador(0);
+                atualizarContadorNome(0);
+                atualizarContadorDesc(0);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Form submit validation
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const nomeLength = inputNome.value.trim().length;
+                if (nomeLength > 110) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro de Validação',
+                        text: 'Limite de caracteres excedido para o nome do serviço (máximo 110)',
+                        confirmButtonColor: '#d33'
+                    });
+                    return false;
+                }
             });
         }
 
@@ -183,7 +206,9 @@
         // 3. VALIDAÇÃO E CONTADORES
         // ============================================================
         const botaoSalvar = form.querySelector('button[type="submit"]');
+        const contadorNome = document.getElementById('nome-servico-counter');
         const contadorDesc = document.getElementById('descricao-servico-counter');
+        const maxLenNome = inputNome ? inputNome.getAttribute('maxlength') : 110;
         const maxLenDesc = inputDesc ? inputDesc.getAttribute('maxlength') : 200;
 
         function verificarCampos() {
@@ -192,7 +217,23 @@
             botaoSalvar.disabled = !(nomeValido && descValida);
         }
 
-        function atualizarContador(tamanhoAtual) {
+        function atualizarContadorNome(tamanhoAtual) {
+            if (!contadorNome) return;
+            
+            const small = contadorNome.querySelector('small');
+            small.textContent = `${tamanhoAtual}/${maxLenNome}`;
+
+            if (tamanhoAtual >= maxLenNome) {
+                contadorNome.classList.remove('text-muted');
+                contadorNome.classList.add('text-danger');
+                small.textContent = `${tamanhoAtual}/${maxLenNome} - Limite atingido!`;
+            } else {
+                contadorNome.classList.add('text-muted');
+                contadorNome.classList.remove('text-danger');
+            }
+        }
+
+        function atualizarContadorDesc(tamanhoAtual) {
             if (!contadorDesc) return;
             
             const small = contadorDesc.querySelector('small');
@@ -208,12 +249,17 @@
             }
         }
 
-        if (inputNome) inputNome.addEventListener('input', verificarCampos);
+        if (inputNome) {
+            inputNome.addEventListener('input', function() {
+                verificarCampos();
+                atualizarContadorNome(this.value.length);
+            });
+        }
         
         if (inputDesc) {
             inputDesc.addEventListener('input', function() {
                 verificarCampos();
-                atualizarContador(this.value.length);
+                atualizarContadorDesc(this.value.length);
             });
         }
         verificarCampos();
@@ -238,7 +284,8 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 verificarCampos();
-                atualizarContador(descricao.length);
+                atualizarContadorNome(nome.length);
+                atualizarContadorDesc(descricao.length);
             });
         });
 

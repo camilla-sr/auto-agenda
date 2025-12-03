@@ -698,15 +698,48 @@ table th {
   padding: 12px;
   font-weight: 600;
   border-bottom: 2px solid var(--cor-primaria-light);
+  vertical-align: middle;
 }
 
 table td {
   padding: 12px;
   border-bottom: 1px solid var(--cor-fundo-medio);
+  vertical-align: middle;
 }
 
 table tbody tr:hover {
   background-color: var(--cor-fundo-claro);
+}
+
+/* Service table cells - allow vertical growth with text wrapping */
+table .nome-servico,
+table .desc-servico {
+  max-width: 250px;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  text-align: center;
+}
+
+/* Ensure action buttons stay centered vertically */
+table td.action-buttons {
+  display: table-cell !important;
+  vertical-align: middle !important;
+  text-align: center !important;
+  white-space: nowrap;
+  padding: 12px;
+}
+
+table td.action-buttons .button-wrapper {
+  display: inline-block;
+}
+
+table td.action-buttons .btn-icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin: 0 4px;
+  vertical-align: middle;
 }
 
 .table-actions {
