@@ -1,22 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-// CONTADOR DE CARACTERES
+    // CONTADOR DE CARACTERES
+    const obsTextarea = document.getElementById('observacao')
+    const obsCounter = document.getElementById('observacao-counter')
 
-const obsTextarea = document.getElementById('observacao')
-const obsCounter = document.getElementById('observacao-counter')
-document.addEventListener('DOMContentLoaded', function () {
-})
+    if (obsTextarea && obsCounter) {
+        const updateCounter = () => {
+            const length = obsTextarea.value.length
+            const max = obsTextarea.maxLength || 200
+            obsCounter.innerHTML = `<small>${length}/${max}</small>`
+        }
 
-if (obsTextarea && obsCounter) {
-  const updateCounter = () => {
-    const length = obsTextarea.value.length
-    const max = obsTextarea.maxLength || 200
-    obsCounter.innerHTML = `<small>${length}/${max}</small>`
-  }
-
-  obsTextarea.addEventListener('input', updateCounter)
-  updateCounter() // Atualiza na abertura da página ou ao editar
-}
+        obsTextarea.addEventListener('input', updateCounter)
+        updateCounter() // Atualiza na abertura da página ou ao editar
+    }
 
     // Hamburger menu toggle
     const hamburger = document.getElementById('hamburger-menu');
@@ -24,6 +21,7 @@ if (obsTextarea && obsCounter) {
 
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', function() {
+            console.log('Hamburger clicado!');
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
 
@@ -76,39 +74,52 @@ if (obsTextarea && obsCounter) {
         }
     }
 	
-	inputSenha.addEventListener('input', verificarSenha);
-	inputConfSenha.addEventListener('input', verificarSenha);
-});
-const filtroStatus = document.getElementById('filtro-status');
-filtroStatus.addEventListener('change', aplicarFiltros);
+	if (inputSenha && inputConfSenha) {
+		inputSenha.addEventListener('input', verificarSenha);
+		inputConfSenha.addEventListener('input', verificarSenha);
+	}
 
-function aplicarFiltros() {
-  const termoBusca = busca.value.toLowerCase();
-  const statusSelecionado = filtroStatus.value;
+    // Filtros de agendamento (se existirem na página)
+    const filtroStatus = document.getElementById('filtro-status');
+    const busca = document.getElementById('busca');
+    const linhas = document.querySelectorAll('tbody tr');
+    const noResultMessage = document.getElementById('no-result-message');
 
-  let found = false;
+    function aplicarFiltros() {
+        if (!busca || !filtroStatus) return;
+        
+        const termoBusca = busca.value.toLowerCase();
+        const statusSelecionado = filtroStatus.value;
 
-  linhas.forEach(function (linha) {
-    if (linha.querySelector('td[colspan="6"]')) return;
+        let found = false;
 
-    const textoLinha = linha.textContent.toLowerCase();
-    const statusLinha = linha.querySelector('.status-badge')?.textContent.trim();
+        linhas.forEach(function (linha) {
+            if (linha.querySelector('td[colspan="6"]')) return;
 
-    const correspondeBusca = textoLinha.includes(termoBusca);
-    const correspondeStatus = !statusSelecionado || statusLinha === statusSelecionado;
+            const textoLinha = linha.textContent.toLowerCase();
+            const statusLinha = linha.querySelector('.status-badge')?.textContent.trim();
 
-    if (correspondeBusca && correspondeStatus) {
-      linha.style.display = '';
-      found = true;
-    } else {
-      linha.style.display = 'none';
+            const correspondeBusca = textoLinha.includes(termoBusca);
+            const correspondeStatus = !statusSelecionado || statusLinha === statusSelecionado;
+
+            if (correspondeBusca && correspondeStatus) {
+                linha.style.display = '';
+                found = true;
+            } else {
+                linha.style.display = 'none';
+            }
+        });
+
+        if (noResultMessage) {
+            noResultMessage.style.display = found ? 'none' : '';
+        }
     }
-  });
 
-  if (noResultMessage) {
-    noResultMessage.style.display = found ? 'none' : '';
-  }
-}
-
-// Garante que o filtro de texto também usa aplicarFiltros
-busca.addEventListener('input', aplicarFiltros);
+    if (filtroStatus) {
+        filtroStatus.addEventListener('change', aplicarFiltros);
+    }
+    
+    if (busca) {
+        busca.addEventListener('input', aplicarFiltros);
+    }
+});
