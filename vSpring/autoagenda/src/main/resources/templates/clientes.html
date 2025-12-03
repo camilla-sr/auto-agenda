@@ -411,7 +411,7 @@
 	                body: JSON.stringify(dto)
 	            }).then(r => r.ok ? r.json() : Promise.reject())
 	            .then(() => { Swal.fire('Sucesso!', 'Os dados do cliente foram registrados.', 'success').then(() => location.reload()); })
-	            .catch(() => Swal.fire('Erro', 'Falha ao salvar.', 'error'));
+	            .catch(() => Swal.fire('Erro', 'Falha ao registrar cliente.', 'error'));
 	        });
 	
 	        btnNovo.addEventListener('click', () => {
@@ -452,7 +452,7 @@
 
 			        Swal.fire({
 			            title: 'Excluir cliente?',
-			            text: "Não será possível reverter essa ação e os veículos vinculados também serão apagados!",
+			            text: "Não será possível reverter essa ação e os veículos vinculados também serão excluídos!",
 			            icon: 'warning',
 			            showCancelButton: true,
 			            confirmButtonColor: '#d33',
@@ -468,14 +468,13 @@
 							})
 							.then(async r => {
 							    if (r.ok) {
-							        Swal.fire('Excluído!', 'Cliente removido.', 'success').then(() => location.reload());
+							        Swal.fire('Sucesso!', 'Os dados do cliente foram excluídos.', 'success').then(() => location.reload());
 							    } else if (r.status === 409) {
 							        const msg = await r.text(); 
 							        Swal.fire({
 							            icon: 'warning',
-							            title: 'Não é possível excluir',
-							            text: msg,
-							            confirmButtonColor: '#3085d6'
+							            title: 'Erro!',
+							            text: msg
 							        });
 							    } else {
 							        Swal.fire('Erro', 'Ocorreu um erro ao excluir.', 'error');
