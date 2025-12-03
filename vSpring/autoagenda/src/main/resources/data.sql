@@ -2,7 +2,7 @@ create table if not exists cliente (
   id_cliente 	int primary key auto_increment,
   nome_cliente 	varchar(80) not null,
   telefone		varchar(15) not null,
-  email			varchar(255) not null unique
+  email			varchar(255) not null
 );
 
 create table if not exists veiculo(
