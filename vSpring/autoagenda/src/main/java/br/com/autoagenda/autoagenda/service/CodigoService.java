@@ -16,14 +16,12 @@ public class CodigoService {
     public String solicitarEnvioCodigo(String email) {
         try {
             ResponseEntity<String> response = authClient.gerarCodigo(email);
-
             if (response.getStatusCode() == HttpStatus.OK) {
                 return "OK";
             } else if (response.getStatusCode().value() == 201) {
                 return "SEM_ENVIO"; 
             }
             return "ERRO";
-
         } catch (ResourceAccessException e) {
             System.err.println("Erro: Microsserviço 2FA inacessível.");
             return "OFFLINE";
@@ -33,16 +31,27 @@ public class CodigoService {
         }
     }
 
-    public boolean validarCodigo(String email, String codigo) {
+    public String validarCodigo(String email, String codigo) {
         try {
-            authClient.validarCodigo(email, codigo);
-            return true;
+            ResponseEntity<String> response = authClient.validarCodigo(email, codigo);
+            
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return "OK";
+            }
+            return "ERRO";
 
         } catch (HttpClientErrorException.Unauthorized e) {
-            return false;
+            // 401 Unauthorized = Código incorreto
+            return "INVALIDO";
+            
+        } catch (ResourceAccessException e) {
+            // Timeout ou serviço desligado
+            System.err.println("Erro: Microsserviço 2FA inacessível.");
+            return "OFFLINE";
+            
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return "ERRO";
         }
     }
 }

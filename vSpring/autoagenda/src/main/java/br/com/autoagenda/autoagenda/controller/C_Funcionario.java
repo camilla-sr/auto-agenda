@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.service.CodigoService;
 import br.com.autoagenda.autoagenda.service.FuncionarioService;
@@ -48,19 +47,22 @@ public class C_Funcionario {
 	}
 
 	@PostMapping("/validar-codigo")
-	@ResponseBody
-	public ResponseEntity<?> validarCodigo(@RequestBody Map<String, String> dados) {
-		String email = dados.get("email");
-		String codigo = dados.get("codigo");
-
-		boolean valido = codigoService.validarCodigo(email, codigo);
-
-		if (valido) {
-			return ResponseEntity.ok("Código correto.");
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Código inválido.");
-		}
-	}
+    @ResponseBody
+    public ResponseEntity<?> validarCodigo(@RequestBody Map<String, String> dados) {
+        String email = dados.get("email");
+        String codigo = dados.get("codigo");
+        String resultado = codigoService.validarCodigo(email, codigo);
+        switch (resultado) {
+            case "OK":
+                return ResponseEntity.ok("Código correto.");
+            case "INVALIDO":
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Código inválido.");
+            case "OFFLINE":
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Serviço de autenticação offline.");
+            default:
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro na validação.");
+        }
+    }
 
 	@PostMapping("/redefinir-senha-final")
 	@ResponseBody
