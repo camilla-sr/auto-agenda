@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redefinir Senha - Centro Automotivo JJ</title>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <script src="/js/sweetalert2.all.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/style1.css">
+</head>
+
+<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100"
+    style="background: linear-gradient(135deg, #000000 0%, #333333 100%);">
+    <div class="container text-center">
+        <p class="mensagem mb-4">Confirmação e Nova Senha</p>
+
+        <div class="login mx-auto" style="max-width: 400px;">
+            <img src="/img/logo.png" alt="Logo JJ" class="logo-login">
+            <h5 class="text-white-50 mb-4">Digite o código recebido por e-mail e crie sua nova senha.</h5>
+
+            <form id="resetSenhaForm">
+                <div class="log-inputs">
+                    <span>Código de Confirmação</span>
+                    <div class="input-group mb-3">
+                        <input type="text" id="token" class="form-control" required placeholder="Insira o código (Ex: 123456)">
+                        <div id="token-feedback" class="invalid-feedback">O código é obrigatório.</div>
+                    </div>
+                    
+                    <span>Nova Senha</span>
+                    <div class="input-group mb-3">
+                        <input type="password" id="novaSenha" class="form-control" required placeholder="Crie uma nova senha">
+                        <div id="senha-feedback" class="invalid-feedback">A senha deve ter pelo menos 6 caracteres.</div>
+                    </div>
+
+                    <span>Confirmar Nova Senha</span>
+                    <div class="input-group mb-3">
+                        <input type="password" id="confirmarNovaSenha" class="form-control" required placeholder="Digite a senha novamente">
+                        <div id="confirmacao-feedback" class="invalid-feedback">As senhas não coincidem.</div>
+                    </div>
+                    
+                    <div class="botoes d-flex justify-content-center gap-3 flex-wrap mt-3">
+                        <button type="submit" class="btn btnLogin" id="btnRedefinir">
+                            <i class="fas fa-lock-open"></i> Redefinir Senha
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('resetSenhaForm');
+            const tokenInput = document.getElementById('token');
+            const novaSenhaInput = document.getElementById('novaSenha');
+            const confirmarNovaSenhaInput = document.getElementById('confirmarNovaSenha');
+            const btnRedefinir = document.getElementById('btnRedefinir');
+
+            function validarSenha(senha) {
+                return senha && senha.length >= 6;
+            }
+            
+            function validarFormulario() {
+                const token = tokenInput.value.trim();
+                const senha = novaSenhaInput.value;
+                const confirmacao = confirmarNovaSenhaInput.value;
+                let valido = true;
+                
+                // Validação do Token
+                if (!token) {
+                    tokenInput.classList.add('is-invalid');
+                    valido = false;
+                } else {
+                    tokenInput.classList.remove('is-invalid');
+                }
+                
+                // Validação de comprimento da senha
+                if (!validarSenha(senha)) {
+                    novaSenhaInput.classList.add('is-invalid');
+                    valido = false;
+                } else {
+                    novaSenhaInput.classList.remove('is-invalid');
+                }
+
+                // Validação de confirmação
+                if (senha !== confirmacao || !validarSenha(confirmacao)) {
+                    confirmarNovaSenhaInput.classList.add('is-invalid');
+                    document.getElementById('confirmacao-feedback').textContent = "As senhas não coincidem.";
+                    valido = false;
+                } else {
+                    confirmarNovaSenhaInput.classList.remove('is-invalid');
+                }
+
+                return valido;
+            }
+
+            // Limpar erros ao digitar
+            [tokenInput, novaSenhaInput, confirmarNovaSenhaInput].forEach(input => {
+                input.addEventListener('input', () => {
+                    input.classList.remove('is-invalid');
+                });
+            });
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!validarFormulario()) {
+                    return;
+                }
+
+                btnRedefinir.disabled = true;
+                Swal.fire({
+                    title: 'Redefinindo...',
+                    text: 'Aguarde, estamos validando o código e salvando sua nova senha.',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+
+                try {
+                    // Endpoint do Backend Java: "/funcionario-api/resetar-senha"
+                    const response = await fetch('/funcionario-api/resetar-senha', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        // Envia o código (token) e a nova senha no corpo JSON
+                        body: JSON.stringify({ 
+                            token: tokenInput.value.trim(), 
+                            novaSenha: novaSenhaInput.value 
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sucesso!',
+                            text: 'Sua senha foi redefinida com sucesso. Você será redirecionado para o Login.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = 'login.html';
+                        });
+                    } else {
+                        // O Java deve retornar um erro específico (ex: 400 ou 403) se o código estiver inválido/expirado
+                        const errorData = await response.json().catch(() => ({ message: 'Código inválido ou expirado.' }));
+                        
+                        let errorMessage = errorData.message || 'Código inválido ou expirado. Tente novamente ou solicite um novo código.';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Falha na Redefinição!',
+                            text: errorMessage,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro de Conexão!',
+                        text: 'Não foi possível conectar ao servidor.',
+                        confirmButtonText: 'OK'
+                    });
+                } finally {
+                    btnRedefinir.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esqueci Minha Senha - Centro Automotivo JJ</title>
+    <title>Recuperação de Senha - Centro Automotivo JJ</title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/fontawesome/css/all.min.css">
@@ -18,37 +18,25 @@
 <body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100"
     style="background: linear-gradient(135deg, #000000 0%, #333333 100%);">
     <div class="container text-center">
-        <p class="mensagem mb-4">Recuperação e Redefinição de Senha</p>
+        <p class="mensagem mb-4">Recuperação de Senha</p>
 
         <div class="login mx-auto" style="max-width: 400px;">
             <img src="/img/logo.png" alt="Logo JJ" class="logo-login">
-            <h5 class="text-white-50 mb-4">Insira seu e-mail e a nova senha que deseja utilizar.</h5>
+            <h5 class="text-white-50 mb-4">Insira seu e-mail cadastrado para receber o código de redefinição.</h5>
 
-            <form id="resetForm">
+            <form id="solicitarResetForm">
                 <div class="log-inputs">
                     <span>E-mail</span>
                     <div class="input-group mb-3">
                         <input type="email" name="email" id="email" class="form-control" required placeholder="seu.email@exemplo.com">
                         <div id="email-feedback" class="invalid-feedback">E-mail inválido.</div>
                     </div>
-
-                    <span>Nova Senha</span>
-                    <div class="input-group mb-3">
-                        <input type="password" id="novaSenha" class="form-control" required placeholder="Crie uma nova senha">
-                        <div id="senha-feedback" class="invalid-feedback">A senha deve ter pelo menos 6 caracteres.</div>
-                    </div>
-
-                    <span>Confirmar Nova Senha</span>
-                    <div class="input-group mb-3">
-                        <input type="password" id="confirmarNovaSenha" class="form-control" required placeholder="Digite a senha novamente">
-                        <div id="confirmacao-feedback" class="invalid-feedback">As senhas não coincidem.</div>
-                    </div>
                     
                     <div class="botoes d-flex justify-content-center gap-3 flex-wrap mt-3">
                         <button type="submit" class="btn btnLogin" id="btnEnviarLink">
-                            <i class="fas fa-lock"></i> Redefinir e Enviar Confirmação
+                            <i class="fas fa-envelope"></i> Enviar Código
                         </button>
-                        <button type="button" class="btn btnCadastro" onclick="window.location.href = '/login'">
+                        <button type="button" class="btn btnCadastro" onclick="window.location.href = 'login.html'">
                             <i class="fas fa-arrow-left"></i> Voltar
                         </button>
                     </div>
@@ -59,117 +47,57 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('resetForm');
+            const form = document.getElementById('solicitarResetForm');
             const emailInput = document.getElementById('email');
-            const novaSenhaInput = document.getElementById('novaSenha');
-            const confirmarNovaSenhaInput = document.getElementById('confirmarNovaSenha');
             const btnEnviarLink = document.getElementById('btnEnviarLink');
-
-            // Funções de validação básica
+            
             function validarEmail(email) {
                 const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 return re.test(String(email).toLowerCase());
             }
-            function validarSenha(senha) {
-                // Senha mínima de 6 caracteres
-                return senha && senha.length >= 6;
-            }
-
-            // Função que valida todos os campos do formulário antes do envio
-            function validarFormulario() {
-                let valido = true;
-                const email = emailInput.value.trim();
-                const senha = novaSenhaInput.value;
-                const confirmacao = confirmarNovaSenhaInput.value;
-
-                // 1. Validação de Email
-                if (!validarEmail(email)) {
-                    document.getElementById('email-feedback').textContent = "Por favor, insira um e-mail válido.";
-                    emailInput.classList.add('is-invalid');
-                    valido = false;
-                } else {
-                    emailInput.classList.remove('is-invalid');
-                }
-
-                // 2. Validação de Senha (Comprimento)
-                if (!validarSenha(senha)) {
-                    document.getElementById('senha-feedback').textContent = "A senha deve ter pelo menos 6 caracteres.";
-                    novaSenhaInput.classList.add('is-invalid');
-                    valido = false;
-                } else {
-                    novaSenhaInput.classList.remove('is-invalid');
-                }
-
-                // 3. Validação de Senha (Match)
-                if (senha !== confirmacao) {
-                    confirmarNovaSenhaInput.classList.add('is-invalid');
-                    document.getElementById('confirmacao-feedback').textContent = "As senhas não coincidem.";
-                    valido = false;
-                } else {
-                    confirmarNovaSenhaInput.classList.remove('is-invalid');
-                }
-
-                return valido;
-            }
-
-            // Limpar indicadores de erro ao digitar
-            [emailInput, novaSenhaInput, confirmarNovaSenhaInput].forEach(input => {
-                input.addEventListener('input', () => {
-                    input.classList.remove('is-invalid');
-                    // Validação de match em tempo real
-                    if (novaSenhaInput.value === confirmarNovaSenhaInput.value && validarSenha(novaSenhaInput.value)) {
-                         confirmarNovaSenhaInput.classList.remove('is-invalid');
-                    }
-                });
-            });
-
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                if (!validarFormulario()) {
-                    return; // Interrompe se a validação falhar
+                const email = emailInput.value.trim();
+                
+                if (!validarEmail(email)) {
+                    emailInput.classList.add('is-invalid');
+                    document.getElementById('email-feedback').textContent = "Por favor, insira um e-mail válido.";
+                    return;
                 }
+                emailInput.classList.remove('is-invalid');
                 
                 btnEnviarLink.disabled = true;
-                
                 Swal.fire({
                     title: 'Processando...',
-                    text: 'Aguarde. Se o e-mail estiver cadastrado, enviaremos um link de confirmação.',
+                    text: 'Verificando seu e-mail e enviando o código.',
                     allowOutsideClick: false,
                     didOpen: () => { Swal.showLoading(); }
                 });
 
                 try {
-                    // Endpoint do Backend (Java) para iniciar o processo de reset
+                    // Endpoint do Backend Java: "/funcionario-api/solicitar-reset"
                     const response = await fetch('/funcionario-api/solicitar-reset', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        // Envia Email E a Nova Senha para o Backend via JSON
-                        body: JSON.stringify({ 
-                            email: emailInput.value.trim(),
-                            novaSenha: novaSenhaInput.value
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email })
                     });
-
-                    // Melhores Práticas de Segurança: SEMPRE retornar 200 OK
-                    // para evitar enumerar e-mails cadastrados.
+                    
                     if (response.ok) {
                         Swal.fire({
                             icon: 'info',
-                            title: 'Confirmação Necessária!',
-                            text: 'Se o seu e-mail estiver cadastrado, você receberá um link de confirmação. Clique nele para ativar a nova senha.',
+                            title: 'Verifique seu E-mail!',
+                            text: 'Se o e-mail estiver cadastrado, você receberá um código de redefinição. Por favor, verifique sua caixa de entrada e spam.',
                             confirmButtonText: 'Entendi'
                         });
-                        form.reset(); // Limpa os campos
+                        form.reset(); 
                     } else {
-                        // Tratar erros de servidor (ex: 500)
+                        // Tratar erros de servidor (Ex: 500)
                         Swal.fire({
                             icon: 'error',
-                            title: 'Erro no Servidor!',
-                            text: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+                            title: 'Erro!',
+                            text: 'Ocorreu um erro ao tentar solicitar o código.',
                             confirmButtonText: 'OK'
                         });
                     }
@@ -177,12 +105,17 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Erro de Conexão!',
-                        text: 'Não foi possível conectar ao servidor. Verifique sua conexão.',
+                        text: 'Não foi possível conectar ao servidor.',
                         confirmButtonText: 'OK'
                     });
                 } finally {
                     btnEnviarLink.disabled = false;
                 }
+            });
+            
+            emailInput.addEventListener('input', function() {
+                 emailInput.classList.remove('is-invalid');
+                 document.getElementById('email-feedback').textContent = "E-mail inválido.";
             });
         });
     </script>
