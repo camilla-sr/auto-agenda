@@ -57,7 +57,10 @@ public class Rotas {
 	}
 	
 	@GetMapping("/recuperar-senha")
-    public String recuperarSenha() { return "esqueciasenha"; }
+	public String recuperarSenha(HttpSession session) { 
+        if(s.loginAtivo(session)) { return "redirect:/"; }
+        return "esqueciasenha"; 
+    }
 	
 	@GetMapping("/cadastroSistema")
 	public String cadastroSistema() { return "cadastro"; }

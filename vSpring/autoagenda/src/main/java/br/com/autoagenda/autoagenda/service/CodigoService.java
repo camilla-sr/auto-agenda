@@ -20,7 +20,7 @@ public class CodigoService {
                 return "OK";
             } else if (response.getStatusCode().value() == 201) {
                 return "SEM_ENVIO"; 
-            }
+            }	
             return "ERRO";
         } catch (ResourceAccessException e) {
             System.err.println("Erro: Microsserviço 2FA inacessível.");
@@ -40,15 +40,11 @@ public class CodigoService {
             }
             return "ERRO";
 
-        } catch (HttpClientErrorException.Unauthorized e) {
-            // 401 Unauthorized = Código incorreto
+        } catch (HttpClientErrorException.Unauthorized e) {	
             return "INVALIDO";
-            
         } catch (ResourceAccessException e) {
-            // Timeout ou serviço desligado
             System.err.println("Erro: Microsserviço 2FA inacessível.");
             return "OFFLINE";
-            
         } catch (Exception e) {
             e.printStackTrace();
             return "ERRO";
