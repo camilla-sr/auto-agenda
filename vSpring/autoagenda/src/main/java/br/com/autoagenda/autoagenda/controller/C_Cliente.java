@@ -48,7 +48,7 @@ public class C_Cliente {
             return ResponseEntity.ok().build(); 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-            		.body("Não é possível excluir: O cliente possui agendamentos vinculados.");
+            		.body("Não é possível excluir: o cliente possui agendamentos vinculados.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             		.body("Erro ao tentar excluir o cliente.");

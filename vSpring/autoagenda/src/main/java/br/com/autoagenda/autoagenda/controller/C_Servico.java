@@ -46,7 +46,7 @@ public class C_Servico {
 			return ResponseEntity.ok().build();
 		} catch (DataIntegrityViolationException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)
-				.body("Não é possível excluir: Este serviço está sendo utilizado em agendamentos.");
+				.body("Não é possível excluir: o serviço possui agendamentos vinculados.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body("Erro ao tentar excluir o serviço.");
