@@ -75,6 +75,28 @@
     
     /* RESPONSIVIDADE DEFINITIVA */
     @media (max-width: 768px) {
+      /* Força layout em coluna no mobile */
+      .form-row {
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+      }
+      
+      .form-col {
+        width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 15px !important;
+      }
+      
+      .form-group {
+        margin-bottom: 15px !important;
+      }
+      
+      .form-container {
+        padding: 20px 15px !important;
+        margin: 0 !important;
+      }
+
       /* Botão QR Code abaixo apenas no mobile */
       #agendamento-form .d-flex.gap-2 {
         flex-direction: column !important;
