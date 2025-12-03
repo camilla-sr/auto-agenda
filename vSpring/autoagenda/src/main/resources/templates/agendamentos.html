@@ -955,7 +955,7 @@
                   [modalInpNome, modalInpTel, modalInpEmail].forEach(el => el.classList.remove('is-invalid', 'is-valid'));
                   btnSalvarCli.disabled = true;
 
-                  Swal.fire('Sucesso', 'Cliente cadastrado', 'success');
+                  Swal.fire('Sucesso!', 'O cliente foi cadastrado.', 'success');
               }).catch(() => Swal.fire('Erro', 'Falha ao salvar cliente', 'error'));
           });
       }
@@ -1037,9 +1037,9 @@
                     if(modalInpMarca) modalInpMarca.classList.remove('is-invalid');
                     btnSalvarVeic.disabled = true;
 
-                    Swal.fire('Sucesso', 'Veículo salvo', 'success');
+                    Swal.fire('Sucesso!', 'O veículo foi cadastrado.', 'success');
                     verificarBotaoSalvar();
-                }).catch(() => Swal.fire('Erro', 'Falha ao salvar veículo', 'error'));
+                }).catch(() => Swal.fire('Erro', 'Falha ao registrar veículo', 'error'));
             });
         }
 
@@ -1298,13 +1298,14 @@
 	                        btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>'; 
 	                        btnDel.onclick = function() {
 	                            Swal.fire({
-	                                title: 'Excluir?', text: "Permanente.", icon: 'warning',
-	                                showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Sim'
+	                                title: 'Remover imagem?', text: "Ela poderá ser adicionada no agendamento novamente.", icon: 'warning',
+	                                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d',
+									confirmButtonText: 'Sim, remover!', cancelButtonText: 'Cancelar'
 	                            }).then((result) => {
 	                                if (result.isConfirmed) {
 	                                    fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
 	                                    .then(response => {
-	                                        if(response.ok) { div.remove(); Swal.fire('Apagado!', '', 'success'); }
+	                                        if(response.ok) { div.remove(); Swal.fire('Sucesso!', 'A imagem foi removida.', 'success'); }
 	                                    });
 	                                }
 	                            });
@@ -1396,7 +1397,7 @@
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault(); const id = this.dataset.id;
-                Swal.fire({ title: 'Excluir?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Sim' })
+                Swal.fire({ title: 'Excluir o agendamento?', text: "Não será possível reverter essa ação!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d', confirmButtonText: 'Sim, excluir!', cancelButtonText: 'Cancelar' })
                 .then(r => { if(r.isConfirmed) { document.getElementById('deleteId').value = id; document.getElementById('deleteForm').submit(); }});
             });
         });
@@ -1409,14 +1410,14 @@
                   const id = this.dataset.id;
                   
                   Swal.fire({
-                      title: 'Concluir Serviço?',
+                      title: 'Concluir agendamento?',
                       text: "O status mudará para Concluído e a data de hoje será registrada.",
                       icon: 'question',
                       showCancelButton: true,
-                      confirmButtonColor: '#198754',
-                      cancelButtonColor: '#6c757d',
-                      confirmButtonText: 'Sim, concluir!',
-                      cancelButtonText: 'Cancelar'
+                      confirmButtonColor: '#d33',
+					  cancelButtonColor: '#6c757d',
+					  confirmButtonText: 'Sim, excluir!',
+					  cancelButtonText: 'Cancelar'
                   }).then((result) => {
                       if (result.isConfirmed) {
                           fetch(`/agendamento-api/concluir/${id}`, { method: 'POST' })
@@ -1429,8 +1430,8 @@
                           })
                           .then(() => {
                               Swal.fire(
-                                  'Concluído!', 
-                                  'O serviço foi finalizado com sucesso.', 
+                                  'Sucesso!', 
+                                  'O agendamento foi finalizado com sucesso.', 
                                   'success'
                               ).then(() => location.reload());
                           })

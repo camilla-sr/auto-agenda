@@ -420,13 +420,14 @@
                     e.preventDefault();
                     const id = this.dataset.id;
                     Swal.fire({
-                        title: 'Tem certeza?',
+                        title: 'Excluir funcionário?',
                         text: "Não será possível reverter essa ação!",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Sim, excluir!'
+						confirmButtonColor: '#d33',
+						cancelButtonColor: '#6c757d',
+						confirmButtonText: 'Sim, excluir!',
+						cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             document.getElementById('deleteId').value = id;

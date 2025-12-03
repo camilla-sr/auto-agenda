@@ -275,7 +275,7 @@
 	                headers: { 'Content-Type': 'application/json' },
 	                body: JSON.stringify(dto)
 	            }).then(r => r.ok ? r.json() : Promise.reject())
-	            .then(() => { Swal.fire('Salvo!', 'Dados do cliente atualizados.', 'success').then(() => location.reload()); })
+	            .then(() => { Swal.fire('Sucesso!', 'Os dados do cliente foram registrados.', 'success').then(() => location.reload()); })
 	            .catch(() => Swal.fire('Erro', 'Falha ao salvar.', 'error'));
 	        });
 	
@@ -374,13 +374,14 @@
 			    // Evento Excluir
 			    tr.querySelector('.btn-delete').addEventListener('click', () => {
 			        Swal.fire({
-			            title: 'Remover veículo?',
-			            text: "Esta ação não pode ser desfeita.",
+			            title: 'Excluir veículo?',
+			            text: "Não será possível reverter essa ação!",
 			            icon: 'warning',
 			            showCancelButton: true,
-			            confirmButtonColor: '#F44336',
-			            cancelButtonColor: '#6c757d',
-			            confirmButtonText: 'Sim, remover'
+						confirmButtonColor: '#d33',
+						cancelButtonColor: '#6c757d',
+						confirmButtonText: 'Sim, excluir!',
+						ancelButtonText: 'Cancelar'
 			        }).then((result) => {
 			            if (result.isConfirmed) {
 			                fetch('/veiculo-api/apagar', {
@@ -389,7 +390,7 @@
 			                    body: `idVeiculo=${v.idVeiculo}`
 			                }).then(r => {
 			                    if(r.ok) carregarVeiculosNoModal(idClienteModal.value);
-			                    else Swal.fire('Erro', 'Não foi possível remover.', 'error');
+			                    else Swal.fire('Erro', 'Não foi possível excluir.', 'error');
 			                });
 			            }
 			        });
@@ -491,7 +492,7 @@
 			        if(r.ok) {
 			            carregarVeiculosNoModal(idClienteModal.value);
 			            const Toast = Swal.mixin({toast: true, position: 'top-end', showConfirmButton: false, timer: 3000});
-			            Toast.fire({icon: 'success', title: 'Veículo salvo com sucesso!'});
+			            Toast.fire({icon: 'success', title: 'Veículo registrado com sucesso!'});
 			        } else {
 			            Swal.fire('Erro', 'Erro ao salvar. Verifique se a placa já existe.', 'error');
 			            btnSave.disabled = false;

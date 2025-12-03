@@ -296,14 +296,14 @@
                 const id = this.dataset.id;
                 
                 Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Esta ação removerá o serviço permanentemente!",
+                    title: 'Excluir serviço?',
+                    text: "Não será possível reverter essa ação!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sim, excluir!',
-                    cancelButtonText: 'Cancelar'
+					confirmButtonColor: '#d33',
+					cancelButtonColor: '#6c757d',
+					confirmButtonText: 'Sim, excluir!',
+					cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         document.getElementById('deleteId').value = id;
