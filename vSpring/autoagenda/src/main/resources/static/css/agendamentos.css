@@ -1049,8 +1049,15 @@ button.btn-outline-primary[data-bs-toggle="modal"] {
 
   .form-container {
     padding: 20px 16px;
-    margin: 0 -5px;
+    margin: 0; /* Corrigido: margem zerada para evitar corte lateral */
     border-radius: 12px;
+  }
+
+  /* Ajuste para container da tabela no mobile */
+  .table-container {
+    padding: 15px;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .form-container h3 {
