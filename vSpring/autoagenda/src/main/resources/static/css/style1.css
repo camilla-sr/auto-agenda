@@ -218,7 +218,8 @@ body {
   display: flex;
   opacity: 1;
   visibility: visible;
-  max-height: 500px; /* Altura suficiente para o conteúdo */
+  max-height: 500px;
+  /* Altura suficiente para o conteúdo */
   padding: 10px 0;
 }
 
@@ -244,7 +245,8 @@ body {
 
   .nav-menu {
     position: fixed;
-    top: 70px; /* Altura do header - posiciona logo abaixo */
+    top: 70px;
+    /* Altura do header - posiciona logo abaixo */
     left: 0;
     width: 100%;
     max-height: 0;
@@ -712,17 +714,25 @@ table tbody tr:hover {
   background-color: var(--cor-fundo-claro);
 }
 
-/* Service table cells - allow vertical growth with text wrapping */
-table .nome-servico,
+
+
 table .desc-servico {
-  max-width: 250px;
+  max-width: none;
   word-wrap: break-word;
   word-break: break-word;
   white-space: normal;
-  text-align: center;
+  text-align: left !important;
 }
 
-/* Ensure action buttons stay centered vertically - DESKTOP ONLY */
+table .nome-servico {
+  max-width: none;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  text-align: left !important;
+}
+
+
 @media (min-width: 768px) {
   table td.action-buttons {
     display: table-cell !important;
@@ -742,6 +752,15 @@ table .desc-servico {
     height: 32px;
     margin: 0 4px;
     vertical-align: middle;
+
+
+    table .desc-servico {
+      max-width: 250px;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      text-align: left;
+    }
   }
 }
 
@@ -900,6 +919,23 @@ table .desc-servico {
 
 /* Responsividade */
 @media (max-width: 768px) {
+
+  table .desc-servico {
+    max-width: none;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    text-align: right !important;
+  }
+
+  table .nome-servico {
+    max-width: none;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    text-align: right !important;
+  }
+
   .header .container {
     flex-direction: column;
     gap: 10px;
