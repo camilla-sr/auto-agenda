@@ -17,6 +17,7 @@ import br.com.autoagenda.autoagenda.repositorios.ProdutoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 import br.com.autoagenda.autoagenda.repositorios.VeiculoRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class Rotas {
@@ -27,6 +28,11 @@ public class Rotas {
 	@Autowired private AgendamentoRepository repoAg;
 	@Autowired private ClienteRepository repoCl;
 	@Autowired private VeiculoRepository repoVe;
+	
+	@ModelAttribute("currentUri")
+    public String getCurrentUri(HttpServletRequest request) {
+        return request.getRequestURI();
+    }
 	
 	@ModelAttribute
     public void usuarioGlobal(HttpSession session, Model model) {
