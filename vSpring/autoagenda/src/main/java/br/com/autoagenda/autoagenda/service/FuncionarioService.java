@@ -87,6 +87,10 @@ public class FuncionarioService {
     public void excluir(Integer id) {
         if (id != null) repo.deleteById(id);
     }
+    
+    public Funcionario buscarPorEmail(String email) {
+        return repo.findByEmail(email).orElse(null);
+    }
 
     private String gerarSenhaAleatoria() {
         String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

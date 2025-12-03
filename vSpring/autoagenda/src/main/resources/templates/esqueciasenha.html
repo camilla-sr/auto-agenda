@@ -13,28 +13,132 @@
     
     <link rel="stylesheet" href="/css/estilo.css">
     <link rel="stylesheet" href="/css/style1.css">
+
+	<style>
+    /* Container principal */
+    .steps-container {
+        position: relative;
+        min-height: 400px; /* Mantém o tamanho fixo para não pular */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Estilo base de cada passo (Escondido por padrão) */
+    .step {
+        display: none; /* Esconde totalmente */
+        width: 100%;
+        animation: fadeIn 0.5s ease-in-out; /* Animação suave ao aparecer */
+    }
+
+    /* Passo Ativo (Visível) */
+    .step.active {
+        display: block; /* Mostra */
+    }
+
+    /* Animação de Fade In */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Estilo dos quadradinhos (Steam Style) */
+    .otp-container {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin: 20px 0;
+        width: 100%;
+    }
+
+    .otp-input {
+        width: 45px;
+        height: 55px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        background-color: #fff;
+        color: #333;
+        transition: all 0.2s;
+    }
+
+    .otp-input:focus {
+        border-color: #ffd700;
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+        outline: none;
+        transform: translateY(-2px);
+    }
+
+    .log-inputs {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto; /* Centraliza o bloco de inputs */
+    }
+
+    .logo-login {
+        max-width: 150px;
+    }
+    
+    @media (max-width: 400px) {
+        .otp-input { width: 35px; height: 45px; font-size: 18px; }
+    }
+</style>
 </head>
 
 <body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100"
     style="background: linear-gradient(135deg, #000000 0%, #333333 100%);">
+    
     <div class="container text-center">
         <p class="mensagem mb-4">Recuperação de Senha</p>
 
-        <div class="login mx-auto" style="max-width: 400px;">
-            <img src="/img/logo.png" alt="Logo JJ" class="logo-login">
-            <h5 class="text-white-50 mb-4">Insira seu e-mail cadastrado para receber o código de redefinição.</h5>
 
-            <form id="solicitarResetForm">
-                <div class="log-inputs">
-                    <span>E-mail</span>
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" id="email" class="form-control" required placeholder="seu.email@exemplo.com">
-                        <div id="email-feedback" class="invalid-feedback">E-mail inválido.</div>
-                    </div>
+        <div class="login mx-auto" style="max-width: 450px;">
+            <img src="/img/logo.png" alt="Logo JJ" class="logo-login mb-3">
+            
+            <div class="steps-container">
+                
+                <div id="step1" class="step active">
+                    <h5 class="text-white-50 mb-4">Passo 1/3: Identificação</h5>
+                    <p class="small text-muted">Informe seu e-mail para receber o código de verificação.</p>
                     
-                    <div class="botoes d-flex justify-content-center gap-3 flex-wrap mt-3">
-                        <button type="button" class="btn btnCadastro" onclick="window.location.href = 'login.html'">
-                            <i class="fas fa-arrow-left"></i> Voltar
+                    <div class="log-inputs text-start">
+                        <span>E-mail</span>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" class="form-control" placeholder="seu.email@exemplo.com">
+                            <div class="invalid-feedback">E-mail inválido.</div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="button" class="btn btnLogin" id="btnAvancarStep1">
+                                Avançar <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary text-white" onclick="window.location.href = '/login'">
+                                Voltar ao Login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step2" class="step">
+                    <h5 class="text-white-50 mb-4">Passo 2/3: Verificação</h5>
+                    <p class="small text-muted">Digite o código de 6 dígitos enviado para: <br><strong id="email-display" class="text-white"></strong></p>
+
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+                        <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+                        <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+                        <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+                        <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+                        <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
+                    </div>
+                    <small class="text-warning" id="otp-feedback" style="display: none;">Código inválido.</small>
+
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-sm btn-link text-white-50 text-decoration-none" onclick="location.reload()">
+                            Não recebeu? Tentar novamente
                         </button>
                         
                         <button type="submit" class="btn btnLogin" id="btnEnviarLink">
@@ -42,84 +146,232 @@
                         </button>
                     </div>
                 </div>
-            </form>
+
+                <div id="step3" class="step">
+                    <h5 class="text-white-50 mb-4">Passo 3/3: Nova Senha</h5>
+                    <p class="small text-muted">Defina sua nova senha de acesso.</p>
+
+                    <div class="log-inputs text-start">
+                        <span>Nova Senha</span>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="novaSenha" class="form-control" placeholder="Mínimo 6 caracteres">
+                        </div>
+
+                        <span>Confirmar Senha</span>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="confirmaSenha" class="form-control" placeholder="Repita a senha">
+                            <div class="invalid-feedback">As senhas não conferem.</div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="button" class="btn btnLogin" id="btnSalvarSenha">
+                                <i class="fas fa-save me-2"></i> Salvar e Entrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('solicitarResetForm');
-            const emailInput = document.getElementById('email');
-            const btnEnviarLink = document.getElementById('btnEnviarLink');
-            
-            function validarEmail(email) {
-                const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                return re.test(String(email).toLowerCase());
-            }
+	<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = {
+            1: document.getElementById('step1'),
+            2: document.getElementById('step2'),
+            3: document.getElementById('step3')
+        };
+        
+        let emailUsuario = "";
+        let codigoRecuperacao = "";
 
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        // --- LÓGICA DE TRANSIÇÃO SIMPLES (FADE) ---
+        function irParaPasso(passoDestino) {
+            // 1. Remove a classe 'active' de todos os passos
+            Object.values(steps).forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 2. Adiciona no novo (com pequeno delay para o DOM processar)
+            setTimeout(() => {
+                steps[passoDestino].classList.add('active');
                 
-                const email = emailInput.value.trim();
-                
-                if (!validarEmail(email)) {
-                    emailInput.classList.add('is-invalid');
-                    document.getElementById('email-feedback').textContent = "Por favor, insira um e-mail válido.";
-                    return;
+                // Foco automático se for a tela de código
+                if(passoDestino === 2) {
+                    const primeiroInput = document.querySelector('.otp-input');
+                    if(primeiroInput) primeiroInput.focus();
                 }
-                emailInput.classList.remove('is-invalid');
-                
-                btnEnviarLink.disabled = true;
-                Swal.fire({
-                    title: 'Processando...',
-                    text: 'Verificando seu e-mail e enviando o código.',
-                    allowOutsideClick: false,
-                    didOpen: () => { Swal.showLoading(); }
+            }, 10);
+        }
+
+        // ==========================================
+        // ETAPA 1
+        // ==========================================
+        const btnStep1 = document.getElementById('btnAvancarStep1');
+        const emailInp = document.getElementById('email');
+
+        btnStep1.addEventListener('click', async () => {
+            const email = emailInp.value.trim();
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!re.test(email)) {
+                emailInp.classList.add('is-invalid');
+                return;
+            }
+            emailInp.classList.remove('is-invalid');
+            emailUsuario = email;
+
+            btnStep1.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btnStep1.disabled = true;
+
+            try {
+                const response = await fetch('/funcionario-api/enviar-codigo-reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                    body: `email=${encodeURIComponent(emailUsuario)}`
                 });
 
-                try {
-                    // Endpoint do Backend Java: "/funcionario-api/solicitar-reset"
-                    const response = await fetch('/funcionario-api/solicitar-reset', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email })
-                    });
-                    
-                    if (response.ok) {
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Verifique seu E-mail!',
-                            text: 'Se o e-mail estiver cadastrado, você receberá um código de redefinição. Por favor, verifique sua caixa de entrada e spam.',
-                            confirmButtonText: 'Entendi'
-                        });
-                        form.reset(); 
-                    } else {
-                        // Tratar erros de servidor (Ex: 500)
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erro!',
-                            text: 'Ocorreu um erro ao tentar solicitar o código.',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro de Conexão!',
-                        text: 'Não foi possível conectar ao servidor.',
-                        confirmButtonText: 'OK'
-                    });
-                } finally {
-                    btnEnviarLink.disabled = false;
+                if (response.ok) {
+                    document.getElementById('email-display').textContent = emailUsuario;
+                    irParaPasso(2);
+                } else {
+                    const msg = await response.text(); 
+                    Swal.fire('Atenção', msg || 'Erro ao enviar código.', 'warning');
+                    resetBtnStep1();
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire('Erro', 'Falha na conexão com o servidor.', 'error');
+                resetBtnStep1();
+            }
+        });
+
+        function resetBtnStep1() {
+            btnStep1.innerHTML = 'Avançar <i class="fas fa-arrow-right ms-2"></i>';
+            btnStep1.disabled = false;
+        }
+
+        // ==========================================
+        // ETAPA 2
+        // ==========================================
+        const otpInputs = document.querySelectorAll('.otp-input');
+
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('keydown', (e) => {
+                if (e.key >= 0 && e.key <= 9) { input.value = ''; } 
+                else if (e.key === 'Backspace' && input.value === '' && index > 0) { otpInputs[index - 1].focus(); }
+            });
+
+            input.addEventListener('input', async (e) => {
+                if (input.value.length === 1 && index < otpInputs.length - 1) { otpInputs[index + 1].focus(); }
+
+                if (index === otpInputs.length - 1 && input.value !== '') {
+                    let codigoCompleto = '';
+                    otpInputs.forEach(i => codigoCompleto += i.value);
+                    if (codigoCompleto.length === 6) await validarCodigo(codigoCompleto);
                 }
             });
             
-            emailInput.addEventListener('input', function() {
-                 emailInput.classList.remove('is-invalid');
-                 document.getElementById('email-feedback').textContent = "E-mail inválido.";
+            input.addEventListener('paste', (e) => {
+                const pasteData = e.clipboardData.getData('text');
+                if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+                    e.preventDefault();
+                    otpInputs.forEach((inp, i) => inp.value = pasteData[i]);
+                    validarCodigo(pasteData);
+                }
             });
         });
-    </script>
-</body>
+        
+        // Listener separado para limpar erro do email (Corrigido nome da variável)
+        emailInp.addEventListener('input', function() {
+             emailInp.classList.remove('is-invalid');
+        });
 
+        async function validarCodigo(codigo) {
+            otpInputs.forEach(i => i.disabled = true);
+            
+            try {
+                const response = await fetch('/funcionario-api/validar-codigo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailUsuario, codigo: codigo }) 
+                });
+
+                if (response.ok) { 
+                    codigoRecuperacao = codigo;
+                    Swal.fire({
+                        icon: 'success', title: 'Código Validado!', timer: 1000, showConfirmButton: false
+                    }).then(() => {
+                        irParaPasso(3);
+                    });
+                } else { 
+                    document.getElementById('otp-feedback').style.display = 'block';
+                    otpInputs.forEach(i => {
+                        i.disabled = false; i.value = ''; i.classList.add('is-invalid');
+                    });
+                    otpInputs[0].focus();
+                }
+            } catch (e) {
+                Swal.fire('Erro', 'Erro ao validar código.', 'error');
+                otpInputs.forEach(i => i.disabled = false);
+            }
+        }
+
+        // ==========================================
+        // ETAPA 3
+        // ==========================================
+        const btnSalvar = document.getElementById('btnSalvarSenha');
+        const senha1 = document.getElementById('novaSenha');
+        const senha2 = document.getElementById('confirmaSenha');
+
+        btnSalvar.addEventListener('click', async () => {
+            const s1 = senha1.value;
+            const s2 = senha2.value;
+
+            if (s1.length < 6) {
+                Swal.fire('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'warning');
+                return;
+            }
+            if (s1 !== s2) {
+                senha2.classList.add('is-invalid');
+                return;
+            }
+
+            btnSalvar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            btnSalvar.disabled = true;
+
+            try {
+                const response = await fetch('/funcionario-api/redefinir-senha-final', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: emailUsuario, 
+                        codigo: codigoRecuperacao,
+                        novaSenha: s1 
+                    })
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success', title: 'Senha Alterada!', text: 'Você será redirecionado para o login.',
+                        timer: 2000, showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '/login';
+                    });
+                } else {
+                    Swal.fire('Erro', 'Não foi possível alterar a senha.', 'error');
+                    btnSalvar.disabled = false;
+                    btnSalvar.innerHTML = '<i class="fas fa-save me-2"></i> Salvar e Entrar';
+                }
+            } catch (e) {
+                Swal.fire('Erro', 'Erro de conexão.', 'error');
+                btnSalvar.disabled = false;
+            }
+        });
+    });
+</script>
+</body>
 </html>

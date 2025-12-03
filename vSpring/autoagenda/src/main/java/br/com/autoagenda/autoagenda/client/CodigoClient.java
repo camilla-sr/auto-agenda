@@ -1,28 +1,20 @@
 package br.com.autoagenda.autoagenda.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import br.com.autoagenda.autoagenda.dto.CodigoDto;
 
 @Component
 public class CodigoClient {
-	@Autowired private RestTemplate rt;
-	
-	public void requisitar(String email) {
-		String url = "http://localhost:8082/2fa/gerar";
-		if(!email.isBlank()) { rt.postForObject(url, email, Void.class); }
-	}
-	
-	public boolean validar(CodigoDto cod) {
-		String url = "http://localhost:8082/2fa/validar";
-		if(cod.getEmail().isEmpty() || cod.getCodigo().isEmpty()) { return false; }
-		
-		try {
-			rt.postForObject(url, cod, Void.class);
-			return true;
-		}catch(Exception e) {
-			return false;
-		}
-	}
+	private final String URL_BASE = "http://localhost:8082/2fa";
+    private final RestTemplate rt = new RestTemplate();
+
+    public ResponseEntity<String> gerarCodigo(String email) {
+        return rt.postForEntity(URL_BASE + "/gerar", Map.of("email", email), String.class);
+    }
+
+    public ResponseEntity<String> validarCodigo(String email, String codigo) {
+        return rt.postForEntity(URL_BASE + "/validar", Map.of("email", email, "codigo", codigo), String.class);
+    }
 }
