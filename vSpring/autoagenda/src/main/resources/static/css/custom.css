@@ -62,14 +62,28 @@
     justify-content: space-between;
   }
 
-  /* Ajuste para células de ação */
-  .appointments-table .action-buttons {
-    justify-content: center;
-    padding: 0.75rem 1rem;
+  /* Ajuste para células de ação - Sobrescreve comportamento padrão do td */
+  .appointments-table tbody tr td.action-buttons {
+    display: flex !important;
+    justify-content: center !important; /* Sobrescreve space-between do td padrão */
+    align-items: center !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 0.75rem 1rem !important;
+    text-align: center !important;
   }
 
-  .appointments-table .action-buttons:before {
-    display: none; /* Remove o label para ações */
+  .appointments-table tbody tr td.action-buttons:before {
+    display: none !important; /* Remove o label para ações */
+    content: none !important;
+  }
+
+  .appointments-table tbody tr td.action-buttons .btn-icon {
+    flex-shrink: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
   }
 
   /* Células vazias ou sem data-label (hidden fields) */

@@ -39,6 +39,34 @@
             justify-content: center; 
             border-radius: 4px;
         }
+
+        /* CORREÇÃO DEFINITIVA - Botões centralizados no mobile */
+        @media (max-width: 767.98px) {
+            /* Força todos os TDs a terem space-between EXCETO action-buttons */
+            .appointments-table td:not(.action-buttons) {
+                justify-content: space-between !important;
+            }
+            
+            /* Action buttons SEMPRE centralizado */
+            .appointments-table td.action-buttons,
+            .appointments-table tbody tr td.action-buttons,
+            td.action-buttons {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+                padding: 0.75rem 1rem !important;
+                text-align: center !important;
+            }
+            
+            .appointments-table td.action-buttons:before,
+            .appointments-table tbody tr td.action-buttons:before,
+            td.action-buttons:before {
+                display: none !important;
+                content: "" !important;
+            }
+        }
     </style>
 </head>
 

@@ -132,6 +132,30 @@
       .form-group .d-flex .btn-outline-primary i {
         font-size: 0.85rem !important;
       }
+
+      /* CORREÇÃO DEFINITIVA - Botões centralizados nos cards mobile */
+      .appointments-table td:not(.action-buttons) {
+        justify-content: space-between !important;
+      }
+      
+      .appointments-table td.action-buttons,
+      .appointments-table tbody tr td.action-buttons,
+      td.action-buttons {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        padding: 0.75rem 1rem !important;
+        text-align: center !important;
+      }
+      
+      .appointments-table td.action-buttons:before,
+      .appointments-table tbody tr td.action-buttons:before,
+      td.action-buttons:before {
+        display: none !important;
+        content: "" !important;
+      }
     }
   </style>
 

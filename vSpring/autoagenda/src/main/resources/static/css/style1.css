@@ -722,25 +722,27 @@ table .desc-servico {
   text-align: center;
 }
 
-/* Ensure action buttons stay centered vertically */
-table td.action-buttons {
-  display: table-cell !important;
-  vertical-align: middle !important;
-  text-align: center !important;
-  white-space: nowrap;
-  padding: 12px;
-}
+/* Ensure action buttons stay centered vertically - DESKTOP ONLY */
+@media (min-width: 768px) {
+  table td.action-buttons {
+    display: table-cell !important;
+    vertical-align: middle !important;
+    text-align: center !important;
+    white-space: nowrap;
+    padding: 12px;
+  }
 
-table td.action-buttons .button-wrapper {
-  display: inline-block;
-}
+  table td.action-buttons .button-wrapper {
+    display: inline-block;
+  }
 
-table td.action-buttons .btn-icon {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  margin: 0 4px;
-  vertical-align: middle;
+  table td.action-buttons .btn-icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin: 0 4px;
+    vertical-align: middle;
+  }
 }
 
 .table-actions {
