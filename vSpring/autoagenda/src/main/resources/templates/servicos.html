@@ -17,12 +17,9 @@
 </head>
 
 <body>
-
     <div th:replace="~{barra :: barra}"></div>
-
     <main class="main-content">
         <div class="container">
-
             <div class="page-header" id="pageHeaderScrollTarget">
                 <h2><i class="fas fa-tools"></i> Gerenciamento de Serviços </h2>
                 <p>Controle e cadastre novos serviços</p>
@@ -65,7 +62,6 @@
                 <form id="deleteForm" action="servico-api/apagar" method="post" style="display: none;">
                     <input type="hidden" name="idServico" id="deleteId">
                 </form>
-
             </div>
 
             <div class="table-container">
@@ -96,7 +92,6 @@
                         <tr th:each="serv : ${servicos}">
                             <td class="nome-servico" th:text="${serv.nomeServico}" data-label="Serviço"></td>
                             <td class="desc-servico" th:text="${serv.descServico}" data-label="Descrição"></td>
-
                             <td class="action-buttons">
                                 <button class="btn-icon btn-edit" th:attr="data-id=${serv.idServico}" title="Editar">
                                     <i class="fas fa-edit"></i>
@@ -109,11 +104,9 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </main>
 
-    <!-- Rodapé -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -125,188 +118,169 @@
             </div>
         </div>
     </footer>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('form-servico');
-            const formTitulo = document.getElementById('formTitulo');
-            const botaoSalvar = form.querySelector('button[type="submit"]');
-            // Removemos a referência pageHeaderScrollTarget, pois vamos usar window.scrollTo
-            // const pageHeaderScrollTarget = document.getElementById('pageHeaderScrollTarget'); 
+	
+	<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ============================================================
+        // 1. MENU MOBILE (Hambúrguer)
+        // ============================================================
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const navMenu = document.getElementById('nav-menu');
 
-            // VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS
-
-            const camposObrigatorios = [
-                'nome-servico',
-                'descricao-servico'
-            ];
-
-            function verificarCampos() {
-                let valido = true;
-                camposObrigatorios.forEach(id => {
-                    const campo = document.getElementById(id);
-                    if (!campo || !campo.value || campo.value === '') {
-                        valido = false;
-                    }
+        if (hamburgerMenu && navMenu) {
+            hamburgerMenu.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburgerMenu.classList.toggle('active');
+            });
+            navMenu.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    hamburgerMenu.classList.remove('active');
                 });
-                botaoSalvar.disabled = !valido;
-            }
-
-            camposObrigatorios.forEach(id => {
-                const campo = document.getElementById(id);
-                if (campo) {
-                    campo.addEventListener('input', verificarCampos);
+            });
+            document.addEventListener('click', (event) => {
+                if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    hamburgerMenu.classList.remove('active');
                 }
             });
+        }
 
-            const btnNovoServico = document.getElementById('btn-novo-servico');
-            const formServicoContainer = document.getElementById('formNovoServicoContainer');
-            const btnCancelarNovoServico = document.getElementById('btn-cancelar-novo-servico');
+        // ============================================================
+        // 2. CONTROLE DO FORMULÁRIO (Novo / Editar / Cancelar)
+        // ============================================================
+        const form = document.getElementById('form-servico');
+        const formTitulo = document.getElementById('formTitulo');
+        const btnNovoServico = document.getElementById('btn-novo-servico');
+        const formServicoContainer = document.getElementById('formNovoServicoContainer');
+        const btnCancelarNovoServico = document.getElementById('btn-cancelar-novo-servico');
+        const inputId = document.getElementById('idServico');
+        const inputNome = document.getElementById('nome-servico');
+        const inputDesc = document.getElementById('descricao-servico');
 
+        if (btnNovoServico) {
             btnNovoServico.addEventListener('click', () => {
-                form.querySelector('#idServico').value = "";
+                inputId.value = "";
+                form.reset();
                 formTitulo.innerHTML = '<i class="fas fa-plus"></i> Cadastrar Novo Serviço';
                 formServicoContainer.style.display = 'block';
                 
-                // CORREÇÃO APLICADA: Rola a janela para o topo absoluto (0, 0)
+                verificarCampos(); 
+                atualizarContador(0);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+        }
 
+        // Cancelar e Fechar formulário
+        if (btnCancelarNovoServico) {
             btnCancelarNovoServico.addEventListener('click', () => {
                 form.reset();
                 formServicoContainer.style.display = 'none';
-                verificarCampos();
             });
+        }
 
-            verificarCampos();
+        // ============================================================
+        // 3. VALIDAÇÃO E CONTADORES
+        // ============================================================
+        const botaoSalvar = form.querySelector('button[type="submit"]');
+        const contadorDesc = document.getElementById('descricao-servico-counter');
+        const maxLenDesc = inputDesc ? inputDesc.getAttribute('maxlength') : 200;
 
-            // EDITAR
+        function verificarCampos() {
+            const nomeValido = inputNome.value.trim() !== "";
+            const descValida = inputDesc.value.trim() !== "";
+            botaoSalvar.disabled = !(nomeValido && descValida);
+        }
 
-            const editButtons = document.querySelectorAll('.btn-edit');
-            editButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
-                    if (formServicoContainer.style.display === 'none' || formServicoContainer.style.display === '') {
-                        formServicoContainer.style.display = 'block';
-                    }
-                    
-                    // CORREÇÃO APLICADA: Rola a janela para o topo absoluto (0, 0)
-                    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        function atualizarContador(tamanhoAtual) {
+            if (!contadorDesc) return;
+            
+            const small = contadorDesc.querySelector('small');
+            small.textContent = `${tamanhoAtual}/${maxLenDesc}`;
 
-                    const row = button.closest('tr');
-                    const id = button.dataset.id;
-                    const nome = row.querySelector('.nome-servico').textContent.trim();
-                    const descricao = row.querySelector('.desc-servico').textContent.trim();
-
-                    document.getElementById('idServico').value = id;
-                    document.getElementById('nome-servico').value = nome;
-                    document.getElementById('descricao-servico').value = descricao;
-
-                    verificarCampos();
-                });
-            });
-
-            // EXCLUIR
-
-            const deleteButtons = document.querySelectorAll('.btn-delete');
-            deleteButtons.forEach(function (button) {
-                button.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const id = button.dataset.id;
-                    Swal.fire({
-                        title: 'Você tem certeza?',
-                        text: "Esta ação não poderá ser desfeita!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#4CAF50',
-                        cancelButtonColor: '#6F6F6F',
-                        confirmButtonText: 'Sim, excluir!',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Se o usuário confirmar, preenche o ID no formulário de exclusão e envia
-                            document.getElementById('deleteId').value = id;
-                            document.getElementById('deleteForm').submit();
-                        }
-                    });
-                });
-            });
-
-            // BUSCA DINÂMICA CLIENT-SIDE 
-
-            const busca = document.getElementById('busca');
-            const tabela = document.querySelector('table');
-            const linhas = tabela.querySelectorAll('tbody tr');
-
-            busca.addEventListener('input', function () {
-                const termoBusca = busca.value.toLowerCase();
-
-                linhas.forEach(function (linha) {
-                    const textoLinha = linha.textContent.toLowerCase();
-
-                    if (textoLinha.includes(termoBusca)) {
-                        linha.style.display = '';
-                    } else {
-                        linha.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburgerMenu = document.getElementById('hamburger-menu');
-            const navMenu = document.getElementById('nav-menu');
-
-            if (hamburgerMenu && navMenu) {
-                hamburgerMenu.addEventListener('click', function() {
-                    navMenu.classList.toggle('active');
-                    hamburgerMenu.classList.toggle('active');
-                });
-
-                // Fecha o menu ao clicar em um link
-                const navLinks = navMenu.querySelectorAll('.nav-link');
-                navLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        navMenu.classList.remove('active');
-                        hamburgerMenu.classList.remove('active');
-                    });
-                });
-
-                // Fecha o menu ao clicar fora dele
-                document.addEventListener('click', function(event) {
-                    if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
-                        navMenu.classList.remove('active');
-                        hamburgerMenu.classList.remove('active');
-                    }
-                });
+            if (tamanhoAtual >= maxLenDesc) {
+                contadorDesc.classList.remove('text-muted');
+                contadorDesc.classList.add('text-danger');
+                small.textContent = `${tamanhoAtual}/${maxLenDesc} - Limite atingido!`;
+            } else {
+                contadorDesc.classList.add('text-muted');
+                contadorDesc.classList.remove('text-danger');
             }
-        });
-    </script>
-    <script>
-    // CONTADOR DE CARACTERES PARA DESCRIÇÃO DO SERVIÇO
-    document.addEventListener('DOMContentLoaded', function() {
-      const descricaoInput = document.getElementById('descricao-servico');
-      const descricaoCounter = document.getElementById('descricao-servico-counter');
+        }
 
-      if (descricaoInput && descricaoCounter) {
-        descricaoInput.addEventListener('input', function() {
-          const currentLength = this.value.length;
-          const maxLength = this.getAttribute('maxlength');
-          
-          descricaoCounter.querySelector('small').textContent = `${currentLength}/${maxLength}`;
-          
-          if (currentLength >= maxLength) {
-            descricaoCounter.classList.remove('text-muted');
-            descricaoCounter.classList.add('text-danger');
-            descricaoCounter.querySelector('small').textContent = `${currentLength}/${maxLength} - Limite de caracteres atingido!`;
-          } else {
-            descricaoCounter.classList.add('text-muted');
-            descricaoCounter.classList.remove('text-danger');
-          }
+        if (inputNome) inputNome.addEventListener('input', verificarCampos);
+        
+        if (inputDesc) {
+            inputDesc.addEventListener('input', function() {
+                verificarCampos();
+                atualizarContador(this.value.length);
+            });
+        }
+        verificarCampos();
+
+        // ============================================================
+        // 4. AÇÕES DA TABELA (Editar / Excluir / Busca)
+        // ============================================================
+        // Botão EDITAR
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const id = this.dataset.id;
+                const nome = row.querySelector('.nome-servico').textContent.trim();
+                const descricao = row.querySelector('.desc-servico').textContent.trim();
+
+                formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
+                inputId.value = id;
+                inputNome.value = nome;
+                inputDesc.value = descricao;
+
+                formServicoContainer.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                verificarCampos();
+                atualizarContador(descricao.length);
+            });
         });
-      }
+
+        // Botão EXCLUIR (SweetAlert2)
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const id = this.dataset.id;
+                
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: "Esta ação removerá o serviço permanentemente!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('deleteId').value = id;
+                        document.getElementById('deleteForm').submit();
+                    }
+                });
+            });
+        });
+
+        // BUSCA DINÂMICA (Filtro na tabela)
+        const inputBusca = document.getElementById('busca');
+        const linhasTabela = document.querySelectorAll('tbody tr');
+
+        if (inputBusca) {
+            inputBusca.addEventListener('input', function () {
+                const termo = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+                linhasTabela.forEach(linha => {
+                    const texto = linha.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    linha.style.display = (termo === "" || texto.includes(termo)) ? '' : 'none';
+                });
+            });
+        }
     });
-    </script>
+</script>
 </body>
-
 </html>
