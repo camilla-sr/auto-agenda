@@ -692,8 +692,9 @@ table {
   border-collapse: collapse;
 }
 
-table th {
-  background-color: var(--cor-fundo-claro);
+table th,
+.appointments-table th {
+  background-color: var(--cor-fundo-claro) !important;
   text-align: left;
   padding: 12px;
   font-weight: 600;
