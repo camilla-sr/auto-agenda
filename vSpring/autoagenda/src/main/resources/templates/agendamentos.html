@@ -388,8 +388,8 @@
                 <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
               </tr>
               <tr th:each="ag : ${agendamentos}">
-                <td data-label="Cliente" class="ag-cliente">
-					<span th:text="${ag.cliente.nomeCliente}"></span>
+                <td data-label="Cliente" class="ag-cliente" th:attr="data-nome-completo=${ag.cliente.nomeCliente}">
+					<span th:text="${ag.cliente.nomeCliente != null ? #strings.arraySplit(ag.cliente.nomeCliente, ' ')[0] : ''}"></span>
 				</td>
                 <td data-label="Tipo de Serviço" class="ag-servico" th:attr="data-servico-id=${ag.servico.idServico}">
                   <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
@@ -1245,6 +1245,8 @@
 	            inputNome.value = row.querySelector('.ag-cliente span').textContent.trim();
 	            const cliObj = todosClientes.find(c => c.nomeCliente === inputNome.value);
 	            inputIdCli.value = cliObj ? cliObj.idCliente : "";
+				const nomeCompleto = row.querySelector('.ag-cliente').getAttribute('data-nome-completo');
+				inputNome.value = nomeCompleto;
 	            
 	            const veicDataId = this.getAttribute('data-veiculo-id');
 	            const veicDataNome = this.getAttribute('data-veiculo-nome');
@@ -1346,7 +1348,8 @@
                     const row = this.closest('tr');
                     const id = this.dataset.id;
                     
-                    document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
+					const nomeCompleto = row.querySelector('.ag-cliente').getAttribute('data-nome-completo');
+					document.getElementById('modal-cliente-agendamento').textContent = nomeCompleto;
                     document.getElementById('modal-cliente-email').textContent = this.getAttribute('data-cliente-email') || '-';
                     document.getElementById('modal-cliente-telefone').textContent = this.getAttribute('data-cliente-telefone') || '-';
                     document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
@@ -1443,15 +1446,17 @@
 		  
         const busca = document.getElementById('busca');
         const filtroSt = document.getElementById('filtro_status');
-        function filtrar() {
-            const t = busca.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            const s = filtroSt.value.toLowerCase();
-            document.querySelectorAll('tbody tr').forEach(row => {
-                const txt = row.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                const st = row.querySelector('.status-badge') ? row.querySelector('.status-badge').textContent.toLowerCase() : '';
-                row.style.display = (txt.includes(t) && (!s || st.includes(s))) ? '' : 'none';
-            });
-        }
+		function filtrar() {
+		    const t = busca.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		    const s = filtroSt.value.toLowerCase();
+		    
+		    document.querySelectorAll('tbody tr').forEach(row => {
+		        const nomeCompleto = row.querySelector('.ag-cliente') ? row.querySelector('.ag-cliente').getAttribute('data-nome-completo') : '';
+		        const txt = (row.textContent + ' ' + nomeCompleto).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		        const st = row.querySelector('.status-badge') ? row.querySelector('.status-badge').textContent.toLowerCase() : '';
+		        row.style.display = (txt.includes(t) && (!s || st.includes(s))) ? '' : 'none';
+		    });
+		}
         if(busca) busca.addEventListener('input', filtrar);
         if(filtroSt) filtroSt.addEventListener('change', filtrar);
 
