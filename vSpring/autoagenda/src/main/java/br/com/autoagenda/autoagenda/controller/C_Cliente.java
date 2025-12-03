@@ -1,6 +1,8 @@
 package br.com.autoagenda.autoagenda.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,14 +40,18 @@ public class C_Cliente {
     }
 
 	@PostMapping("/apagar")
-    public String apagarCliente(@RequestParam Integer idCliente) {
-        if(idCliente != null) { 
-            try {
-                repo.deleteById(idCliente); 
-            } catch (Exception e) {
-                return "redirect:/clientes?erro=true";
-            }
+	@ResponseBody
+    public ResponseEntity<?> apagarCliente(@RequestParam Integer idCliente) {
+        if(idCliente == null) { return ResponseEntity.badRequest().body("ID inválido"); }
+        try {
+            repo.deleteById(idCliente);
+            return ResponseEntity.ok().build(); 
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+            		.body("Não é possível excluir: O cliente possui agendamentos vinculados.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            		.body("Erro ao tentar excluir o cliente.");
         }
-        return "redirect:/clientes?sucesso=true";
     }
 }

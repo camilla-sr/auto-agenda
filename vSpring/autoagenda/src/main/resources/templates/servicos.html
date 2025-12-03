@@ -127,7 +127,7 @@
 	<script>
     document.addEventListener('DOMContentLoaded', function () {
         // ============================================================
-        // 1. MENU MOBILE (Hambúrguer)
+        // MENU MOBILE (Hambúrguer)
         // ============================================================
         const hamburgerMenu = document.getElementById('hamburger-menu');
         const navMenu = document.getElementById('nav-menu');
@@ -152,7 +152,7 @@
         }
 
         // ============================================================
-        // 2. CONTROLE DO FORMULÁRIO (Novo / Editar / Cancelar)
+        // CONTROLE DO FORMULÁRIO (Novo / Editar / Cancelar)
         // ============================================================
         const form = document.getElementById('form-servico');
         const formTitulo = document.getElementById('formTitulo');
@@ -203,7 +203,7 @@
         }
 
         // ============================================================
-        // 3. VALIDAÇÃO E CONTADORES
+        // VALIDAÇÃO E CONTADORES
         // ============================================================
         const botaoSalvar = form.querySelector('button[type="submit"]');
         const contadorNome = document.getElementById('nome-servico-counter');
@@ -265,7 +265,7 @@
         verificarCampos();
 
         // ============================================================
-        // 4. AÇÕES DA TABELA (Editar / Excluir / Busca)
+        // AÇÕES DA TABELA (Editar / Excluir / Busca)
         // ============================================================
         // Botão EDITAR
         document.querySelectorAll('.btn-edit').forEach(button => {
@@ -289,29 +289,48 @@
             });
         });
 
-        // Botão EXCLUIR (SweetAlert2)
-        document.querySelectorAll('.btn-delete').forEach(button => {
-            button.addEventListener('click', function (e) {
-                e.preventDefault();
-                const id = this.dataset.id;
-                
-                Swal.fire({
-                    title: 'Excluir serviço?',
-                    text: "Não será possível reverter essa ação!",
-                    icon: 'warning',
-                    showCancelButton: true,
-					confirmButtonColor: '#d33',
-					cancelButtonColor: '#6c757d',
-					confirmButtonText: 'Sim, excluir!',
-					cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('deleteId').value = id;
-                        document.getElementById('deleteForm').submit();
-                    }
-                });
-            });
-        });
+        // Botão EXCLUIR
+		document.querySelectorAll('.btn-delete').forEach(button => {
+		    button.addEventListener('click', function (e) {
+		        e.preventDefault();
+		        const id = this.dataset.id;
+		        
+		        Swal.fire({
+		            title: 'Excluir serviço?',
+		            text: "Não será possível reverter essa ação!",
+		            icon: 'warning',
+		            showCancelButton: true,
+		            confirmButtonColor: '#d33',
+		            cancelButtonColor: '#6c757d',
+		            confirmButtonText: 'Sim, excluir!',
+		            cancelButtonText: 'Cancelar'
+		        }).then((result) => {
+		            if (result.isConfirmed) {
+		                fetch('/servico-api/apagar', {
+		                    method: 'POST',
+		                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		                    body: `idServico=${id}`
+		                })
+		                .then(async r => {
+		                    if (r.ok) {
+		                        Swal.fire('Excluído!', 'Serviço removido.', 'success').then(() => location.reload());
+		                    } else if (r.status === 409) {
+		                        const msg = await r.text();
+		                        Swal.fire({
+		                            icon: 'warning',
+		                            title: 'Não é possível excluir',
+		                            text: msg,
+		                            confirmButtonColor: '#3085d6'
+		                        });
+		                    } else {
+		                        Swal.fire('Erro', 'Ocorreu um erro ao excluir.', 'error');
+		                    }
+		                })
+		                .catch(() => Swal.fire('Erro', 'Erro de conexão.', 'error'));
+		            }
+		        });
+		    });
+		});
 
         // BUSCA DINÂMICA (Filtro na tabela)
         const inputBusca = document.getElementById('busca');
