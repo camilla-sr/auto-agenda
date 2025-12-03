@@ -138,10 +138,16 @@ body {
   margin-right: 6px;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.nav-link:hover {
   background-color: var(--cor-primaria);
   color: var(--cor-secundaria);
+}
+
+.nav-link.active {
+  background-color: var(--cor-primaria-hover);
+  color: var(--cor-secundaria);
+  font-weight: 600;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Dropdown menu styles */
