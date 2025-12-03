@@ -86,6 +86,13 @@ public class Rotas {
     	model.addAttribute("funcionarios", repoFunc.findAll());
     	return verificaUsuario(session, "funcionarios");
     }
+    
+    @GetMapping("/clientes")
+    public String clientes(HttpSession session, Model model) {
+    	if(!s.verificaAcesso(session, "admin")) { return "acesso-negado"; }
+    	model.addAttribute("clientes", repoCl.findAll());
+    	return verificaUsuario(session, "clientes");
+    }
 	
     @GetMapping("/servicos")
     public String servicos(HttpSession session, Model model) {

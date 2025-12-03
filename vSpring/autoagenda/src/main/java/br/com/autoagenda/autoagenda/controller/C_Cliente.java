@@ -13,11 +13,11 @@ import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 
 @Controller
 @RequestMapping("/cliente-api")
-@ResponseBody
 public class C_Cliente {
 	@Autowired private ClienteRepository repo;
 
 	@PostMapping("/salvar")
+	@ResponseBody
     public ResponseEntity<Cliente> salvar(@RequestBody Cliente cl) {
 		Cliente clienteSalvo;
 		
@@ -37,9 +37,15 @@ public class C_Cliente {
 		return ResponseEntity.ok(clienteSalvo);
     }
 
-	@PostMapping("/apagarCliente")
+	@PostMapping("/apagar")
     public String apagarCliente(@RequestParam Integer idCliente) {
-		if(idCliente != null) { repo.deleteById(idCliente); }
-		return "redirect:/agendamentos?sucesso=true";
+        if(idCliente != null) { 
+            try {
+                repo.deleteById(idCliente); 
+            } catch (Exception e) {
+                return "redirect:/clientes?erro=true";
+            }
+        }
+        return "redirect:/clientes?sucesso=true";
     }
 }

@@ -37,6 +37,9 @@
 				<div class="nav-item">
 					<a href="/produtos" class="nav-link" th:classappend="${currentUri != null and currentUri.contains('/produtos') ? 'active' : ''}"><i class="fas fa-box-open"></i>Produtos</a>
 				</div>
+				<div class="nav-item">
+					<a href="/clientes" class="nav-link" th:classappend="${currentUri != null and currentUri.contains('/clientes') ? 'active' : ''}"><i class="fas fa-user"></i>Clientes</a>
+				</div>
 				<div class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 						<i class="fas fa-user"></i>Usuário

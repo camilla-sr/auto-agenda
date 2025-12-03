@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Centro Automotivo JJ</title>
+    
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="/css/main-styles.css"> 
+	<link rel="stylesheet" href="/css/modal-fix.css">
+	<link rel="stylesheet" href="/css/custom.css">
+	<link rel="stylesheet" href="/css/style1.css">
+	<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/jquery.mask.min.js"></script>
+	<script src="/js/sweetalert2.all.min.js"></script>
+	<style>
+        /* Cores Específicas */
+        .btn-veiculos { background-color: #0dcaf0; color: #fff; } /* Azul Ciano para Carros */
+        .btn-veiculos:hover { background-color: #0bb5d8; color: #fff; }
+
+        /* === ESTILOS DO MODAL === */
+        .table-input { 
+            border: 1px solid #ced4da; 
+            border-radius: 4px; 
+            padding: 4px 8px; 
+            width: 100%; 
+            font-size: 0.9rem;
+        }
+        .table-input:focus { border-color: #86b7fe; outline: 0; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
+        .table-input.is-invalid { border-color: #dc3545; }
+
+        /* Botões quadradinhos dentro do modal */
+        .btn-square-sm { 
+            width: 32px; 
+            height: 32px; 
+            padding: 0; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{barra :: barra}"></div>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <div class="page-header">
+                <h2><i class="fas fa-users"></i> Gerenciamento de Clientes</h2>
+                <p>Cadastre e gerencie seus clientes e veículos vinculados</p>
+            </div>
+
+			<div class="form-container" id="formClienteContainer" style="display: none;">
+	            <h3 id="formTitulo"><i class="fas fa-user-plus"></i> Novo Cliente</h3>
+	            
+	            <form id="formCliente">
+	                <input type="hidden" name="idCliente" id="idCliente">
+	                
+	                <div class="form-row">
+	                    <div class="form-col">
+	                        <div class="form-group">
+	                            <label for="nome" class="required">Nome Completo</label>
+	                            <div class="input-wrapper">
+	                                <i class="fas fa-user input-icon"></i>
+	                                <input type="text" id="nome" name="nomeCliente" placeholder="Nome e Sobrenome" required>
+	                                <div class="invalid-feedback">Digite nome e sobrenome.</div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    
+	                    <div class="form-col">
+	                        <div class="form-group">
+	                            <label for="telefone" class="required">Telefone / Celular</label>
+	                            <div class="input-wrapper">
+	                                <i class="fas fa-phone input-icon"></i>
+	                                <input type="tel" id="telefone" name="telefone" class="phone-mask" placeholder="(00) 00000-0000" required>
+	                                <div class="invalid-feedback">Telefone inválido (mínimo 10 dígitos).</div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	
+	                <div class="form-row">
+	                    <div class="form-col">
+	                        <div class="form-group">
+	                            <label for="email">E-mail</label>
+	                            <div class="input-wrapper">
+	                                <i class="fas fa-envelope input-icon"></i>
+	                                <input type="email" id="email" name="email" placeholder="cliente@email.com">
+	                                <div class="invalid-feedback">E-mail inválido.</div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	
+	                <div class="form-actions mt-4">
+	                    <button type="button" class="btn btn-secondary" id="btn-cancelar">
+	                        <i class="fas fa-times"></i> Cancelar
+	                    </button>
+	                    <button type="submit" class="btn btn-primary" id="btn-salvar" disabled>
+	                        <i class="fas fa-save"></i> Salvar Cliente
+	                    </button>
+	                </div>
+	            </form>
+	        </div>
+	
+	        <div class="modal fade" id="modalGerenciarVeiculos" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+	            <div class="modal-dialog modal-lg modal-dialog-centered">
+	                <div class="modal-content">
+	                    
+	                    <div class="modal-header bg-light">
+	                        <div>
+	                            <h5 class="modal-title mb-0"><i class="fas fa-car"></i> Veículos</h5>
+	                            <small class="text-muted" id="lbl-nome-cliente-modal">Carregando...</small>
+	                        </div>
+	                        
+	                        <button type="button" class="btn btn-warning btn-sm ms-auto fw-bold shadow-sm" id="btn-add-linha-veiculo">
+	                            <i class="fas fa-plus"></i> Novo Veículo
+	                        </button>
+	                    </div>
+	
+	                    <div class="modal-body p-0">
+	                        <input type="hidden" id="id-cliente-modal-veiculos">
+	                        
+	                        <div class="table-responsive">
+	                            <table class="table table-hover table-striped mb-0 align-middle p-5" id="tabela-gestao-veiculos">
+	                                <thead class="border-bottom">
+	                                    <tr>
+	                                        <th style="width: 35%">Modelo</th>
+	                                        <th style="width: 25%">Placa</th>
+	                                        <th style="width: 25%">Marca</th>
+	                                        <th style="width: 15%" class="text-center">Ações</th>
+	                                    </tr>
+	                                </thead>
+	                                <tbody id="tbody-veiculos-rapido">
+	                                    </tbody>
+	                            </table>
+	                        </div>
+	                        
+	                        <div id="msg-sem-veiculos-modal" class="text-center text-muted p-4" style="display: none;">
+	                            <i class="fas fa-car fa-2x mb-2 text-secondary opacity-25"></i><br>
+	                            Nenhum veículo vinculado.
+	                        </div>
+	                    </div>
+	
+	                    <div class="modal-footer bg-light py-2">
+	                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+	                    </div>
+	
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="table-container">
+	            <div class="table-header">
+	                <h3><i class="fas fa-list"></i> Lista de Clientes</h3>
+	                <button class="btn btn-primary" id="btn-novo"><i class="fas fa-plus"></i> Novo Cliente</button>
+	            </div>
+	
+	            <div class="table-actions">
+	                <div class="form-group">
+	                    <label for="busca">Buscar Cliente</label>
+	                    <input type="text" id="busca" placeholder="Busque por nome, telefone ou email...">
+	                </div>
+	            </div>
+	
+	            <table class="table clientes-table">
+	                <thead>
+	                    <tr>
+	                        <th>Nome</th>
+	                        <th>Telefone</th>
+	                        <th>Email</th>
+	                        <th class="text-center">Ações</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr th:if="${clientes == null or clientes.empty}">
+	                        <td colspan="4" class="text-center">Nenhum cliente cadastrado.</td>
+	                    </tr>
+	                    <tr th:each="c : ${clientes}">
+	                        <td class="nome-cliente" th:text="${c.nomeCliente}" data-label="Nome"></td>
+	                        <td class="telefone-cliente" th:text="${c.telefone}" data-label="Telefone"></td>
+	                        <td class="email-cliente" th:text="${c.email}" data-label="Email"></td>
+	                        
+	                        <td class="action-buttons text-center">
+	                            <button class="btn-icon btn-veiculos" th:attr="data-id=${c.idCliente}, data-nome=${c.nomeCliente}" title="Gerenciar Veículos">
+	                                <i class="fas fa-car"></i>
+	                            </button>
+	                            
+	                            <button class="btn-icon btn-edit" th:attr="data-id=${c.idCliente}" title="Editar">
+	                                <i class="fas fa-pen"></i>
+	                            </button>
+	                            
+	                            <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}" 
+	                                    class="btn-icon btn-delete" th:attr="data-id=${c.idCliente}" title="Excluir">
+	                                <i class="fas fa-trash"></i>
+	                            </button>
+	                       </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </div>
+	    </div>
+	</main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-car-alt"></i>
+                    <span class="logo-highlight">Centro Automotivo </span> JJ
+                </div>
+                <p>&copy; 2025 Centro Automotivo JJ. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+	        // ================= LÓGICA DE CLIENTES (Mantida igual) =================
+	        const formContainer = document.getElementById('formClienteContainer');
+	        const formTitulo = document.getElementById('formTitulo');
+	        const btnNovo = document.getElementById('btn-novo');
+	        const btnCancelar = document.getElementById('btn-cancelar');
+	        const btnSalvar = document.getElementById('btn-salvar');
+	        const inputId = document.getElementById('idCliente');
+	        const inputNome = document.getElementById('nome');
+	        const inputTel = document.getElementById('telefone');
+	        const inputEmail = document.getElementById('email');
+	
+	        var behavior = function (val) { return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009'; },
+	        options = { onKeyPress: function (val, e, field, options) { field.mask(behavior.apply({}, arguments), options); } };
+	        $('.phone-mask').mask(behavior, options);
+	
+	        function validarInput(input, isValid) {
+	            if (isValid) { input.classList.remove('is-invalid'); input.classList.add('is-valid'); } 
+	            else {
+	                if (input.value.trim() === "" && !input.hasAttribute('required')) { input.classList.remove('is-invalid', 'is-valid'); } 
+	                else { input.classList.remove('is-valid'); input.classList.add('is-invalid'); }
+	            }
+	            return isValid;
+	        }
+	
+	        function verificarCampos() {
+	            const nomeValido = inputNome.value.trim().split(' ').filter(p => p.length > 0).length >= 2;
+	            const telRaw = inputTel.value.replace(/\D/g, "");
+	            const telValido = telRaw.length >= 10; 
+	            const emailRaw = inputEmail.value.trim();
+	            const emailValido = emailRaw === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw);
+	            btnSalvar.disabled = !(nomeValido && telValido && emailValido);
+	        }
+	
+	        inputNome.addEventListener('input', function() { validarInput(this, this.value.trim().split(' ').length >= 2); verificarCampos(); });
+	        inputTel.addEventListener('input', function() { validarInput(this, this.value.replace(/\D/g, "").length >= 10); verificarCampos(); });
+	        inputEmail.addEventListener('input', function() { 
+	            const v = this.value.trim(); 
+	            if(v==="") this.classList.remove('is-valid','is-invalid'); 
+	            else validarInput(this, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)); 
+	            verificarCampos(); 
+	        });
+	
+	        btnSalvar.addEventListener('click', function(e) {
+	            e.preventDefault();
+	            const dto = {
+	                idCliente: inputId.value || null,
+	                nomeCliente: inputNome.value.trim(),
+	                telefone: inputTel.value.trim(),
+	                email: inputEmail.value.trim()
+	            };
+	            fetch('/cliente-api/salvar', {
+	                method: 'POST',
+	                headers: { 'Content-Type': 'application/json' },
+	                body: JSON.stringify(dto)
+	            }).then(r => r.ok ? r.json() : Promise.reject())
+	            .then(() => { Swal.fire('Salvo!', 'Dados do cliente atualizados.', 'success').then(() => location.reload()); })
+	            .catch(() => Swal.fire('Erro', 'Falha ao salvar.', 'error'));
+	        });
+	
+	        btnNovo.addEventListener('click', () => {
+	            inputId.value = "";
+	            document.getElementById('formCliente').reset();
+	            [inputNome, inputTel, inputEmail].forEach(el => el.classList.remove('is-valid', 'is-invalid'));
+	            formTitulo.innerHTML = '<i class="fas fa-user-plus"></i> Novo Cliente';
+	            formContainer.style.display = 'block';
+	            window.scrollTo({ top: 0, behavior: 'smooth' });
+	            verificarCampos();
+	        });
+	
+	        btnCancelar.addEventListener('click', () => {
+	            formContainer.style.display = 'none';
+	            document.getElementById('formCliente').reset();
+	        });
+	
+	        document.querySelectorAll('.btn-edit').forEach(btn => {
+	            btn.addEventListener('click', function() {
+	                const row = this.closest('tr');
+	                formTitulo.innerHTML = '<i class="fas fa-user-edit"></i> Editar Cliente';
+	                inputId.value = this.dataset.id;
+	                inputNome.value = row.querySelector('.nome-cliente').textContent.trim();
+	                inputTel.value = row.querySelector('.telefone-cliente').textContent.trim();
+	                inputEmail.value = row.querySelector('.email-cliente').textContent.trim();
+	                $(inputTel).trigger('input');
+	                [inputNome, inputTel, inputEmail].forEach(el => el.classList.remove('is-valid', 'is-invalid'));
+	                formContainer.style.display = 'block';
+	                window.scrollTo({ top: 0, behavior: 'smooth' });
+	                verificarCampos();
+	            });
+	        });
+	
+	        // ================= LÓGICA DE VEÍCULOS =================
+			const modalVeiculosEl = document.getElementById('modalGerenciarVeiculos');
+			const modalVeiculos = new bootstrap.Modal(modalVeiculosEl);
+			const tbodyVeiculos = document.getElementById('tbody-veiculos-rapido');
+			const idClienteModal = document.getElementById('id-cliente-modal-veiculos');
+			const btnAddLinha = document.getElementById('btn-add-linha-veiculo');
+
+			document.querySelectorAll('.btn-veiculos').forEach(btn => {
+			    btn.addEventListener('click', function() {
+			        const id = this.dataset.id;
+			        const nome = this.dataset.nome;
+			        
+			        document.getElementById('lbl-nome-cliente-modal').textContent = nome;
+			        idClienteModal.value = id;
+			        
+			        carregarVeiculosNoModal(id);
+			        modalVeiculos.show();
+			    });
+			});
+
+			// 2. Carregar Dados
+			function carregarVeiculosNoModal(idCli) {
+			    tbodyVeiculos.innerHTML = '<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin text-warning"></i> Carregando...</td></tr>';
+			    document.getElementById('msg-sem-veiculos-modal').style.display = 'none';
+
+			    fetch(`/veiculo-api/listar-por-cliente/${idCli}`)
+			    .then(r => r.ok ? r.json() : [])
+			    .then(veiculos => {
+			        tbodyVeiculos.innerHTML = "";
+			        if(veiculos.length === 0) {
+			            document.getElementById('msg-sem-veiculos-modal').style.display = 'block';
+			        } else {
+			            veiculos.forEach(v => criarLinhaVeiculo(v));
+			        }
+			    })
+			    .catch(() => tbodyVeiculos.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Erro ao carregar.</td></tr>');
+			}
+
+			//Criar Linha (Modo Leitura)
+			function criarLinhaVeiculo(v) {
+			    const tr = document.createElement('tr');
+			    tr.dataset.original = JSON.stringify(v);
+			    
+			    tr.innerHTML = `
+			        <td style="padding-left: 20px;">${v.modelo}</td>
+			        <td><span class="badge bg-light text-dark border" style="font-size: 0.9em">${v.placa}</span></td>
+			        <td>${v.marca || '-'}</td>
+			        <td class="text-center">
+			            <button class="btn-action-custom btn-edit me-1" title="Editar">
+			                <i class="fas fa-pen"></i>
+			            </button>
+			            <button class="btn-action-custom btn-delete" title="Excluir">
+			                <i class="fas fa-trash"></i>
+			            </button>
+			        </td>
+			    `;
+			    tbodyVeiculos.appendChild(tr);
+
+			    // Evento Editar
+			    tr.querySelector('.btn-edit').addEventListener('click', () => ativarEdicao(tr, v));
+
+			    // Evento Excluir
+			    tr.querySelector('.btn-delete').addEventListener('click', () => {
+			        Swal.fire({
+			            title: 'Remover veículo?',
+			            text: "Esta ação não pode ser desfeita.",
+			            icon: 'warning',
+			            showCancelButton: true,
+			            confirmButtonColor: '#F44336',
+			            cancelButtonColor: '#6c757d',
+			            confirmButtonText: 'Sim, remover'
+			        }).then((result) => {
+			            if (result.isConfirmed) {
+			                fetch('/veiculo-api/apagar', {
+			                    method: 'POST',
+			                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			                    body: `idVeiculo=${v.idVeiculo}`
+			                }).then(r => {
+			                    if(r.ok) carregarVeiculosNoModal(idClienteModal.value);
+			                    else Swal.fire('Erro', 'Não foi possível remover.', 'error');
+			                });
+			            }
+			        });
+			    });
+			}
+
+			// Ativar Modo Edição (Transforma texto em Inputs)
+			function ativarEdicao(tr, dados) {
+			    tr.innerHTML = `
+			        <td style="padding-left: 20px;">
+			            <input type="text" class="table-input inp-modelo" value="${dados.modelo}" placeholder="Modelo">
+			        </td>
+			        <td>
+			            <input type="text" class="table-input inp-placa" value="${dados.placa}" maxlength="7" placeholder="Placa">
+			        </td>
+			        <td>
+			            <input type="text" class="table-input inp-marca" value="${dados.marca || ''}" placeholder="Marca">
+			        </td>
+			        <td class="text-center">
+			            <button class="btn-action-custom btn-success btn-save-row me-1" title="Salvar">
+			                <i class="fas fa-check"></i>
+			            </button>
+			            <button class="btn-action-custom btn-secondary btn-cancel-row" title="Cancelar">
+			                <i class="fas fa-times"></i>
+			            </button>
+			        </td>
+			    `;
+
+			    const inpPlaca = tr.querySelector('.inp-placa');
+			    
+			    // Máscara/Validação de Placa Uppercase
+			    inpPlaca.addEventListener('input', function() {
+			        this.value = this.value.toUpperCase().replace(/\s/g, '').replace(/[^A-Z0-9]/g, '');
+			    });
+
+			    // Salvar
+			    tr.querySelector('.btn-save-row').addEventListener('click', () => {
+			        salvarVeiculo(tr, dados.idVeiculo);
+			    });
+
+			    // Cancelar (Restaura o HTML original)
+			    tr.querySelector('.btn-cancel-row').addEventListener('click', () => {
+			        if(!dados.idVeiculo) {
+			            tr.remove();
+			            if(tbodyVeiculos.children.length === 0) document.getElementById('msg-sem-veiculos-modal').style.display = 'block';
+			        } else {
+			            carregarVeiculosNoModal(idClienteModal.value); 
+			        }
+			    });
+			}
+
+			// Botão "Novo Veículo" (Cria uma linha vazia já em edição)
+			btnAddLinha.addEventListener('click', function() {
+			    document.getElementById('msg-sem-veiculos-modal').style.display = 'none';
+			    const tr = document.createElement('tr');
+			    tr.className = "bg-light";
+			    
+			    tbodyVeiculos.prepend(tr);
+			    
+			    // Chama a função de edição passando um objeto vazio (id null)
+			    ativarEdicao(tr, { idVeiculo: null, modelo: '', placa: '', marca: '' });
+			    
+			    // Foca no primeiro campo
+			    setTimeout(() => tr.querySelector('.inp-modelo').focus(), 50);
+			});
+
+			// Função Unificada de Salvar
+			function salvarVeiculo(tr, idVeiculo) {
+			    const modelo = tr.querySelector('.inp-modelo').value.trim();
+			    const placa = tr.querySelector('.inp-placa').value.trim();
+			    const marca = tr.querySelector('.inp-marca').value.trim();
+			    const btnSave = tr.querySelector('.btn-save-row');
+			    
+			    // Validação Simples
+			    let valido = true;
+			    if(!modelo) { tr.querySelector('.inp-modelo').classList.add('is-invalid'); valido = false; }
+			    if(placa.length !== 7) { tr.querySelector('.inp-placa').classList.add('is-invalid'); valido = false; }
+			    if(!marca) { tr.querySelector('.inp-marca').classList.add('is-invalid'); valido = false; }
+
+			    if(!valido) return;
+
+			    const veiculoDTO = {
+			        idVeiculo: idVeiculo,
+			        cliente: { idCliente: idClienteModal.value },
+			        modelo: modelo,
+			        placa: placa,
+			        marca: marca
+			    };
+
+			    // UI Feedback
+			    btnSave.disabled = true;
+			    btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+			    fetch('/veiculo-api/salvar', {
+			        method: 'POST',
+			        headers: {'Content-Type': 'application/json'},
+			        body: JSON.stringify(veiculoDTO)
+			    }).then(r => {
+			        if(r.ok) {
+			            carregarVeiculosNoModal(idClienteModal.value);
+			            const Toast = Swal.mixin({toast: true, position: 'top-end', showConfirmButton: false, timer: 3000});
+			            Toast.fire({icon: 'success', title: 'Veículo salvo com sucesso!'});
+			        } else {
+			            Swal.fire('Erro', 'Erro ao salvar. Verifique se a placa já existe.', 'error');
+			            btnSave.disabled = false;
+			            btnSave.innerHTML = '<i class="fas fa-check"></i>';
+			        }
+			    }).catch(err => {
+			        console.error(err);
+			        Swal.fire('Erro', 'Erro de conexão.', 'error');
+			        btnSave.disabled = false;
+			    });
+			}
+	
+	        const inputBusca = document.getElementById('busca');
+	        const linhas = document.querySelectorAll('.clientes-table tbody tr');
+	        inputBusca.addEventListener('input', function() {
+	            const termo = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+	            linhas.forEach(row => {
+	                if(row.cells.length === 1) return; 
+	                const texto = row.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+	                row.style.display = texto.includes(termo) ? '' : 'none';
+	            });
+	        });
+	        
+	        const ham = document.getElementById('hamburger-menu');
+	        const nav = document.getElementById('nav-menu');
+	        if(ham && nav) ham.addEventListener('click', () => { nav.classList.toggle('active'); ham.classList.toggle('active'); });
+	    });
+	</script>
+</body>
+</html>
