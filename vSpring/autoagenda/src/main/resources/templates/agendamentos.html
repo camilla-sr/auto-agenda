@@ -485,9 +485,9 @@
 	                  <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
 	                </p>
                 </div>
-                <div class="col-md-4 text-md-end">
-                  <h5>Previsão</h5>
-                  <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
+				<div class="col-md-4 text-md-end">
+                  <h5 id="titulo-data-modal">Previsão</h5>
+				  <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
                 </div>
 				<div class="mt-3">
 				    <h6><i class="fas fa-camera me-2"></i>Fotos do Serviço</h6>
@@ -506,11 +506,9 @@
               <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
               <p id="modal-observacao" style="white-space: pre-wrap;"></p>
               <hr>
-			  <div class="d-flex justify-content-around align-items-center">
-				<p class="mb-0"><strong>Status:</strong> <span id="modal-status"></span></p>
-				<div class="vr text-muted mx-2" style="height: 20px;"></div> 
-				<p class="mb-0"><strong>Conclusão:</strong> <span id="modal-conclusao"></span></p>
-			 </div>
+			  <div class="d-flex align-items-center">
+  				<p class="mb-0" style="font-size: 1.1rem;"><strong>Status: </strong><span id="modal-status"></span></p>
+  			 </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -1087,112 +1085,129 @@
   		      });
   		  }
 
-		// ============================================================
-        // VISUALIZAR IMAGENS (CORREÇÃO DAS SETAS/CARROSSEL)
-        // ============================================================
-        const modalVisEl = document.getElementById('visualizarAgendamentoModal');
-        if (modalVisEl) {
-            const modalVis = new bootstrap.Modal(modalVisEl);
-            const track = document.getElementById('galeria-visualizacao');
-            const btnPrev = document.getElementById('btn-galeria-prev');
-            const btnNext = document.getElementById('btn-galeria-next');
-            const scrollAmount = 300; 
+		  // ============================================================
+          // VISUALIZAR IMAGENS (CARROSSEL + DATAS + DADOS CLIENTE)
+          // ============================================================
+          const modalVisEl = document.getElementById('visualizarAgendamentoModal');
+          
+          if (modalVisEl) {
+              const modalVis = new bootstrap.Modal(modalVisEl);
+              const track = document.getElementById('galeria-visualizacao');
+              const btnPrev = document.getElementById('btn-galeria-prev');
+              const btnNext = document.getElementById('btn-galeria-next');
+              const scrollAmount = 300; 
+			  
+              function atualizarBotoes() {
+                  if(!track) return;
+                  const precisaRolagem = track.scrollWidth > track.clientWidth;
+                  if (!precisaRolagem) {
+                      btnPrev.classList.remove('visible');
+                      btnNext.classList.remove('visible');
+                      return;
+                  }
 
-            function atualizarBotoes() {
-                if(!track) return;
-                const precisaRolagem = track.scrollWidth > track.clientWidth;
+                  if (track.scrollLeft > 5) btnPrev.classList.add('visible');
+                  else btnPrev.classList.remove('visible');
 
-                if (!precisaRolagem) {
-                    btnPrev.classList.remove('visible');
-                    btnNext.classList.remove('visible');
-                    return;
-                }
+                  if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) {
+                      btnNext.classList.remove('visible');
+                  } else {
+                      btnNext.classList.add('visible');
+                  }
+              }
 
-                if (track.scrollLeft > 5) btnPrev.classList.add('visible');
-                else btnPrev.classList.remove('visible');
+              if(btnPrev && btnNext && track) {
+                  btnPrev.addEventListener('click', () => {
+                      track.scrollLeft -= scrollAmount;
+                      setTimeout(atualizarBotoes, 350); 
+                  });
+                  btnNext.addEventListener('click', () => {
+                      track.scrollLeft += scrollAmount;
+                      setTimeout(atualizarBotoes, 350);
+                  });
+                  track.addEventListener('scroll', atualizarBotoes);
+              }
+              
+              modalVisEl.addEventListener('shown.bs.modal', atualizarBotoes);
 
-                if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) {
-                    btnNext.classList.remove('visible');
-                } else {
-                    btnNext.classList.add('visible');
-                }
-            }
+              // ==========================================
+              // EVENTO DE CLIQUE NO BOTÃO "VISUALIZAR"
+              // ==========================================
+              document.querySelectorAll('.btn-view').forEach(btn => {
+                  btn.addEventListener('click', function () {
+                      const row = this.closest('tr');
+                      const idAgendamento = this.dataset.id;
+                      const infoVeiculo = this.getAttribute('data-veiculo-info') || '-';
+                      const email = this.getAttribute('data-cliente-email') || '-';
+                      const telefone = this.getAttribute('data-cliente-telefone') || '-';
 
-            if(btnPrev && btnNext && track) {
-                btnPrev.addEventListener('click', () => {
-                    track.scrollLeft -= scrollAmount;
-                    setTimeout(atualizarBotoes, 350); 
-                });
-                btnNext.addEventListener('click', () => {
-                    track.scrollLeft += scrollAmount;
-                    setTimeout(atualizarBotoes, 350);
-                });
-                track.addEventListener('scroll', atualizarBotoes);
-            }
-            modalVisEl.addEventListener('shown.bs.modal', atualizarBotoes);
+                      const statusTexto = row.querySelector('.ag-status span').textContent.trim();
+                      const dataPrevisao = row.querySelector('.ag-previsao').textContent.trim();
+                      const dataConclusao = row.querySelector('.ag-conclusao').textContent.trim();
 
-            // Evento de Clique no Botão "Visualizar"
-            document.querySelectorAll('.btn-view').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const row = this.closest('tr');
-                    const idAgendamento = this.dataset.id;
-                    const infoVeiculo = this.getAttribute('data-veiculo-info') || '-';
-                    const email = this.getAttribute('data-cliente-email') || '-';
-                    const telefone = this.getAttribute('data-cliente-telefone') || '-';
+                      document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
+                      document.getElementById('modal-cliente-email').textContent = email;
+                      document.getElementById('modal-cliente-telefone').textContent = telefone;
+                      document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
+                      document.getElementById('modal-veiculo-agendamento').textContent = infoVeiculo;
+                      document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
+                      document.getElementById('modal-status').textContent = statusTexto;
 
-                    document.getElementById('modal-cliente-agendamento').textContent = row.querySelector('.ag-cliente').textContent.trim();
-                    document.getElementById('modal-cliente-email').textContent = email;
-                    document.getElementById('modal-cliente-telefone').textContent = telefone;
-                    document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
-                    document.getElementById('modal-veiculo-agendamento').textContent = infoVeiculo;
-                    document.getElementById('modal-previsao-agendamento').textContent = row.querySelector('.ag-previsao').textContent.trim();
-                    document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
-                    document.getElementById('modal-status').textContent = row.querySelector('.ag-status span').textContent.trim();
-                    document.getElementById('modal-conclusao').textContent = row.querySelector('.ag-conclusao').textContent.trim();
+                      const tituloData = document.getElementById('titulo-data-modal');
+                      const valorData = document.getElementById('modal-previsao-agendamento');
+                      const statusNormalizado = statusTexto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-                    track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Carregando...</p>';
-                    btnPrev.classList.remove('visible');
-                    btnNext.classList.remove('visible');
-                    track.scrollLeft = 0;
+                      if (statusNormalizado === 'concluido' && dataConclusao !== '-' && dataConclusao !== '') {
+                          tituloData.textContent = 'Conclusão';
+                          valorData.textContent = dataConclusao;
+                      } else {
+                          tituloData.textContent = 'Previsão';
+                          valorData.textContent = dataPrevisao;
+                      }
 
-                    fetch(`/fotos-api/listar/${idAgendamento}`)
-                    .then(r => r.status === 204 ? [] : r.json())
-                    .then(fotos => {
-                        track.innerHTML = "";
-                        
-                        if(!fotos || fotos.length === 0) {
-                            track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Nenhuma foto anexada.</p>';
-                            atualizarBotoes();
-                            return;
-                        }
+                      track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Carregando...</p>';
+                      btnPrev.classList.remove('visible');
+                      btnNext.classList.remove('visible');
+                      track.scrollLeft = 0;
 
-                        fotos.forEach(f => {
-                            const div = document.createElement('div');
-                            div.className = 'gallery-item';
-                            
-                            const img = document.createElement('img');
-                            img.src = `/fotos-api/imagem/${f.id}`;
-                            img.alt = "Foto";
-                            img.title = "Clique para ampliar";
-                            img.onload = () => atualizarBotoes();
-                            div.onclick = () => window.open(img.src, '_blank');
-                            div.appendChild(img);
-                            track.appendChild(div);
-                        });
+                      fetch(`/fotos-api/listar/${idAgendamento}`)
+                      .then(r => r.status === 204 ? [] : r.json())
+                      .then(fotos => {
+                          track.innerHTML = "";
+                          
+                          if(!fotos || fotos.length === 0) {
+                              track.innerHTML = '<p class="text-muted small w-100 text-center py-4">Nenhuma foto anexada.</p>';
+                              atualizarBotoes();
+                              return;
+                          }
 
-                        atualizarBotoes(); 
-                        setTimeout(atualizarBotoes, 500);
-                    })
-                    .catch(e => {
-                        console.error(e);
-                        track.innerHTML = '<p class="text-danger small w-100 text-center">Erro ao carregar imagens.</p>';
-                    });
+                          fotos.forEach(f => {
+                              const div = document.createElement('div');
+                              div.className = 'gallery-item';
+                              
+                              const img = document.createElement('img');
+                              img.src = `/fotos-api/imagem/${f.id}`;
+                              img.alt = "Foto";
+                              img.title = "Clique para ampliar";
+                              
+                              img.onload = () => atualizarBotoes();
+                              div.onclick = () => window.open(img.src, '_blank');
+                              
+                              div.appendChild(img);
+                              track.appendChild(div);
+                          });
 
-                    modalVis.show();
-                });
-            });
-        }
-
+                          atualizarBotoes(); 
+                          setTimeout(atualizarBotoes, 500);
+                      })
+                      .catch(e => {
+                          console.error(e);
+                          track.innerHTML = '<p class="text-danger small w-100 text-center">Erro ao carregar imagens.</p>';
+                      });
+                      modalVis.show();
+                  });
+              });
+          }
           // ============================================================
           // UTILITÁRIOS (Status, Filtros, Delete, Modais Rápidos)
           // ============================================================
