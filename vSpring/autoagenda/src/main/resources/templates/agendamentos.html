@@ -17,6 +17,100 @@
     .status-badge {
       text-transform: capitalize;
     }
+    
+    /* ===== ESTILOS DEFINITIVOS PARA BOTÕES - PRIORIDADE MÁXIMA ===== */
+    
+    /* Botões de adicionar cliente/veículo - quadrados com cantos arredondados */
+    .form-group .d-flex .btn-outline-primary,
+    #agendamento-form .btn-outline-primary,
+    button.btn-outline-primary[data-bs-toggle="modal"] {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+      max-width: 36px !important;
+      padding: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 8px !important; /* Quadrado com cantos arredondados */
+      flex-shrink: 0 !important;
+      font-size: 0.85rem !important;
+      border: 2px solid #FFD700 !important; /* Borda amarela */
+      color: #FFD700 !important; /* Ícone amarelo */
+      background-color: rgba(255, 215, 0, 0.1) !important; /* Fundo levemente amarelo */
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+      margin-top: 2px !important;
+      outline: none !important;
+    }
+    
+    .form-group .d-flex .btn-outline-primary:hover {
+      background-color: #FFD700 !important; /* Fundo amarelo sólido */
+      color: #000000 !important; /* Ícone preto */
+      transform: translateY(-2px) scale(1.05) !important;
+      box-shadow: 0 6px 12px rgba(255, 215, 0, 0.4) !important;
+      border-color: #E6C200 !important;
+    }
+    
+    .form-group .d-flex .btn-outline-primary:active {
+      transform: translateY(0) scale(0.98) !important;
+      box-shadow: 0 2px 4px rgba(255, 215, 0, 0.2) !important;
+    }
+    
+    .form-group .d-flex .btn-outline-primary:disabled {
+      opacity: 0.4 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+      box-shadow: none !important;
+      border-color: #cccccc !important;
+      color: #cccccc !important;
+      background-color: transparent !important;
+    }
+    
+    .form-group .d-flex .btn-outline-primary i {
+      margin: 0 !important;
+      font-size: 0.8rem !important;
+      font-weight: 600 !important;
+    }
+    
+    /* RESPONSIVIDADE DEFINITIVA */
+    @media (max-width: 768px) {
+      /* Botão QR Code abaixo apenas no mobile */
+      #agendamento-form .d-flex.gap-2 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+      }
+      
+      #agendamento-form .d-flex.gap-2 > .input-wrapper.flex-grow-1 {
+        width: 100% !important;
+        flex: none !important;
+      }
+      
+      #agendamento-form .d-flex.gap-2 > button#btn-abrir-qrcode,
+      #agendamento-form .d-flex.gap-2 > .btn-outline-dark {
+        width: 100% !important;
+        margin-top: 10px !important;
+        padding: 12px !important;
+        border-radius: 8px !important;
+      }
+      
+      /* Botões de + maiores no mobile */
+      .form-group .d-flex .btn-outline-primary,
+      #agendamento-form .btn-outline-primary,
+      button.btn-outline-primary[data-bs-toggle="modal"] {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+      }
+      
+      .form-group .d-flex .btn-outline-primary i {
+        font-size: 0.85rem !important;
+      }
+    }
   </style>
 
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
