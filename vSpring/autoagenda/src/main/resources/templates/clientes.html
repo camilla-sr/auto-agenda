@@ -209,7 +209,9 @@
 	                        <td colspan="4" class="text-center">Nenhum cliente cadastrado.</td>
 	                    </tr>
 	                    <tr th:each="c : ${clientes}">
-	                        <td class="nome-cliente" th:text="${c.nomeCliente}" data-label="Nome"></td>
+	                        <td class="nome-cliente" th:attr="data-nome-completo=${c.nomeCliente}">
+								<span th:text="${c.nomeCliente != null ? #strings.arraySplit(c.nomeCliente, ' ')[0] : ''}"
+							 data-label="Nome"></td>
 	                        <td class="telefone-cliente" th:text="${c.telefone}" data-label="Telefone"></td>
 	                        <td class="email-cliente" th:text="${c.email}" data-label="Email"></td>
 	                        
@@ -328,7 +330,7 @@
 	                const row = this.closest('tr');
 	                formTitulo.innerHTML = '<i class="fas fa-user-edit"></i> Editar Cliente';
 	                inputId.value = this.dataset.id;
-	                inputNome.value = row.querySelector('.nome-cliente').textContent.trim();
+	                inputNome.value = row.querySelector('.nome-cliente').getAttribute('data-nome-completo');
 	                inputTel.value = row.querySelector('.telefone-cliente').textContent.trim();
 	                inputEmail.value = row.querySelector('.email-cliente').textContent.trim();
 	                $(inputTel).trigger('input');
@@ -573,12 +575,14 @@
 			}
 	
 	        const inputBusca = document.getElementById('busca');
-	        const linhas = document.querySelectorAll('.clientes-table tbody tr');
+	        const linhas = document.querySelectorAll('.appointments-table tbody tr');
+			
 	        inputBusca.addEventListener('input', function() {
 	            const termo = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 	            linhas.forEach(row => {
-	                if(row.cells.length === 1) return; 
-	                const texto = row.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+	                if(row.cells.length === 1) return;
+					const nomeCompleto = row.querySelector('.nome-cliente') ? row.querySelector('.nome-cliente').getAttribute('data-nome-completo') : '';
+	                const texto = (row.textContent + ' ' + nomeCompleto).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 	                row.style.display = texto.includes(termo) ? '' : 'none';
 	            });
 	        });
