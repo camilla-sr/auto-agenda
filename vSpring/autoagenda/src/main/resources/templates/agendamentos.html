@@ -35,9 +35,9 @@
       border-radius: 8px !important; /* Quadrado com cantos arredondados */
       flex-shrink: 0 !important;
       font-size: 0.85rem !important;
-      border: 2px solid #FFD700 !important; /* Borda amarela */
-      color: #FFD700 !important; /* Ícone amarelo */
-      background-color: rgba(255, 215, 0, 0.1) !important; /* Fundo levemente amarelo */
+      border: 2px solid var(--cor-primaria) !important; /* Borda amarela padrão */
+      color: black !important; /* Ícone amarelo padrão */
+      background-color: var(--cor-primaria) !important; /* Fundo levemente amarelo */
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
       margin-top: 2px !important;
@@ -45,11 +45,11 @@
     }
     
     .form-group .d-flex .btn-outline-primary:hover {
-      background-color: #FFD700 !important; /* Fundo amarelo sólido */
-      color: #000000 !important; /* Ícone preto */
+      background-color: var(--cor-primaria) !important; /* Fundo amarelo padrão sólido */
+      color: var(--cor-secundaria) !important; /* Ícone preto */
       transform: translateY(-2px) scale(1.05) !important;
       box-shadow: 0 6px 12px rgba(255, 215, 0, 0.4) !important;
-      border-color: #E6C200 !important;
+      border-color: var(--cor-primaria-hover) !important;
     }
     
     .form-group .d-flex .btn-outline-primary:active {
