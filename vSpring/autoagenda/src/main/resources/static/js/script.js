@@ -1,4 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+// CONTADOR DE CARACTERES
+
+const obsTextarea = document.getElementById('observacao')
+const obsCounter = document.getElementById('observacao-counter')
+document.addEventListener('DOMContentLoaded', function () {
+})
+
+if (obsTextarea && obsCounter) {
+  const updateCounter = () => {
+    const length = obsTextarea.value.length
+    const max = obsTextarea.maxLength || 200
+    obsCounter.innerHTML = `<small>${length}/${max}</small>`
+  }
+
+  obsTextarea.addEventListener('input', updateCounter)
+  updateCounter() // Atualiza na abertura da página ou ao editar
+}
+
     // Hamburger menu toggle
     const hamburger = document.getElementById('hamburger-menu');
     const navMenu = document.getElementById('nav-menu');
