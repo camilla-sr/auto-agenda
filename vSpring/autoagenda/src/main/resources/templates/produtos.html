@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -183,12 +181,35 @@
             Produto</button>
         </div>
 
-        <div class="table-actions">
-        <div class="form-group">
-          <label for="busca">Buscar Produto</label>
-          <input type="text" name="busca" id="busca" placeholder="Digite para buscar...">
-        </div>
-      </div>
+		<div class="table-filters">
+		  <div class="form-row">
+		    <div class="form-col">
+		      <div class="form-group">
+		        <label for="busca">Buscar Produto</label>
+		        <div class="input-wrapper">
+		          <input type="text" id="busca" name="busca" placeholder="Nome ou código...">
+		        </div>
+		      </div>
+		    </div>
+
+		    <div class="form-col">
+		      <div class="form-group">
+		        <label for="filtro_categoria">Filtrar por Categoria</label>
+		        <div class="input-wrapper">
+		          <i class="fas fa-filter input-icon"></i>
+		          <select id="filtro_categoria">
+		            <option value="">Todas as categorias</option>
+		            <option value="Oleo">Óleo</option>
+		            <option value="Filtro">Filtro</option>
+		            <option value="Pneu">Pneu</option>
+		            <option value="Bateria">Bateria</option>
+		            <option value="Outro">Outro</option>
+		          </select>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
         
         <!-- MUDANÇA AQUI: Tabela com `data-label` para responsividade -->
@@ -303,9 +324,8 @@
 
   <script>
       document.addEventListener('DOMContentLoaded', function () {
-          
           // ============================================================
-          // 1. MENU MOBILE (Hambúrguer)
+          // MENU MOBILE (Hambúrguer)
           // ============================================================
           const hamburgerMenu = document.getElementById('hamburger-menu');
           const navMenu = document.getElementById('nav-menu');
@@ -332,7 +352,7 @@
           }
 
           // ============================================================
-          // 2. CONTROLE DO FORMULÁRIO (Novo / Cancelar / Salvar)
+          // CONTROLE DO FORMULÁRIO (Novo / Cancelar / Salvar)
           // ============================================================
           const form = document.getElementById('formNovoProduto');
           const formTitulo = document.getElementById('formTitulo');
@@ -377,7 +397,7 @@
           });
 
           // ============================================================
-          // 3. VALIDAÇÃO E MÁSCARAS
+          // VALIDAÇÃO E MÁSCARAS
           // ============================================================
           const camposObrigatorios = [
               'nome-produto', 'preco-custo', 'preco-venda', 
@@ -427,9 +447,8 @@
           verificarCampos();
 
           // ============================================================
-          // 4. AÇÕES DA TABELA (Status, Editar, Excluir, Visualizar)
+          // AÇÕES DA TABELA (Status, Editar, Excluir, Visualizar)
           // ============================================================
-
           // Função para pintar os badges de estoque
           function atualizarStatusEstoque() {
               document.querySelectorAll('#productsTable tbody tr').forEach(function (row) {
@@ -443,8 +462,6 @@
 
                   const atual = parseFloat(atualEl.textContent) || 0;
                   const minimo = parseFloat(minEl.textContent) || 0;
-
-                  // Remove classes antigas
                   badge.classList.remove('status-ok', 'bg-success', 'bg-warning', 'bg-danger', 'text-dark', 'text-white');
                   badge.style.color = 'white'; 
 
@@ -568,35 +585,48 @@
           });
 
           // ============================================================
-          // 5. BUSCA DINÂMICA
+          // BUSCA DINÂMICA
           // ============================================================
-          const inputBusca = document.getElementById('busca');
-          const linhasTabela = document.querySelectorAll('#productsTable tbody tr');
-          const msgSemResultado = document.querySelector('tbody tr td[colspan="6"]'); // Se existir linha de aviso
+		  const inputBusca = document.getElementById('busca');
+		  const filtroCategoria = document.getElementById('filtro_categoria');
+		  const linhasTabela = document.querySelectorAll('#productsTable tbody tr');
+		  const msgSemResultado = document.querySelector('tbody tr td[colspan="6"]');
 
-          if (inputBusca) {
-              inputBusca.addEventListener('input', function () {
-                  const termo = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                  let encontrou = false;
+		  function filtrarTabela() {
+		      const termo = inputBusca.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		      const categoriaSelecionada = filtroCategoria.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		      let encontrou = false;
 
-                  linhasTabela.forEach(linha => {
-                      if (linha.querySelector('td[colspan="6"]')) return;
+		      linhasTabela.forEach(linha => {
+		          if (linha.querySelector('td[colspan="6"]')) return;
 
-                      const texto = linha.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                      
-                      if (texto.includes(termo)) {
-                          linha.style.display = '';
-                          encontrou = true;
-                      } else {
-                          linha.style.display = 'none';
-                      }
-                  });
+		          // Pega os textos para busca textual
+		          const nome = linha.querySelector('.nome-produto').textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		          const codigo = linha.querySelector('.codigo-produto').textContent.toLowerCase();
+		          const textoCompleto = nome + ' ' + codigo;
 
-                  if (msgSemResultado) {
-                      msgSemResultado.parentElement.style.display = encontrou ? 'none' : '';
-                  }
-              });
-          }
+		          // Pega a categoria oculta na linha para o filtro exato
+		          const catLinha = linha.querySelector('.categoria').textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+		          // Lógica: Tem que bater o Texto E a Categoria (se houver categoria selecionada)
+		          const matchTexto = textoCompleto.includes(termo);
+		          const matchCategoria = categoriaSelecionada === "" || catLinha.includes(categoriaSelecionada);
+
+		          if (matchTexto && matchCategoria) {
+		              linha.style.display = '';
+		              encontrou = true;
+		          } else {
+		              linha.style.display = 'none';
+		          }
+		      });
+
+		      if (msgSemResultado) {
+		          msgSemResultado.parentElement.style.display = encontrou ? 'none' : '';
+		      }
+		  }
+
+		  if (inputBusca) { inputBusca.addEventListener('input', filtrarTabela); }
+		  if (filtroCategoria) { filtroCategoria.addEventListener('change', filtrarTabela); }
       });
   </script>
 </body>
