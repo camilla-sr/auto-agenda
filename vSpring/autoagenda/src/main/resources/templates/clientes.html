@@ -40,6 +40,103 @@
             border-radius: 4px;
         }
 
+        /* === BOTÕES DE AÇÃO DENTRO DO MODAL === */
+        .btn-action-custom {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-size: 0.875rem;
+        }
+
+        /* Botão Editar (Amarelo - variáveis do sistema) */
+        .btn-action-custom.btn-edit {
+            background-color: var(--cor-primaria-light);
+            color: var(--cor-secundaria);
+        }
+        .btn-action-custom.btn-edit:hover {
+            background-color: var(--cor-primaria);
+            color: var(--cor-secundaria);
+        }
+
+        /* Botão Excluir (Vermelho - variáveis do sistema) */
+        .btn-action-custom.btn-delete {
+            background-color: var(--cor-erro-light);
+            color: var(--cor-erro);
+        }
+        .btn-action-custom.btn-delete:hover {
+            filter: brightness(95%);
+        }
+
+        /* Botão Salvar (Verde - variáveis do sistema) */
+        .btn-action-custom.btn-success {
+            background-color: var(--cor-sucesso-light);
+            color: var(--cor-sucesso);
+        }
+        .btn-action-custom.btn-success:hover {
+            background-color: var(--cor-sucesso);
+            color: var(--cor-texto-claro);
+        }
+
+        /* Botão Cancelar (Cinza) */
+        .btn-action-custom.btn-secondary {
+            background-color: var(--cor-fundo-medio);
+            color: var(--cor-texto-escuro);
+        }
+        .btn-action-custom.btn-secondary:hover {
+            background-color: var(--cor-borda);
+            color: var(--cor-secundaria);
+        }
+
+        .btn-action-custom:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsividade - Botões maiores e centralizados no mobile */
+        @media (max-width: 767.98px) {
+            .btn-action-custom {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            #tabela-gestao-veiculos tbody tr td:last-child {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                padding: 0.75rem;
+            }
+        }
+
+        /* Responsividade do Header do Modal */
+        @media (max-width: 767.98px) {
+            #modalGerenciarVeiculos .modal-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.75rem;
+            }
+            
+            #modalGerenciarVeiculos .modal-header .flex-grow-1 {
+                width: 100%;
+            }
+            
+            #modalGerenciarVeiculos .modal-header .d-flex {
+                flex-direction: column !important;
+                gap: 0.25rem !important;
+            }
+            
+            #modalGerenciarVeiculos .modal-header button {
+                width: 100%;
+            }
+        }
+
         /* CORREÇÃO DEFINITIVA - Botões centralizados no mobile */
         @media (max-width: 767.98px) {
             /* Força todos os TDs a terem space-between EXCETO action-buttons */
@@ -134,18 +231,22 @@
 	                </div>
 	            </form>
 	        </div>
-	
+
 	        <div class="modal fade" id="modalGerenciarVeiculos" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 	            <div class="modal-dialog modal-lg modal-dialog-centered">
 	                <div class="modal-content">
 	                    
 	                    <div class="modal-header bg-light">
-	                        <div>
-	                            <h5 class="modal-title mb-0"><i class="fas fa-car"></i> Veículos</h5>
-	                            <small class="text-muted" id="lbl-nome-cliente-modal">Carregando...</small>
+	                        <div class="flex-grow-1">
+	                            <h5 class="modal-title mb-1"><i class="fas fa-user-circle me-2"></i>Detalhes do Cliente e Veículos</h5>
+	                            <div class="d-flex flex-column flex-md-row gap-1 gap-md-3 mt-2">
+	                                <small class="text-dark" id="lbl-nome-cliente-modal"><strong>Nome:</strong> Carregando...</small>
+	                                <small class="text-muted" id="lbl-telefone-cliente-modal"></small>
+	                                <small class="text-muted" id="lbl-email-cliente-modal"></small>
+	                            </div>
 	                        </div>
 	                        
-	                        <button type="button" class="btn btn-warning btn-sm ms-auto fw-bold shadow-sm" id="btn-add-linha-veiculo">
+	                        <button type="button" class="btn btn-warning btn-sm fw-bold shadow-sm" id="btn-add-linha-veiculo" style="white-space: nowrap;">
 	                            <i class="fas fa-plus"></i> Novo Veículo
 	                        </button>
 	                    </div>
@@ -215,20 +316,23 @@
 	                        <td class="telefone-cliente" th:text="${c.telefone}" data-label="Telefone"></td>
 	                        <td class="email-cliente" th:text="${c.email}" data-label="Email"></td>
 	                        
-	                        <td class="action-buttons text-center">
+	                        <td class="action-buttons text-center" data-label="Ações">
 	                            <button class="btn-icon btn-edit" th:attr="data-id=${c.idCliente}" title="Editar">
 	                                <i class="fas fa-edit"></i>
 	                            </button>
-	                            
 	                            <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}" 
 	                                    class="btn-icon btn-delete" th:attr="data-id=${c.idCliente}" title="Excluir">
 	                                <i class="fas fa-trash"></i>
 	                            </button>
-	                            
-	                            <button class="btn-icon btn-veiculos" th:attr="data-id=${c.idCliente}, data-nome=${c.nomeCliente}" title="Gerenciar Veículos">
+	                            <button class="btn-icon btn-veiculos" 
+	                                    th:attr="data-id=${c.idCliente}, 
+	                                             data-nome=${c.nomeCliente}, 
+	                                             data-telefone=${c.telefone}, 
+	                                             data-email=${c.email}" 
+	                                    title="Visualizar Cliente e Veículos">
 	                                <i class="fas fa-car"></i>
 	                            </button>
-	                       </td>
+	                        </td>
 	                    </tr>
 	                </tbody>
 	            </table>
@@ -394,8 +498,13 @@
 			    btn.addEventListener('click', function() {
 			        const id = this.dataset.id;
 			        const nome = this.dataset.nome;
+			        const telefone = this.dataset.telefone || '';
+			        const email = this.dataset.email || '';
 			        
-			        document.getElementById('lbl-nome-cliente-modal').textContent = nome;
+			        // Preencher dados do cliente no header
+			        document.getElementById('lbl-nome-cliente-modal').innerHTML = `<strong>Nome:</strong> ${nome}`;
+			        document.getElementById('lbl-telefone-cliente-modal').innerHTML = telefone ? `<i class="fas fa-phone-alt me-1"></i>${telefone}` : '';
+			        document.getElementById('lbl-email-cliente-modal').innerHTML = email ? `<i class="fas fa-envelope me-1"></i>${email}` : '';
 			        idClienteModal.value = id;
 			        
 			        carregarVeiculosNoModal(id);
@@ -426,19 +535,19 @@
 			    const tr = document.createElement('tr');
 			    tr.dataset.original = JSON.stringify(v);
 			    
-			    tr.innerHTML = `
-			        <td style="padding-left: 20px;">${v.modelo}</td>
-			        <td><span class="badge bg-light text-dark border" style="font-size: 0.9em">${v.placa}</span></td>
-			        <td>${v.marca || '-'}</td>
-			        <td class="text-center">
-			            <button class="btn-action-custom btn-edit me-1" title="Editar">
-			                <i class="fas fa-pen"></i>
-			            </button>
-			            <button class="btn-action-custom btn-delete" title="Excluir">
-			                <i class="fas fa-trash"></i>
-			            </button>
-			        </td>
-			    `;
+		    tr.innerHTML = `
+		        <td style="padding-left: 20px;">${v.modelo}</td>
+		        <td><span class="badge bg-light text-dark border" style="font-size: 0.9em">${v.placa}</span></td>
+		        <td>${v.marca || '-'}</td>
+		        <td class="text-center">
+		            <button class="btn-action-custom btn-edit me-1" title="Editar">
+		                <i class="fas fa-edit"></i>
+		            </button>
+		            <button class="btn-action-custom btn-delete" title="Excluir">
+		                <i class="fas fa-trash"></i>
+		            </button>
+		        </td>
+		    `;
 			    tbodyVeiculos.appendChild(tr);
 
 			    // Evento Editar
@@ -578,6 +687,7 @@
 			    });
 			}
 	
+	        // ================= BUSCA =================
 	        const inputBusca = document.getElementById('busca');
 	        const linhas = document.querySelectorAll('.appointments-table tbody tr');
 			
