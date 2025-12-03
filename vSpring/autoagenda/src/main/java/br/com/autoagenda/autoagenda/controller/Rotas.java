@@ -56,6 +56,9 @@ public class Rotas {
 	    return nf.format(valor);
 	}
 	
+	@GetMapping("/recuperar-senha")
+    public String recuperarSenha() { return "esqueciasenha"; }
+	
 	@GetMapping("/cadastroSistema")
 	public String cadastroSistema() { return "cadastro"; }
 	
