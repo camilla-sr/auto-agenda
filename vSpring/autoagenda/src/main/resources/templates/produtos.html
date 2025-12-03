@@ -464,7 +464,7 @@
           atualizarStatusEstoque();
 
           // BOTÃO EDITAR
-          document.querySelectorAll('.btn-edit').forEach(button => {
+		  document.querySelectorAll('.btn-edit').forEach(button => {
               button.addEventListener('click', function () {
                   formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Produto';
                   formContainer.style.display = 'block';
@@ -476,28 +476,41 @@
                   document.getElementById('idProduto').value = id;
                   document.getElementById('nome-produto').value = row.querySelector('.nome-produto').textContent.trim();
                   document.getElementById('codigo-produto').value = row.querySelector('.codigo-produto').textContent.trim();
-                  document.getElementById('categoria').value = row.querySelector('.categoria').textContent.trim();
+                  
+                  const catTexto = row.querySelector('.categoria').textContent.trim();
+                  const catSelect = document.getElementById('categoria');
+                  const limpar = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                  const alvo = limpar(catTexto);
+
+                  for(let i=0; i<catSelect.options.length; i++) {
+                      const optValor = limpar(catSelect.options[i].value);
+                      const optTexto = limpar(catSelect.options[i].text);
+                      
+                      if(optValor === alvo || optTexto === alvo) {
+                          catSelect.selectedIndex = i;
+                          break;
+                      }
+                  }
+                  
                   document.getElementById('fornecedor').value = row.querySelector('.fornecedor').textContent.trim();
                   document.getElementById('estoque-atual').value = row.querySelector('.estoque-atual').textContent.trim();
                   document.getElementById('estoque-minimo').value = row.querySelector('.estoque-minimo').textContent.trim();
                   document.getElementById('descricao').value = row.querySelector('.descricao').textContent.trim();
 
-                  // TRATAMENTO DE VALORES MONETÁRIOS
-                  const custo = row.querySelector('.preco-custo').dataset.valor; // Valor bruto (ex: 10.5)
+                  const custo = row.querySelector('.preco-custo').dataset.valor; 
                   const venda = row.querySelector('.preco-venda').dataset.valor;
 
-                  // Formata para pt-BR (ex: "10,50") para o campo visual
                   document.getElementById('preco-custo').value = parseFloat(custo).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                   document.getElementById('preco-venda').value = parseFloat(venda).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
-                  // Dispara evento 'input' para a máscara do jQuery reformatar corretamente
                   $('#preco-custo').trigger('input');
                   $('#preco-venda').trigger('input');
 
                   verificarCampos();
               });
           });
-
+		  
+		  
           // BOTÃO EXCLUIR
           document.querySelectorAll('.btn-delete').forEach(button => {
               button.addEventListener('click', function (e) {
