@@ -248,12 +248,13 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-	        // ================= LÓGICA DE CLIENTES (Mantida igual) =================
+	        // ================= LÓGICA DE CLIENTES =================
 	        const formContainer = document.getElementById('formClienteContainer');
 	        const formTitulo = document.getElementById('formTitulo');
 	        const btnNovo = document.getElementById('btn-novo');
 	        const btnCancelar = document.getElementById('btn-cancelar');
 	        const btnSalvar = document.getElementById('btn-salvar');
+			const btnApagar = document.getElementById('btn-delete')
 	        const inputId = document.getElementById('idCliente');
 	        const inputNome = document.getElementById('nome');
 	        const inputTel = document.getElementById('telefone');
@@ -337,6 +338,44 @@
 	                verificarCampos();
 	            });
 	        });
+			
+			document.querySelectorAll('.btn-delete').forEach(btn => {
+			    btn.addEventListener('click', function(e) {
+			        e.preventDefault();
+			        const idCliente = this.dataset.id; 
+
+			        Swal.fire({
+			            title: 'Excluir cliente?',
+			            text: "Não será possível reverter essa ação e os veículos vinculados também serão apagados!",
+			            icon: 'warning',
+			            showCancelButton: true,
+			            confirmButtonColor: '#d33',
+			            cancelButtonColor: '#6c757d',
+			            confirmButtonText: 'Sim, excluir!',
+			            cancelButtonText: 'Cancelar'
+			        }).then((result) => {
+			            if (result.isConfirmed) {
+			                fetch('/cliente-api/apagar', {
+			                    method: 'POST',
+			                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			                    body: `idCliente=${idCliente}`
+			                })
+			                .then(r => {
+			                    if (r.ok) {
+			                        Swal.fire(
+			                            'Excluído!', 
+			                            'Cliente removido com sucesso.', 
+			                            'success'
+			                        ).then(() => location.reload());
+			                    } else {
+			                        Swal.fire('Erro', 'Não foi possível excluir este cliente.', 'error');
+			                    }
+			                })
+			                .catch(() => Swal.fire('Erro', 'Erro de conexão.', 'error'));
+			            }
+			        });
+			    });
+			});
 	
 	        // ================= LÓGICA DE VEÍCULOS =================
 			const modalVeiculosEl = document.getElementById('modalGerenciarVeiculos');
