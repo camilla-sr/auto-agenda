@@ -1256,94 +1256,104 @@
 
         // EDITAR AGENDAMENTO
 		document.querySelectorAll('.btn-edit').forEach(btn => {
-	        btn.addEventListener('click', function () {
-	            const row = this.closest('tr');
-	            const id = this.dataset.id;
-	            
-	            document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
-	            document.getElementById('idAgendamento').value = id;
-	            
-	            dt = new DataTransfer();
-	            if(inpImg) inpImg.files = dt.files;
-	            prevDiv.innerHTML = "";
-	            
-	            inputNome.value = row.querySelector('.ag-cliente span').textContent.trim();
-	            const cliObj = todosClientes.find(c => c.nomeCliente === inputNome.value);
-	            inputIdCli.value = cliObj ? cliObj.idCliente : "";
-				const nomeCompleto = row.querySelector('.ag-cliente').getAttribute('data-nome-completo');
-				inputNome.value = nomeCompleto;
-	            
-	            const veicDataId = this.getAttribute('data-veiculo-id');
-	            const veicDataNome = this.getAttribute('data-veiculo-nome');
-	            inputVeiculo.value = veicDataNome || "";
-	            inputIdVeiculo.value = veicDataId || "";
-	            
-	            if(inputIdCli.value) toggleCamposVeiculo(true);
-	
-	            document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const id = this.dataset.id;
+                
+                document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
+                document.getElementById('idAgendamento').value = id;
+                
+                dt = new DataTransfer();
+                if(inpImg) inpImg.files = dt.files;
+                prevDiv.innerHTML = "";
+                
+                const nomeCompleto = row.querySelector('.ag-cliente').getAttribute('data-nome-completo');
+                inputNome.value = nomeCompleto;
 
-	            const statusTxt = row.querySelector('.ag-status span').textContent.trim();
-	            const limparTexto = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s/g, '');
-	            const statusAlvo = limparTexto(statusTxt);
-	
-	            for(let i=0; i<statusSel.options.length; i++) {
-	                const opcaoTexto = limparTexto(statusSel.options[i].text);
-	                const opcaoValor = limparTexto(statusSel.options[i].value);
-	
-	                if(opcaoTexto === statusAlvo || opcaoValor === statusAlvo) {
-	                    statusSel.selectedIndex = i; 
-	                    break;
-	                }
-	            }
-	            
-	            checkStatus();
-	
-	            const prev = row.querySelector('.ag-previsao');
-	            if(prev) document.getElementById('data-previsao').value = prev.dataset.date;
-	            const conc = row.querySelector('.ag-conclusao');
-	            if(conc) document.getElementById('data-conclusao').value = conc.dataset.date || '';
-	            
-	            const obs = row.querySelector('.ag-observacao').textContent.trim();
-	            obsInput.value = obs;
-	            obsInput.dispatchEvent(new Event('input')); 
-	
-	            fetch(`/fotos-api/listar/${id}`)
-	            .then(r => r.status === 204 ? [] : r.json())
-	            .then(fotos => {
-	                if(fotos && fotos.length > 0) {
-	                    fotos.forEach(foto => {
-	                        const div = document.createElement('div');
-	                        div.className = 'preview-wrapper db-photo'; 
-	                        div.style.borderColor = '#0d6efd'; 
-	                        const img = document.createElement('img');
-	                        img.src = `/fotos-api/imagem/${foto.id}`;
-	                        img.className = 'preview-img';
-	                        const btnDel = document.createElement('div');
-	                        btnDel.className = 'btn-delete-img';
-	                        btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>'; 
-	                        btnDel.onclick = function() {
-	                            Swal.fire({
-	                                title: 'Remover imagem?', text: "Ela poderá ser adicionada no agendamento novamente.", icon: 'warning',
-	                                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d',
-									confirmButtonText: 'Sim, remover!', cancelButtonText: 'Cancelar'
-	                            }).then((result) => {
-	                                if (result.isConfirmed) {
-	                                    fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
-	                                    .then(response => {
-	                                        if(response.ok) { div.remove(); Swal.fire('Sucesso!', 'A imagem foi removida.', 'success'); }
-	                                    });
-	                                }
-	                            });
-	                        };
-	                        div.appendChild(img); div.appendChild(btnDel); prevDiv.appendChild(div);
-	                    });
-	                }
-	            });
-	            formContainer.style.display = 'block';
-	            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-	            verificarBotaoSalvar();
-	        });
-	    });
+                const cliObj = todosClientes.find(c => c.nomeCliente === inputNome.value);
+                inputIdCli.value = cliObj ? cliObj.idCliente : "";
+               
+                if(inputIdCli.value) {
+                    toggleCamposVeiculo(true);
+                    inputNome.classList.add('is-valid');
+                    inputNome.classList.remove('is-invalid');
+                }
+
+                const veicDataId = this.getAttribute('data-veiculo-id');
+                const veicDataNome = this.getAttribute('data-veiculo-nome');
+                inputVeiculo.value = veicDataNome || "";
+                inputIdVeiculo.value = veicDataId || "";
+               
+                if(inputIdVeiculo.value) {
+                    inputVeiculo.classList.add('is-valid');
+                    inputVeiculo.classList.remove('is-invalid');
+                }
+    
+                document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
+
+                const statusTxt = row.querySelector('.ag-status span').textContent.trim();
+                const limparTexto = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s/g, '');
+                const statusAlvo = limparTexto(statusTxt);
+    
+                for(let i=0; i<statusSel.options.length; i++) {
+                    const opcaoTexto = limparTexto(statusSel.options[i].text);
+                    const opcaoValor = limparTexto(statusSel.options[i].value);
+    
+                    if(opcaoTexto === statusAlvo || opcaoValor === statusAlvo) {
+                        statusSel.selectedIndex = i; 
+                        break;
+                    }
+                }
+                
+                checkStatus();
+    
+                const prev = row.querySelector('.ag-previsao');
+                if(prev) document.getElementById('data-previsao').value = prev.dataset.date;
+                const conc = row.querySelector('.ag-conclusao');
+                if(conc) document.getElementById('data-conclusao').value = conc.dataset.date || '';
+                
+                const obs = row.querySelector('.ag-observacao').textContent.trim();
+                obsInput.value = obs;
+                obsInput.dispatchEvent(new Event('input')); 
+    
+                fetch(`/fotos-api/listar/${id}`)
+                .then(r => r.status === 204 ? [] : r.json())
+                .then(fotos => {
+                    if(fotos && fotos.length > 0) {
+                        fotos.forEach(foto => {
+                            const div = document.createElement('div');
+                            div.className = 'preview-wrapper db-photo'; 
+                            div.style.borderColor = '#0d6efd'; 
+                            const img = document.createElement('img');
+                            img.src = `/fotos-api/imagem/${foto.id}`;
+                            img.className = 'preview-img';
+                            const btnDel = document.createElement('div');
+                            btnDel.className = 'btn-delete-img';
+                            btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>'; 
+                            btnDel.onclick = function() {
+                                Swal.fire({
+                                    title: 'Remover imagem?', text: "Ela poderá ser adicionada no agendamento novamente.", icon: 'warning',
+                                    showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d',
+                                    confirmButtonText: 'Sim, remover!', cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        fetch(`/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
+                                        .then(response => {
+                                            if(response.ok) { div.remove(); Swal.fire('Sucesso!', 'A imagem foi removida.', 'success'); }
+                                        });
+                                    }
+                                });
+                            };
+                            div.appendChild(img); div.appendChild(btnDel); prevDiv.appendChild(div);
+                        });
+                    }
+                });
+                
+                formContainer.style.display = 'block';
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                verificarBotaoSalvar();
+            });
+        });
 
         // VISUALIZAR (MODAL)
         const modalVisEl = document.getElementById('visualizarAgendamentoModal');
