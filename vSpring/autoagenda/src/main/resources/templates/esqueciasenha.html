@@ -251,7 +251,7 @@
 
                 <p class="text-center text-muted mt-3" style="font-size: 0.85rem;">
                     Não recebeu? 
-                    <a href="#" onclick="return false;" class="small-link">Reenviar código</a>
+                    <a href="#" id="btnReenviar" class="small-link">Reenviar código</a>
                 </p>
             </div>
 
@@ -525,6 +525,70 @@
                 btnSalvar.disabled = false;
             }
         });
+		
+		// ==========================================
+		// FUNCIONALIDADE: Reenviar código
+		// ==========================================
+		const btnReenviar = document.getElementById('btnReenviar');
+
+		btnReenviar.addEventListener('click', async (e) => {
+		    e.preventDefault(); // Impede o link de recarregar a página
+
+		    // Bloqueia o botão para evitar cliques repetidos (spam)
+		    btnReenviar.style.pointerEvents = 'none';
+		    btnReenviar.style.opacity = '0.5';
+		    btnReenviar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+		    try {
+		        // reutiliza rota do step 1
+		        const response = await fetch('/funcionario-api/enviar-codigo-reset', {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		            body: `email=${encodeURIComponent(emailUsuario)}`
+		        });
+
+		        if (response.ok) {
+		            Swal.fire({
+		                icon: 'success',
+		                title: 'Código reenviado!',
+		                text: 'Verifique sua caixa de entrada novamente.',
+		                timer: 2000,
+		                showConfirmButton: false
+		            });
+		            iniciarCooldownReenvio(); 
+		        } else {
+		            Swal.fire('Erro', 'Não foi possível reenviar o código.', 'error');
+		            liberarBotaoReenviar();
+		        }
+		    } catch (error) {
+		        Swal.fire('Erro', 'Falha na conexão.', 'error');
+		        liberarBotaoReenviar();
+		    }
+		});
+
+		function liberarBotaoReenviar() {
+		    btnReenviar.style.pointerEvents = 'auto';
+		    btnReenviar.style.opacity = '1';
+		    btnReenviar.innerHTML = 'Reenviar código';
+		}
+
+		//Função para evitar spam (Cooldown)
+		function iniciarCooldownReenvio() {
+		    let segundos = 30;
+		    btnReenviar.style.pointerEvents = 'none';
+		    
+		    const intervalo = setInterval(() => {
+		        segundos--;
+		        btnReenviar.innerHTML = `Aguarde ${segundos}s para reenviar`;
+		        btnReenviar.style.color = 'gray';
+
+		        if (segundos <= 0) {
+		            clearInterval(intervalo);
+		            liberarBotaoReenviar();
+		            btnReenviar.style.color = ''; // Volta a cor original
+		        }
+		    }, 1000);
+		}
 
         // Limpar erro ao digitar na confirmação
         senha2.addEventListener('input', () => {
