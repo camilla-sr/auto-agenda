@@ -26,6 +26,7 @@ public class CodigoService {
             System.err.println("Erro: Microsserviço 2FA inacessível.");
             return "OFFLINE";
         } catch (Exception e) {
+        	System.err.println("Causa real do erro: " + e.getMessage());
             e.printStackTrace();
             return "ERRO";
         }
@@ -46,6 +47,7 @@ public class CodigoService {
             System.err.println("Erro: Microsserviço 2FA inacessível.");
             return "OFFLINE";
         } catch (Exception e) {
+        	System.err.println("Causa real do erro: " + e.getMessage());
             e.printStackTrace();
             return "ERRO";
         }

@@ -37,7 +37,7 @@ public class AuthService {
 		if(ultimo.isEmpty()) { return false; }
 		
 		Codigo2FA registro = ultimo.get();
-		if(!registro.getCodigo().equals(dados.getCodigoDigitado())) { return false; }
+		if(!registro.getCodigo().equals(dados.getCodigo())) { return false; }
 		
 		registro.setValidado(true);
 		repo.save(registro);

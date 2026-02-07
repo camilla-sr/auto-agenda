@@ -2,17 +2,17 @@ package com.autoagenda.auth_api.model;
 
 public class ValidacaoCodigo {
 	private String email;
-	private String codigoDigitado;
+	private String codigo;
 	
 	public ValidacaoCodigo() {}
 	
-	public ValidacaoCodigo(String email, String codigoDigitado) {
+	public ValidacaoCodigo(String email, String codigo) {
 		this.email = email;
-		this.codigoDigitado = codigoDigitado;
+		this.codigo = codigo;
 	}
 	
 	public String getEmail() { return email; }
 	public void setEmail(String email) { this.email = email; }
-	public String getCodigoDigitado() { return codigoDigitado; }
-	public void setCodigoDigitado(String codigoDigitado) { this.codigoDigitado = codigoDigitado; }
+	public String getCodigo() { return codigo; }
+	public void setCodigo(String codigo) { this.codigo = codigo; }
 }
