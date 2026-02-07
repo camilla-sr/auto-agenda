@@ -15,9 +15,19 @@
     <style>
         /* Container das etapas */
         .steps-container {
-            min-height: 380px;
-            position: relative;
+			min-height: 100px; /* Um valor mínimo pequeno apenas para não colapsar */
+		    height: auto;      /* Deixa o conteúdo ditar a altura */
+		    position: relative;
+		    transition: all 0.4s ease-in-out; /* Suaviza a expansão/contração */
+		    overflow: hidden; /* Evita que o conteúdo escape durante a transição */
         }
+		
+		.login {
+		    height: auto;
+		    align-self: center; /* Garante que ela fique centralizada no flex pai */
+		    display: flex;
+		    flex-direction: column;
+		}
 
         .step {
             display: none;
@@ -132,6 +142,16 @@
             font-size: 0.85rem;
             margin-top: 5px;
         }
+		
+		.log-inputs label {
+		    display: block;
+		    width: 100%;
+		    margin-bottom: 15px;
+		}
+
+		.log-inputs input {
+		    width: 100%;
+		}
 
         @media (max-width: 500px) {
             .login {
@@ -184,7 +204,7 @@
             <!-- ETAPA 1: Solicitar código -->
             <!-- ============================================== -->
             <div class="step active" id="step1">
-                <h2 class="mensagem">Recuperar Senha</h2>
+                <h2 class="mensagem text-center">Recuperar Senha</h2>
                 <p class="text-muted text-center mb-4">Digite seu e-mail para receber o código de verificação</p>
 
                 <div class="log-inputs">
@@ -210,7 +230,7 @@
             <!-- ETAPA 2: Validar código -->
             <!-- ============================================== -->
             <div class="step" id="step2">
-                <h2 class="mensagem">Digite o Código</h2>
+                <h2 class="mensagem text-center">Digite o Código</h2>
                 <p class="text-muted text-center mb-3">
                     Enviamos um código de 6 dígitos para<br>
                     <strong style="color: var(--cor-primaria);" id="email-display"></strong>
@@ -244,7 +264,7 @@
 
                 <div class="log-inputs">
                     <label for="novaSenha">
-                        <span>Nova Senha</span>
+                        <span class="text-center">Nova Senha</span>
                         <input
                             type="password"
                             id="novaSenha"
