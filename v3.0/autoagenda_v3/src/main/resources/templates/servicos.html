@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Serviços - ' + ${branding.nomeEmpresa}">Serviços - AutoAgenda</title>
+    <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/sweetalert2.all.min.js"></script>
+    <script src="/js/validacao.js"></script>
+	
+    <link rel="stylesheet" href="/css/variaveis.css">
+    <link rel="stylesheet" href="/css/servicos.css">
+	<link rel="stylesheet" href="/css/navegacao.css">
+</head>
+
+<body>
+    <div th:replace="~{fragments/barra :: barra}"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header" id="pageHeaderScrollTarget">
+                <h2><i class="fas fa-tools"></i> Gerenciamento de Serviços</h2>
+                <p>Controle e cadastre novos serviços</p>
+            </div>
+
+            <div class="form-container" id="formNovoServicoContainer" style="display: none;">
+                <h3 id="formTitulo"><i class="fas fa-plus"></i> Cadastrar Novo Serviço</h3>
+
+                <form method="post" th:action="@{/{slug}/servico-api/salvar(slug=${oficinaContexto.slug})}" id="form-servico">
+                    <input type="hidden" name="idServico" id="idServico" readonly>
+                    
+                    <input type="hidden" name="oficina.idOficina" th:value="${oficinaContexto.idOficina}">
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="nome-servico">Nome do Serviço</label>
+                                <input type="text" id="nome-servico" name="nomeServico" class="form-input"
+                                    placeholder="Ex: Troca de óleo" maxlength="110">
+                                <div id="nome-servico-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+                                    <small>0/110</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="descricao-servico">Descrição</label>
+                                <input type="text" id="descricao-servico" name="descServico" class="form-input"
+                                    placeholder="Ex: Troca de óleo do motor e filtro" maxlength="200">
+                                <div id="descricao-servico-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+                                    <small>0/200</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="btn-cancelar-novo-servico" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Serviço
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3><i class="fas fa-clipboard-list"></i> Lista de Serviços</h3>
+                    <button id="btn-novo-servico" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Novo Serviço
+                    </button>
+                </div>
+
+                <div class="table-actions">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" name="busca" id="busca" placeholder="Buscar Serviço...">
+                    </div>
+                </div>
+
+                <table class="table appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Serviço</th>
+                            <th>Descrição</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${servicos == null or servicos.empty}">
+                            <td colspan="3" style="text-align: center;">Nenhum resultado encontrado</td>
+                        </tr>
+                        <tr th:each="serv : ${servicos}">
+                            <td class="nome-servico" th:text="${serv.nomeServico}" data-label="Serviço"></td>
+                            <td class="desc-servico" th:text="${serv.descServico}" data-label="Descrição"></td>
+                            <td class="action-buttons">
+                                <div class="button-wrapper">
+                                    <button class="btn-icon btn-edit" th:attr="data-id=${serv.idServico}" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete" th:attr="data-id=${serv.idServico}" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+   <div th:replace="~{fragments/footer :: footer}"></div>
+	
+    <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        // Capturando o slug gerado pelo backend
+        const slugAtual = /*[[${oficinaContexto.slug}]]*/ 'oficina';
+
+        // MENU MOBILE
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const navMenu = document.getElementById('nav-menu');
+
+        if (hamburgerMenu && navMenu) {
+            hamburgerMenu.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburgerMenu.classList.toggle('active');
+            });
+            document.addEventListener('click', (event) => {
+                if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    hamburgerMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // CONTROLES DO FORMULÁRIO
+        const form = document.getElementById('form-servico');
+        const formTitulo = document.getElementById('formTitulo');
+        const btnNovoServico = document.getElementById('btn-novo-servico');
+        const formServicoContainer = document.getElementById('formNovoServicoContainer');
+        const btnCancelarNovoServico = document.getElementById('btn-cancelar-novo-servico');
+        const inputId = document.getElementById('idServico');
+        const inputNome = document.getElementById('nome-servico');
+        const inputDesc = document.getElementById('descricao-servico');
+
+        if (btnNovoServico) {
+            btnNovoServico.addEventListener('click', () => {
+                inputId.value = "";
+                form.reset();
+                formTitulo.innerHTML = '<i class="fas fa-plus"></i> Cadastrar Novo Serviço';
+                formServicoContainer.style.display = 'block';
+                verificarCampos(); 
+                atualizarContadorNome(0);
+                atualizarContadorDesc(0);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        if (btnCancelarNovoServico) {
+            btnCancelarNovoServico.addEventListener('click', () => {
+                form.reset();
+                formServicoContainer.style.display = 'none';
+            });
+        }
+
+        // VALIDAÇÃO E CONTADORES
+        const botaoSalvar = form.querySelector('button[type="submit"]');
+        const contadorNome = document.getElementById('nome-servico-counter');
+        const contadorDesc = document.getElementById('descricao-servico-counter');
+        const maxLenNome = inputNome ? inputNome.getAttribute('maxlength') : 110;
+        const maxLenDesc = inputDesc ? inputDesc.getAttribute('maxlength') : 200;
+
+        function verificarCampos() {
+            const nomeValido = inputNome.value.trim() !== "";
+            const descValida = inputDesc.value.trim() !== "";
+            botaoSalvar.disabled = !(nomeValido && descValida);
+        }
+
+        function atualizarContadorNome(tamanhoAtual) {
+            if (!contadorNome) return;
+            const small = contadorNome.querySelector('small');
+            small.textContent = `${tamanhoAtual}/${maxLenNome}`;
+            
+            if (tamanhoAtual >= maxLenNome) {
+                contadorNome.classList.remove('text-muted');
+                contadorNome.classList.add('text-danger');
+            } else {
+                contadorNome.classList.add('text-muted');
+                contadorNome.classList.remove('text-danger');
+            }
+        }
+
+        function atualizarContadorDesc(tamanhoAtual) {
+            if (!contadorDesc) return;
+            const small = contadorDesc.querySelector('small');
+            small.textContent = `${tamanhoAtual}/${maxLenDesc}`;
+            
+            if (tamanhoAtual >= maxLenDesc) {
+                contadorDesc.classList.remove('text-muted');
+                contadorDesc.classList.add('text-danger');
+            } else {
+                contadorDesc.classList.add('text-muted');
+                contadorDesc.classList.remove('text-danger');
+            }
+        }
+
+        if (inputNome) {
+            inputNome.addEventListener('input', function() {
+                verificarCampos();
+                atualizarContadorNome(this.value.length);
+            });
+        }
+        
+        if (inputDesc) {
+            inputDesc.addEventListener('input', function() {
+                verificarCampos();
+                atualizarContadorDesc(this.value.length);
+            });
+        }
+
+        // EDIÇÃO
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const id = this.dataset.id;
+                const nome = row.querySelector('.nome-servico').textContent.trim();
+                const descricao = row.querySelector('.desc-servico').textContent.trim();
+
+                formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Serviço';
+                inputId.value = id;
+                inputNome.value = nome;
+                inputDesc.value = descricao;
+
+                formServicoContainer.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                verificarCampos();
+                atualizarContadorNome(nome.length);
+                atualizarContadorDesc(descricao.length);
+            });
+        });
+
+        // EXCLUSÃO (Agora usando a rota com o SLUG)
+		document.querySelectorAll('.btn-delete').forEach(button => {
+		    button.addEventListener('click', function (e) {
+		        e.preventDefault();
+		        const id = this.dataset.id;
+		        
+		        Swal.fire({
+		            title: 'Excluir serviço?',
+		            text: "Não será possível reverter essa ação!",
+		            icon: 'warning',
+		            showCancelButton: true,
+		            confirmButtonColor: '#d33',
+		            cancelButtonColor: '#6c757d',
+		            confirmButtonText: 'Sim, excluir!',
+		            cancelButtonText: 'Cancelar'
+		        }).then((result) => {
+		            if (result.isConfirmed) {
+                        // Construção dinâmica da URL no Javascript
+		                fetch(`/${slugAtual}/servico-api/apagar`, {
+		                    method: 'POST',
+		                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		                    body: `idServico=${id}`
+		                })
+		                .then(async r => {
+		                    if (r.ok) {
+		                        Swal.fire('Excluído!', 'Serviço removido.', 'success').then(() => location.reload());
+		                    } else {
+		                        Swal.fire('Erro!', 'Ocorreu um erro ao excluir.', 'error');
+		                    }
+		                });
+		            }
+		        });
+		    });
+		});
+
+        // BUSCA
+        const inputBusca = document.getElementById('busca');
+        const linhasTabela = document.querySelectorAll('tbody tr');
+
+        if (inputBusca) {
+            inputBusca.addEventListener('input', function () {
+                const termo = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                linhasTabela.forEach(linha => {
+                    const texto = linha.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    linha.style.display = (termo === "" || texto.includes(termo)) ? '' : 'none';
+                });
+            });
+        }
+    });
+    </script>
+</body>
+</html>

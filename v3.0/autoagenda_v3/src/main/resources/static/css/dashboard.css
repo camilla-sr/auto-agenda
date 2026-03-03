@@ -1,0 +1,215 @@
+/* ARQUIVO: css/tudonovo/dashboard.css */
+/* OBJETIVO: Estilos exclusivos do DASHBOARD */
+
+/* 1. Estrutura Base */
+body {
+    background-color: var(--cor-fundo-claro);
+    color: var(--cor-texto-escuro);
+    font-family: var(--fonte-principal);
+}
+
+.main-content {
+    margin-top: 80px;
+    padding: 30px 0;
+    min-height: calc(100vh - 160px);
+}
+
+/* 2. Cabeçalho da Página (Título Interno) */
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--cor-primaria);
+}
+
+.page-header h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--cor-secundaria);
+    margin-bottom: 5px;
+}
+
+.page-header h2 i {
+    margin-right: 10px;
+    color: var(--cor-primaria);
+}
+
+.page-header p {
+    color: #666;
+    font-size: 1rem;
+    margin-left: 35px;
+}
+
+/* 3. Cards de Estatísticas */
+.dashboard-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background-color: #fff;
+    border-radius: var(--borda-arredondada);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    border-left: 5px solid var(--cor-primaria);
+    transition: transform 0.2s ease;
+    border: 1px solid var(--cor-fundo-medio);
+    border-left-width: 5px;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card.success {
+    border-left-color: var(--cor-sucesso);
+}
+
+.stat-card.warning {
+    border-left-color: var(--cor-alerta);
+}
+
+.stat-card.danger {
+    border-left-color: var(--cor-erro);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 1.5rem;
+    background-color: var(--cor-primaria-light);
+    color: var(--cor-primaria-hover);
+}
+
+.stat-card.success .stat-icon {
+    background-color: var(--cor-sucesso-light);
+    color: var(--cor-sucesso);
+}
+
+.stat-card.warning .stat-icon {
+    background-color: var(--cor-alerta-light);
+    color: var(--cor-alerta);
+}
+
+.stat-card.danger .stat-icon {
+    background-color: var(--cor-erro-light);
+    color: var(--cor-erro);
+}
+
+.stat-info h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--cor-secundaria);
+}
+
+.stat-info p {
+    margin: 0;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* 4. Tabelas e Containers */
+.table-container {
+    background-color: #fff;
+    border-radius: var(--borda-arredondada);
+    box-shadow: var(--sombra-padrao);
+    padding: 25px;
+    margin-bottom: 30px;
+    border-top: 4px solid var(--cor-primaria);
+}
+
+.table-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--cor-fundo-medio);
+    padding-bottom: 10px;
+}
+
+.table-header h3 i {
+    margin-right: 10px;
+    color: var(--cor-primaria);
+}
+
+/* 5. Modal Redefinir Senha */
+.modal-backdrop-blur {
+    backdrop-filter: blur(5px);
+}
+
+#modalRedefinirSenha .modal-content {
+    background: rgba(33, 37, 41, 0.98);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+#modalRedefinirSenha .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+}
+
+#modalRedefinirSenha .modal-title {
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+#modalRedefinirSenha .modal-body {
+    padding: 2rem;
+}
+
+#modalRedefinirSenha .form-label {
+    color: #ddd;
+    margin-bottom: 5px;
+}
+
+#modalRedefinirSenha .form-control {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+#modalRedefinirSenha .form-control:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.btn-salvar-senha {
+    background-color: var(--cor-primaria);
+    border: none;
+    color: var(--cor-secundaria);
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 1rem;
+    transition: var(--transicao);
+    text-transform: uppercase;
+}
+
+.btn-salvar-senha:hover {
+    background-color: var(--cor-primaria-hover);
+    transform: translateY(-2px);
+}
+
+/* Responsividade Específica do Dashboard */
+@media (max-width: 768px) {
+    .dashboard-cards-container {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header h2 {
+        font-size: 1.5rem;
+    }
+}

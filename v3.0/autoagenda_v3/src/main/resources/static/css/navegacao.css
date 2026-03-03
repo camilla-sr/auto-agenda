@@ -1,0 +1,218 @@
+/* OBJETIVO: Estilos globais do Header (Menu), Navegação e Footer */
+
+/* ========================================= */
+/* 1. CABEÇALHO (Header)                     */
+/* ========================================= */
+.header {
+    background-color: var(--cor-secundaria); /* Preto */
+    color: var(--cor-texto-claro);
+    padding: 15px 0;
+    box-shadow: var(--sombra-padrao);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--cor-texto-claro);
+}
+
+/* O link do logo não pode ter sublinhado */
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.logo-highlight { 
+    color: var(--cor-primaria); /* Amarelo */
+}
+
+/* ========================================= */
+/* 2. MENU DE NAVEGAÇÃO                      */
+/* ========================================= */
+.nav-menu {
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--cor-texto-claro);
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: var(--borda-arredondada);
+    text-decoration: none;
+    transition: var(--transicao);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link i {
+    font-size: 1.1em;
+}
+
+/* Hover e Item Ativo */
+.nav-link:hover, 
+.nav-link.active {
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria); /* Texto preto no fundo amarelo */
+}
+
+/* Menu Hambúrguer (Mobile) */
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background-color: var(--cor-texto-claro);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* ========================================= */
+/* 3. DROPDOWN (Menu Usuário)                */
+/* ========================================= */
+/* Personalizando o Bootstrap Dropdown para o tema Dark */
+
+.dropdown-menu {
+    background-color: var(--cor-secundaria); /* Fundo preto */
+    border: 1px solid var(--cor-fundo-medio);
+    border-radius: var(--borda-arredondada);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    margin-top: 10px; /* Afasta um pouco do topo */
+}
+
+.dropdown-item {
+    color: var(--cor-texto-claro);
+    padding: 10px 20px;
+    transition: var(--transicao);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-item:hover, 
+.dropdown-item:focus {
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+}
+
+.dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================= */
+/* 4. RODAPÉ (Footer)                        */
+/* ========================================= */
+.footer {
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto-claro);
+    padding: 30px 0;
+    margin-top: auto;
+    width: 100%;
+    border-top: 4px solid var(--cor-primaria); /* Detalhe amarelo no topo do rodapé */
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    gap: 10px;
+}
+
+.footer-logo i {
+    color: var(--cor-primaria);
+}
+
+.footer p {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+/* ========================================= */
+/* 5. RESPONSIVIDADE (Mobile)                */
+/* ========================================= */
+@media (max-width: 991px) { /* Tablet e Mobile */
+    
+    .header .container {
+        /* Mantém logo e hambúrguer na mesma linha */
+        flex-direction: row; 
+        flex-wrap: wrap;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        width: 100%;
+        display: none; /* Escondido por padrão */
+        background-color: var(--cor-secundaria);
+        padding: 20px 0;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 15px;
+    }
+    
+    /* Classe adicionada pelo JS */
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .nav-item {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-link {
+        justify-content: center;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Animação do Hambúrguer quando ativo */
+    .hamburger-menu.active .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger-menu.active .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-menu.active .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -6px);
+    }
+}

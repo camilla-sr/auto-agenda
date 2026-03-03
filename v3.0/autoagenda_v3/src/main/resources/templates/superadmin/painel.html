@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QG do Sistema - Superadmin</title>
+    <link rel="icon" type="image/png" href="/img/padrao_favicon.ico"/>
+
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/variaveis.css">
+    <link rel="stylesheet" href="/css/painel_superadmin.css">
+    
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/sweetalert2.all.min.js"></script>
+    
+    <style>
+        /* Ajuste do contraste do container de Status Geral da Oficina */
+        .card-status-geral {
+            background-color: #f8d7da !important;
+            border-color: #f5c2c7 !important;
+        }
+        .card-status-geral h6, .card-status-geral p, .card-status-geral i {
+            color: #842029 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-super navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">
+                <i class="fa-solid fa-server me-2"></i>Auto<span class="brand-highlight">Agenda</span> | Core
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active nav-menu-spa text-white px-3" href="#" data-target="visao-geral"><i class="fa-solid fa-chart-pie me-1"></i> Visão Geral</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-menu-spa text-white px-3" href="#" data-target="microsservicos"><i class="fa-solid fa-network-wired me-1"></i> Microsserviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-menu-spa text-white px-3" href="#" data-target="logs-sistema"><i class="fa-solid fa-terminal me-1"></i> Logs do Sistema</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="d-flex align-items-center mt-2 mt-lg-0">
+                <span class="text-light me-3 small"><i class="fa-solid fa-user-shield me-1"></i> <span th:text="${superadmin.nome}">SuperUser</span></span>
+                <a href="/superadmin-api/logout" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-power-off"></i> Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        
+        <div id="visao-geral" class="spa-section active">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="summary-card">
+                        <div class="summary-icon text-primary"><i class="fa-solid fa-building"></i></div>
+                        <div class="summary-info">
+                            <h3 th:text="${totalOficinas}">0</h3>
+                            <span>Oficinas Registradas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="summary-card">
+                        <div class="summary-icon text-success"><i class="fa-solid fa-check-circle"></i></div>
+                        <div class="summary-info">
+                            <h3 th:text="${oficinasAtivas}">0</h3>
+                            <span>Oficinas Ativas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="summary-card">
+                        <div class="summary-icon text-info"><i class="fa-solid fa-users"></i></div>
+                        <div class="summary-info">
+                            <h3 th:text="${totalUsuariosGlobais}">0</h3>
+                            <span>Usuários no Sistema</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-list me-2"></i> Gerenciamento de Oficinas</h5>
+                    <div class="d-flex gap-2">
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Buscar por slug ou CNPJ...">
+                            <button class="btn btn-secondary btn-sm" title="Buscar"><i class="fa-solid fa-search"></i></button>
+                            
+                            <button class="btn btn-outline-secondary btn-sm" id="btnRefreshTabela" title="Atualizar dados da tabela">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                        <a href="/setup/oficina" target="_blank" class="btn btn-success btn-sm d-flex align-items-center" title="Cadastrar nova oficina">
+                            <i class="fa-solid fa-plus me-1"></i> Nova Oficina
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Oficina (Nome Fantasia)</th>
+                                <th>Slug (URL)</th>
+                                <th>CNPJ</th>
+                                <th>Status</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(listaOficinas)}">
+                                <td colspan="99" class="text-center text-muted py-4">
+                                    <i class="fa-solid fa-building-circle-xmark fa-2x mb-2 opacity-50"></i><br>
+                                    Nenhuma oficina cadastrada no sistema.
+                                </td>
+                            </tr>
+                            <tr th:each="oficina : ${listaOficinas}">
+                                <td th:text="${oficina.idOficina}">1</td>
+                                <td>
+                                    <strong th:text="${oficina.nomeFantasia}"></strong><br>
+                                    <small class="text-light opacity-75" th:text="${oficina.emailContato}">contato@silva.com</small>
+                                </td>
+                                <td><span class="badge bg-secondary" th:text="${oficina.slug}">mecanica-silva</span></td>
+                                <td th:text="${oficina.cnpj}"></td>
+                                <td>
+                                    <span th:if="${oficina.ativo}" class="badge-status badge-ativo">Ativo</span>
+                                    <span th:unless="${oficina.ativo}" class="badge-status badge-inativo">Bloqueado</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:href="@{/{slug}/login(slug=${oficina.slug})}" target="_blank" class="btn btn-sm btn-outline-info me-1" title="Acessar tela de login">
+                                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-manage btn-sm" data-bs-toggle="modal" data-bs-target="#modalGerenciarOficina"
+                                            th:data-id="${oficina.idOficina}" th:data-nome="${oficina.nomeFantasia}" th:data-ativo="${oficina.ativo}" th:data-slug="${oficina.slug}">
+                                        <i class="fa-solid fa-gear me-1"></i> Gerenciar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="microsservicos" class="spa-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4><i class="fa-solid fa-network-wired text-info me-2"></i> Status dos Microsserviços</h4>
+                <button class="btn btn-sm btn-outline-info"><i class="fa-solid fa-rotate me-1"></i> Atualizar Status</button>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="card-title text-white mb-0"><i class="fa-solid fa-envelope text-warning me-2"></i>EmailService</h6>
+                                <span class="badge bg-success">Online</span>
+                            </div>
+                            <p class="small text-muted mb-0">Serviço de envio de credenciais e recuperações de senha.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="card-title text-white mb-0"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Auth2FAService</h6>
+                                <span class="badge bg-success">Online</span>
+                            </div>
+                            <p class="small text-muted mb-0">Validação e geração de códigos para login seguro.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-dark border-secondary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="card-title text-white mb-0"><i class="fa-solid fa-image text-info me-2"></i>ImageUploadService</h6>
+                                <span class="badge bg-success">Online</span>
+                            </div>
+                            <p class="small text-muted mb-0">Processamento de logos, favicons e fotos de agendamento via web/mobile.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="logs-sistema" class="spa-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4><i class="fa-solid fa-terminal text-success me-2"></i> Logs de Auditoria</h4>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-download me-1"></i> Exportar CSV</button>
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash-can me-1"></i> Limpar Logs</button>
+                </div>
+            </div>
+            
+            <div class="bg-black p-3 rounded border border-secondary" style="font-family: monospace; height: 500px; overflow-y: auto;">
+                <div class="text-success mb-1">[INFO] Exemplo de log de sistema iniciado.</div>
+                <div class="text-muted text-center mt-4">--- Fim dos registros ---</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalGerenciarOficina" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-secondary">
+                <div class="modal-header bg-dark border-secondary">
+                    <h5 class="modal-title"><i class="fa-solid fa-building text-primary me-2"></i> Gerenciar: <span id="modalOficinaNome" class="text-warning fw-bold">Carregando...</span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body p-0 bg-darker">
+                    <ul class="nav nav-tabs px-3 pt-2 border-secondary" id="manageTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active text-light" data-bs-toggle="tab" data-bs-target="#tab-resumo" type="button">Resumo & Acesso</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-light" data-bs-toggle="tab" data-bs-target="#tab-modulos" type="button">Módulos</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-light" data-bs-toggle="tab" data-bs-target="#tab-admins" type="button">Administradores</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-light" data-bs-toggle="tab" data-bs-target="#tab-funcionarios" type="button">Funcionários (Comum)</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-warning" data-bs-toggle="tab" data-bs-target="#tab-acessos" type="button"><i class="fa-solid fa-shield me-1"></i> Controle de Níveis</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content p-4" id="manageTabsContent">
+                        
+                        <div class="tab-pane fade show active" id="tab-resumo">
+                            <div class="row g-3 mb-4" id="cards-estatisticas-oficina">
+                                <div class="col-4">
+                                    <div class="stat-mini-card p-3 text-center border border-secondary rounded bg-dark">
+                                        <h3 id="stat-clientes" class="text-info mb-1"><i class="fa-solid fa-spinner fa-spin"></i></h3>
+                                        <span class="text-muted small">Clientes Base</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-mini-card p-3 text-center border border-secondary rounded bg-dark">
+                                        <h3 id="stat-produtos" class="text-success mb-1"><i class="fa-solid fa-spinner fa-spin"></i></h3>
+                                        <span class="text-muted small">Produtos/Peças</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-mini-card p-3 text-center border border-secondary rounded bg-dark">
+                                        <h3 id="stat-agendamentos" class="text-warning mb-1"><i class="fa-solid fa-spinner fa-spin"></i></h3>
+                                        <span class="text-muted small">Agendamentos Totais</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card card-status-geral mb-0">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold"><i class="fa-solid fa-power-off me-2"></i> Status Geral da Oficina</h6>
+                                        <p class="mb-0 small">Desativar a oficina impede o login de todos os funcionários e bloqueia a tela de acesso.</p>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-outline-danger px-4 fw-bold border-2" id="btnToggleStatusOficina">
+                                            Bloquear Acesso
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-modulos">
+                            <p class="text-muted small mb-4">Habilite ou desabilite as ferramentas do sistema para esta oficina.</p>
+                            
+                            <form method="post" action="/superadmin-api/salvar-modulos" id="formModulos">
+                                <input type="hidden" name="idOficina" id="modalInputModulosId">
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+                                    <div>
+                                        <strong class="d-block text-light">Gestão de Estoque</strong>
+                                        <small class="text-muted">Menu de produtos e controle de quantidade.</small>
+                                    </div>
+                                    <div class="form-check form-switch custom-switch fs-5">
+                                        <input class="form-check-input check-modulo" type="checkbox" name="usarProdutos" id="toggleProd">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+                                    <div>
+                                        <strong class="d-block text-light">Módulo Financeiro</strong>
+                                        <small class="text-muted">Preços, custos e visualização de faturamento.</small>
+                                    </div>
+                                    <div class="form-check form-switch custom-switch fs-5">
+                                        <input class="form-check-input check-modulo" type="checkbox" name="usarFinanceiro" id="toggleFin">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+                                    <div>
+                                        <strong class="d-block text-light">Segurança 2FA</strong>
+                                        <small class="text-muted">Obrigar uso de código por e-mail no login.</small>
+                                    </div>
+                                    <div class="form-check form-switch custom-switch fs-5">
+                                        <input class="form-check-input check-modulo" type="checkbox" name="usarAuth" id="toggleAuth">
+                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-success px-4" id="btnSalvarModulos" disabled>
+                                        <i class="fa-solid fa-save me-2"></i> Salvar Módulos
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-admins">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h6 class="mb-0 text-light">Administradores</h6>
+                                    <small class="text-muted">Gerencie quem tem controle total sobre esta oficina.</small>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-primary" id="btnNovoAdmin">
+                                    <i class="fa-solid fa-plus me-1"></i> Novo Admin
+                                </button>
+                            </div>
+
+                            <div id="formAdminContainer" class="mb-4 p-3 border border-primary rounded" style="display: none; background-color: rgba(13, 110, 253, 0.05);">
+                                <h6 class="mb-3 text-primary" id="tituloFormAdmin"><i class="fa-solid fa-user-tie me-2"></i>Cadastrar Admin</h6>
+                                <form id="formAdminData">
+                                    <input type="hidden" name="idFuncionario" id="adminIdFunc">
+                                    <input type="hidden" name="acesso" value="admin">
+                                    
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">Nome Completo</label>
+                                            <input type="text" name="nomeFuncionario" id="adminNome" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">CPF</label>
+                                            <input type="text" name="cpf" id="adminCpf" class="form-control form-control-sm bg-dark text-white border-secondary mask-cpf" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">E-mail Oficial</label>
+                                            <input type="email" name="email" id="adminEmail" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">Usuário (Login)</label>
+                                            <input type="text" name="usuario" id="adminUsuario" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="alert alert-warning py-2 mt-3 mb-3 small border-warning" id="avisoSenhaNova" style="background-color: transparent;">
+                                        <i class="fa-solid fa-circle-info me-1"></i> Ao criar um novo usuário, a senha será gerada aleatoriamente e enviada por e-mail.
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-sm btn-secondary me-2 btn-cancel-form" data-target="formAdminContainer">Cancelar</button>
+                                        <button type="submit" class="btn btn-sm btn-primary px-3" id="btnSalvarFormAdmin"><i class="fa-solid fa-save me-1"></i> Salvar Dados</button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <div class="table-responsive border border-secondary rounded">
+                                <table class="table table-dark table-hover mb-0 align-middle text-sm" id="tabela-admins">
+                                    <thead class="table-active">
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Login</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="4" class="text-center py-3 text-muted">Carregando administradores...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-funcionarios">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h6 class="mb-0 text-light">Funcionários (Comum)</h6>
+                                    <small class="text-muted">Gerencie a equipe operacional da oficina.</small>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-info text-dark fw-bold" id="btnNovoFunc">
+                                    <i class="fa-solid fa-plus me-1"></i> Novo Funcionário
+                                </button>
+                            </div>
+
+                            <div id="formFuncContainer" class="mb-4 p-3 border border-info rounded" style="display: none; background-color: rgba(13, 202, 240, 0.05);">
+                                <h6 class="mb-3 text-info" id="tituloFormFunc"><i class="fa-solid fa-wrench me-2"></i>Cadastrar Funcionário</h6>
+                                <form id="formFuncData">
+                                    <input type="hidden" name="idFuncionario" id="funcIdFunc">
+                                    <input type="hidden" name="acesso" value="comum">
+                                    
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">Nome Completo</label>
+                                            <input type="text" name="nomeFuncionario" id="funcNome" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">CPF</label>
+                                            <input type="text" name="cpf" id="funcCpf" class="form-control form-control-sm bg-dark text-white border-secondary mask-cpf" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">E-mail Oficial</label>
+                                            <input type="email" name="email" id="funcEmail" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">Usuário (Login)</label>
+                                            <input type="text" name="usuario" id="funcUsuario" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-warning py-2 mt-3 mb-3 small border-warning" id="avisoSenhaNovaFunc" style="background-color: transparent;">
+                                        <i class="fa-solid fa-circle-info me-1"></i> Ao criar um novo usuário, a senha será gerada aleatoriamente e enviada por e-mail.
+                                    </div>
+
+                                    <div class="text-end mt-3">
+                                        <button type="button" class="btn btn-sm btn-secondary me-2 btn-cancel-form" data-target="formFuncContainer">Cancelar</button>
+                                        <button type="submit" class="btn btn-sm btn-info px-3" id="btnSalvarFormFunc"><i class="fa-solid fa-save me-1"></i> Salvar Dados</button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <div class="table-responsive border border-secondary rounded">
+                                <table class="table table-dark table-hover mb-0 align-middle text-sm" id="tabela-funcionarios">
+                                    <thead class="table-active">
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Login</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="4" class="text-center py-3 text-muted">Carregando equipe...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-acessos">
+                            <div class="mb-3">
+                                <h6 class="text-warning"><i class="fa-solid fa-layer-group me-2"></i> Alteração de Nível de Acesso</h6>
+                                <p class="text-muted small">Modifique as permissões dos funcionários desta oficina.</p>
+                            </div>
+                            
+                            <div class="table-responsive border border-secondary rounded" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-dark table-hover mb-0 align-middle text-sm" id="tabela-todos-acessos">
+                                    <thead class="table-active sticky-top">
+                                        <tr>
+                                            <th>Colaborador</th>
+                                            <th>Permissão Atual</th>
+                                            <th style="width: 250px;">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="3" class="text-center py-3 text-muted">Carregando mapa de cargos...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // =========================================================
+            // LÓGICA DE NAVEGAÇÃO SPA (Single Page Application)
+            // =========================================================
+            const linksSpa = document.querySelectorAll('.nav-menu-spa');
+            const secoesSpa = document.querySelectorAll('.spa-section');
+
+            linksSpa.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    linksSpa.forEach(l => l.classList.remove('active', 'fw-bold'));
+                    this.classList.add('active', 'fw-bold');
+
+                    secoesSpa.forEach(sec => sec.style.display = 'none');
+                    const alvo = this.getAttribute('data-target');
+                    document.getElementById(alvo).style.display = 'block';
+                });
+            });
+
+            // =========================================================
+            // GERADOR AUTOMÁTICO DE NOME DE USUÁRIO
+            // =========================================================
+            function ativarGeradorDeUsuario(idCampoNome, idCampoUsuario) {
+                const inputNomeStr = document.getElementById(idCampoNome);
+                const inputUsuarioStr = document.getElementById(idCampoUsuario);
+                if (!inputNomeStr || !inputUsuarioStr) return;
+
+                let editadoManualmente = false;
+
+                inputUsuarioStr.addEventListener('input', (e) => {
+                    if (e.isTrusted) editadoManualmente = true; 
+                });
+
+                inputNomeStr.addEventListener('input', function() {
+                    if (!editadoManualmente) {
+                        const nomeLimpo = this.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, '');
+                        const partes = nomeLimpo.split(/\s+/);
+                        
+                        if (partes.length > 1) {
+                            const primeiro = partes[0];
+                            let ultimo = partes[partes.length - 1];
+                            const preposicoes = ['de', 'da', 'do', 'das', 'dos'];
+                            if (preposicoes.includes(ultimo) && partes.length > 2) {
+                                ultimo = partes[partes.length - 2];
+                            }
+                            inputUsuarioStr.value = `${primeiro}.${ultimo}`;
+                            inputUsuarioStr.dispatchEvent(new Event('input'));
+                            editadoManualmente = false; 
+                        } else {
+                            inputUsuarioStr.value = partes[0] || '';
+                        }
+                    }
+                });
+            }
+
+            ativarGeradorDeUsuario('adminNome', 'adminUsuario');
+            ativarGeradorDeUsuario('funcNome', 'funcUsuario');
+
+            // --- Máscara de CPF Dinâmica ---
+            if(typeof Inputmask !== 'undefined') {
+                document.querySelectorAll('.mask-cpf').forEach(el => {
+                    Inputmask("999.999.999-99").mask(el);
+                });
+            }
+
+            // --- BOTÃO REFRESH TABELA PRINCIPAL ---
+            const btnRefresh = document.getElementById('btnRefreshTabela');
+            if (btnRefresh) {
+                btnRefresh.addEventListener('click', () => {
+                    btnRefresh.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    btnRefresh.disabled = true;
+                    setTimeout(() => location.reload(), 300);
+                });
+            }
+
+            // =========================================================
+            // LÓGICA DO MODAL DE GERENCIAMENTO DE OFICINA
+            // =========================================================
+            let oficinaIdContexto = null;
+            let slugContexto = null;
+            const modalGerenciar = document.getElementById('modalGerenciarOficina');
+            
+            modalGerenciar.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                oficinaIdContexto = button.getAttribute('data-id');
+                slugContexto = button.getAttribute('data-slug');
+                const nome = button.getAttribute('data-nome');
+                const isAtivo = button.getAttribute('data-ativo') === 'true';
+                
+                document.getElementById('modalOficinaNome').textContent = nome;
+                
+                const btnStatusOficina = document.getElementById('btnToggleStatusOficina');
+                if(isAtivo) {
+                    btnStatusOficina.className = 'btn btn-outline-danger px-4 fw-bold border-2';
+                    btnStatusOficina.innerHTML = '<i class="fa-solid fa-lock me-1"></i> Bloquear Acesso';
+                } else {
+                    btnStatusOficina.className = 'btn btn-success px-4 fw-bold';
+                    btnStatusOficina.innerHTML = '<i class="fa-solid fa-lock-open me-1"></i> Liberar Acesso';
+                }
+
+                // Reseta forms
+                document.getElementById('formAdminContainer').style.display = 'none';
+                document.getElementById('formFuncContainer').style.display = 'none';
+                document.getElementById('formAdminData').reset();
+                document.getElementById('formFuncData').reset();
+                
+                carregarEstatisticasOficina(oficinaIdContexto);
+                carregarModulosOficina(oficinaIdContexto);
+                carregarEquipePorNivel(oficinaIdContexto, 'admin', 'tabela-admins');
+                carregarEquipePorNivel(oficinaIdContexto, 'comum', 'tabela-funcionarios');
+                carregarAcessosRapidos(oficinaIdContexto);
+            });
+
+            // =========================================================
+            // API: DESATIVAR/ATIVAR OFICINA
+            // =========================================================
+            document.getElementById('btnToggleStatusOficina').addEventListener('click', () => {
+                if(!oficinaIdContexto) return;
+                
+                Swal.fire({
+                    title: 'Alterar Status da Oficina?',
+                    text: "Ao bloquear, todos os usuários serão deslogados imediatamente e a URL ficará inacessível.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33', 
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sim, prosseguir'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/superadmin-api/oficina/status/${oficinaIdContexto}`, { method: 'POST' })
+                        .then(res => {
+                            if(res.ok) {
+                                Swal.fire('Sucesso!', 'Status da oficina atualizado.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Erro', 'Não foi possível alterar o status.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // =========================================================
+            // API: CARREGAR ESTATÍSTICAS
+            // =========================================================
+            function carregarEstatisticasOficina(idOficina) {
+                const elCli = document.getElementById('stat-clientes');
+                const elProd = document.getElementById('stat-produtos');
+                const elAg = document.getElementById('stat-agendamentos');
+
+                elCli.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                elProd.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                elAg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+                fetch(`/superadmin-api/oficina/estatisticas/${idOficina}`)
+                .then(r => r.json())
+                .then(data => {
+                    elCli.innerHTML = data.totalClientes || 0;
+                    elProd.innerHTML = data.totalProdutos || 0;
+                    elAg.innerHTML = data.totalAgendamentos || 0;
+                }).catch(() => {
+                    elCli.innerHTML = '-'; elProd.innerHTML = '-'; elAg.innerHTML = '-';
+                });
+            }
+
+            // =========================================================
+            // API: CARREGAR MÓDULOS
+            // =========================================================
+            function carregarModulosOficina(idOficina) {
+                document.getElementById('modalInputModulosId').value = idOficina;
+                
+                fetch(`/superadmin-api/oficina/modulos/${idOficina}`)
+                .then(r => r.json())
+                .then(modulos => {
+                    document.getElementById('toggleProd').checked = modulos.usarProdutos;
+                    document.getElementById('toggleFin').checked = modulos.usarFinanceiro;
+                    document.getElementById('toggleAuth').checked = modulos.usarAuth;
+                    document.getElementById('btnSalvarModulos').disabled = true;
+                });
+            }
+
+            document.querySelectorAll('.check-modulo').forEach(cb => {
+                cb.addEventListener('change', () => { document.getElementById('btnSalvarModulos').disabled = false; });
+            });
+
+            // =========================================================
+            // API: RENDERIZAR TABELAS DE EQUIPE (ADMINS E COMUNS)
+            // =========================================================
+            function carregarEquipePorNivel(idOficina, nivel, idTabela) {
+                const tbody = document.querySelector(`#${idTabela} tbody`);
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin text-info"></i> Buscando...</td></tr>';
+
+                fetch(`/superadmin-api/oficina/funcionarios/${idOficina}?nivel=${nivel}`)
+                .then(r => r.json())
+                .then(equipe => {
+                    tbody.innerHTML = '';
+                    if(equipe.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-muted">Nenhum ${nivel} cadastrado.</td></tr>`;
+                        return;
+                    }
+
+                    equipe.forEach(func => {
+                        const tr = document.createElement('tr');
+                        const statusBadge = func.ativo 
+                            ? `<span class="badge bg-success" style="font-size:0.65rem;">Ativo</span>` 
+                            : `<span class="badge bg-danger" style="font-size:0.65rem;">Bloqueado</span>`;
+                            
+                        const btnBloquearCor = func.ativo ? 'btn-outline-danger' : 'btn-outline-success';
+                        const btnBloquearIcone = func.ativo ? 'fa-ban' : 'fa-check';
+                        const btnBloquearTitle = func.ativo ? 'Desativar acesso' : 'Reativar acesso';
+
+                        // Guarda o objeto para preencher o formulário
+                        tr.dataset.funcionario = JSON.stringify(func);
+
+                        tr.innerHTML = `
+                            <td>
+                                <strong>${func.nomeFuncionario}</strong><br>
+                                <span class="text-muted" style="font-size:0.75rem;">${func.email}</span>
+                            </td>
+                            <td><code>${func.usuario}</code></td>
+                            <td>${statusBadge}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-secondary me-1 btn-forcar-logout" title="Forçar Logout" data-id="${func.idFuncionario}">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info btn-edit-func me-1" title="Editar Dados" data-nivel="${nivel}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning btn-reset-senha me-1" title="Resetar Senha" data-id="${func.idFuncionario}">
+                                    <i class="fa-solid fa-key"></i>
+                                </button>
+                                <button class="btn btn-sm ${btnBloquearCor} btn-toggle-func" title="${btnBloquearTitle}" data-id="${func.idFuncionario}">
+                                    <i class="fa-solid ${btnBloquearIcone}"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    configurarEventosTabelaEquipe(idTabela);
+                }).catch(() => {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-danger">Erro ao carregar lista.</td></tr>';
+                });
+            }
+
+            function configurarEventosTabelaEquipe(idTabela) {
+                const tabela = document.getElementById(idTabela);
+                
+                // EDITAR (PREENCHE O FORMULÁRIO DO RESPECTIVO NÍVEL)
+                tabela.querySelectorAll('.btn-edit-func').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const tr = this.closest('tr');
+                        const func = JSON.parse(tr.dataset.funcionario);
+                        const nivel = this.getAttribute('data-nivel');
+                        
+                        if(nivel === 'admin') {
+                            document.getElementById('tituloFormAdmin').innerHTML = '<i class="fa-solid fa-user-pen me-2"></i>Editar Admin';
+                            document.getElementById('avisoSenhaNova').style.display = 'none';
+                            document.getElementById('adminIdFunc').value = func.idFuncionario;
+                            document.getElementById('adminNome').value = func.nomeFuncionario;
+                            document.getElementById('adminCpf').value = func.cpf;
+                            document.getElementById('adminEmail').value = func.email;
+                            document.getElementById('adminUsuario').value = func.usuario;
+                            document.getElementById('formAdminContainer').style.display = 'block';
+                        } else {
+                            document.getElementById('tituloFormFunc').innerHTML = '<i class="fa-solid fa-user-pen me-2"></i>Editar Funcionário';
+                            document.getElementById('avisoSenhaNovaFunc').style.display = 'none';
+                            document.getElementById('funcIdFunc').value = func.idFuncionario;
+                            document.getElementById('funcNome').value = func.nomeFuncionario;
+                            document.getElementById('funcCpf').value = func.cpf;
+                            document.getElementById('funcEmail').value = func.email;
+                            document.getElementById('funcUsuario').value = func.usuario;
+                            document.getElementById('formFuncContainer').style.display = 'block';
+                        }
+                    });
+                });
+
+                // RESET DE SENHA
+                tabela.querySelectorAll('.btn-reset-senha').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idUser = this.getAttribute('data-id');
+                        Swal.fire({
+                            title: 'Forçar Reset de Senha?',
+                            text: "Uma nova senha provisória será enviada ao e-mail deste usuário.",
+                            icon: 'warning', showCancelButton: true, confirmButtonColor: '#ffc107', confirmButtonText: 'Sim, Enviar Reset', background: '#1a1e21', color: '#fff'
+                        }).then(r => { 
+                            if(r.isConfirmed) {
+                                fetch(`/superadmin-api/funcionario/reset-senha/${idUser}`, { method: 'POST' })
+                                .then(res => {
+                                    if(res.ok) Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'E-mail enviado', showConfirmButton: false, timer: 3000});
+                                    else Swal.fire('Erro', 'Não foi possível resetar a senha.', 'error');
+                                });
+                            }
+                        });
+                    });
+                });
+
+                // FORÇAR LOGOUT
+                tabela.querySelectorAll('.btn-forcar-logout').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idUser = this.getAttribute('data-id');
+                        fetch(`/superadmin-api/funcionario/logout/${idUser}`, { method: 'POST' })
+                        .then(res => {
+                            if(res.ok) Swal.fire({toast: true, position: 'top-end', icon: 'info', title: 'Sessão encerrada (se ativo)', showConfirmButton: false, timer: 3000});
+                        });
+                    });
+                });
+
+                // BLOQUEAR/DESBLOQUEAR USUÁRIO
+                tabela.querySelectorAll('.btn-toggle-func').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idUser = this.getAttribute('data-id');
+                        fetch(`/superadmin-api/funcionario/status/${idUser}`, { method: 'POST' })
+                        .then(res => {
+                            if(res.ok) {
+                                carregarEquipePorNivel(oficinaIdContexto, 'admin', 'tabela-admins');
+                                carregarEquipePorNivel(oficinaIdContexto, 'comum', 'tabela-funcionarios');
+                            }
+                        });
+                    });
+                });
+            }
+
+            // =========================================================
+            // SALVAR FORMULÁRIOS (INTEGRANDO COM O ENDPOINT EXISTENTE)
+            // =========================================================
+            function submeterFormularioFuncionario(formElement, nivel) {
+                const formData = new FormData(formElement);
+                formData.append('oficina.idOficina', oficinaIdContexto); // Vincula à oficina do modal
+                
+                // O endpoint do controller atual de funcionário usa o slug na URL
+                fetch(`/${slugContexto}/funcionario-api/salvar`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => {
+                    if(res.redirected && res.url.includes("erro=true")) {
+                         Swal.fire('Atenção', 'Verifique se o usuário/CPF/e-mail já existem.', 'warning');
+                    } else if(res.ok || res.redirected) {
+                        Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Salvo com sucesso!', showConfirmButton: false, timer: 2000});
+                        formElement.reset();
+                        formElement.closest('div').style.display = 'none';
+                        carregarEquipePorNivel(oficinaIdContexto, nivel, nivel === 'admin' ? 'tabela-admins' : 'tabela-funcionarios');
+                        carregarAcessosRapidos(oficinaIdContexto);
+                    }
+                }).catch(e => Swal.fire('Erro', 'Falha na comunicação', 'error'));
+            }
+
+            document.getElementById('formAdminData').addEventListener('submit', function(e) {
+                e.preventDefault(); submeterFormularioFuncionario(this, 'admin');
+            });
+            document.getElementById('formFuncData').addEventListener('submit', function(e) {
+                e.preventDefault(); submeterFormularioFuncionario(this, 'comum');
+            });
+
+            // CONTROLES DE ABERTURA E FECHAMENTO
+            document.getElementById('btnNovoAdmin').addEventListener('click', () => {
+                document.getElementById('tituloFormAdmin').innerHTML = '<i class="fa-solid fa-user-tie me-2"></i>Cadastrar Novo Admin';
+                document.getElementById('avisoSenhaNova').style.display = 'block';
+                document.getElementById('formAdminData').reset();
+                document.getElementById('adminIdFunc').value = "";
+                document.getElementById('formAdminContainer').style.display = 'block';
+                document.getElementById('adminNome').focus();
+            });
+
+            document.getElementById('btnNovoFunc').addEventListener('click', () => {
+                document.getElementById('tituloFormFunc').innerHTML = '<i class="fa-solid fa-wrench me-2"></i>Cadastrar Funcionário';
+                document.getElementById('avisoSenhaNovaFunc').style.display = 'block';
+                document.getElementById('formFuncData').reset();
+                document.getElementById('funcIdFunc').value = "";
+                document.getElementById('formFuncContainer').style.display = 'block';
+                document.getElementById('funcNome').focus();
+            });
+
+            document.querySelectorAll('.btn-cancel-form').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById(this.getAttribute('data-target')).style.display = 'none';
+                });
+            });
+
+            // =========================================================
+            // TAB: GERENCIAMENTO RÁPIDO DE ACESSOS (PROMOVER/REBAIXAR)
+            // =========================================================
+            function carregarAcessosRapidos(idOficina) {
+                const tbody = document.querySelector('#tabela-todos-acessos tbody');
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin text-warning"></i> Carregando mapa de cargos...</td></tr>';
+                
+                fetch(`/superadmin-api/oficina/funcionarios/${idOficina}?nivel=todos`)
+                .then(r => r.json())
+                .then(equipe => {
+                    tbody.innerHTML = '';
+                    if(equipe.length === 0) return;
+
+                    equipe.forEach(func => {
+                        const tr = document.createElement('tr');
+                        const isAdm = func.acesso === 'admin';
+                        const badgeNivel = isAdm ? `<span class="badge bg-primary text-light">Administrador</span>` : `<span class="badge bg-secondary text-light border border-secondary">Usuário Comum</span>`;
+                        
+                        // Select com a opção de troca
+                        const selectHtml = `
+                            <select class="form-select form-select-sm bg-dark text-white border-secondary select-nivel" data-id="${func.idFuncionario}">
+                                <option value="admin" ${isAdm ? 'selected' : ''}>Admin</option>
+                                <option value="comum" ${!isAdm ? 'selected' : ''}>Comum</option>
+                            </select>
+                        `;
+
+                        tr.innerHTML = `
+                            <td>${func.nomeFuncionario}<br><small class="text-muted">${func.usuario}</small></td>
+                            <td>${badgeNivel}</td>
+                            <td>${selectHtml}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    // Evento de Troca no Select
+                    tbody.querySelectorAll('.select-nivel').forEach(sel => {
+                        sel.addEventListener('change', function() {
+                            const id = this.dataset.id;
+                            const novoNivel = this.value;
+                            
+                            fetch(`/superadmin-api/funcionario/alterar-nivel`, { 
+                                method: 'POST', 
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: `idFuncionario=${id}&nivel=${novoNivel}`
+                            }).then(res => {
+                                if(res.ok) {
+                                    Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Nível atualizado!', showConfirmButton: false, timer: 1500});
+                                    // Recarrega as tabelas para refletir as mudanças
+                                    carregarEquipePorNivel(oficinaIdContexto, 'admin', 'tabela-admins');
+                                    carregarEquipePorNivel(oficinaIdContexto, 'comum', 'tabela-funcionarios');
+                                    carregarAcessosRapidos(oficinaIdContexto);
+                                }
+                            });
+                        });
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

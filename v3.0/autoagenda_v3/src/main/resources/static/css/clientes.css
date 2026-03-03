@@ -1,0 +1,437 @@
+/* ARQUIVO: css/tudonovo/clientes.css */
+/* OBJETIVO: Estilos exclusivos da página de CLIENTES e Modal de Veículos */
+
+/* 1. Estrutura Base */
+body {
+    background-color: var(--cor-fundo-claro);
+    color: var(--cor-texto-escuro);
+    font-family: var(--fonte-principal);
+}
+
+.main-content {
+    margin-top: 80px;
+    padding: 30px 0;
+    min-height: calc(100vh - 160px);
+}
+
+/* 2. Cabeçalho da Página */
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--cor-primaria);
+}
+
+.page-header h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--cor-secundaria);
+    margin-bottom: 5px;
+}
+
+.page-header h2 i {
+    margin-right: 10px;
+    color: var(--cor-primaria);
+}
+
+.page-header p {
+    color: #666;
+    font-size: 1rem;
+    margin-left: 35px;
+}
+
+/* 3. Formulário de Novo Cliente */
+.form-container {
+    background-color: #fff;
+    border-radius: var(--borda-arredondada);
+    box-shadow: var(--sombra-padrao);
+    padding: 25px;
+    margin-bottom: 30px;
+    border-top: 4px solid var(--cor-primaria);
+}
+
+.form-container h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--cor-fundo-medio);
+    padding-bottom: 10px;
+}
+
+.form-container h3 i {
+    margin-right: 10px;
+    color: var(--cor-primaria);
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-col {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group label.required::after {
+    content: " *";
+    color: var(--cor-erro);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    color: #999;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--borda-arredondada);
+    font-family: var(--fonte-principal);
+    height: 42px;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+    border-color: var(--cor-primaria);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--cor-fundo-medio);
+}
+
+/* 4. Tabela de Clientes */
+.table-container {
+    background-color: #fff;
+    border-radius: var(--borda-arredondada);
+    box-shadow: var(--sombra-padrao);
+    padding: 25px;
+    border-top: 4px solid var(--cor-primaria);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--cor-fundo-medio);
+    padding-bottom: 10px;
+}
+
+.table-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.table-header h3 i {
+    margin-right: 10px;
+    color: var(--cor-primaria);
+}
+
+.table-actions {
+    margin-bottom: 20px;
+}
+
+#busca {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--borda-arredondada);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th {
+    background-color: var(--cor-fundo-claro);
+    text-align: left;
+    padding: 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--cor-primaria-light);
+}
+
+table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--cor-fundo-medio);
+    vertical-align: middle;
+}
+
+/* Botões da Tabela Principal */
+.action-buttons {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    margin: 0 2px;
+    transition: var(--transicao);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit {
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+}
+
+.btn-edit:hover {
+    background-color: var(--cor-primaria-hover);
+}
+
+.btn-delete {
+    background-color: var(--cor-erro);
+}
+
+.btn-delete:hover {
+    filter: brightness(0.9);
+}
+
+.btn-veiculos {
+    background-color: var(--cor-info);
+}
+
+.btn-veiculos:hover {
+    filter: brightness(0.9);
+}
+
+/* 5. MODAL DE VEÍCULOS (Estilos Específicos) */
+
+/* Inputs dentro da tabela do modal */
+.table-input {
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.table-input:focus {
+    border-color: var(--cor-primaria);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+}
+
+.table-input.is-invalid {
+    border-color: var(--cor-erro);
+}
+
+/* Botões de Ação do Modal (Quadradinhos) */
+.btn-action-custom {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transicao);
+    font-size: 0.875rem;
+}
+
+/* Cores específicas para o modal (usando variáveis) */
+.btn-action-custom.btn-edit {
+    background-color: var(--cor-primaria-light);
+    color: var(--cor-secundaria);
+}
+
+.btn-action-custom.btn-edit:hover {
+    background-color: var(--cor-primaria);
+}
+
+.btn-action-custom.btn-delete {
+    background-color: var(--cor-erro-light);
+    color: var(--cor-erro);
+}
+
+.btn-action-custom.btn-delete:hover {
+    filter: brightness(0.95);
+}
+
+.btn-action-custom.btn-success {
+    background-color: var(--cor-sucesso-light);
+    color: var(--cor-sucesso);
+}
+
+.btn-action-custom.btn-success:hover {
+    background-color: var(--cor-sucesso);
+    color: #fff;
+}
+
+.btn-action-custom.btn-secondary {
+    background-color: var(--cor-fundo-medio);
+    color: var(--cor-texto-escuro);
+}
+
+.btn-action-custom.btn-secondary:hover {
+    background-color: var(--cor-borda);
+}
+
+/* Ajustes do Modal Bootstrap */
+.modal-header {
+    border-bottom: 1px solid var(--cor-fundo-medio);
+    background-color: var(--cor-fundo-claro);
+}
+
+.modal-title i {
+    color: var(--cor-primaria);
+}
+
+/* 6. Botões Gerais da Página */
+.btn {
+    padding: 10px 20px;
+    border-radius: var(--borda-arredondada);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transicao);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+}
+
+.btn-primary:hover {
+    background-color: var(--cor-primaria-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* 7. Responsividade */
+@media (max-width: 768px) {
+    .form-col {
+        min-width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Modal Responsivo */
+    #modalGerenciarVeiculos .modal-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+
+    #modalGerenciarVeiculos .modal-header button {
+        width: 100%;
+    }
+
+    .btn-action-custom {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    /* Tabela Responsiva (Card View) */
+    .appointments-table thead {
+        display: none;
+    }
+
+    .appointments-table,
+    .appointments-table tbody,
+    .appointments-table tr,
+    .appointments-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .appointments-table tr {
+        margin-bottom: 15px;
+        background-color: #fff;
+        border: 1px solid var(--cor-borda);
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .appointments-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 40px;
+    }
+
+    .appointments-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        text-align: left;
+    }
+
+    /* Ajuste específico para a coluna de ações no mobile */
+    .appointments-table td.action-buttons {
+        display: flex !important;
+        justify-content: center !important;
+        padding-left: 0;
+        margin-top: 10px;
+        gap: 10px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+
+    .appointments-table td.action-buttons::before {
+        display: none;
+    }
+}

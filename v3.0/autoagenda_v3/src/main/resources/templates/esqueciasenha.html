@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Recuperação de senha - ' + ${branding.nomeEmpresa}">Agendamentos - AutoAgenda</title>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+    <script src="/js/sweetalert2.all.min.js"></script>
+    
+	<link rel="stylesheet" href="/css/variaveis.css">
+	<link rel="stylesheet" href="/css/autenticacao.css">
+</head>
+<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100">
+	<div class="auth-card">
+        <button class="btn-back" onclick="window.location.href='/login'" title="Voltar">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <img th:src="@{${branding.logoUrl}}" alt="Logo" class="auth-logo">
+
+        <div class="step-indicator">
+            <div class="step-dot active" id="dot1"></div>
+            <div class="step-dot" id="dot2"></div>
+            <div class="step-dot" id="dot3"></div>
+        </div>
+
+        <div class="steps-container">
+            
+            <div class="step active" id="step1">
+                <h2 class="mensagem">Recuperar Senha</h2>
+                <p class="text-muted mb-4">Digite seu e-mail para receber o código</p>
+
+                <div class="log-inputs">
+                    <label class="form-label">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" id="email" class="form-control" placeholder="seu@email.com" required/>
+                        <div class="invalid-feedback">E-mail inválido</div>
+                    </div>
+                </div>
+
+                <div class="botoes">
+                    <button type="button" id="btnAvancarStep1" class="btn-acao">Avançar</button>
+                </div>
+            </div>
+
+            <div class="step" id="step2">
+                <h2 class="mensagem">Código</h2>
+                <p class="text-muted mb-3">
+                    Enviamos um código para<br>
+                    <strong style="color: var(--cor-primaria);" id="email-display"></strong>
+                </p>
+
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                </div>
+
+                <div id="otp-feedback" style="display:none; color: #dc3545; margin-bottom: 10px; text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i> Código inválido
+                </div>
+
+                <p class="text-muted mt-3" style="text-align: center;">
+                    Não recebeu? 
+                    <a href="#" id="btnReenviar" class="small-link">Reenviar código</a>
+                </p>
+            </div>
+
+            <div class="step" id="step3">
+                <h2 class="mensagem">Nova Senha</h2>
+                <p class="text-muted mb-4">Crie sua nova senha</p>
+
+                <div class="log-inputs">
+                    <label class="form-label">Nova Senha</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="novaSenha" class="form-control" placeholder="Mínimo 6 caracteres" required />
+                    </div>
+
+                    <label class="form-label">Confirmar Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-check"></i></span>
+                        <input type="password" id="confirmaSenha" class="form-control" placeholder="Repita a senha" required />
+                        <div class="invalid-feedback">As senhas não coincidem</div>
+                    </div>
+                </div>
+
+                <div class="botoes">
+                    <button type="button" id="btnSalvarSenha" class="btnLogin">Salvar Senha</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let emailUsuario = '';
+        let codigoRecuperacao = '';
+
+        const steps = document.querySelectorAll('.step');
+        const dots = document.querySelectorAll('.step-dot');
+
+        // Função para mudar de passo
+        function irParaPasso(numPasso) {
+            steps.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            const stepAtual = document.getElementById(`step${numPasso}`);
+            const dotAtual = document.getElementById(`dot${numPasso}`);
+            
+            if (stepAtual) stepAtual.classList.add('active');
+            if (dotAtual) dotAtual.classList.add('active');
+
+            // Foco automático no primeiro input da etapa 2
+            if (numPasso === 2) {
+                setTimeout(() => {
+                    const primeiroInput = document.querySelector('.otp-input');
+                    if (primeiroInput) primeiroInput.focus();
+                }, 100);
+            }
+        }
+
+        // ==========================================
+        // ETAPA 1: Enviar código
+        // ==========================================
+        const btnStep1 = document.getElementById('btnAvancarStep1');
+        const emailInp = document.getElementById('email');
+        const emailFeedback = emailInp.nextElementSibling;
+
+        btnStep1.addEventListener('click', async () => {
+            const email = emailInp.value.trim();
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!re.test(email)) {
+                emailInp.classList.add('is-invalid');
+                emailFeedback.style.display = 'block';
+                return;
+            }
+            
+            emailInp.classList.remove('is-invalid');
+            emailFeedback.style.display = 'none';
+            emailUsuario = email;
+
+            btnStep1.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btnStep1.disabled = true;
+
+            try {
+                const response = await fetch('/funcionario-api/enviar-codigo-reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `email=${encodeURIComponent(emailUsuario)}`
+                });
+
+                if (response.ok) {
+                    document.getElementById('email-display').textContent = emailUsuario;
+                    irParaPasso(2);
+                } else {
+                    const msg = await response.text();
+                    Swal.fire('Atenção', msg || 'Erro ao enviar código.', 'warning');
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire('Erro', 'Falha na conexão com o servidor.', 'error');
+            } finally {
+                btnStep1.innerHTML = 'Avançar';
+                btnStep1.disabled = false;
+            }
+        });
+
+        // Limpar erro ao digitar
+        emailInp.addEventListener('input', () => {
+            emailInp.classList.remove('is-invalid');
+            emailFeedback.style.display = 'none';
+        });
+
+        // ==========================================
+        // ETAPA 2: Validar código OTP
+        // ==========================================
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const otpFeedback = document.getElementById('otp-feedback');
+
+        otpInputs.forEach((input, index) => {
+            // Navegação entre inputs
+            input.addEventListener('keydown', (e) => {
+                if (e.key >= '0' && e.key <= '9') {
+                    input.value = '';
+                } else if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener('input', async () => {
+                // Limpar erros
+                input.classList.remove('is-invalid');
+                otpFeedback.style.display = 'none';
+
+                // Avançar para próximo input
+                if (input.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+
+                // Validar quando preencher todos
+                if (index === otpInputs.length - 1 && input.value !== '') {
+                    let codigoCompleto = '';
+                    otpInputs.forEach(i => codigoCompleto += i.value);
+                    
+                    if (codigoCompleto.length === 6) {
+                        await validarCodigo(codigoCompleto);
+                    }
+                }
+            });
+
+            // Suporte a colar código
+            input.addEventListener('paste', (e) => {
+                const pasteData = e.clipboardData.getData('text');
+                if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+                    e.preventDefault();
+                    otpInputs.forEach((inp, i) => {
+                        inp.value = pasteData[i];
+                        inp.classList.remove('is-invalid');
+                    });
+                    validarCodigo(pasteData);
+                }
+            });
+        });
+
+        async function validarCodigo(codigo) {
+            otpInputs.forEach(i => i.disabled = true);
+
+            try {
+                const response = await fetch('/funcionario-api/validar-codigo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailUsuario, codigo: codigo })
+                });
+
+                if (response.ok) {
+                    codigoRecuperacao = codigo;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Código Validado!',
+                        timer: 1000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        irParaPasso(3);
+                    });
+                } else {
+                    otpFeedback.style.display = 'block';
+                    otpInputs.forEach(i => {
+                        i.disabled = false;
+                        i.value = '';
+                        i.classList.add('is-invalid');
+                    });
+                    otpInputs[0].focus();
+                }
+            } catch (e) {
+                Swal.fire('Erro', 'Erro ao validar código.', 'error');
+                otpInputs.forEach(i => {
+                    i.disabled = false;
+                    i.value = '';
+                });
+            }
+        }
+
+        // ==========================================
+        // ETAPA 3: Redefinir senha
+        // ==========================================
+        const btnSalvar = document.getElementById('btnSalvarSenha');
+        const senha1 = document.getElementById('novaSenha');
+        const senha2 = document.getElementById('confirmaSenha');
+        const senhaFeedback = senha2.nextElementSibling;
+
+        btnSalvar.addEventListener('click', async () => {
+            const s1 = senha1.value;
+            const s2 = senha2.value;
+
+            if (s1.length < 6) {
+                Swal.fire('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'warning');
+                return;
+            }
+
+            if (s1 !== s2) {
+                senha2.classList.add('is-invalid');
+                senhaFeedback.style.display = 'block';
+                return;
+            }
+
+            senha2.classList.remove('is-invalid');
+            senhaFeedback.style.display = 'none';
+
+            btnSalvar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            btnSalvar.disabled = true;
+
+            try {
+                const response = await fetch('/funcionario-api/redefinir-senha-final', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: emailUsuario,
+                        codigo: codigoRecuperacao,
+                        novaSenha: s1
+                    })
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Senha Alterada!',
+                        text: 'Você será redirecionado para o login.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '/login';
+                    });
+                } else {
+                    Swal.fire('Erro', 'Não foi possível alterar a senha.', 'error');
+                }
+            } catch (e) {
+                Swal.fire('Erro', 'Erro de conexão.', 'error');
+            } finally {
+                btnSalvar.innerHTML = 'Salvar';
+                btnSalvar.disabled = false;
+            }
+        });
+		
+		// ==========================================
+		// FUNCIONALIDADE: Reenviar código
+		// ==========================================
+		const btnReenviar = document.getElementById('btnReenviar');
+
+		btnReenviar.addEventListener('click', async (e) => {
+		    e.preventDefault(); // Impede o link de recarregar a página
+
+		    // Bloqueia o botão para evitar cliques repetidos (spam)
+		    btnReenviar.style.pointerEvents = 'none';
+		    btnReenviar.style.opacity = '0.5';
+		    btnReenviar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+		    try {
+		        // reutiliza rota do step 1
+		        const response = await fetch('/funcionario-api/enviar-codigo-reset', {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		            body: `email=${encodeURIComponent(emailUsuario)}`
+		        });
+
+		        if (response.ok) {
+		            Swal.fire({
+		                icon: 'success',
+		                title: 'Código reenviado!',
+		                text: 'Verifique sua caixa de entrada novamente.',
+		                timer: 2000,
+		                showConfirmButton: false
+		            });
+		            iniciarCooldownReenvio(); 
+		        } else {
+		            Swal.fire('Erro', 'Não foi possível reenviar o código.', 'error');
+		            liberarBotaoReenviar();
+		        }
+		    } catch (error) {
+		        Swal.fire('Erro', 'Falha na conexão.', 'error');
+		        liberarBotaoReenviar();
+		    }
+		});
+
+		function liberarBotaoReenviar() {
+		    btnReenviar.style.pointerEvents = 'auto';
+		    btnReenviar.style.opacity = '1';
+		    btnReenviar.innerHTML = 'Reenviar código';
+		}
+
+		//Função para evitar spam (Cooldown)
+		function iniciarCooldownReenvio() {
+		    let segundos = 30;
+		    btnReenviar.style.pointerEvents = 'none';
+		    
+		    const intervalo = setInterval(() => {
+		        segundos--;
+		        btnReenviar.innerHTML = `Aguarde ${segundos}s para reenviar`;
+		        btnReenviar.style.color = 'gray';
+
+		        if (segundos <= 0) {
+		            clearInterval(intervalo);
+		            liberarBotaoReenviar();
+		            btnReenviar.style.color = ''; // Volta a cor original
+		        }
+		    }, 1000);
+		}
+
+        // Limpar erro ao digitar na confirmação
+        senha2.addEventListener('input', () => {
+            senha2.classList.remove('is-invalid');
+            senhaFeedback.style.display = 'none';
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+body {
+    background-color: #121416; /* Fundo extremamente escuro */
+    color: #e9ecef;
+    font-family: var(--fonte-principal, 'Segoe UI', sans-serif);
+}
+
+/* Navbar Especial Superadmin */
+.navbar-super {
+    background-color: #000;
+    border-bottom: 2px solid #dc3545;
+    padding: 10px 20px;
+}
+
+.navbar-super .navbar-brand {
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.navbar-super .brand-highlight {
+    color: #dc3545;
+}
+
+/* Cards de Resumo */
+.summary-card {
+    background-color: #212529;
+    border: 1px solid #343a40;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.summary-icon {
+    font-size: 2.5rem;
+    margin-right: 15px;
+    opacity: 0.8;
+}
+
+.summary-info h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.summary-info span {
+    font-size: 0.85rem;
+    color: #adb5bd;
+    text-transform: uppercase;
+}
+
+/* Tabela de Oficinas */
+.table-container {
+    background-color: #212529;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #343a40;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.table-dark {
+    background-color: transparent;
+}
+
+.table-dark thead th {
+    border-bottom: 2px solid #495057;
+    color: #adb5bd;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.table-dark tbody td {
+    border-bottom: 1px solid #343a40;
+    vertical-align: middle;
+}
+
+/* Badges de Status */
+.badge-status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-ativo { background-color: rgba(25, 135, 84, 0.2); color: #20c997; border: 1px solid #198754; }
+.badge-inativo { background-color: rgba(220, 53, 69, 0.2); color: #ff7675; border: 1px solid #dc3545; }
+
+/* Ações */
+.btn-manage {
+    background-color: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+.btn-manage:hover { background-color: #0b5ed7; color: #fff; }
+
+/* ==================================== */
+/* ESTILOS DO MODAL DE GERENCIAMENTO    */
+/* ==================================== */
+.modal-content {
+    background-color: #212529;
+    border: 1px solid #495057;
+    color: #f8f9fa;
+}
+
+.modal-header {
+    border-bottom: 1px solid #343a40;
+}
+
+.modal-footer {
+    border-top: 1px solid #343a40;
+}
+
+/* Abas do Modal */
+.nav-tabs .nav-link {
+    color: #adb5bd;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 15px;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    color: #fff;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: transparent;
+    color: var(--cor-primaria, #0d6efd);
+    border-bottom: 2px solid var(--cor-primaria, #0d6efd);
+    font-weight: bold;
+}
+
+/* Mini Cards de Estatísticas dentro do Modal */
+.stat-mini-card {
+    background-color: #1a1d20;
+    border: 1px solid #343a40;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.stat-mini-card h4 { margin: 0; color: #fff; font-size: 1.5rem; }
+.stat-mini-card span { font-size: 0.8rem; color: #adb5bd; }
+
+/* Switch personalizado */
+.custom-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+    background-color: #495057;
+    border-color: #343a40;
+}
+.custom-switch .form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #1a1d20;
+    border: 1px solid #343a40;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.toggle-row strong { display: block; font-size: 0.95rem; }
+.toggle-row small { color: #adb5bd; font-size: 0.8rem; }

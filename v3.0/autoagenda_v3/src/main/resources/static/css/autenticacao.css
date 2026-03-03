@@ -1,0 +1,380 @@
+/* ========================================= */
+/* 1. ESTRUTURA E FUNDO                      */
+/* ========================================= */
+body {
+    background: radial-gradient(circle at center, var(--cor-secundaria-light) 0%, var(--cor-secundaria) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--fonte-principal);
+    color: var(--cor-texto-claro);
+    padding: 20px;
+    margin: 0;
+}
+
+/* ========================================= */
+/* 2. CARDS (CONTAINERS)                     */
+/* ========================================= */
+.auth-card {
+    background-color: #212529;
+    border: 1px solid var(--cor-secundaria-light);
+    border-radius: var(--borda-arredondada);
+    box-shadow: var(--sombra-padrao);
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+    max-width: 420px;
+    padding: 2.5rem 2rem;
+}
+
+.auth-card-lg {
+    max-width: 900px;
+    padding: 2rem 2.5rem;
+}
+
+.auth-card.dense-mode {
+    padding: 1.5rem 2rem;
+}
+
+/* ========================================= */
+/* 3. LOGOS E TÍTULOS                        */
+/* ========================================= */
+.auth-logo {
+    width: 120px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1.5rem auto;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
+}
+
+.auth-logo-corner {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    width: 80px;
+    height: auto;
+    opacity: 0.9;
+    transition: var(--transicao);
+}
+.auth-logo-corner:hover { opacity: 1; }
+
+.mensagem {
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--cor-texto-claro);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.auth-title-page {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--cor-texto-claro);
+    margin-bottom: 0.5rem;
+    border-left: 4px solid var(--cor-primaria);
+    padding-left: 15px;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.auth-subtitle {
+    font-size: 0.9rem;
+    color: #adb5bd;
+    margin-bottom: 2rem;
+    padding-left: 19px;
+    text-align: left;
+}
+
+.setup-step-text {
+    font-size: 0.75rem;
+    color: var(--cor-primaria);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    padding-left: 19px;
+}
+
+.header-center { text-align: center; }
+.header-center .auth-title-page { border-left: none; padding-left: 0; text-align: center; }
+.header-center .setup-step-text, .header-center .auth-subtitle { padding-left: 0; text-align: center; }
+
+/* ========================================= */
+/* 4. INPUTS E FORMULÁRIOS                   */
+/* ========================================= */
+.form-label, label {
+    color: #e0e0e0;
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+}
+
+.form-control, .form-select {
+    background-color: var(--cor-secundaria-light) !important;
+    border: 1px solid #4d4d4d !important;
+    color: var(--cor-texto-claro) !important;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--borda-arredondada);
+    transition: var(--transicao);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--cor-secundaria-light) !important;
+    border-color: var(--cor-primaria) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.15) !important;
+    color: var(--cor-texto-claro) !important;
+}
+
+.form-control::placeholder { color: #adb5bd !important; opacity: 0.5; }
+
+.input-group-text {
+    background-color: #2c2c2c;
+    border: 1px solid #4d4d4d;
+    color: #adb5bd;
+    border-right: none;
+}
+
+.invalid-feedback { font-size: 0.75rem; margin-top: 2px; color: var(--cor-erro); }
+.is-invalid { border-color: var(--cor-erro) !important; }
+.is-valid { border-color: var(--cor-sucesso) !important; }
+
+.text-muted { color: #adb5bd !important; font-size: 0.9rem; text-align: center; }
+
+/* ========================================= */
+/* 5. UPLOAD                                 */
+/* ========================================= */
+.upload-preview-container {
+    position: relative;
+    width: 100%;
+    background-color: var(--cor-secundaria-light);
+    border: 2px dashed #4d4d4d;
+    border-radius: var(--borda-arredondada);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0 auto 8px auto;
+    cursor: pointer;
+    transition: var(--transicao);
+}
+.upload-preview-container:hover {
+    border-color: var(--cor-primaria);
+    background-color: #3d3d3d;
+}
+.upload-preview-container img { max-width: 90%; max-height: 90%; object-fit: contain; }
+.preview-lg { height: 130px; }
+.preview-sm { height: 70px; width: 70px !important; margin: 0 auto 8px auto; }
+
+/* ========================================= */
+/* 6. BOTÕES (CORRIGIDO)                     */
+/* ========================================= */
+.botoes {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 15px;
+    justify-content: center; /* Centraliza no Login */
+    flex-wrap: wrap;
+}
+
+/* Botão Base */
+.btn-primary, .btnLogin, .btn-acao {
+    background-color: var(--cor-primaria);
+    border: none;
+    color: var(--cor-secundaria);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 0.6rem 2rem;
+    border-radius: 50px;
+    transition: var(--transicao);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px; /* Garante um tamanho mínimo elegante, mas não 100% */
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-primary:hover, .btnLogin:hover, .btn-acao:hover {
+    background-color: var(--cor-primaria-hover);
+    color: var(--cor-secundaria);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+/* Botão Verde/Sucesso */
+.btn-sucesso {
+    background-color: var(--cor-sucesso);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 0.5rem 2rem;
+    border-radius: 50px;
+    transition: var(--transicao);
+}
+.btn-sucesso:hover {
+    background-color: #43a047;
+    transform: translateY(-1px);
+}
+
+/* Botões Secundários (Outline) */
+.btnCadastro, .btn-voltar {
+    background: transparent;
+    border: 1px solid #6c757d;
+    color: #adb5bd;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.6rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transicao);
+    min-width: 140px;
+    cursor: pointer;
+}
+
+.btnCadastro {
+    border-color: var(--cor-primaria);
+    color: var(--cor-primaria);
+}
+
+.btnCadastro:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-voltar:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-sm-action { padding: 0.25rem 0.5rem; font-size: 0.75rem; width: auto; min-width: auto; }
+
+/* Botão Voltar Absoluto (Seta) */
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transicao);
+    z-index: 10;
+}
+.btn-back:hover { color: var(--cor-primaria); transform: translateX(-3px); }
+
+/* Links */
+.small-link {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transicao);
+}
+.small-link:hover { color: var(--cor-primaria-hover); text-decoration: underline; }
+
+/* ========================================= */
+/* 7. RESPONSIVIDADE                         */
+/* ========================================= */
+@media (max-width: 768px) {
+    .auth-card-lg { padding: 1.5rem; }
+    .border-end {
+        border-right: none !important;
+        border-bottom: 1px solid #4d4d4d;
+        padding-right: 0 !important;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .ps-4 { padding-left: 0 !important; }
+    
+    /* No mobile, botões podem ficar full width para facilitar o toque */
+    .botoes { flex-direction: column; }
+    .btnLogin, .btnCadastro, .btn-primary, .btn-voltar { width: 100%; }
+}
+
+/* ========================================= */
+/* 8. WIZARD / PASSOS                        */
+/* ========================================= */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.step-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #495057;
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.step-dot.active {
+    background-color: var(--cor-primaria);
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.steps-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.step {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================= */
+/* 9. OTP INPUTS                             */
+/* ========================================= */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 1.5rem 0;
+}
+
+.otp-input {
+    width: 45px;
+    height: 55px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    background-color: var(--cor-secundaria-light);
+    border: 1px solid #4d4d4d;
+    color: var(--cor-texto-claro);
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.otp-input:focus {
+    border-color: var(--cor-primaria);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.otp-input.is-invalid {
+    border-color: var(--cor-erro) !important;
+    background-color: rgba(220, 53, 69, 0.1);
+}

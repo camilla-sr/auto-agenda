@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Configurações - ' + ${branding.nomeEmpresa}">Configurações</title>
+    
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+    <link id="dinamic-favicon" rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+    <link rel="stylesheet" href="/css/variaveis.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
+	<link rel="stylesheet" href="/css/painel.css">
+    
+    <script src="/js/sweetalert2.all.min.js"></script>
+    <script src="/js/inputmask.min.js"></script>
+</head>
+
+<body>
+    <div th:replace="~{fragments/barra :: barra}"></div>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <div th:if="${msgSucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i> <span th:text="${msgSucesso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${msgErro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${msgErro}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="config-wrapper">
+                <div class="config-sidebar">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-dados">
+                            <i class="fas fa-store"></i> Dados da Oficina
+                        </button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-branding">
+                            <i class="fas fa-paint-brush"></i> Identidade Visual
+                        </button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-features">
+                            <i class="fas fa-toggle-on"></i> Funcionalidades
+                        </button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-system">
+                            <i class="fas fa-server"></i> Status do Sistema
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-content">
+                    <div class="tab-content">
+                        
+                        <div class="tab-pane fade show active" id="tab-dados">
+                            <h3 class="section-title">Dados da Oficina</h3>
+                            <span class="section-subtitle">Informações cadastrais exibidas em orçamentos e relatórios.</span>
+                            
+                            <form id="form-dados" th:action="@{/{slug}/painel-api/salvar-dados(slug=${oficina.slug})}" method="post">
+                                <input type="hidden" name="idOficina" th:value="${oficina.idOficina}">
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nome Fantasia</label>
+                                        <input type="text" class="form-control input-dado" name="nomeFantasia" th:value="${oficina.nomeFantasia}" disabled required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Razão Social</label>
+                                        <input type="text" class="form-control input-dado" name="razaoSocial" th:value="${oficina.razaoSocial}" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">CNPJ</label>
+                                        <input type="text" class="form-control input-dado" name="cnpj" th:value="${oficina.cnpj}" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Insc. Municipal</label>
+                                        <input type="text" class="form-control input-dado" name="inscricaoMunicipal" th:value="${oficina.inscricaoMunicipal}" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Insc. Estadual</label>
+                                        <input type="text" class="form-control input-dado" name="inscricaoEstadual" th:value="${oficina.inscricaoEstadual}" disabled>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">CEP</label>
+                                        <input type="text" class="form-control input-dado" name="cep" th:value="${oficina.cep}" disabled>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label class="form-label">Logradouro</label>
+                                        <input type="text" class="form-control input-dado" name="logradouro" th:value="${oficina.logradouro}" disabled>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Número</label>
+                                        <input type="text" class="form-control input-dado" name="numero" th:value="${oficina.numero}" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Bairro</label>
+                                        <input type="text" class="form-control input-dado" name="bairro" th:value="${oficina.bairro}" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Cidade</label>
+                                        <input type="text" class="form-control input-dado" name="cidade" th:value="${oficina.cidade}" disabled>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">UF</label>
+                                        <input type="text" class="form-control input-dado" name="uf" th:value="${oficina.uf}" disabled>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Telefone Principal</label>
+                                        <input type="text" class="form-control input-dado" name="telefonePrincipal" th:value="${oficina.telefonePrincipal}" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">E-mail de Contato</label>
+                                        <input type="email" class="form-control input-dado" name="emailContato" th:value="${oficina.emailContato}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-secondary" id="btn-cancelar" style="display: none;">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="btn-editar">
+                                        <i class="fas fa-edit me-2"></i> Editar Dados
+                                    </button>
+                                    <button type="submit" class="btn btn-success" id="btn-salvar" style="display: none;">
+                                        <i class="fas fa-save me-2"></i> Salvar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-branding">
+                            <h3 class="section-title">Identidade Visual</h3>
+                            <span class="section-subtitle">Personalize a aparência do sistema.</span>
+
+                            <form th:action="@{/{slug}/painel-api/salvar-branding(slug=${oficina.slug})}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="idOficina" th:value="${oficina.idOficina}">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="branding-upload-area">
+                                            <label class="form-label mb-3">Logotipo</label>
+                                            <div class="preview-box">
+                                                <img id="prev-logo" th:src="@{${oficina.logotipo != null ? '/img/' + oficina.logotipo : '/img/padrao_logo.png'}}">
+                                            </div>
+                                            <input type="file" class="form-control" name="arquivoLogo" id="in-logo" accept="image/*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="branding-upload-area">
+                                            <label class="form-label mb-3">Favicon</label>
+                                            <div class="preview-box" style="width: 80px; height: 80px;">
+                                                <img id="prev-fav" th:src="@{${oficina.favicon != null ? '/img/' + oficina.favicon : '/img/padrao_favicon.ico'}}">
+                                            </div>
+                                            <input type="file" class="form-control" name="arquivoFavicon" id="in-fav" accept=".ico, .png, .jpg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-end">
+                                    <button type="submit" class="btn btn-primary">Atualizar Imagens</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-features">
+                            <h3 class="section-title">Funcionalidades</h3>
+                            <span class="section-subtitle">Habilite módulos conforme sua necessidade.</span>
+
+                            <form th:action="@{/{slug}/painel-api/salvar-features(slug=${oficina.slug})}" method="post">
+                                <input type="hidden" name="idOficina" th:value="${oficina.idOficina}">
+
+                                <div class="feature-card">
+                                    <div class="feature-info">
+                                        <h5><i class="fas fa-box-open me-2 text-primary"></i>Gestão de Produtos</h5>
+                                        <p>Habilita menus de estoque e peças.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="usarProdutos" th:checked="${oficina.usarProdutos}">
+                                    </div>
+                                </div>
+
+                                <div class="feature-card">
+                                    <div class="feature-info">
+                                        <h5><i class="fas fa-dollar-sign me-2 text-success"></i>Módulo Financeiro</h5>
+                                        <p>Habilita preços e valores de venda em serviços/produtos.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="usarFinanceiro" th:checked="${oficina.usarFinanceiro}">
+                                    </div>
+                                </div>
+
+                                <div class="feature-card">
+                                    <div class="feature-info">
+                                        <h5><i class="fas fa-shield-alt me-2 text-danger"></i>Autenticação em Dois Fatores (2FA)</h5>
+                                        <p>Exige código via e-mail no login.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="usarAuth" th:checked="${oficina.usarAuth}">
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 text-end">
+                                    <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-system">
+                            <h3 class="section-title">Status do Sistema</h3>
+                            <div class="row g-4 mt-2">
+                                <div class="col-md-4">
+                                    <div class="service-card">
+                                        <div class="service-icon"><i class="fas fa-envelope"></i></div>
+                                        <h5>Serviço de E-mail</h5>
+                                        <div th:class="${statusEmail} ? 'status-indicator status-up' : 'status-indicator status-down'">
+                                            <span th:if="${statusEmail}" class="pulse-dot"></span>
+                                            <span th:text="${statusEmail} ? 'Online' : 'Offline'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="service-card">
+                                        <div class="service-icon"><i class="fas fa-database"></i></div>
+                                        <h5>Banco de Dados</h5>
+                                        <div class="status-indicator status-up">
+                                            <span class="pulse-dot"></span>Conectado
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+		document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- CACHE BUSTER SEGURO (Mata o cache das imagens sem quebrar o Spring) ---
+            const timeStamp = new Date().getTime();
+            
+            const favIconHead = document.getElementById('dinamic-favicon');
+            if (favIconHead) {
+                favIconHead.href = favIconHead.href.split('?')[0] + '?' + timeStamp;
+            }
+
+            const imgLogo = document.getElementById('prev-logo');
+            if (imgLogo && !imgLogo.src.includes('padrao')) {
+                imgLogo.src = imgLogo.src.split('?')[0] + '?' + timeStamp;
+            }
+
+            const imgFav = document.getElementById('prev-fav');
+            if (imgFav && !imgFav.src.includes('padrao')) {
+                imgFav.src = imgFav.src.split('?')[0] + '?' + timeStamp;
+            }
+
+            // --- LÓGICA DE BOTÕES ---
+            const btnEdit = document.getElementById('btn-editar');
+            const btnCancel = document.getElementById('btn-cancelar');
+            const btnSave = document.getElementById('btn-salvar');
+            const inputs = document.querySelectorAll('.input-dado');
+
+            if(btnEdit) {
+                btnEdit.addEventListener('click', () => {
+                    inputs.forEach(i => i.disabled = false);
+                    btnEdit.style.display = 'none';
+                    btnSave.style.display = 'inline-block';
+                    btnCancel.style.display = 'inline-block';
+                });
+            }
+            if(btnCancel) {
+                btnCancel.addEventListener('click', () => location.reload());
+            }
+
+            // --- MANTER A ABA ATIVA APÓS O REFRESH ---
+            const triggerTabList = document.querySelectorAll('#v-pills-tab button[data-bs-toggle="pill"]');
+            
+            triggerTabList.forEach(triggerEl => {
+                triggerEl.addEventListener('shown.bs.tab', event => {
+                    sessionStorage.setItem('abaAtivaPainel', event.target.getAttribute('data-bs-target'));
+                });
+            });
+
+            const abaSalva = sessionStorage.getItem('abaAtivaPainel');
+            if (abaSalva) {
+                const btnAba = document.querySelector(`button[data-bs-target="${abaSalva}"]`);
+                if (btnAba) {
+                    const tab = new bootstrap.Tab(btnAba);
+                    tab.show();
+                }
+            }
+
+            // --- PREVIEW DE IMAGENS ---
+            function preview(inId, imgId) {
+                const inp = document.getElementById(inId);
+                const img = document.getElementById(imgId);
+                if(inp && img) {
+                    inp.addEventListener('change', e => {
+                        if(e.target.files[0]) {
+                            const r = new FileReader();
+                            r.onload = ev => img.src = ev.target.result;
+                            r.readAsDataURL(e.target.files[0]);
+                        }
+                    });
+                }
+            }
+            preview('in-logo', 'prev-logo');
+            preview('in-fav', 'prev-fav');
+
+            // --- MÁSCARAS ---
+            const cnpjInp = document.querySelector('input[name="cnpj"]');
+            const telInp = document.querySelector('input[name="telefonePrincipal"]');
+            const cepInp = document.querySelector('input[name="cep"]');
+
+            if(typeof Inputmask !== 'undefined'){
+                if(cnpjInp) Inputmask("99.999.999/9999-99").mask(cnpjInp);
+                if(telInp) Inputmask("(99) 9999-9999[9]").mask(telInp);
+                if(cepInp) Inputmask("99999-999").mask(cepInp);
+            }
+
+            // --- INTEGRAÇÃO VIACEP ---
+            if(cepInp) {
+                cepInp.addEventListener('blur', function() {
+                    let cep = this.value.replace(/\D/g, '');
+
+                    if (cep.length === 8) {
+                        document.querySelector('input[name="logradouro"]').value = "...";
+                        document.querySelector('input[name="bairro"]').value = "...";
+                        document.querySelector('input[name="cidade"]').value = "...";
+                        document.querySelector('input[name="uf"]').value = "...";
+
+                        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (!data.erro) {
+                                    document.querySelector('input[name="logradouro"]').value = data.logradouro;
+                                    document.querySelector('input[name="bairro"]').value = data.bairro;
+                                    document.querySelector('input[name="cidade"]').value = data.localidade;
+                                    document.querySelector('input[name="uf"]').value = data.uf;
+                                    document.querySelector('input[name="numero"]').focus();
+                                } else {
+                                    Swal.fire('Ops...', 'CEP não localizado na base dos Correios.', 'warning');
+                                    limparEndereco();
+                                }
+                            })
+                            .catch(err => {
+                                console.error("Erro ViaCEP:", err);
+                                Swal.fire('Erro', 'Falha ao conectar com o serviço de CEP.', 'error');
+                                limparEndereco();
+                            });
+                    }
+                });
+            }
+
+            function limparEndereco() {
+                document.querySelector('input[name="logradouro"]').value = "";
+                document.querySelector('input[name="bairro"]').value = "";
+                document.querySelector('input[name="cidade"]').value = "";
+                document.querySelector('input[name="uf"]').value = "";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+/* ARQUIVO: of.css (Versão Final - Layout Full) */
+
+/* ========================================= */
+/* 1. LAYOUT GERAL                           */
+/* ========================================= */
+body {
+    background-color: #f4f6f9; /* Fundo profissional claro */
+    font-family: var(--fonte-principal);
+    overflow-x: hidden; /* Evita rolagem horizontal acidental */
+}
+
+.main-content {
+    /* Aumentei o espaçamento superior para separar da Navbar fixa */
+    padding-top: 100px; 
+    padding-bottom: 0;
+    min-height: calc(100vh - 60px); /* Ajuste para empurrar o footer */
+    display: flex;
+}
+
+/* O container agora ocupa 100% e removemos o visual de "Card" */
+.config-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: transparent; /* Fundo transparente */
+    box-shadow: none; /* Remove a sombra */
+    border-radius: 0; /* Remove bordas arredondadas */
+    border: none;
+    gap: 30px; /* Espaço entre o menu e o conteúdo */
+}
+
+/* ========================================= */
+/* 2. SIDEBAR (Lateral Esquerda Colada)      */
+/* ========================================= */
+.config-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    /* Visual de bloco sólido separado */
+    background-color: #fff;
+    border-radius: 8px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    padding: 20px 15px;
+    height: fit-content; /* Altura se ajusta ao conteúdo */
+    position: sticky;
+    top: 100px; /* Fixa o menu ao rolar a página */
+}
+
+.nav-pills .nav-link {
+    color: #555;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    border-left: 4px solid transparent;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #f8f9fa;
+    color: #000;
+}
+
+/* ITEM ATIVO (Barra lateral colorida estilo Dashboard moderno) */
+.nav-pills .nav-link.active {
+    background-color: #fff;
+    color: #000;
+    font-weight: 700;
+    border-left-color: var(--cor-primaria); /* Amarelo na borda esquerda */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.nav-icon {
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 1.1rem;
+    color: #adb5bd;
+}
+
+.nav-link.active .nav-icon {
+    color: var(--cor-primaria);
+}
+
+/* Setinha discreta */
+.arrow-indicator {
+    margin-left: auto;
+    font-size: 0.7rem;
+    opacity: 0;
+}
+.nav-link.active .arrow-indicator {
+    opacity: 1;
+    color: var(--cor-primaria);
+}
+
+/* ========================================= */
+/* 3. CONTEÚDO (Lateral Direita)             */
+/* ========================================= */
+.config-content {
+    flex-grow: 1;
+    /* O conteúdo agora tem seu próprio fundo branco ("Card" interno) */
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    min-height: 500px;
+}
+
+/* Header de cada Aba */
+.content-header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 5px;
+}
+
+.section-subtitle {
+    color: #adb5bd;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Transições */
+.tab-pane {
+    transition: opacity 0.3s ease;
+}
+
+/* ========================================= */
+/* 4. FORMULÁRIOS                            */
+/* ========================================= */
+.form-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    background-color: #fdfdfd;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    color: #212529;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+}
+
+.form-control:disabled {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #495057;
+    opacity: 1;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* ========================================= */
+/* 5. SWITCHES E CARDS DE FEATURES           */
+/* ========================================= */
+.feature-card {
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+    background: #fff;
+}
+
+.feature-card:hover {
+    border-color: var(--cor-primaria);
+    background-color: #fffdf5; /* Levemente amarelo */
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--cor-sucesso);
+    border-color: var(--cor-sucesso);
+}
+
+/* ========================================= */
+/* 6. UPLOAD AREA (CORREÇÃO DE IMAGEM)       */
+/* ========================================= */
+.branding-upload-area {
+    border: 2px dashed #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    background-color: #fcfcfc;
+    transition: var(--transicao);
+    height: 100%; /* Garante altura uniforme */
+}
+
+.branding-upload-area:hover {
+    border-color: var(--cor-primaria);
+    background-color: #fff;
+}
+
+/* --- FIX CRÍTICO DA IMAGEM GIGANTE --- */
+.preview-box {
+    width: 100%;
+    /* Altura fixa para o container do preview */
+    height: 180px; 
+    border: 1px solid #eee;
+    background: #fff;
+    /* Centraliza a imagem */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    border-radius: 6px;
+    /* Importante: Esconde qualquer coisa que vaze */
+    overflow: hidden; 
+    padding: 10px;
+}
+
+.preview-box img {
+    /* Força a imagem a caber dentro da caixa sem distorcer */
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; 
+}
+
+/* ========================================= */
+/* 7. RESPONSIVIDADE                         */
+/* ========================================= */
+@media (max-width: 992px) {
+    .config-wrapper {
+        flex-direction: column;
+    }
+    
+    .config-sidebar {
+        width: 100%;
+        position: static;
+        margin-bottom: 20px;
+    }
+    
+    .nav-pills {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+    
+    .nav-pills .nav-link {
+        white-space: nowrap;
+        margin-right: 10px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+    }
+
+    .nav-pills .nav-link.active {
+        border-left: none;
+        border-bottom-color: var(--cor-primaria);
+    }
+}
+
+/* ... Mantenha o CSS anterior e ADICIONE/ATUALIZE isso no final ... */
+
+/* Força o Sidebar a ser Dark (Identidade Visual) */
+.config-sidebar {
+    background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%) !important;
+    color: #fff !important;
+}
+
+/* Ajuste das letras do menu para fundo escuro */
+.nav-pills .nav-link {
+    color: #b0b0b0 !important; /* Cinza claro para inativo */
+}
+
+.nav-pills .nav-link:hover {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--cor-primaria) !important;
+    color: #000 !important; /* Texto preto no amarelo */
+}
+
+/* Área de Perigo (Excluir Conta) */
+.danger-zone {
+    border: 1px solid #ffcccc;
+    background-color: #fff5f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.danger-title {
+    color: #dc3545;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Tabela de Desempenho */
+.table-performance {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table-performance thead th {
+    border: none;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding: 10px 15px;
+}
+
+.table-performance tbody tr {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.table-performance tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.table-performance td {
+    padding: 15px;
+    border: none;
+    vertical-align: middle;
+}
+
+.table-performance td:first-child { border-radius: 8px 0 0 8px; }
+.table-performance td:last-child { border-radius: 0 8px 8px 0; }
+
+/* Status Badges */
+.badge-status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.badge-concluido { background-color: #d1e7dd; color: #0f5132; }
+.badge-cancelado { background-color: #f8d7da; color: #842029; }
+.badge-andamento { background-color: #fff3cd; color: #664d03; }

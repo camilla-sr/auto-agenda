@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração Inicial - Oficina</title>
+	<link rel="icon" href="/img/padrao_favicon.ico" type="image/x-icon">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/css/variaveis.css">
+    <link rel="stylesheet" href="/css/autenticacao.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/inputmask.min.js"></script>
+    <script src="/js/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+    <div class="auth-card auth-card-lg dense-mode" style="max-width: 950px; padding: 2rem;"> 
+        <div class="setup-step-text mb-1">Passo 1 de 2</div>
+        <h4 class="auth-title-page mb-3">Configuração da Oficina</h4>
+        
+        <form method="post" th:action="@{/setup/oficina}" th:object="${oficina}" enctype="multipart/form-data" id="formSetup">
+            <div class="row">
+                
+                <div class="col-md-5 border-end border-secondary pe-md-4 mb-2 mb-md-0">
+                    
+                    <div class="row g-2 mb-2">
+                        <div class="col-8">
+                            <label class="form-label small text-center w-100 mb-1">Logotipo</label>
+                            <div class="upload-preview-container preview-lg" onclick="document.getElementById('inputLogo').click()" style="min-height: 100px;">
+                                <img src="/img/padrao_logo.png" id="imgPreview" alt="Logo">
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-sm-action mt-1" onclick="document.getElementById('inputLogo').click()">
+                                <i class="fa-solid fa-camera me-1"></i> Alterar
+                            </button>
+                            <input type="file" id="inputLogo" name="imgLogo" accept="image/*" class="d-none">
+                        </div>
+
+                        <div class="col-4">
+                            <label class="form-label small text-center w-100 mb-1">Ícone</label>
+                            <div class="upload-preview-container preview-sm" onclick="document.getElementById('inputFavicon').click()" style="min-height: 100px;">
+                                <img src="/img/padrao_favicon.ico" id="favPreview" alt="Favicon" style="width: 32px; height: 32px;">
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-sm-action mt-1" onclick="document.getElementById('inputFavicon').click()">
+                                <i class="fa-solid fa-upload"></i>
+                            </button>
+                            <input type="file" id="inputFavicon" name="imgFavicon" accept=".ico, .png, .jpg" class="d-none">
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label mb-1">Razão Social</label>
+                        <input type="text" th:field="*{razaoSocial}" class="form-control" required placeholder="Nome empresarial">
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label class="form-label mb-1">Nome Fantasia</label>
+                        <input type="text" id="nomeFantasia" th:field="*{nomeFantasia}" class="form-control" required placeholder="Nome na fachada">
+                    </div>
+
+					<div class="mb-1">
+					    <label class="form-label mb-1">Link de Acesso (Slug) <span class="text-danger">*</span></label>
+					    <div class="input-group">
+					        <span class="input-group-text bg-dark text-muted border-secondary px-2">autoagenda.com.br/</span>
+					        <input type="text" name="slug" id="slug" class="form-control ps-2" required autocomplete="off">
+					    </div>
+					    <div class="form-text text-warning mt-1" style="line-height: 1.15; font-size: 0.75rem;">
+					        <i class="fa-solid fa-triangle-exclamation"></i> Este é o link exclusivo para acessar o sistema. <strong>Ele não poderá ser alterado depois.</strong>
+					    </div>
+					</div>
+                </div>
+
+                <div class="col-md-7 ps-md-4">
+                    
+                    <h6 class="text-primary mb-2 pb-1 border-bottom border-secondary" style="border-color: #495057 !important; font-size: 0.95rem;">
+                        <i class="fa-solid fa-file-invoice me-2"></i>Dados Fiscais e Contato
+                    </h6>
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-5">
+                            <label class="form-label mb-1">CNPJ</label>
+                            <input type="text" id="cnpj" th:field="*{cnpj}" class="form-control" required placeholder="00.000.000/0000-00">
+                            <div id="cnpj-feedback" class="invalid-feedback">CNPJ inválido.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">I.E.</label>
+                            <input type="text" id="ie" th:field="*{inscricaoEstadual}" class="form-control" placeholder="Números ou ISENTO">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label mb-1">I.M.</label>
+                            <input type="text" id="im" th:field="*{inscricaoMunicipal}" class="form-control" placeholder="Opcional">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-7">
+                            <label class="form-label mb-1">E-mail Oficial</label>
+                            <input type="email" id="email" th:field="*{emailContato}" class="form-control" required placeholder="contato@oficina.com">
+                            <div id="email-feedback" class="invalid-feedback">E-mail inválido.</div>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label mb-1">Telefone</label>
+                            <div class="input-group">
+                                <input type="text" id="telefone" th:field="*{telefonePrincipal}" class="form-control" required placeholder="(99) 99999-9999">
+                                <button class="btn btn-secondary" type="button" id="btnAddTel" title="Adicionar secundário" style="padding: 0.375rem 0.5rem;">
+                                    <i class="fa-solid fa-plus small"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class="row mb-2" id="rowTelSec" style="display: none;">
+					    <div class="col-md-5 offset-md-7">
+					        <div class="input-group">
+					            <input type="text" id="telefoneSec" th:field="*{telefoneSecundario}" class="form-control" placeholder="Secundário">
+					            <button class="btn btn-outline-danger" type="button" id="btnRemoveTel" title="Remover telefone" style="padding: 0.375rem 0.5rem;">
+					                <i class="fa-solid fa-trash"></i>
+					            </button>
+					        </div>
+					    </div>
+					</div>
+
+                    <h6 class="text-primary mb-2 pb-1 border-bottom border-secondary mt-3" style="border-color: #495057 !important; font-size: 0.95rem;">
+                        <i class="fas fa-map-marker-alt me-2"></i>Localização
+                    </h6>
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label mb-1">CEP</label>
+                            <input type="text" id="cep" th:field="*{cep}" class="form-control" required placeholder="00000-000">
+                            <div id="cep-feedback" class="invalid-feedback">Inválido</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label mb-1">Logradouro</label>
+                            <input type="text" id="logradouro" th:field="*{logradouro}" class="form-control" required readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label mb-1">Número</label>
+                            <input type="text" id="numero" th:field="*{numero}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label mb-1">Complem.</label>
+                            <input type="text" th:field="*{complemento}" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">Bairro</label>
+                            <input type="text" id="bairro" th:field="*{bairro}" class="form-control" required readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">Cidade</label>
+                            <input type="text" id="cidade" th:field="*{cidade}" class="form-control" required readonly>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label mb-1">UF</label>
+                            <input type="text" id="uf" th:field="*{uf}" class="form-control" required readonly maxlength="2" style="padding: 0.375rem 0.2rem; text-align: center;">
+                        </div>
+                    </div>
+
+                    <div class="mt-3 text-end">
+                        <button type="submit" class="btn btn-primary px-4 py-2">
+                            Salvar e Criar Admin <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos
+            const form = document.getElementById('formSetup');
+            const cnpjInp = document.getElementById('cnpj');
+            const cnpjFeedback = document.getElementById('cnpj-feedback');
+            const telInp = document.getElementById('telefone');
+            const telSecInp = document.getElementById('telefoneSec');
+            const btnAddTel = document.getElementById('btnAddTel');
+            const btnRemoveTel = document.getElementById('btnRemoveTel');
+            const rowTelSec = document.getElementById('rowTelSec');
+            const cepInp = document.getElementById('cep');
+            const emailInp = document.getElementById('email');
+            const emailFeedback = document.getElementById('email-feedback');
+            const inputLogo = document.getElementById('inputLogo');
+            const imgPreview = document.getElementById('imgPreview');
+            
+            // Novos elementos do Slug
+            const inputNomeFantasia = document.getElementById('nomeFantasia');
+            const inputSlug = document.getElementById('slug');
+            let slugEditadoManualmente = false;
+
+            // --- LÓGICA DO SLUG ---
+            function gerarSlug(texto) {
+                return texto.toString().toLowerCase().trim()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/[\s-]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+            }
+
+            if (inputNomeFantasia && inputSlug) {
+                inputNomeFantasia.addEventListener('input', function() {
+                    if (!slugEditadoManualmente) {
+                        inputSlug.value = gerarSlug(this.value);
+                    }
+                });
+
+                inputSlug.addEventListener('input', function() {
+                    slugEditadoManualmente = true;
+                    this.value = gerarSlug(this.value);
+                });
+            }
+
+            // --- PREVIEW DO LOGO ---
+            inputLogo.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imgPreview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+			
+			// --- PREVIEW DO FAVICON ---
+			const inputFavicon = document.getElementById('inputFavicon');
+			const favPreview = document.getElementById('favPreview');
+
+			inputFavicon.addEventListener('change', function(e) {
+			    const file = e.target.files[0];
+			    if (file) {
+			        const reader = new FileReader();
+			        reader.onload = function(e) {
+			            favPreview.src = e.target.result;
+			        }
+			        reader.readAsDataURL(file);
+			    }
+			});
+
+			// --- INSCRIÇÕES ESTADUAL E MUNICIPAL ---
+			const ieInput = document.getElementById('ie');
+			const imInput = document.getElementById('im');
+
+			ieInput.addEventListener('input', function(e) {
+			    let valor = e.target.value.toUpperCase();
+			    
+			    if ("ISENTO".startsWith(valor) || valor === "ISENTO") {
+			        e.target.value = valor;
+			    } else {
+			        e.target.value = valor.replace(/[^0-9]/g, "");
+			    }
+			});
+
+			imInput.addEventListener('input', function(e) {
+			    e.target.value = e.target.value.replace(/\D/g, "");
+			});
+			
+            // --- MÁSCARAS ---
+            if(typeof Inputmask !== 'undefined'){
+                Inputmask("99.999.999/9999-99").mask(cnpjInp);
+                Inputmask("(99) 9999-9999[9]").mask(telInp);
+                Inputmask("(99) 9999-9999[9]").mask(telSecInp);
+                Inputmask("99999-999").mask(cepInp);
+            }
+
+            // --- LÓGICA TELEFONE SECUNDÁRIO ---
+            btnAddTel.addEventListener('click', () => {
+                rowTelSec.style.display = 'flex';
+                telSecInp.focus();
+                btnAddTel.style.display = 'none';
+            });
+
+            btnRemoveTel.addEventListener('click', () => {
+                rowTelSec.style.display = 'none';
+                telSecInp.value = '';
+                btnAddTel.style.display = 'block';
+            });
+
+			// --- VIACEP ---
+            cepInp.addEventListener('blur', function() {
+                let cep = this.value.replace(/\D/g, '');
+
+                if (cep === "") {
+                    this.classList.remove('is-invalid');
+                    return;
+                }
+
+                if (cep.length === 8) {
+                    document.getElementById('logradouro').value = "...";
+                    document.getElementById('bairro').value = "...";
+                    document.getElementById('cidade').value = "...";
+                    document.getElementById('uf').value = "...";
+                    
+                    this.classList.remove('is-invalid');
+
+                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.erro) {
+                                document.getElementById('logradouro').value = data.logradouro;
+                                document.getElementById('bairro').value = data.bairro;
+                                document.getElementById('cidade').value = data.localidade;
+                                document.getElementById('uf').value = data.uf;
+                                
+                                this.classList.remove('is-invalid');
+                                this.classList.add('is-valid'); 
+                                
+                                document.getElementById('numero').focus();
+                            } else {
+                                tratarErroCep(this, "CEP não localizado.");
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Erro ViaCEP:", err);
+                            tratarErroCep(this, "Erro de conexão.");
+                        });
+                } else {
+                    tratarErroCep(this, "CEP deve ter 8 dígitos.");
+                }
+            });
+
+            function tratarErroCep(input, mensagem) {
+                document.getElementById('logradouro').value = "";
+                document.getElementById('bairro').value = "";
+                document.getElementById('cidade').value = "";
+                document.getElementById('uf').value = "";
+				
+                const feedbackDiv = document.getElementById('cep-feedback');
+                if(feedbackDiv) feedbackDiv.innerText = mensagem;
+
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+
+                setTimeout(() => {
+                    input.focus();
+                }, 10);
+            }
+
+            // --- VALIDAÇÃO DE CNPJ ---
+            function validarCNPJ(cnpj) {
+                cnpj = cnpj.replace(/[^\d]+/g,'');
+                if(cnpj == '') return false;
+                if (cnpj.length != 14) return false;
+                if (/^(\d)\1+$/.test(cnpj)) return false;
+                    
+                let tamanho = cnpj.length - 2
+                let numeros = cnpj.substring(0,tamanho);
+                let digitos = cnpj.substring(tamanho);
+                let soma = 0;
+                let pos = tamanho - 7;
+                
+                for (let i = tamanho; i >= 1; i--) {
+                  soma += numeros.charAt(tamanho - i) * pos--;
+                  if (pos < 2) pos = 9;
+                }
+                
+                let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado != digitos.charAt(0)) return false;
+                    
+                tamanho = tamanho + 1;
+                numeros = cnpj.substring(0,tamanho);
+                soma = 0;
+                pos = tamanho - 7;
+                
+                for (let i = tamanho; i >= 1; i--) {
+                  soma += numeros.charAt(tamanho - i) * pos--;
+                  if (pos < 2) pos = 9;
+                }
+                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado != digitos.charAt(1)) return false;
+                    
+                return true;
+            }
+
+            cnpjInp.addEventListener('blur', function() {
+                if(!validarCNPJ(this.value)) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    cnpjFeedback.style.display = 'block';
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                    cnpjFeedback.style.display = 'none';
+                }
+            });
+            
+            cnpjInp.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+                cnpjFeedback.style.display = 'none';
+            });
+
+            // --- VALIDAÇÃO DE E-MAIL ---
+            emailInp.addEventListener('blur', function() {
+                const email = this.value;
+                if (email === "") return;
+
+                let msgErro = "";
+                let valido = true;
+                const partes = email.split('@');
+
+                if (partes.length !== 2 || !partes[0] || !partes[1]) {
+                    valido = false; msgErro = "Falta o '@' ou usuário/domínio.";
+                } else if (!partes[1].includes('.')) {
+                    valido = false; msgErro = "Falta o domínio (.com).";
+                } else if (partes[1].startsWith('.') || partes[1].endsWith('.')) {
+                    valido = false; msgErro = "Ponto em local inválido.";
+                }
+
+                if (!valido) {
+                    this.classList.add('is-invalid');
+                    emailFeedback.textContent = msgErro;
+                    emailFeedback.style.display = 'block';
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                    emailFeedback.style.display = 'none';
+                }
+            });
+
+            emailInp.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+                emailFeedback.style.display = 'none';
+            });
+
+            // --- SUBMIT DO FORM ---
+            form.addEventListener('submit', function(e) {
+                if (cnpjInp.classList.contains('is-invalid') || emailInp.classList.contains('is-invalid')) {
+                    e.preventDefault();
+                    Swal.fire('Atenção', 'Verifique os campos em vermelho.', 'warning');
+                    return;
+                }
+                if(!validarCNPJ(cnpjInp.value)) {
+                    e.preventDefault();
+                    cnpjInp.classList.add('is-invalid');
+                    Swal.fire('Erro', 'CNPJ Inválido', 'error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

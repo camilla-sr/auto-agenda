@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="'Produtos - ' + ${branding.nomeEmpresa}">Produtos - AutoAgenda</title>
+  <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/jquery-3.7.1.min.js"></script>
+  <script src="/js/jquery.mask.min.js"></script>
+  <script src="/js/sweetalert2.all.min.js"></script>
+  <script src="/js/validacao.js"></script>
+  <script src="/js/mascaras.js"></script>
+  
+  <link rel="stylesheet" href="/css/variaveis.css">
+  <link rel="stylesheet" href="/css/produtos.css">
+  <link rel="stylesheet" href="/css/navegacao.css">
+</head>
+
+<body>
+  <div th:replace="~{fragments/barra :: barra}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h2><i class="fas fa-box-open"></i> Gerenciamento de Produtos</h2>
+        <p>Controle seu estoque e cadastre novos itens</p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-boxes"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="${totalProdutos}">0</h3>
+            <p>Produtos cadastrados</p>
+          </div>
+        </div>
+
+        <div th:if="${estoqueBaixo} > 0" class="stat-card warning">
+          <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="${estoqueBaixo}">0</h3>
+            <p>Estoque baixo</p>
+          </div>
+        </div>
+
+        <div th:if="${estoqueZerado} > 0" class="stat-card danger">
+          <div class="stat-icon">
+            <i class="fas fa-times-circle"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="${estoqueZerado}">0</h3>
+            <p>Itens esgotados</p>
+          </div>
+        </div>
+
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="'R$ ' + ${precoEstoque}">R$ 0,00</h3>
+            <p>Valor total em estoque</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-container" id="formNovoProdutoContainer" style="display: none;">
+        <h3 id="formTitulo"><i class="fas fa-plus"></i> Adicionar Novo Produto</h3>
+        
+        <form id="formNovoProduto" th:action="@{/{slug}/produto-api/salvar(slug=${oficinaContexto.slug})}" method="post">
+          <input type="hidden" name="idProduto" id="idProduto" readonly>
+          
+          <input type="hidden" name="oficina.idOficina" th:value="${oficinaContexto.idOficina}">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome-produto" class="required">Nome do Produto</label>
+              <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <input type="text" id="nome-produto" name="nomeProduto" placeholder="Ex: Óleo Motor 10W40" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="codigo-produto">Código</label>
+              <div class="input-wrapper">
+                <i class="fas fa-barcode input-icon"></i>
+                <input type="text" id="codigo-produto" name="codigoProduto" placeholder="Ex: ABC123">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="categoria" class="required">Categoria</label>
+              <div class="input-wrapper">
+                <i class="fas fa-layer-group input-icon"></i>
+                <select id="categoria" name="categoria" required>
+                  <option value="" selected disabled>Selecione</option>
+                  <option value="Oleo">Óleo</option>
+                  <option value="Filtro">Filtro</option>
+                  <option value="Pneu">Pneu</option>
+                  <option value="Bateria">Bateria</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="preco-custo" class="required">Preço de Compra (R$)</label>
+              <div class="input-wrapper">
+                <i class="fas fa-dollar-sign input-icon"></i>
+                <input class="valores" type="text" id="preco-custo" name="precoCusto" placeholder="0,00"
+                  inputmode="numeric" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="preco-venda" class="required">Preço de Venda (R$)</label>
+              <div class="input-wrapper">
+                <i class="fas fa-hand-holding-usd input-icon"></i>
+                <input class="valores" type="text" id="preco-venda" name="precoVenda" placeholder="0,00"
+                  inputmode="numeric" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fornecedor">Fornecedor</label>
+              <div class="input-wrapper">
+                <i class="fas fa-truck input-icon"></i>
+                <input type="text" id="fornecedor" name="fornecedor" placeholder="Nome do fornecedor">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="descricao">Descrição</label>
+              <div class="input-wrapper">
+                <i class="fas fa-align-left input-icon"></i>
+                <input type="text" id="descricao" name="descricao" placeholder="Opcional" maxlength="200">
+              </div>
+              <div id="descricao-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+                <small>0/200</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="estoque-atual" class="required">Estoque Atual</label>
+              <div class="input-wrapper">
+                <i class="fas fa-boxes input-icon"></i>
+                <input type="number" id="estoque-atual" name="estoqueAtual" min="0" placeholder="0" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="estoque-minimo" class="required">Estoque Mínimo</label>
+              <div class="input-wrapper">
+                <i class="fas fa-exclamation-circle input-icon"></i>
+                <input type="number" id="estoque-minimo" name="estoqueMinimo" min="0" placeholder="0" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancelar-novo-produto">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" id="btn-salvar" disabled>
+              <i class="fas fa-save"></i> Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
+          <button class="btn btn-primary" id="btn-novo-produto" type="button">
+            <i class="fas fa-plus"></i> Novo Produto
+          </button>
+        </div>
+
+        <div class="table-filters">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="busca">Buscar Produto</label>
+              <div class="input-wrapper">
+                <i class="fas fa-search input-icon"></i>
+                <input type="text" id="busca" name="busca" placeholder="Nome ou código...">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="filtro_categoria">Filtrar por Categoria</label>
+              <div class="input-wrapper">
+                <i class="fas fa-filter input-icon"></i>
+                <select id="filtro_categoria">
+                  <option value="">Todas as categorias</option>
+                  <option value="Oleo">Óleo</option>
+                  <option value="Filtro">Filtro</option>
+                  <option value="Pneu">Pneu</option>
+                  <option value="Bateria">Bateria</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <table class="appointments-table" id="productsTable">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Código</th>
+              <th>Preço de Venda</th>
+              <th>Estoque</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${produtos == null or produtos.empty}">
+              <td colspan="6" style="text-align: center;">Nenhum resultado encontrado</td>
+            </tr>
+            <tr th:each="p : ${produtos}">
+              <td data-label="Nome" class="nome-produto" th:text="${p.nomeProduto}"></td>
+              <td data-label="Código" class="codigo-produto" th:text="${p.codigoProduto}"></td>
+              <td class="categoria" th:text="${p.categoria}" style="display:none;"></td>
+              <td class="preco-custo valores" th:attr="data-valor=${p.precoCusto}"
+                th:text="${'R$ '+ #numbers.formatDecimal(p.precoCusto, 1, 'POINT', 2, 'COMMA')}" style="display:none;">
+              </td>
+              <td data-label="Preço Venda" class="preco-venda valores" th:attr="data-valor=${p.precoVenda}"
+                th:text="${'R$ ' + #numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}"></td>
+              <td class="fornecedor" th:text="${p.fornecedor}" style="display:none;"></td>
+              <td class="estoque-minimo" th:text="${p.estoqueMinimo}" style="display:none;"></td>
+              <td data-label="Estoque" class="estoque-atual" th:text="${p.estoqueAtual}"></td>
+              <td class="descricao" th:text="${p.descricao}" style="display:none;"></td>
+              
+              <td data-label="Status"><span class="status-badge">Verificando...</span></td>
+              
+              <td data-label="Ações" class="action-buttons">
+                <button class="btn-icon btn-edit" th:attr="data-id=${p.idProduto}" title="Editar">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}" 
+				class="btn-icon btn-delete" th:attr="data-id=${p.idProduto}" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="btn-icon btn-view" title="Detalhes"><i class="fas fa-eye"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="pagination">
+          <button>Anterior</button>
+          <span>Página 1</span>
+          <button>Próximo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bootstrap-iso">
+      <div class="modal fade" id="visualizarProdutoModal" tabindex="-1" aria-labelledby="visualizarProdutoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="visualizarProdutoModalLabel">
+                <i class="fas fa-eye"></i> Detalhes do Produto
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <h4><strong id="modal-nome-produto"></strong></h4>
+                  <p class="text-muted">Código: <span id="modal-codigo-produto"></span></p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                  <h5>Valor de Venda</h5>
+                  <h4 class="text-success fw-bold" id="modal-preco-venda"></h4>
+                </div>
+              </div>
+              <hr>
+              <h6><i class="fas fa-align-left me-2"></i>Descrição</h6>
+              <p id="modal-descricao" style="white-space: pre-wrap;"></p>
+              <hr>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p><strong>Categoria:</strong> <span id="modal-categoria"></span></p>
+                  <p><strong>Fornecedor:</strong> <span id="modal-fornecedor"></span></p>
+                </div>
+                <div class="col-sm-6">
+                  <p><strong>Estoque Atual:</strong> <span id="modal-estoque-atual"></span> unidades</p>
+                  <p><strong>Estoque Mínimo:</strong> <span id="modal-estoque-minimo"></span> unidades</p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times"></i> Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <script th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+          
+          // Capturando o slug gerado pelo backend
+          const slugAtual = /*[[${oficinaContexto.slug}]]*/ 'oficina';
+
+          // ============================================================
+          // MENU MOBILE
+          // ============================================================
+          const hamburgerMenu = document.getElementById('hamburger-menu');
+          const navMenu = document.getElementById('nav-menu');
+
+          if (hamburgerMenu && navMenu) {
+              hamburgerMenu.addEventListener('click', () => {
+                  navMenu.classList.toggle('active');
+                  hamburgerMenu.classList.toggle('active');
+              });
+              document.addEventListener('click', (event) => {
+                  if (!navMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                      navMenu.classList.remove('active');
+                      hamburgerMenu.classList.remove('active');
+                  }
+              });
+          }
+
+          // ============================================================
+          // CONTROLES DO FORMULÁRIO
+          // ============================================================
+          const form = document.getElementById('formNovoProduto');
+          const formContainer = document.getElementById('formNovoProdutoContainer');
+          const formTitulo = document.getElementById('formTitulo');
+          const btnNovo = document.getElementById('btn-novo-produto');
+          const btnCancelar = document.getElementById('btn-cancelar-novo-produto');
+          const btnSalvar = document.getElementById('btn-salvar');
+
+          if (btnNovo) {
+              btnNovo.addEventListener('click', () => {
+                  document.getElementById('idProduto').value = "";
+                  form.reset();
+                  formTitulo.innerHTML = '<i class="fas fa-plus"></i> Adicionar Novo Produto';
+                  formContainer.style.display = 'block';
+                  form.scrollIntoView({ behavior: 'smooth' });
+                  verificarCampos();
+              });
+          }
+
+          if (btnCancelar) {
+              btnCancelar.addEventListener('click', () => {
+                  formContainer.style.display = 'none';
+                  form.reset();
+              });
+          }
+
+          // Converter valores monetários antes de enviar
+          $('#formNovoProduto').on('submit', function () {
+              $(this).find('.valores').each(function () {
+                  const valorLimpo = $(this).cleanVal(); // Método do jQuery Mask Plugin
+                  let valorParaEnviar = (parseFloat(valorLimpo) / 100).toFixed(2);
+                  if (isNaN(valorParaEnviar)) { valorParaEnviar = ''; }
+                  $(this).val(valorParaEnviar);
+              });
+              return true;
+          });
+
+          // ============================================================
+          // VALIDAÇÃO E MÁSCARAS
+          // ============================================================
+          const idsValidacao = ['nome-produto', 'preco-custo', 'preco-venda', 'categoria', 'estoque-atual', 'estoque-minimo'];
+          
+          function verificarCampos() {
+              let valido = true;
+              idsValidacao.forEach(id => {
+                  const el = document.getElementById(id);
+                  if (!el || !el.value || el.value.trim() === '') valido = false;
+              });
+              btnSalvar.disabled = !valido;
+          }
+          
+          idsValidacao.forEach(id => {
+              const el = document.getElementById(id);
+              if(el) { el.addEventListener('input', verificarCampos); el.addEventListener('change', verificarCampos); }
+          });
+
+          // Contador de Descrição
+          const descEl = document.getElementById('descricao');
+          const counterEl = document.getElementById('descricao-counter');
+          if(descEl && counterEl) {
+              descEl.addEventListener('input', function() {
+                  const len = this.value.length;
+                  const max = this.getAttribute('maxlength');
+                  const small = counterEl.querySelector('small');
+                  small.textContent = `${len}/${max}`;
+                  if(len >= max) {
+                       counterEl.classList.remove('text-muted');
+                       counterEl.classList.add('text-danger');
+                  } else {
+                       counterEl.classList.add('text-muted');
+                       counterEl.classList.remove('text-danger');
+                  }
+              });
+          }
+
+          // ============================================================
+          // PINTAR STATUS DO ESTOQUE
+          // ============================================================
+          function atualizarStatusEstoque() {
+              document.querySelectorAll('#productsTable tbody tr').forEach(function (row) {
+                  if (row.querySelector('td[colspan="6"]')) return;
+
+                  const badge = row.querySelector('.status-badge');
+                  const atualEl = row.querySelector('.estoque-atual');
+                  const minEl = row.querySelector('.estoque-minimo');
+
+                  if (!badge || !atualEl || !minEl) return;
+
+                  const atual = parseFloat(atualEl.textContent) || 0;
+                  const minimo = parseFloat(minEl.textContent) || 0;
+                  badge.classList.remove('status-ok', 'bg-success', 'bg-warning', 'bg-danger', 'text-dark', 'text-white');
+                  badge.style.color = '#fff';
+
+                  if (atual <= 0) {
+                      badge.textContent = 'Esgotado';
+                      badge.classList.add('bg-danger'); 
+                      badge.style.backgroundColor = 'var(--cor-erro)'; 
+                  } else if (atual <= minimo) {
+                      badge.textContent = 'Estoque Baixo';
+                      badge.style.backgroundColor = 'var(--cor-alerta)';
+                      badge.style.color = '#000';
+                  } else {
+                      badge.textContent = 'Em Estoque';
+                      badge.style.backgroundColor = 'var(--cor-sucesso)';
+                  }
+              });
+          }
+          atualizarStatusEstoque();
+
+          // ============================================================
+          // AÇÕES (EDITAR, EXCLUIR, VIEW)
+          // ============================================================
+          // EDITAR
+          document.querySelectorAll('.btn-edit').forEach(btn => {
+              btn.addEventListener('click', function() {
+                  formTitulo.innerHTML = '<i class="fas fa-edit"></i> Editar Produto';
+                  formContainer.style.display = 'block';
+                  form.scrollIntoView({ behavior: 'smooth' });
+
+                  const row = btn.closest('tr');
+                  const id = btn.dataset.id;
+                  
+                  document.getElementById('idProduto').value = id;
+                  document.getElementById('nome-produto').value = row.querySelector('.nome-produto').textContent.trim();
+                  document.getElementById('codigo-produto').value = row.querySelector('.codigo-produto').textContent.trim();
+                  document.getElementById('fornecedor').value = row.querySelector('.fornecedor').textContent.trim();
+                  document.getElementById('estoque-atual').value = row.querySelector('.estoque-atual').textContent.trim();
+                  document.getElementById('estoque-minimo').value = row.querySelector('.estoque-minimo').textContent.trim();
+                  document.getElementById('descricao').value = row.querySelector('.descricao').textContent.trim();
+
+                  // Categoria (match inteligente)
+                  const catTexto = row.querySelector('.categoria').textContent.trim().toLowerCase();
+                  const select = document.getElementById('categoria');
+                  for(let i=0; i<select.options.length; i++) {
+                      if(select.options[i].text.toLowerCase().includes(catTexto) || select.options[i].value.toLowerCase().includes(catTexto)) {
+                          select.selectedIndex = i; break;
+                      }
+                  }
+
+                  // Preços (formatar de volta para PT-BR)
+                  const custo = parseFloat(row.querySelector('.preco-custo').dataset.valor);
+                  const venda = parseFloat(row.querySelector('.preco-venda').dataset.valor);
+                  
+                  $('#preco-custo').val(custo.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                  $('#preco-venda').val(venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                  
+                  verificarCampos();
+              });
+          });
+
+          // EXCLUIR - ROTA AJUSTADA PARA O SLUG
+          document.querySelectorAll('.btn-delete').forEach(btn => {
+              btn.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  const id = this.dataset.id;
+                  
+                  Swal.fire({
+                      title: 'Excluir produto?',
+                      text: "Ação irreversível!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#d33',
+                      confirmButtonText: 'Sim, excluir!'
+                  }).then((res) => {
+                      if (res.isConfirmed) {
+                          // Rota de exclusão com slug dinâmico
+                          fetch(`/${slugAtual}/produto-api/apagar`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                              body: 'idProduto=' + id
+                          }).then(resp => {
+                              if(resp.ok) Swal.fire('Sucesso', 'Produto excluído', 'success').then(() => location.reload());
+                              else Swal.fire('Erro', 'Falha ao excluir', 'error');
+                          });
+                      }
+                  });
+              });
+          });
+
+          // VISUALIZAR
+          const modalView = new bootstrap.Modal(document.getElementById('visualizarProdutoModal'));
+          document.querySelectorAll('.btn-view').forEach(btn => {
+              btn.addEventListener('click', function() {
+                  const row = btn.closest('tr');
+                  document.getElementById('modal-nome-produto').textContent = row.querySelector('.nome-produto').textContent.trim();
+                  document.getElementById('modal-codigo-produto').textContent = row.querySelector('.codigo-produto').textContent.trim();
+                  document.getElementById('modal-categoria').textContent = row.querySelector('.categoria').textContent.trim();
+                  document.getElementById('modal-preco-venda').textContent = row.querySelector('.preco-venda').textContent.trim();
+                  document.getElementById('modal-fornecedor').textContent = row.querySelector('.fornecedor').textContent.trim();
+                  document.getElementById('modal-estoque-atual').textContent = row.querySelector('.estoque-atual').textContent.trim();
+                  document.getElementById('modal-estoque-minimo').textContent = row.querySelector('.estoque-minimo').textContent.trim();
+                  document.getElementById('modal-descricao').textContent = row.querySelector('.descricao').textContent.trim();
+                  
+                  modalView.show();
+              });
+          });
+
+          // BUSCA DINÂMICA
+          const buscaEl = document.getElementById('busca');
+          const filtroEl = document.getElementById('filtro_categoria');
+          
+          function filtrar() {
+              const termo = buscaEl.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+              const catFiltro = filtroEl.value.toLowerCase();
+              const linhas = document.querySelectorAll('#productsTable tbody tr');
+
+              linhas.forEach(linha => {
+                  if(linha.querySelector('td[colspan]')) return;
+                  
+                  const nome = linha.querySelector('.nome-produto').textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                  const codigo = linha.querySelector('.codigo-produto').textContent.toLowerCase();
+                  const catLinha = linha.querySelector('.categoria').textContent.toLowerCase();
+
+                  const matchTexto = nome.includes(termo) || codigo.includes(termo);
+                  const matchCat = catFiltro === "" || catLinha.includes(catFiltro);
+
+                  linha.style.display = (matchTexto && matchCat) ? '' : 'none';
+              });
+          }
+
+          if(buscaEl) buscaEl.addEventListener('input', filtrar);
+          if(filtroEl) filtroEl.addEventListener('change', filtrar);
+      });
+  </script>
+</body>
+</html>

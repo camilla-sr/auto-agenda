@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="'Agendamentos - ' + ${branding.nomeEmpresa}">Agendamentos - AutoAgenda</title>
+  <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/sweetalert2.all.min.js"></script>
+  <script src="/js/script.js" defer></script>
+  <script src="/js/validacao.js"></script>
+  <script src="/js/qrcode.min.js"></script>
+  
+  <link rel="stylesheet" href="/css/variaveis.css">
+  <link rel="stylesheet" href="/css/navegacao.css">
+  <link rel="stylesheet" href="/css/agendamentos.css">
+</head>
+
+<body>
+  <div th:replace="~{fragments/barra :: barra}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h2><i class="fas fa-calendar-check"></i> Gerenciamento de Agendamentos</h2>
+        <p>Visualize e gerencie os agendamentos de serviços</p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="${agendaPendente}">0</h3>
+            <p>Agendamentos pendentes</p>
+          </div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="${agendaAndamento}">0</h3>
+            <p>Em andamento</p>
+          </div>
+        </div>
+
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <h3 th:text="${agendaConcluidoHoje}">0</h3>
+            <p>Concluídos hoje</p>
+          </div>
+        </div>
+      </div>
+	  
+      <div class="form-container" id="agendamento-form-container" style="display: none;">
+        <h3 id="formTitulo"><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
+
+        <form method="post" th:action="@{/{slug}/agendamento-api/salvar(slug=${oficinaContexto.slug})}" id="agendamento-form" enctype="multipart/form-data">
+		  <input type="hidden" id="idCliente" name="idCliente">
+		  <input type="hidden" id="idVeiculo" name="idVeiculo">
+		  <input type="hidden" name="tokenMobile" id="tokenMobile">
+          
+          <input type="hidden" name="oficina.idOficina" th:value="${oficinaContexto.idOficina}">
+		  
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="nome-cliente">Nome do Cliente</label>
+                <div class="d-flex gap-2">
+                  <div class="input-wrapper flex-grow-1">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="nome-cliente" name="nomeCliente" list="lista-clientes" placeholder="Nome completo do cliente" required>
+                    <datalist id="lista-clientes"></datalist>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cadastrarClienteModal" title="Cadastrar Novo Cliente">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="veiculo">Veículo</label>
+                <div class="d-flex gap-2">
+                  <div class="input-wrapper flex-grow-1">
+                    <i class="fas fa-car input-icon"></i>
+                    <input type="text" id="veiculo" name="veiculoNome" list="lista-veiculos" placeholder="Modelo/Placa do veículo" disabled>
+                    <datalist id="lista-veiculos"></datalist>
+                  </div>
+                  <button type="button" id="add-veiculo" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cadastrarVeiculoModal" title="Cadastrar Novo Veículo" disabled>
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="nome-servico">Tipo de Serviço</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-tools input-icon"></i>
+                  <select id="nome-servico" name="idServico" required>
+                    <option value="">Selecione um serviço</option>
+                    <option th:each="serv : ${servicos}" th:value="${serv.idServico}" th:text="${serv.nomeServico}">
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="data-previsao">Agendamento para</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-calendar-alt input-icon"></i>
+                  <input type="date" id="data-previsao" name="dataPrevisao">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-info-circle input-icon"></i>
+                  <select id="status" name="statusAgendamento" required>
+                    <option value="Agendado">Agendado</option>
+                    <option value="Confirmado">Confirmado</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluido">Concluído</option>
+                    <option value="Cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col" style="display: none" id="data_conclusao_container">
+              <div class="form-group">
+                <label for="data-conclusao">Data de Conclusão</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-calendar-plus input-icon"></i>
+                  <input type="date" id="data-conclusao" name="dataConclusao">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="observacao">Observações</label>
+            <div class="input-wrapper">
+              <i class="fas fa-comment-alt input-icon"></i>
+              <textarea id="observacao" name="observacao" rows="3" maxlength="200"
+                placeholder="Observações adicionais sobre o agendamento"></textarea>
+            </div>
+            <div id="observacao-counter" class="text-end text-muted" style="font-size: 0.85em; margin-top: 5px;">
+              <small>0/200</small>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <label for="agendamento-imagens"><i class="fas fa-camera"></i> Imagens do Serviço</label>
+			
+			<div class="d-flex gap-2">
+	            <div class="input-wrapper flex-grow-1">
+	                <input type="file" id="agendamento-imagens" name="imagens" multiple accept="image/*" class="form-control" style="padding-left: 10px;">				
+	            </div>			
+				<button type="button" class="btn btn-outline-dark text-nowrap" id="btn-abrir-qrcode" title="Usar Câmera do Celular">
+	                <i class="fas fa-qrcode"></i> Enviar pelo Celular
+	            </button>
+			</div>
+            <div id="form-preview-imagens" class="d-flex flex-wrap gap-2 mt-2">
+                </div>
+			<div id="aviso-token-mobile" class="alert alert-info mt-2 p-2 align-items-center justify-content-between" style="display: none;">
+			    <div>
+			        <small><i class="fas fa-mobile-alt"></i> Sessão mobile ativa. Fotos do celular serão vinculadas ao salvar.</small>
+			    </div>
+			    <button type="button" id="btn-cancelar-mobile" class="btn btn-sm btn-outline-danger ms-2" style="padding: 0 8px; font-size: 0.75rem; line-height: 1.5;">
+			        <i class="fas fa-times"></i> Cancelar
+			    </button>
+			</div>
+          </div>
+
+          <div class="form-actions">
+            <input type="hidden" name="idAgendamento" id="idAgendamento" readonly>
+            <button type="reset" class="btn btn-secondary" id="btn-cancelar-novo-agendamento">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" id="salvarAg">
+              <i class="fas fa-save"></i> Salvar Agendamento
+            </button>
+          </div>
+        </form>
+        
+        <form id="deleteForm" th:action="@{/{slug}/agendamento-api/apagar(slug=${oficinaContexto.slug})}" method="post" style="display: none;">
+          <input type="hidden" name="idAgendamento" id="deleteId">
+        </form>
+      </div>
+
+      <div class="table-container" id="lista-agendamentos-container">
+        <div class="table-header">
+          <h3><i class="fas fa-list"></i> Lista de Agendamentos</h3>
+          <button class="btn btn-primary" id="btn-novo-agendamento">
+            <i class="fas fa-plus"></i> Novo Agendamento
+          </button>
+        </div>
+
+        <div class="table-filters">
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label for="busca">Buscar Agendamento</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-search input-icon"></i>
+                  <input type="text" id="busca" name="busca" placeholder="Digite para buscar...">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label for="filtro_status">Filtrar por Status</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-filter input-icon"></i>
+                  <select id="filtro_status" name="filtro_status">
+                    <option value="">Todos os status</option>
+                    <option value="Agendado">Agendado</option>
+                    <option value="Confirmado">Confirmado</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluido">Concluído</option>
+                    <option value="Cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Tipo de Serviço</th>
+                <th>Previsão</th>
+                <th>Conclusão</th>
+                <th>Status</th>
+                <th>Observação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${agendamentos == null or agendamentos.empty}">
+                <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
+              </tr>
+              <tr th:each="ag : ${agendamentos}">
+                <td data-label="Cliente" class="ag-cliente" th:attr="data-nome-completo=${ag.cliente.nomeCliente}">
+					<span th:text="${ag.cliente.nomeCliente != null ? #strings.arraySplit(ag.cliente.nomeCliente, ' ')[0] : ''}"></span>
+				</td>
+                <td data-label="Tipo de Serviço" class="ag-servico" th:attr="data-servico-id=${ag.servico.idServico}">
+                  <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
+                    th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
+                    th:text="${ag.servico.nomeServico}"> </span>
+                  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}"></span>
+                </td>
+                <td data-label="Previsão" class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
+                  th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
+                </td>
+                <td data-label="Conclusão" class="ag-conclusao">
+                  <span th:if="${ag.dataConclusao != null}" th:text="${#temporals.format(ag.dataConclusao, 'dd/MM/yyyy')}" th:data-date="${#temporals.format(ag.dataConclusao, 'yyyy-MM-dd')}"></span>
+                  <span th:unless="${ag.dataConclusao != null}">-</span>
+                </td>
+                <td data-label="Status" class="ag-status">
+                  <span class="status-badge"
+                    th:classappend="' ' + ${#strings.replace(ag.statusAgendamento.toLowerCase(), ' ', '_')}"
+                    th:text="${#strings.replace(ag.statusAgendamento, '_', ' ')}"></span>
+                </td>
+                <td data-label="Observação" th:text="${ag.observacao}" class="observacao-cell ag-observacao"></td>
+				
+                <td class="action-buttons">
+                  <button class="btn-icon btn-edit" th:attr="data-id=${ag.idAgendamento}, data-veiculo-id=${ag.veiculo.idVeiculo},
+					               data-veiculo-nome=${ag.veiculo.modelo + ' - ' + ag.veiculo.placa}" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}"
+				  class="btn-icon btn-delete" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento},
+												  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
+												  data-cliente-email=${ag.cliente.email},
+												  data-cliente-telefone=${ag.cliente.telefone}" title="Visualizar">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
+                          class="btn-icon btn-concluir" th:attr="data-id=${ag.idAgendamento}" title="Concluir">
+                    <i class="fas fa-check"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-pagination">
+          <button class="btn btn-secondary" id="btn-anterior" disabled>
+            <i class="fas fa-chevron-left"></i> Anterior
+          </button>
+          <span class="pagination-info">Página 1 de 1</span>
+          <button class="btn btn-secondary" id="btn-proximo" disabled>
+            Próximo <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+	<div class="modal fade" id="modalQrCode" tabindex="-1" aria-labelledby="modalQrCodeLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="modalQrCodeLabel"><i class="fas fa-mobile-alt"></i> Enviar fotos pelo celular</h5>
+	          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	        <div class="modal-body text-center">
+	          <p class="text-muted">Escaneie o código abaixo com a câmera do seu celular para anexar fotos.</p>
+	          
+	          <div id="qrcode-container" class="d-flex justify-content-center my-3"></div>
+	          
+	          <div class="alert alert-warning small">
+	            <i class="fas fa-exclamation-triangle"></i> Mantenha essa tela aberta no PC enquanto envia as fotos pelo celular.
+	            <br>Depois, clique em <strong>Fechar</strong> e salve o agendamento.
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" id="btn-fechar-qrcode" class="btn btn-secondary" data-bs-dismiss="modal">Fechar e Voltar</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	
+    <div class="bootstrap-iso">
+      <div class="modal fade" id="visualizarAgendamentoModal" tabindex="-1"
+        aria-labelledby="visualizarAgendamentoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="visualizarAgendamentoModalLabel">
+                <i class="fas fa-eye"></i> Detalhes do Agendamento
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <h4><strong id="modal-cliente-agendamento"></strong></h4>
+				  
+				  <div class="mb-2 text-muted small">
+			        <span class="me-3"><i class="fas fa-phone-alt me-1"></i><span id="modal-cliente-telefone"></span></span>
+			        <span><i class="fas fa-envelope me-1"></i><span id="modal-cliente-email"></span></span>
+			      </div>
+				  
+                  <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+				  <p class="text-muted mb-0" style="font-size: 0.95rem;">
+	                  <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
+	                </p>
+                </div>
+				<div class="col-md-4 text-md-end">
+                  <h5 id="titulo-data-modal">Previsão</h5>
+				  <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
+                </div>
+				<div class="mt-3">
+				    <h6><i class="fas fa-camera me-2"></i>Fotos do Serviço</h6>
+				    <div class="gallery-carousel-wrapper">
+				        <button type="button" class="gallery-nav gallery-prev" id="btn-galeria-prev">
+				            <i class="fas fa-chevron-left"></i>
+				        </button>
+				        <div id="galeria-visualizacao" class="gallery-track"></div>
+				        <button type="button" class="gallery-nav gallery-next" id="btn-galeria-next">
+				            <i class="fas fa-chevron-right"></i>
+				        </button>
+				    </div>
+				</div>
+              </div>
+              <hr>
+              <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
+              <p id="modal-observacao" style="white-space: pre-wrap;"></p>
+              <hr>
+			  <div class="d-flex align-items-center">
+  				<p class="mb-0" style="font-size: 1.1rem;"><strong>Status: </strong><span id="modal-status"></span></p>
+  			 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times"></i> Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+		
+      <div class="modal fade" id="cadastrarClienteModal" tabindex="-1" aria-labelledby="cadastrarClienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cadastrarClienteModalLabel"><i class="fas fa-user-plus"></i> Novo Cliente</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-novo-cliente">
+                <div class="mb-3">
+                  <label for="novo-cliente-nome" class="form-label">Nome Completo</label>
+                  <input type="text" class="form-control" id="novo-cliente-nome" maxlength="80" required>
+				  <div id="erro-nome-cli" class="invalid-feedback">Digite nome e sobrenome.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-cliente-telefone" class="form-label">Telefone/Celular</label>
+                  <input type="tel" class="form-control" id="novo-cliente-telefone" maxlength="15" required>
+				  <div class="invalid-feedback">Telefone incompleto (mínimo 10 dígitos + DDD).</div>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-cliente-email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="novo-cliente-email" placeholder="nome@exemplo.com">
+				  <div class="invalid-feedback">E-mail inválido.</div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btn-salvar-novo-cliente">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="cadastrarVeiculoModal" tabindex="-1" aria-labelledby="cadastrarVeiculoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cadastrarVeiculoModalLabel"><i class="fas fa-car"></i> Novo Veículo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-novo-veiculo">
+				<input type="hidden" id="idCliente">
+                <div class="mb-3">
+                  <label for="novo-veiculo-modelo" class="form-label">Modelo</label>
+                  <input type="text" class="form-control" id="novo-veiculo-modelo" placeholder="Ex: Gol, Civic..." maxlength="35" required>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-veiculo-placa" class="form-label">Placa</label>
+                  <input type="text" class="form-control" id="novo-veiculo-placa" placeholder="ABC-1234" maxlength="7" required>
+				  <div class="invalid-feedback">Placa obrigatória (7 caracteres).</div>
+                </div>
+                <div class="mb-3">
+                  <label for="novo-veiculo-marca" class="form-label">Marca</label>
+                  <input type="text" class="form-control" id="novo-veiculo-marca" placeholder="Ex: VW, Honda..." maxlength="20">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btn-salvar-novo-veiculo">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="anexarImagensModal" tabindex="-1" aria-labelledby="anexarImagensModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="anexarImagensModalLabel"><i class="fas fa-images"></i> Anexar Imagens</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-anexar-imagens">
+                <input type="hidden" id="id-agendamento-imagens">
+                <div class="mb-3">
+                  <label for="input-imagens" class="form-label">Selecione as imagens</label>
+                  <input class="form-control" type="file" id="input-imagens" multiple accept="image/*">
+                </div>
+                <div id="preview-imagens" class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
+                    <p class="text-muted w-100 text-center">Nenhuma imagem selecionada</p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="btn-salvar-imagens">Salvar Anexos</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // CAPTURA DO CONTEXTO DA OFICINA
+        const slugAtual = /*[[${oficinaContexto.slug}]]*/ 'oficina';
+        const idOficinaAtual = /*[[${oficinaContexto.idOficina}]]*/ null;
+
+        const todosClientes = /*[[${clientes}]]*/ []; 
+        const todosVeiculos = /*[[${veiculos}]]*/ []; 
+
+        const formContainer = document.getElementById('agendamento-form-container');
+        const formAgendamento = document.getElementById('agendamento-form');
+        const btnNovoAgendamento = document.getElementById('btn-novo-agendamento');
+        const btnCancelar = document.getElementById('btn-cancelar-novo-agendamento');
+        const btnSalvarAgendamento = document.getElementById('salvarAg');
+        
+        const inputId = document.getElementById('idAgendamento');
+        const inputIdCli = document.getElementById('idCliente');
+        const inputNome = document.getElementById('nome-cliente');
+        const inputIdVeiculo = document.getElementById('idVeiculo');
+        const inputVeiculo = document.getElementById('veiculo');
+        const inputData = document.getElementById('data-previsao');
+        const datalistCli = document.getElementById('lista-clientes');
+        const datalistVeic = document.getElementById('lista-veiculos');
+        const btnAddVeiculo = document.getElementById('add-veiculo');
+
+        const statusSel = document.getElementById('status');
+        const divConc = document.getElementById('data_conclusao_container');
+        const inpConc = document.getElementById('data-conclusao');
+
+        const btnQrCode = document.getElementById('btn-abrir-qrcode');
+        const inputToken = document.getElementById('tokenMobile');
+        const avisoMobile = document.getElementById('aviso-token-mobile');
+        const btnCancelarMobile = document.getElementById('btn-cancelar-mobile');
+        const qrcodeContainer = document.getElementById('qrcode-container');
+        const modalQrCodeEl = document.getElementById('modalQrCode');
+        const modalQrCode = modalQrCodeEl ? new bootstrap.Modal(modalQrCodeEl) : null;
+        const inpImg = document.getElementById('agendamento-imagens');
+        const prevDiv = document.getElementById('form-preview-imagens');
+        let dt = new DataTransfer(); 
+        let idsFotosRenderizadas = new Set(); 
+
+        function checkStatus() {
+            if (statusSel && (statusSel.value === 'Concluido' || statusSel.value === 'Concluído')) {
+                divConc.style.display = 'block';
+                inpConc.required = true;
+                if (!inpConc.value) inpConc.value = new Date().toISOString().split('T')[0];
+            } else {
+                if (divConc) divConc.style.display = 'none';
+                if (inpConc) { inpConc.required = false; inpConc.value = ""; }
+            }
+        }
+        if (statusSel) statusSel.addEventListener('change', checkStatus);
+
+        function verificarBotaoSalvar() {
+            if(!btnSalvarAgendamento) return;
+            const temCliente = inputIdCli && inputIdCli.value !== "";
+            const temVeiculo = inputIdVeiculo && inputIdVeiculo.value !== "";
+            const temData = inputData && inputData.value !== "";
+            btnSalvarAgendamento.disabled = !(temCliente && temVeiculo && temData);
+        }
+
+        function toggleCamposVeiculo(habilitar) {
+            if (inputVeiculo && btnAddVeiculo) {
+                inputVeiculo.disabled = !habilitar;
+                btnAddVeiculo.disabled = !habilitar;
+                if (habilitar) {
+                    inputVeiculo.placeholder = "Modelo/Placa do veículo";
+                } else {
+                    inputVeiculo.value = "";
+                    if(inputIdVeiculo) inputIdVeiculo.value = "";
+                    inputVeiculo.placeholder = "Selecione o cliente primeiro...";
+                    inputVeiculo.classList.remove('is-valid', 'is-invalid');
+                    if(datalistVeic) datalistVeic.innerHTML = "";
+                }
+            }
+        }
+
+        if(inputData) {
+            inputData.addEventListener('input', verificarBotaoSalvar);
+            inputData.addEventListener('change', verificarBotaoSalvar);
+        }
+
+        if (todosClientes && datalistCli) {
+            todosClientes.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.nomeCliente;
+                datalistCli.appendChild(opt);
+            });
+        }
+
+        if (inputNome) {
+            inputNome.addEventListener('input', function() {
+                const valor = this.value.trim();
+                
+                if (valor === "") {
+                    inputIdCli.value = "";
+                    this.classList.remove('is-valid', 'is-invalid');
+                    toggleCamposVeiculo(false);
+                    verificarBotaoSalvar();
+                    return;
+                }
+
+                const cliente = todosClientes.find(c => c.nomeCliente === valor);
+
+                if (cliente) {
+                    inputIdCli.value = cliente.idCliente;
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    toggleCamposVeiculo(true);
+                    filtrarVeiculos(cliente.idCliente);
+                } else {
+                    inputIdCli.value = "";
+                    this.classList.remove('is-valid');
+                    toggleCamposVeiculo(false);
+                }
+                verificarBotaoSalvar();
+            });
+
+            inputNome.addEventListener('change', function() {
+                if(!inputIdCli.value && this.value !== "") {
+                    Swal.fire({
+                        toast: true, position: 'top-end', icon: 'warning',
+                        title: 'Cliente não encontrado. Selecione da lista ou cadastre novo.',
+                        showConfirmButton: false, timer: 3000
+                    });
+                    this.value = "";
+                    this.classList.remove('is-valid', 'is-invalid');
+                    verificarBotaoSalvar();
+                }
+            });
+        }
+
+        function filtrarVeiculos(idCliente) {
+            if(!todosVeiculos || !datalistVeic) return;
+            datalistVeic.innerHTML = "";
+            inputVeiculo.value = "";
+            if(inputIdVeiculo) inputIdVeiculo.value = "";
+            
+            const filtrados = todosVeiculos.filter(v => v.cliente && v.cliente.idCliente === idCliente);
+            filtrados.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.modelo + " - " + v.placa;
+                datalistVeic.appendChild(opt);
+            });
+            
+            if (filtrados.length === 1) {
+                const v = filtrados[0];
+                inputVeiculo.value = v.modelo + " - " + v.placa;
+                if(inputIdVeiculo) inputIdVeiculo.value = v.idVeiculo;
+                inputVeiculo.classList.add('is-valid');
+            }
+        }
+
+        if (inputVeiculo) {
+            inputVeiculo.addEventListener('input', function() {
+                const valor = this.value;
+                const idCli = parseInt(inputIdCli.value);
+                
+                if(valor === "") {
+                    if(inputIdVeiculo) inputIdVeiculo.value = "";
+                    this.classList.remove('is-valid', 'is-invalid');
+                    verificarBotaoSalvar();
+                    return;
+                }
+
+                const veiculo = todosVeiculos.find(v => 
+                    (v.modelo + " - " + v.placa) === valor && 
+                    (v.cliente && v.cliente.idCliente === idCli)
+                );
+                
+                if (veiculo) {
+                    if(inputIdVeiculo) inputIdVeiculo.value = veiculo.idVeiculo;
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                } else {
+                    if(inputIdVeiculo) inputIdVeiculo.value = "";
+                    this.classList.remove('is-valid');
+                }
+                verificarBotaoSalvar();
+            });
+            
+            inputVeiculo.addEventListener('change', function() {
+                 if(inputIdVeiculo && !inputIdVeiculo.value && this.value !== "") {
+                    Swal.fire({
+                        toast: true, position: 'top-end', icon: 'warning',
+                        title: 'Veículo inválido para este cliente.',
+                        showConfirmButton: false, timer: 3000
+                    });
+                    this.value = "";
+                    this.classList.remove('is-valid', 'is-invalid');
+                    verificarBotaoSalvar();
+                 }
+            });
+        }
+
+	  const btnSalvarCli = document.getElementById('btn-salvar-novo-cliente');
+      const modalInpNome = document.getElementById('novo-cliente-nome');
+      const modalInpTel = document.getElementById('novo-cliente-telefone');
+      const modalInpEmail = document.getElementById('novo-cliente-email');
+
+      if (btnSalvarCli && modalInpNome && modalInpTel) {
+          btnSalvarCli.disabled = true;
+
+          function checkNome() {
+              const valor = modalInpNome.value.trim();
+              return valor.split(' ').filter(p => p.length > 0).length >= 2;
+          }
+
+          function checkTel() { 
+              const raw = modalInpTel.value.replace(/\D/g, "");
+              return raw.length === 10 || raw.length === 11;
+          }
+
+          function checkEmail() {
+              const valor = modalInpEmail.value.trim();
+              if (valor === "") return true;
+              return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
+          }
+
+          function atualizarBotao() {
+              btnSalvarCli.disabled = !(checkNome() && checkTel() && checkEmail());
+          }
+
+          modalInpNome.addEventListener('input', () => {
+              modalInpNome.classList.remove('is-invalid');
+              atualizarBotao();
+          });
+          modalInpNome.addEventListener('blur', () => {
+              if(!checkNome()) modalInpNome.classList.add('is-invalid');
+              atualizarBotao();
+          });
+
+          modalInpTel.addEventListener('input', (e) => {
+              modalInpTel.classList.remove('is-invalid');
+              let v = e.target.value.replace(/\D/g, "");
+              if (v.length > 11) v = v.substring(0, 11);
+              v = v.replace(/^(\d\d)(\d)/g, "($1) $2");
+              if (v.replace(/\D/g, "").length === 11) {
+                  v = v.replace(/(\d{5})(\d{4})$/, "$1-$2");
+              } else {
+                  v = v.replace(/(\d{4})(\d{0,4})$/, "$1-$2");
+              }
+              e.target.value = v;
+              
+              atualizarBotao();
+          });
+          
+          modalInpTel.addEventListener('blur', () => {
+              if(!checkTel()) modalInpTel.classList.add('is-invalid');
+              atualizarBotao();
+          });
+
+          if(modalInpEmail) {
+              modalInpEmail.addEventListener('input', () => {
+                  modalInpEmail.classList.remove('is-invalid');
+                  atualizarBotao();
+              });
+              modalInpEmail.addEventListener('blur', () => {
+                  if(!checkEmail()) modalInpEmail.classList.add('is-invalid');
+                  atualizarBotao();
+              });
+          }
+
+          btnSalvarCli.addEventListener('click', function() {
+              if(!checkNome() || !checkTel() || !checkEmail()) return;
+
+              const nome = modalInpNome.value.trim();
+              const tel = modalInpTel.value.trim();
+              const email = modalInpEmail.value.trim();
+
+              fetch(`/${slugAtual}/cliente-api/salvar`, {
+                  method: 'POST', headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({nomeCliente: nome, telefone: tel, email: email, oficina: { idOficina: idOficinaAtual }})
+              }).then(r => r.ok ? r.json() : Promise.reject())
+              .then(cli => {
+                  todosClientes.push(cli);
+                  
+                  inputNome.value = cli.nomeCliente;
+                  inputIdCli.value = cli.idCliente;
+                  
+                  inputNome.classList.add('is-valid');
+                  inputNome.classList.remove('is-invalid');
+                  
+                  const opt = document.createElement('option'); opt.value = cli.nomeCliente;
+                  datalistCli.appendChild(opt);
+                  
+                  toggleCamposVeiculo(true);
+                  verificarBotaoSalvar();
+                  
+                  bootstrap.Modal.getInstance(document.getElementById('cadastrarClienteModal')).hide();
+                  document.getElementById('form-novo-cliente').reset();
+                  
+                  [modalInpNome, modalInpTel, modalInpEmail].forEach(el => el.classList.remove('is-invalid', 'is-valid'));
+                  btnSalvarCli.disabled = true;
+
+                  Swal.fire('Sucesso!', 'O cliente foi cadastrado.', 'success');
+              }).catch(() => Swal.fire('Erro', 'Falha ao salvar cliente', 'error'));
+          });
+      }
+
+        const btnSalvarVeic = document.getElementById('btn-salvar-novo-veiculo');
+        const modalInpModelo = document.getElementById('novo-veiculo-modelo');
+        const modalInpPlaca = document.getElementById('novo-veiculo-placa');
+        const modalInpMarca = document.getElementById('novo-veiculo-marca');
+
+        if (btnSalvarVeic && modalInpModelo && modalInpPlaca) {
+            btnSalvarVeic.disabled = true;
+			
+            function checkModelo() { return modalInpModelo.value.trim().length > 0; }
+            function checkPlaca() { return modalInpPlaca.value.trim().length === 7; }
+
+            function atualizarBotaoVeiculo() {
+                btnSalvarVeic.disabled = !(checkModelo() && checkPlaca());
+            }
+            
+            modalInpModelo.addEventListener('input', () => {
+                modalInpModelo.classList.remove('is-invalid');
+                atualizarBotaoVeiculo();
+            });
+            modalInpModelo.addEventListener('blur', () => {
+                if(!checkModelo()) modalInpModelo.classList.add('is-invalid');
+                atualizarBotaoVeiculo();
+            });
+
+            modalInpPlaca.addEventListener('input', function() {
+                this.value = this.value.toUpperCase().replace(/\s/g, '').replace(/[^A-Z0-9]/g, '');
+                
+                this.classList.remove('is-invalid');
+                atualizarBotaoVeiculo();
+            });
+            
+            modalInpPlaca.addEventListener('blur', () => {
+                if(!checkPlaca()) modalInpPlaca.classList.add('is-invalid');
+                atualizarBotaoVeiculo();
+            });
+
+            btnSalvarVeic.addEventListener('click', function() {
+                const idCli = inputIdCli.value;
+                
+                if(!checkModelo() || !checkPlaca()) return;
+                
+                if(!idCli) {
+                    Swal.fire('Atenção', 'Selecione um cliente no formulário principal primeiro.', 'warning');
+                    return;
+                }
+
+                fetch(`/${slugAtual}/veiculo-api/salvar`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        cliente: {idCliente: idCli},
+                        oficina: {idOficina: idOficinaAtual},
+                        modelo: modalInpModelo.value.trim(),
+                        placa: modalInpPlaca.value.trim(),
+                        marca: modalInpMarca ? modalInpMarca.value.trim() : ""
+                    })
+                }).then(r => r.ok ? r.json() : Promise.reject())
+                .then(v => {
+                    todosVeiculos.push(v);
+                    inputVeiculo.value = v.modelo + " - " + v.placa;
+                    inputIdVeiculo.value = v.idVeiculo;
+                    
+                    inputVeiculo.classList.add('is-valid');
+                    inputVeiculo.classList.remove('is-invalid');
+                    
+                    const opt = document.createElement('option');
+                    opt.value = v.modelo + " - " + v.placa;
+                    datalistVeic.appendChild(opt);
+                    
+                    bootstrap.Modal.getInstance(document.getElementById('cadastrarVeiculoModal')).hide();
+                    document.getElementById('form-novo-veiculo').reset();
+                    
+                    [modalInpModelo, modalInpPlaca].forEach(el => el.classList.remove('is-invalid', 'is-valid'));
+                    if(modalInpMarca) modalInpMarca.classList.remove('is-invalid');
+                    btnSalvarVeic.disabled = true;
+
+                    Swal.fire('Sucesso!', 'O veículo foi cadastrado.', 'success');
+                    verificarBotaoSalvar();
+                }).catch(() => Swal.fire('Erro', 'Falha ao registrar veículo', 'error'));
+            });
+        }
+
+        if (btnNovoAgendamento) {
+            btnNovoAgendamento.addEventListener('click', function () {
+                dt = new DataTransfer();
+                idsFotosRenderizadas.clear();
+                prevDiv.innerHTML = "";
+                
+                document.getElementById('idAgendamento').value = "";
+                document.getElementById('formTitulo').innerHTML = '<i class="fas fa-plus-circle"></i> Novo Agendamento';
+                
+                inputNome.value = ""; inputNome.classList.remove('is-valid', 'is-invalid');
+                inputIdCli.value = "";
+                toggleCamposVeiculo(false);
+                
+                inputToken.value = "";
+                avisoMobile.classList.remove('d-flex');
+                avisoMobile.style.display = 'none';
+                
+                formAgendamento.reset();
+                checkStatus();
+                
+                formContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    formContainer.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+                
+                verificarBotaoSalvar();
+            });
+        }
+
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', function () {
+                formContainer.style.display = 'none';
+                formAgendamento.reset();
+                
+                const tok = inputToken.value;
+                if(tok) fetch(`/mobile/cancelar/${tok}`, { method: 'DELETE' });
+                inputToken.value = "";
+                avisoMobile.classList.remove('d-flex');
+                avisoMobile.style.display = 'none';
+                idsFotosRenderizadas.clear();
+
+                document.getElementById('lista-agendamentos-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        if(inpImg && prevDiv) {
+            inpImg.addEventListener('change', function() {
+                for(let file of this.files){ dt.items.add(file); }
+                this.files = dt.files;
+                
+                const fotosDoBanco = Array.from(prevDiv.querySelectorAll('.db-photo'));
+                prevDiv.innerHTML = "";
+                fotosDoBanco.forEach(div => prevDiv.appendChild(div)); 
+
+                Array.from(dt.files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const div = document.createElement('div');
+                        div.className = 'preview-wrapper';
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-img';
+                        const btn = document.createElement('div');
+                        btn.className = 'btn-delete-img';
+                        btn.innerHTML = 'X';
+                        btn.onclick = () => {
+                            const novoDt = new DataTransfer();
+                            Array.from(dt.files).forEach((f, i) => { if(i !== index) novoDt.items.add(f); });
+                            dt = novoDt;
+                            inpImg.files = dt.files;
+                            div.remove(); 
+                        };
+                        div.appendChild(img); div.appendChild(btn);
+                        prevDiv.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+		
+        if(btnQrCode) {
+            btnQrCode.addEventListener('click', function() {
+				const urlBase = window.location.origin;
+				
+				// Trava de segurança para testes locais
+                if (urlBase.includes('localhost')) {
+                    Swal.fire({
+                        title: 'Modo Localhost',
+                        text: 'Para usar a câmera do celular no ambiente de testes, acesse o sistema no navegador do PC digitando o seu IP da rede (ex: http://192.168.x.x:8080) em vez de localhost.',
+                        icon: 'warning'
+                    });
+                    return; // Interrompe para não gerar um QR Code inútil
+                }
+				
+                if(!inputToken.value) {
+                    inputToken.value = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+                    avisoMobile.style.display = 'flex';
+                    avisoMobile.classList.add('d-flex');
+                }
+                qrcodeContainer.innerHTML = "";
+                
+				// Descobre automaticamente se é localhost, IP ou Domínio Público
+				new QRCode(qrcodeContainer, { text: `${urlBase}/mobile/upload-fotos/${inputToken.value}`, width: 200, height: 200 });
+                if(modalQrCode) modalQrCode.show();
+            });
+        }
+
+        const btnFecharQr = document.getElementById('btn-fechar-qrcode');
+        if(btnFecharQr) {
+            btnFecharQr.addEventListener('click', function() {
+                const token = inputToken.value;
+                if(!token) return;
+
+                fetch('/' + slugAtual + `/fotos-api/listar-temp/${token}`)
+                    .then(r => r.json())
+                    .then(fotos => {
+                        if(fotos && fotos.length > 0) {
+                            fotos.forEach(f => {
+                                if(!idsFotosRenderizadas.has(f.id)) {
+                                    renderizarFotoMobile(f);
+                                    idsFotosRenderizadas.add(f.id);
+                                }
+                            });
+                            Swal.fire({ title: 'Fotos Recebidas!', icon: 'success', timer: 2000, showConfirmButton: false });
+                        }
+                    });
+            });
+        }
+
+        function renderizarFotoMobile(foto) {
+            const div = document.createElement('div');
+            div.className = 'preview-wrapper db-photo mobile-photo'; 
+            div.style.borderColor = '#198754'; 
+
+            const img = document.createElement('img');
+            img.src = '/' + slugAtual + `/fotos-api/imagem/${foto.id}`;
+            img.className = 'preview-img';
+            
+            const btnDel = document.createElement('div');
+            btnDel.className = 'btn-delete-img';
+            btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            
+            btnDel.onclick = function() {
+                 fetch('/' + slugAtual + `/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
+                 .then(r => {
+                     if(r.ok) {
+                         div.remove();
+                         idsFotosRenderizadas.delete(foto.id);
+                         if (document.querySelectorAll('.mobile-photo').length === 0) {
+                             inputToken.value = "";
+                             avisoMobile.classList.remove('d-flex');
+                             avisoMobile.style.display = 'none';
+                             Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Sessão mobile finalizada', showConfirmButton: false, timer: 3000 });
+                         }
+                     }
+                 });
+            };
+
+            const icon = document.createElement('div');
+            icon.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+            icon.style.cssText = "position: absolute; bottom: -5px; right: -5px; background: #198754; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px;";
+
+            div.appendChild(img); div.appendChild(btnDel); div.appendChild(icon);
+            prevDiv.appendChild(div);
+        }
+
+        if(btnCancelarMobile) {
+            btnCancelarMobile.addEventListener('click', function() {
+                const tok = inputToken.value;
+                document.querySelectorAll('.mobile-photo').forEach(el => el.remove());
+                idsFotosRenderizadas.clear();
+                if(tok) fetch(`/mobile/cancelar/${tok}`, { method: 'DELETE' });
+                
+                inputToken.value = "";
+                avisoMobile.classList.remove('d-flex');
+                avisoMobile.style.display = 'none';
+            });
+        }
+
+        const obsInput = document.getElementById('observacao');
+        const obsCounter = document.getElementById('observacao-counter');
+        if (obsInput && obsCounter) {
+            obsInput.addEventListener('input', function() {
+                const current = this.value.length;
+                const max = this.getAttribute('maxlength') || 200;
+                obsCounter.querySelector('small').textContent = `${current}/${max}`;
+                if (current >= max) {
+                    obsCounter.classList.remove('text-muted'); obsCounter.classList.add('text-danger');
+                } else {
+                    obsCounter.classList.add('text-muted'); obsCounter.classList.remove('text-danger');
+                }
+            });
+        }
+
+		document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const id = this.dataset.id;
+                
+                document.getElementById('formTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Agendamento';
+                document.getElementById('idAgendamento').value = id;
+                
+                dt = new DataTransfer();
+                if(inpImg) inpImg.files = dt.files;
+                prevDiv.innerHTML = "";
+                
+                const nomeCompleto = row.querySelector('.ag-cliente').getAttribute('data-nome-completo');
+                inputNome.value = nomeCompleto;
+
+                const cliObj = todosClientes.find(c => c.nomeCliente === inputNome.value);
+                inputIdCli.value = cliObj ? cliObj.idCliente : "";
+               
+                if(inputIdCli.value) {
+                    toggleCamposVeiculo(true);
+                    inputNome.classList.add('is-valid');
+                    inputNome.classList.remove('is-invalid');
+                }
+
+                const veicDataId = this.getAttribute('data-veiculo-id');
+                const veicDataNome = this.getAttribute('data-veiculo-nome');
+                inputVeiculo.value = veicDataNome || "";
+                inputIdVeiculo.value = veicDataId || "";
+               
+                if(inputIdVeiculo.value) {
+                    inputVeiculo.classList.add('is-valid');
+                    inputVeiculo.classList.remove('is-invalid');
+                }
+    
+                document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
+
+                const statusTxt = row.querySelector('.ag-status span').textContent.trim();
+                const limparTexto = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s/g, '');
+                const statusAlvo = limparTexto(statusTxt);
+    
+                for(let i=0; i<statusSel.options.length; i++) {
+                    const opcaoTexto = limparTexto(statusSel.options[i].text);
+                    const opcaoValor = limparTexto(statusSel.options[i].value);
+    
+                    if(opcaoTexto === statusAlvo || opcaoValor === statusAlvo) {
+                        statusSel.selectedIndex = i; 
+                        break;
+                    }
+                }
+                
+                checkStatus();
+    
+                const prev = row.querySelector('.ag-previsao');
+                if(prev) document.getElementById('data-previsao').value = prev.dataset.date;
+                const conc = row.querySelector('.ag-conclusao');
+                if(conc) document.getElementById('data-conclusao').value = conc.dataset.date || '';
+                
+                const obs = row.querySelector('.ag-observacao').textContent.trim();
+                obsInput.value = obs;
+                obsInput.dispatchEvent(new Event('input')); 
+    
+                fetch('/' + slugAtual + `/fotos-api/listar/${id}`)
+                .then(r => r.status === 204 ? [] : r.json())
+                .then(fotos => {
+                    if(fotos && fotos.length > 0) {
+                        fotos.forEach(foto => {
+                            const div = document.createElement('div');
+                            div.className = 'preview-wrapper db-photo'; 
+                            div.style.borderColor = '#0d6efd'; 
+                            const img = document.createElement('img');
+                            img.src = '/' + slugAtual + `/fotos-api/imagem/${foto.id}`;
+                            img.className = 'preview-img';
+                            const btnDel = document.createElement('div');
+                            btnDel.className = 'btn-delete-img';
+                            btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>'; 
+                            btnDel.onclick = function() {
+                                Swal.fire({
+                                    title: 'Remover imagem?', text: "Ela poderá ser adicionada no agendamento novamente.", icon: 'warning',
+                                    showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d',
+                                    confirmButtonText: 'Sim, remover!', cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        fetch('/' + slugAtual + `/fotos-api/apagar/${foto.id}`, { method: 'DELETE' })
+                                        .then(response => {
+                                            if(response.ok) { div.remove(); Swal.fire('Sucesso!', 'A imagem foi removida.', 'success'); }
+                                        });
+                                    }
+                                });
+                            };
+                            div.appendChild(img); div.appendChild(btnDel); prevDiv.appendChild(div);
+                        });
+                    }
+                });
+                
+                formContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    formContainer.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+                
+                verificarBotaoSalvar();
+            });
+        });
+
+        const modalVisEl = document.getElementById('visualizarAgendamentoModal');
+        if (modalVisEl) {
+            const modalVis = new bootstrap.Modal(modalVisEl);
+            const track = document.getElementById('galeria-visualizacao');
+            const btnPrev = document.getElementById('btn-galeria-prev');
+            const btnNext = document.getElementById('btn-galeria-next');
+            
+            function atualizarBotoes() {
+                if(!track) return;
+                const precisa = track.scrollWidth > track.clientWidth;
+                if(!precisa) { btnPrev.classList.remove('visible'); btnNext.classList.remove('visible'); return; }
+                
+                if(track.scrollLeft > 5) btnPrev.classList.add('visible'); else btnPrev.classList.remove('visible');
+                if(Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) btnNext.classList.remove('visible'); else btnNext.classList.add('visible');
+            }
+
+            if(btnPrev) {
+                btnPrev.onclick = () => { track.scrollLeft -= 300; setTimeout(atualizarBotoes, 350); };
+                btnNext.onclick = () => { track.scrollLeft += 300; setTimeout(atualizarBotoes, 350); };
+                track.onscroll = atualizarBotoes;
+            }
+            modalVisEl.addEventListener('shown.bs.modal', atualizarBotoes);
+
+            document.querySelectorAll('.btn-view').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const id = this.dataset.id;
+                    
+					const nomeCompleto = row.querySelector('.ag-cliente').getAttribute('data-nome-completo');
+					document.getElementById('modal-cliente-agendamento').textContent = nomeCompleto;
+                    document.getElementById('modal-cliente-email').textContent = this.getAttribute('data-cliente-email') || '-';
+                    document.getElementById('modal-cliente-telefone').textContent = this.getAttribute('data-cliente-telefone') || '-';
+                    document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
+                    document.getElementById('modal-veiculo-agendamento').textContent = this.getAttribute('data-veiculo-info') || '-';
+                    document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
+                    
+                    const stText = row.querySelector('.ag-status span').textContent.trim();
+                    document.getElementById('modal-status').textContent = stText;
+                    
+                    const lblData = document.getElementById('titulo-data-modal');
+                    const valData = document.getElementById('modal-previsao-agendamento');
+                    
+                    if(stText.toLowerCase() === 'concluido' || stText.toLowerCase() === 'concluído') {
+                        lblData.textContent = 'Conclusão';
+                        valData.textContent = row.querySelector('.ag-conclusao').textContent.trim();
+                    } else {
+                        lblData.textContent = 'Previsão';
+                        valData.textContent = row.querySelector('.ag-previsao').textContent.trim();
+                    }
+
+                    track.innerHTML = '<p class="text-center py-4">Carregando...</p>';
+                    track.scrollLeft = 0;
+                    btnPrev.classList.remove('visible'); btnNext.classList.remove('visible');
+
+                    fetch('/' + slugAtual + `/fotos-api/listar/${id}`).then(r => r.status===204?[]:r.json()).then(fotos => {
+                        track.innerHTML = "";
+                        if(!fotos.length) { track.innerHTML = '<p class="text-center w-100 text-muted">Sem fotos.</p>'; return; }
+                        
+                        fotos.forEach(f => {
+                            const div = document.createElement('div'); div.className = 'gallery-item';
+                            const img = document.createElement('img'); img.src = '/' + slugAtual + `/fotos-api/imagem/${f.id}`;
+                            img.onload = atualizarBotoes;
+                            div.onclick = () => window.open(img.src, '_blank');
+                            div.appendChild(img); track.appendChild(div);
+                        });
+                        setTimeout(atualizarBotoes, 500);
+                    });
+                    modalVis.show();
+                });
+            });
+        }
+
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); const id = this.dataset.id;
+                Swal.fire({ title: 'Excluir o agendamento?', text: "Não será possível reverter essa ação!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d', confirmButtonText: 'Sim, excluir!', cancelButtonText: 'Cancelar' })
+                .then(r => { if(r.isConfirmed) { document.getElementById('deleteId').value = id; document.getElementById('deleteForm').submit(); }});
+            });
+        });
+
+          document.querySelectorAll('.btn-concluir').forEach(btn => {
+              btn.addEventListener('click', function () {
+                  const id = this.dataset.id;
+                  
+                  Swal.fire({
+                      title: 'Concluir agendamento?',
+                      text: "O status mudará para Concluído e a data de hoje será registrada.",
+                      icon: 'question',
+                      showCancelButton: true,
+                      confirmButtonColor: '#d33',
+					  cancelButtonColor: '#6c757d',
+					  confirmButtonText: 'Sim, concluir!',
+					  cancelButtonText: 'Cancelar'
+                  }).then((result) => {
+                      if (result.isConfirmed) {
+                          // ROTA DE CONCLUIR AGENDAMENTO ATUALIZADA NO FETCH
+                          fetch(`/${slugAtual}/agendamento-api/concluir/${id}`, { method: 'POST' })
+                          .then(res => {
+                              if (res.ok) {
+                                  return res.json();
+                              } else {
+                                  throw new Error('Erro ao concluir');
+                              }
+                          })
+                          .then(() => {
+                              Swal.fire(
+                                  'Sucesso!', 
+                                  'O agendamento foi finalizado com sucesso.', 
+                                  'success'
+                              ).then(() => location.reload());
+                          })
+                          .catch(error => {
+                              console.error(error);
+                              Swal.fire('Erro', 'Não foi possível concluir o agendamento.', 'error');
+                          });
+                      }
+                  });
+              });
+          });
+		  
+        const busca = document.getElementById('busca');
+        const filtroSt = document.getElementById('filtro_status');
+		function filtrar() {
+		    const t = busca.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		    const s = filtroSt.value.toLowerCase();
+		    
+		    document.querySelectorAll('tbody tr').forEach(row => {
+		        const nomeCompleto = row.querySelector('.ag-cliente') ? row.querySelector('.ag-cliente').getAttribute('data-nome-completo') : '';
+		        const txt = (row.textContent + ' ' + nomeCompleto).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		        const st = row.querySelector('.status-badge') ? row.querySelector('.status-badge').textContent.toLowerCase() : '';
+		        row.style.display = (txt.includes(t) && (!s || st.includes(s))) ? '' : 'none';
+		    });
+		}
+        if(busca) busca.addEventListener('input', filtrar);
+        if(filtroSt) filtroSt.addEventListener('change', filtrar);
+
+    });
+  </script>
+</body>
+</html>

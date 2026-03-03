@@ -1,0 +1,97 @@
+/* ARQUIVO: variaveis.css
+   OBJETIVO: Centralizar todas as cores, fontes e configurações globais.
+   IMPORTANTE: Este arquivo deve ser o PRIMEIRO a ser importado em qualquer página.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ========================================= */
+  /* 1. IDENTIDADE VISUAL (CORES BASE)         */
+  /* ========================================= */
+  --cor-primaria: #FFD700;       /* O Amarelo Ouro principal */
+  --cor-primaria-hover: #E6C200; /* Amarelo um pouco mais escuro para hover */
+  --cor-primaria-light: #FFF0B3; /* Amarelo bem claro para fundos leves */
+  
+  --cor-secundaria: #000000;       /* Preto */
+  --cor-secundaria-light: #333333; /* Cinza escuro (fundo dark ou textos) */
+  
+  --cor-texto-claro: #FFFFFF;
+  --cor-texto-escuro: #333333;
+  
+  --cor-fundo-claro: #F5F5F5;    /* Cinza quase branco para fundo de site */
+  --cor-fundo-medio: #E0E0E0;    /* Cinza para divisórias/bordas */
+  --cor-borda: #CCCCCC;
+
+  /* ========================================= */
+  /* 2. FEEDBACK E AÇÕES (Alertas, Sucesso)    */
+  /* ========================================= */
+  --cor-sucesso: #4CAF50;        /* Verde */
+  --cor-sucesso-light: #E8F5E9;
+  
+  --cor-alerta: #FF9800;         /* Laranja */
+  --cor-alerta-light: #FFF3E0;
+  
+  --cor-erro: #F44336;           /* Vermelho */
+  --cor-erro-light: #FFEBEE;
+  
+  --cor-info: #2196F3;           /* Azul */
+  --cor-info-light: #E3F2FD;
+
+  /* ========================================= */
+  /* 3. STATUS DE AGENDAMENTOS                 */
+  /* ========================================= */
+  --status-agendado: #3498db;      /* Azul */
+  --status-confirmado: #9b59b6;    /* Roxo */
+  --status-em-andamento: #FF9800;  /* Laranja */
+  --status-concluido: #4CAF50;     /* Verde */
+  --status-cancelado: #F44336;     /* Vermelho */
+
+  /* ========================================= */
+  /* 4. CATEGORIAS DE PRODUTOS / SERVIÇOS      */
+  /* ========================================= */
+  --cat-oleo: #3498db;
+  --cat-filtros: #9b59b6;
+  --cat-freios: #e74c3c;
+  --cat-suspensao: #2ecc71;
+  --cat-motor: #f39c12;
+  --cat-eletrica: #1abc9c;
+  --cat-acessorios: #34495e;
+  --cat-ar-condicionado: #34495e;
+
+  /* ========================================= */
+  /* 5. CONFIGURAÇÕES GERAIS                   */
+  /* ========================================= */
+  --fonte-principal: 'Poppins', sans-serif;
+  --borda-arredondada: 8px; /* Padronizando o raio das bordas */
+  --sombra-padrao: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --transicao: all 0.3s ease;
+}
+
+/* ========================================= */
+/* 6. SCROLLBAR PERSONALIZADA (Global)       */
+/* ========================================= */
+  
+/* Largura da barra */
+::-webkit-scrollbar {
+	width: 10px;
+    height: 10px;
+}
+
+/* Fundo da barra (Track) */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 4px;
+}
+
+/* A parte que corre (Thumb) */
+::-webkit-scrollbar-thumb {
+	background: var(--cor-primaria); /* Amarelo */
+	border-radius: 4px;
+	border: 2px solid #f1f1f1; /* Borda para dar respiro */
+}
+
+	/* Hover na barra */
+::-webkit-scrollbar-thumb:hover {
+	background: var(--cor-primaria-hover); /* Amarelo mais escuro */
+}

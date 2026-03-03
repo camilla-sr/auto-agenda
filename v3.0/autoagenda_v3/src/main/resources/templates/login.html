@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Login - ' + ${branding.nomeEmpresa}">Login - AutoAgenda</title>
+    <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/sweetalert2.all.min.js"></script>
+	<script src="/js/validacao.js"></script>
+	    
+    <link rel="stylesheet" href="/css/variaveis.css">
+    <link rel="stylesheet" href="/css/autenticacao.css">
+</head>
+
+<body>
+    <div class="auth-card">
+        <img th:src="@{${branding.logoUrl}}" alt="Logo" class="auth-logo">
+        <h4 class="mensagem">Bem-vindo</h4>
+        <form method="post" th:action="@{/{slug}/funcionario-api/logar(slug=${oficinaContexto.slug})}">
+            <div class="log-inputs">
+                <div class="mb-3">
+                    <label class="form-label">Usuário</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Seu usuário" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" name="senha" id="senha" class="form-control" placeholder="Sua senha" required>
+                    </div>
+                </div>
+
+                <div class="botoes">
+                    <button type="submit" class="btnLogin">Entrar</button>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="/recuperar-senha" class="link-recuperar">
+                        <i class="fa-solid fa-key me-1"></i> Esqueci Minha Senha
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito - Superadmin</title>
+    <link rel="icon" type="image/png" href="/img/padrao_favicon.ico"/>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/variaveis.css">
+    <link rel="stylesheet" href="/css/login_superadmin.css">
+</head>
+<body>
+
+    <div class="superadmin-card">
+        <i class="fa-solid fa-user-shield icon-lock"></i>
+        <h4 class="auth-title">AutoAgenda</h4>
+        <div class="auth-subtitle">Controle do Sistema</div>
+
+        <div th:if="${param.erro}" class="alert alert-danger py-2 small">
+            <i class="fa-solid fa-triangle-exclamation"></i> Credenciais inválidas.
+        </div>
+        <div th:if="${param.sucesso}" class="alert alert-success py-2 small text-success bg-dark border-success">
+            <i class="fa-solid fa-check-circle"></i> Conta criada com sucesso!
+        </div>
+
+        <form method="post" action="/superadmin-api/logar">
+            <div class="log-inputs">
+                
+                <div class="mb-3">
+                    <label class="form-label">Usuário Mestre</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-terminal"></i></span>
+                        <input type="text" name="usuario" id="usuario" class="form-control" required autofocus autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Senha de Segurança</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                        <input type="password" name="senha" id="senha" class="form-control" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-superadmin">
+                    <i class="fa-solid fa-door-open me-2"></i> Acessar Sistema
+                </button>
+                
+                <div class="text-center">
+                    <a href="/superadmin/cadastro" class="link-mestre">
+                        <i class="fa-solid fa-user-plus me-1"></i> Criar nova conta Mestre
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+	<script th:if="${sucesso}">
+        Swal.fire({
+            icon: 'success',
+            title: 'Tudo pronto!',
+            text: '[[${sucesso}]]',
+            background: '#16191c',
+            color: '#fff',
+            confirmButtonColor: '#198754'
+        });
+    </script>
+</body>
+</html>
