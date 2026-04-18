@@ -1,7 +1,8 @@
 /vSpring/autoagenda/data.mv.db
 /vSpring/autoagenda/data.trace.db
 
-/vSpring/email/src/main/resources/application.properties
+/v2.0/email/src/main/resources/application.properties
+/v3.0/autoagenda_v3/src/main/resources/application.properties
 
 *.db
 
