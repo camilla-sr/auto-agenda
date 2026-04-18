@@ -56,6 +56,15 @@
                             <div id="email-feedback" class="invalid-feedback">E-mail inválido.</div>
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Telefone / Celular</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                            <input type="text" id="telefone" th:field="*{telefone}" class="form-control" required placeholder="(99) 99999-9999">
+                            <div id="telefone-feedback" class="invalid-feedback">Telefone incompleto.</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 ps-md-4 mt-3 mt-md-0">
@@ -108,6 +117,8 @@
             const cpfFeedback = document.getElementById('cpf-feedback');
             const emailInput = document.getElementById('email');
             const emailFeedback = document.getElementById('email-feedback');
+            const telefoneInput = document.getElementById('telefone');
+            const telefoneFeedback = document.getElementById('telefone-feedback');
             const usuarioInput = document.getElementById('usuario');
             const usuarioFeedback = document.getElementById('usuario-feedback');
             const senhaInput = document.getElementById('senha');
@@ -161,9 +172,15 @@
                 });
             }
 
-            // --- 3. VALIDAÇÃO DE CPF ---
-            if(typeof Inputmask !== 'undefined' && cpfInput){
+            // --- 3. MÁSCARAS E VALIDAÇÃO CPF/TELEFONE ---
+            if(typeof Inputmask !== 'undefined'){
                 Inputmask("999.999.999-99").mask(cpfInput);
+                
+                // Suporta 8 ou 9 dígitos de forma fluida
+                Inputmask({
+                    mask: ["(99) 9999-9999", "(99) 99999-9999"],
+                    keepStatic: true
+                }).mask(telefoneInput);
             }
 
             function validarCPF(cpf) {
@@ -197,6 +214,23 @@
                         this.classList.add('is-valid');
                         this.classList.remove('is-invalid');
                         cpfFeedback.style.display = 'none';
+                    }
+                });
+            }
+
+            if (telefoneInput && telefoneFeedback) {
+                telefoneInput.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    telefoneFeedback.style.display = 'none';
+                });
+
+                telefoneInput.addEventListener('blur', function() {
+                    const numeros = this.value.replace(/\D/g, '');
+                    if (numeros.length > 0 && numeros.length < 10) { // Menos de 10 dígitos (DDD + 8)
+                        this.classList.add('is-invalid');
+                        telefoneFeedback.style.display = 'block';
+                    } else if (numeros.length >= 10) {
+                        this.classList.add('is-valid');
                     }
                 });
             }
@@ -256,7 +290,6 @@
             form.addEventListener('submit', function(e) {
                 let temErro = false;
 
-                // Validações antes do envio
                 const erroNome = obterErroNome(nomeInput.value);
                 if (erroNome) {
                     nomeInput.classList.add('is-invalid');
@@ -268,6 +301,13 @@
                 if (!validarCPF(cpfInput.value)) {
                     cpfInput.classList.add('is-invalid');
                     cpfFeedback.style.display = 'block';
+                    temErro = true;
+                }
+                
+                const numsTelefone = telefoneInput.value.replace(/\D/g, '');
+                if (numsTelefone.length < 10) {
+                    telefoneInput.classList.add('is-invalid');
+                    telefoneFeedback.style.display = 'block';
                     temErro = true;
                 }
 
@@ -289,7 +329,7 @@
                         alert("Verifique os erros.");
                     }
                 } else {
-                    cpfInput.value = cpfInput.value.replace(/\D/g, '');
+                    cpfInput.value = cpfInput.value.replace(/\D/g, ''); // Limpa máscara do CPF antes de enviar
                 }
             });
         });

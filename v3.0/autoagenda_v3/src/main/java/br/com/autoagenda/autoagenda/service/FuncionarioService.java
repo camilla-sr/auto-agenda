@@ -28,6 +28,22 @@ public class FuncionarioService {
         func.setSenha(novaSenha);
         repo.save(func);
     }
+    
+    public void alterarSenhaPerfil(Funcionario usuarioLogado, String senhaAtual, String novaSenha, String confirmaSenha) {
+        if (!novaSenha.equals(confirmaSenha)) {
+            throw new IllegalArgumentException("A nova senha e a confirmação não conferem.");
+        }
+
+        if (!senhaAtual.equals(usuarioLogado.getSenha())) {
+             throw new IllegalArgumentException("A senha atual informada está incorreta.");
+        }
+        
+        if (senhaAtual.equals(novaSenha)) {
+            throw new IllegalArgumentException("A nova senha deve ser diferente da atual.");
+        }
+        usuarioLogado.setSenha(novaSenha);
+        repo.save(usuarioLogado);
+    }
 
     public void salvarOuAtualizar(Funcionario func, String novaSenha, boolean cadastroInicial, Oficina oficina) {
         String cpfLimpo = func.getCpf().replaceAll("\\D", "");

@@ -24,10 +24,10 @@
                 
                 <div class="col-md-5 border-end border-secondary pe-md-4 mb-2 mb-md-0">
                     
-                    <div class="row g-2 mb-2">
-                        <div class="col-8">
+                    <div class="row g-2 mb-2 justify-content-center">
+                        <div class="col-8 d-flex flex-column align-items-center">
                             <label class="form-label small text-center w-100 mb-1">Logotipo</label>
-                            <div class="upload-preview-container preview-lg" onclick="document.getElementById('inputLogo').click()" style="min-height: 100px;">
+                            <div class="upload-preview-container preview-lg" onclick="document.getElementById('inputLogo').click()" style="min-height: 100px; width: 100%;">
                                 <img src="/img/padrao_logo.png" id="imgPreview" alt="Logo">
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-sm-action mt-1" onclick="document.getElementById('inputLogo').click()">
@@ -36,16 +36,6 @@
                             <input type="file" id="inputLogo" name="imgLogo" accept="image/*" class="d-none">
                         </div>
 
-                        <div class="col-4">
-                            <label class="form-label small text-center w-100 mb-1">Ícone</label>
-                            <div class="upload-preview-container preview-sm" onclick="document.getElementById('inputFavicon').click()" style="min-height: 100px;">
-                                <img src="/img/padrao_favicon.ico" id="favPreview" alt="Favicon" style="width: 32px; height: 32px;">
-                            </div>
-                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-sm-action mt-1" onclick="document.getElementById('inputFavicon').click()">
-                                <i class="fa-solid fa-upload"></i>
-                            </button>
-                            <input type="file" id="inputFavicon" name="imgFavicon" accept=".ico, .png, .jpg" class="d-none">
-                        </div>
                     </div>
 
                     <div class="mb-2">
@@ -225,21 +215,6 @@
                     reader.readAsDataURL(file);
                 }
             });
-			
-			// --- PREVIEW DO FAVICON ---
-			const inputFavicon = document.getElementById('inputFavicon');
-			const favPreview = document.getElementById('favPreview');
-
-			inputFavicon.addEventListener('change', function(e) {
-			    const file = e.target.files[0];
-			    if (file) {
-			        const reader = new FileReader();
-			        reader.onload = function(e) {
-			            favPreview.src = e.target.result;
-			        }
-			        reader.readAsDataURL(file);
-			    }
-			});
 
 			// --- INSCRIÇÕES ESTADUAL E MUNICIPAL ---
 			const ieInput = document.getElementById('ie');

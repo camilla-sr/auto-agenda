@@ -38,19 +38,7 @@ public class SetupService {
                 System.out.println("Logo vinculada no DB: " + oficina.getLogotipo());
             } else {
                 System.out.println("Aviso: Nenhuma LOGO recebida no formulário.");
-            }
-            
-            if (favicon != null && !favicon.isEmpty()) {
-                String ext = obterExtensao(favicon.getOriginalFilename());
-                String nomeFav = "favicon" + ext;
-                
-                salvarArquivo(favicon, subPasta, nomeFav);
-                oficina.setFavicon(slugLimpo + "/branding/" + nomeFav);
-                System.out.println("Favicon vinculado no DB: " + oficina.getFavicon());
-            } else {
-                System.out.println("Aviso: Nenhum FAVICON recebido no formulário.");
-            }
-            
+            }            
             return oficinaRepo.save(oficina);
             
         } catch (Exception e) {
@@ -123,7 +111,7 @@ public class SetupService {
         oficinaRepo.save(atual);
     }
 
-    public void atualizarBranding(Integer idOficina, MultipartFile logo, MultipartFile favicon) {
+    public void atualizarBranding(Integer idOficina, MultipartFile logo) {
         try {
             Oficina atual = oficinaRepo.findById(idOficina)
                 .orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada"));
@@ -135,12 +123,6 @@ public class SetupService {
                 String nomeLogo = "logotipo" + ext;
                 salvarArquivo(logo, subPasta, nomeLogo);
                 atual.setLogotipo(subPasta + "/" + nomeLogo);
-            }
-            if (favicon != null && !favicon.isEmpty()) {
-                String ext = obterExtensao(favicon.getOriginalFilename());
-                String nomeFav = "favicon" + ext;
-                salvarArquivo(favicon, subPasta, nomeFav);
-                atual.setFavicon(subPasta + "/" + nomeFav);
             }
             oficinaRepo.save(atual);
         } catch (IOException e) {

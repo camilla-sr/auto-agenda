@@ -16,8 +16,8 @@ public class FotosAgendamento {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFoto;
 	@ManyToOne @JoinColumn(name = "fk_agendamento") private Agendamento agendamento;
 	@Column(nullable = false) private String nomeArquivo;
-	private String tokenTemp;
 	@Column(nullable = false) private LocalDateTime dataCriacao = LocalDateTime.now();
+	private String tokenTemp;
 	
 	public FotosAgendamento() {}
 	

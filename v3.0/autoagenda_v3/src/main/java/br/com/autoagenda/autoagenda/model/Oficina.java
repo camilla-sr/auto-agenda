@@ -15,8 +15,8 @@ public class Oficina {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idOficina;
 	private String razaoSocial;
 	@NotNull private String nomeFantasia;
-	@CNPJ @Column(length = 18) private String cnpj;
 	@NotNull private String slug;
+	@CNPJ @Column(length = 18) private String cnpj;
 	@NotNull private String inscricaoMunicipal;
 	private String inscricaoEstadual;
 	private String logradouro;
@@ -30,7 +30,6 @@ public class Oficina {
 	private String telefoneSecundario;
 	@NotNull private String emailContato;
 	private String logotipo;
-	private String favicon;
 	
 	@Column(name = "usar_produtos", columnDefinition = "boolean default true")
     private boolean usarProdutos = true;
@@ -83,8 +82,6 @@ public class Oficina {
 	public void setEmailContato(String emailContato) { this.emailContato = emailContato; }
 	public String getLogotipo() { return logotipo; }
 	public void setLogotipo(String logotipo) { this.logotipo = logotipo; }
-	public String getFavicon() { return favicon; }
-	public void setFavicon(String favicon) { this.favicon = favicon; }
 
 	public Boolean getAtivo() { return ativo; }
     public void setAtivo(Boolean ativo) { this.ativo = ativo; }

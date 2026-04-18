@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import br.com.autoagenda.autoagenda.model.Agendamento;
+import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.service.AgendamentoService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ public class C_Agendamento {
     @PostMapping("/salvar")
     public String salvar(@PathVariable("slug") String slug,
     				@SessionAttribute("oficinaAtual") Oficina oficina,
+    				@SessionAttribute("usuarioLogado") Funcionario usuarioLogado,
     				@Valid Agendamento ag,  @RequestParam("idServico") Integer idServico,
     				@RequestParam("idCliente") Integer idCliente, @RequestParam("idVeiculo") Integer idVeiculo,
     				@RequestParam(value = "tokenMobile", required = false) String tokenMobile,
@@ -32,6 +34,7 @@ public class C_Agendamento {
         try {
             boolean isEdicao = ag.getIdAgendamento() != null;
             ag.setOficina(oficina);
+            ag.setFuncionario(usuarioLogado);
             
             service.salvarAgendamento(ag, idServico, idCliente, idVeiculo, fotos, tokenMobile);
             

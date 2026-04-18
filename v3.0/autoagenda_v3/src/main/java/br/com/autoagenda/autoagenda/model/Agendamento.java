@@ -19,20 +19,22 @@ import jakarta.validation.constraints.NotNull;
 public class Agendamento {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idAgendamento;
 	@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "fk_oficina") private Oficina oficina;
+	@ManyToOne @JoinColumn(name = "fk_funcionario") private Funcionario funcionario;
+	@ManyToOne @JoinColumn(name = "fk_cliente") private Cliente cliente;
+	@ManyToOne @JoinColumn(name = "fk_veiculo") private Veiculo veiculo;
+	@ManyToOne @JoinColumn(name = "fk_servico") private Servico servico;
 	@NotNull private LocalDate dataCadastro = LocalDate.now();
 	@NotNull private LocalDate dataPrevisao;
     private LocalDate dataConclusao;
 	@NotEmpty private String statusAgendamento;
     @Column(length = 1000) private String observacao;
-    @ManyToOne @JoinColumn(name = "fk_servico") private Servico servico;
-    @ManyToOne @JoinColumn(name = "fk_cliente") private Cliente cliente;
-    @ManyToOne @JoinColumn(name = "fk_veiculo") private Veiculo veiculo;
 
     public Agendamento() {}
     
-    public Agendamento(Integer idAgendamento, Cliente cliente, Veiculo veiculo, LocalDate dataCadastro, LocalDate dataPrevisao, LocalDate dataConclusao, String statusAgendamento, String observacao) {
+    public Agendamento(Integer idAgendamento, Cliente cliente, Funcionario funcionario, Veiculo veiculo, LocalDate dataCadastro, LocalDate dataPrevisao, LocalDate dataConclusao, String statusAgendamento, String observacao) {
     	this.idAgendamento = idAgendamento;
     	this.cliente = cliente;
+    	this.funcionario = funcionario;
     	this.veiculo= veiculo;
     	this.servico = new Servico();
     	this.dataPrevisao = dataPrevisao;
@@ -45,6 +47,8 @@ public class Agendamento {
     public void setIdAgendamento(Integer idAgendamento) { this.idAgendamento = idAgendamento; }
     public Cliente getCliente() { return cliente; }
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Funcionario getFuncionario() { return funcionario; }
+    public void setFuncionario (Funcionario funcionario) { this.funcionario = funcionario; }
     public Veiculo getVeiculo() { return veiculo; }
     public void setVeiculo(Veiculo veiculo) { this.veiculo = veiculo; }
     public Servico getServico() { return servico; }

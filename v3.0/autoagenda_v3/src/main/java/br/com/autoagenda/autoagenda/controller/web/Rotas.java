@@ -3,6 +3,7 @@ package br.com.autoagenda.autoagenda.controller.web;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.autoagenda.autoagenda.config.Sessao;
+import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.SuperAdmin;
@@ -187,7 +189,19 @@ public class Rotas {
         Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
         Funcionario atual = repoFunc.findById(logado.getIdFuncionario()).get();
         
+        List<Agendamento> historico = repoAg.findHistoricoDoFuncionario(atual);
+        
+        // Cálculo das métricas
+        long concluidos = historico.stream().filter(a -> a.getStatusAgendamento().equalsIgnoreCase("Concluido") || a.getStatusAgendamento().equalsIgnoreCase("Concluído")).count();
+        long cancelados = historico.stream().filter(a -> a.getStatusAgendamento().equalsIgnoreCase("Cancelado")).count();
+        long andamento = historico.stream().filter(a -> a.getStatusAgendamento().equalsIgnoreCase("Em Andamento")).count();
+        
+        model.addAttribute("historico", historico);
         model.addAttribute("usuarioLogado", atual);
+        model.addAttribute("metricaTotal", historico.size());
+        model.addAttribute("metricaConcluidos", concluidos);
+        model.addAttribute("metricaCancelados", cancelados);
+        model.addAttribute("metricaAndamento", andamento);
         return verificaUsuario(session, "perfil", slug);
     }
     

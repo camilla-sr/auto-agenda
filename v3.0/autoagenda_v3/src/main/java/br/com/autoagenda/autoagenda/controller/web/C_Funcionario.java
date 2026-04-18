@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+import br.com.autoagenda.autoagenda.config.Sessao;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.service.CodigoService;
@@ -27,6 +29,7 @@ import jakarta.servlet.http.HttpSession;
 public class C_Funcionario {
 	@Autowired FuncionarioService service;
 	@Autowired private CodigoService codigoService;
+	@Autowired private Sessao s;
 	
 	@PostMapping(value = "/logar")
     public String logar(@PathVariable("slug") String slug, @RequestParam String usuario,
@@ -112,26 +115,26 @@ public class C_Funcionario {
     }
     
     @PostMapping("/alterar-senha-perfil")
-    public String alterarSenhaPerfil(@PathVariable("slug") String slug, @RequestParam String senhaAtual, 
+    public String alterarSenhaPerfil(@PathVariable String slug, 
+                                     @RequestParam String senhaAtual, 
                                      @RequestParam String novaSenha, 
-                                     @RequestParam String confirmaSenha,
-                                     HttpSession session, 
-                                     RedirectAttributes ra) {
-        Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
-        if (logado == null) return "redirect:/"+ slug +"/login";
-
-        if (!logado.getSenha().equals(senhaAtual)) {
-             ra.addFlashAttribute("msgErro", "A senha atual está incorreta.");
-             return "redirect:/"+ slug +"/perfil";
+                                     @RequestParam String confirmaSenha, 
+                                     HttpSession session, RedirectAttributes ra) {
+        try {
+            Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
+            if (logado == null) return "redirect:/" + slug + "/login";
+            
+            service.alterarSenhaPerfil(logado, senhaAtual, novaSenha, confirmaSenha);
+            s.logout(session);
+            return "redirect:/" + slug + "/login?senhaAlterada=true";
+            
+        } catch (IllegalArgumentException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+            return "redirect:/" + slug + "/perfil";
+        } catch (Exception e) {
+            ra.addFlashAttribute("msgErro", "Erro interno ao alterar senha.");
+            return "redirect:/" + slug + "/perfil";
         }
-
-        if (!novaSenha.equals(confirmaSenha)) {
-            ra.addFlashAttribute("msgErro", "As senhas não coincidem.");
-            return "redirect:/"+ slug +"/perfil";
-        }
-        service.atualizarSenha(logado, novaSenha);
-        ra.addFlashAttribute("msgSucesso", "Senha alterada com sucesso!");
-        return "redirect:/"+ slug +"/perfil";
     }
     
     @PostMapping(value = "/apagar")

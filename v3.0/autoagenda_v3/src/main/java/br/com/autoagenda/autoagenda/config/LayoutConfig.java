@@ -19,13 +19,10 @@ public class LayoutConfig {
         
         if (oficina != null) {
             String logo = oficina.getLogotipo() != null ? "/img/" + oficina.getLogotipo() : "/img/padrao_logo.png";
-            String fav = oficina.getFavicon() != null ? "/img/" + oficina.getFavicon() : "/img/padrao_favicon.ico";
-            
-            return new BrandingDto(logo, fav, oficina.getNomeFantasia());
+            return new BrandingDto(logo, oficina.getNomeFantasia());
         }
         return new BrandingDto(
             "/img/padrao_logo.png",
-            "/img/padrao_favicon.ico",
             "AutoAgenda"
         );
     }

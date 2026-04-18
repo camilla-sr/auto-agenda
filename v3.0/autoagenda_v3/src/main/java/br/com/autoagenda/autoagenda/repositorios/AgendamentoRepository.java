@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Oficina;
 
@@ -24,4 +27,7 @@ public interface AgendamentoRepository extends CrudRepository<Agendamento, Integ
 	@Query("select count(*) from Agendamento a where a.statusAgendamento = 'concluido' and a.dataConclusao is not null "
 			+ "and a.dataConclusao = CURRENT_DATE and a.oficina = :oficina")
     long countConcluidosHojeByOficina(Oficina oficina);
+	
+	@Query("SELECT a FROM Agendamento a WHERE a.funcionario = :funcionario ORDER BY a.dataPrevisao DESC")
+	List<Agendamento> findHistoricoDoFuncionario(@Param("funcionario") Funcionario funcionario);
 }

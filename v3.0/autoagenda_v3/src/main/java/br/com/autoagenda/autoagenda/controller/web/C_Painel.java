@@ -48,10 +48,9 @@ public class C_Painel {
     @PostMapping("/salvar-branding")
     public String salvarBranding(@PathVariable("slug") String slug, @RequestParam Integer idOficina,
                          @RequestParam(value = "arquivoLogo", required = false) MultipartFile logo,
-                         @RequestParam(value = "arquivoFavicon", required = false) MultipartFile favicon,
                          RedirectAttributes ra) {
         try {
-            service.atualizarBranding(idOficina, logo, favicon);
+            service.atualizarBranding(idOficina, logo);
             ra.addFlashAttribute("msgSucesso", "Imagens atualizadas! Atualize a página se necessário.");
         } catch (Exception e) {
             ra.addFlashAttribute("msgErro", "Erro ao subir imagem: " + e.getMessage());

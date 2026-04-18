@@ -19,13 +19,14 @@ public class Funcionario {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFuncionario;
 	@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "fk_oficina") private Oficina oficina;
 	@NotEmpty private String nomeFuncionario;
-	@CPF private String cpf;
-	@Column(nullable = false, unique = true) private String email;
 	private String telefone;
 	@NotEmpty private String usuario;
+	@Column(nullable = false, unique = true) private String email;
+	@CPF private String cpf;
 	@Column(nullable = true) private String senha;
 	private String acesso = "comum";
 	@Column(nullable = false) boolean primeiroLogin = false;
+	@Column(nullable = false) boolean ativo = true;
 	
 	public Funcionario() {}
 
@@ -60,4 +61,6 @@ public class Funcionario {
 	public void setCpf(String cpf) { this.cpf = cpf; }
 	public boolean isPrimeiroLogin() { return primeiroLogin; }
 	public void setPrimeiroLogin(boolean primeiroLogin) { this.primeiroLogin = primeiroLogin; }
+	public boolean isAtivo() { return ativo; }
+	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

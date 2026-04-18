@@ -13,13 +13,12 @@ public class BrandingService {
     @Autowired private OficinaRepository oficinaRepo;
 
     private static final String LOGO_PADRAO = "/img/padrao_logo.png";
-    private static final String FAVICON_PADRAO = "/img/padrao_favicon.ico";
     private static final String NOME_PADRAO = "AutoAgenda";
 
     public BrandingDto obterBrandingAtual() {
         List<Oficina> oficinas = oficinaRepo.findAll();
         if (oficinas.isEmpty()) {
-            return new BrandingDto(LOGO_PADRAO, FAVICON_PADRAO, NOME_PADRAO);
+            return new BrandingDto(LOGO_PADRAO, NOME_PADRAO);
         }
 
         Oficina oficina = oficinas.get(0);
@@ -29,14 +28,10 @@ public class BrandingService {
                 ? "/img/" + oficina.getLogotipo() 
                 : LOGO_PADRAO;
 
-        String urlFavicon = (oficina.getFavicon() != null && !oficina.getFavicon().isEmpty()) 
-                ? "/img/" + oficina.getFavicon() 
-                : FAVICON_PADRAO;
-
         String nomeEmpresa = (oficina.getNomeFantasia() != null && !oficina.getNomeFantasia().isEmpty())
                 ? oficina.getNomeFantasia()
                 : NOME_PADRAO;
 
-        return new BrandingDto(urlLogo, urlFavicon, nomeEmpresa);
+        return new BrandingDto(urlLogo, nomeEmpresa);
     }
 }

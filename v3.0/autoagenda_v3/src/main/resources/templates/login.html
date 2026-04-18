@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Login - ' + ${branding.nomeEmpresa}">Login - AutoAgenda</title>
-    <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+    <link rel="icon" href="/img/padrao_favicon.ico" type="image/x-icon">
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/fontawesome/css/all.min.css">
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -41,11 +41,11 @@
                     <button type="submit" class="btnLogin">Entrar</button>
                 </div>
                 
-                <div class="text-center mt-4">
-                    <a href="/recuperar-senha" class="link-recuperar">
-                        <i class="fa-solid fa-key me-1"></i> Esqueci Minha Senha
-                    </a>
-                </div>
+				<div class="text-center mt-4">
+				    <a th:href="@{/{slug}/recuperar-senha(slug=${oficinaContexto.slug})}" class="link-recuperar">
+				        <i class="fa-solid fa-key me-1"></i> Esqueci Minha Senha
+				    </a>
+				</div>
             </div>
         </form>
     </div>

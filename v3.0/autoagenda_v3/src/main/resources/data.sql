@@ -29,7 +29,6 @@ create table if not exists oficina(
     email_contato       varchar(100),
     ativo				boolean default true,
     logotipo            varchar(255) default '',
-    favicon 			varchar(255) default '',
 	usar_produtos       boolean default true,
     usar_financeiro     boolean default true,
     usar_auth           boolean default false,
@@ -95,6 +94,7 @@ create table if not exists produto (
 create table if not exists agendamento (
   id_agendamento 		int primary key auto_increment,
   fk_oficina    		int not null,
+  fk_funcionario		int not null,
   fk_cliente 			int not null,
   fk_veiculo			int not null,
   fk_servico 			int not null,
@@ -104,6 +104,7 @@ create table if not exists agendamento (
   status_agendamento 	varchar(20) default 'agendado',
   observacao 			text default null,
   foreign key (fk_servico) references servico (id_servico),
+  foreign key (fk_funcionario) references funcionario (id_funcionario),
   foreign key (fk_cliente) references cliente (id_cliente),
   foreign key (fk_veiculo) references veiculo (id_veiculo),
   foreign key (fk_oficina) references oficina (id_oficina)
@@ -125,7 +126,7 @@ create table if not exists log_sistema (
   id_usuario      int null,
   fk_oficina      int null,
   acao            varchar(50),
-  entidade        varchar(50),
-  entidade_id     int null,
+  tipo_alvo       varchar(50),
+  alvo_id     	  int null,
   descricao       text
 );

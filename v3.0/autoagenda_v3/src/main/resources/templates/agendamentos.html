@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="'Agendamentos - ' + ${branding.nomeEmpresa}">Agendamentos - AutoAgenda</title>
-  <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
+  <link rel="icon" href="/img/padrao_favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/fontawesome/css/all.min.css">
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -35,7 +35,7 @@
             <i class="fas fa-clock"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${agendaPendente}">0</h3>
+            <h3 th:text="${agendaPendente}"></h3>
             <p>Agendamentos pendentes</p>
           </div>
         </div>
@@ -45,7 +45,7 @@
             <i class="fas fa-cog"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${agendaAndamento}">0</h3>
+            <h3 th:text="${agendaAndamento}"></h3>
             <p>Em andamento</p>
           </div>
         </div>
@@ -55,7 +55,7 @@
             <i class="fas fa-check-circle"></i>
           </div>
           <div class="stat-info">
-            <h3 th:text="${agendaConcluidoHoje}">0</h3>
+            <h3 th:text="${agendaConcluidoHoje}"></h3>
             <p>Concluídos hoje</p>
           </div>
         </div>
@@ -68,8 +68,6 @@
 		  <input type="hidden" id="idCliente" name="idCliente">
 		  <input type="hidden" id="idVeiculo" name="idVeiculo">
 		  <input type="hidden" name="tokenMobile" id="tokenMobile">
-          
-          <input type="hidden" name="oficina.idOficina" th:value="${oficinaContexto.idOficina}">
 		  
           <div class="form-row">
             <div class="form-col">
@@ -300,7 +298,8 @@
                   <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento},
 												  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
 												  data-cliente-email=${ag.cliente.email},
-												  data-cliente-telefone=${ag.cliente.telefone}" title="Visualizar">
+												  data-cliente-telefone=${ag.cliente.telefone},
+                                                  data-responsavel=${ag.funcionario != null ? ag.funcionario.nomeFuncionario : 'Não atribuído'}" title="Visualizar">
                     <i class="fas fa-eye"></i>
                   </button>
                   <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
@@ -396,8 +395,9 @@
               <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
               <p id="modal-observacao" style="white-space: pre-wrap;"></p>
               <hr>
-			  <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center justify-content-between">
   				<p class="mb-0" style="font-size: 1.1rem;"><strong>Status: </strong><span id="modal-status"></span></p>
+                <p class="mb-0 text-muted"><i class="fas fa-user-cog me-1"></i> Responsável: <strong id="modal-responsavel"></strong></p>
   			 </div>
             </div>
             <div class="modal-footer">
@@ -975,14 +975,13 @@
             btnQrCode.addEventListener('click', function() {
 				const urlBase = window.location.origin;
 				
-				// Trava de segurança para testes locais
                 if (urlBase.includes('localhost')) {
                     Swal.fire({
                         title: 'Modo Localhost',
                         text: 'Para usar a câmera do celular no ambiente de testes, acesse o sistema no navegador do PC digitando o seu IP da rede (ex: http://192.168.x.x:8080) em vez de localhost.',
                         icon: 'warning'
                     });
-                    return; // Interrompe para não gerar um QR Code inútil
+                    return; 
                 }
 				
                 if(!inputToken.value) {
@@ -992,7 +991,6 @@
                 }
                 qrcodeContainer.innerHTML = "";
                 
-				// Descobre automaticamente se é localhost, IP ou Domínio Público
 				new QRCode(qrcodeContainer, { text: `${urlBase}/mobile/upload-fotos/${inputToken.value}`, width: 200, height: 200 });
                 if(modalQrCode) modalQrCode.show();
             });
@@ -1225,6 +1223,9 @@
                     document.getElementById('modal-veiculo-agendamento').textContent = this.getAttribute('data-veiculo-info') || '-';
                     document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
                     
+                    // ATUALIZADO: Preenchendo o nome do responsável
+                    document.getElementById('modal-responsavel').textContent = this.getAttribute('data-responsavel') || 'Não atribuído';
+                    
                     const stText = row.querySelector('.ag-status span').textContent.trim();
                     document.getElementById('modal-status').textContent = stText;
                     
@@ -1284,7 +1285,6 @@
 					  cancelButtonText: 'Cancelar'
                   }).then((result) => {
                       if (result.isConfirmed) {
-                          // ROTA DE CONCLUIR AGENDAMENTO ATUALIZADA NO FETCH
                           fetch(`/${slugAtual}/agendamento-api/concluir/${id}`, { method: 'POST' })
                           .then(res => {
                               if (res.ok) {

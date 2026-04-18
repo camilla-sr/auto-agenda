@@ -80,8 +80,9 @@ body {
     color: #adb5bd;
 }
 
-.nav-link.active .nav-icon {
-    color: var(--cor-primaria);
+.nav-link.active .nav-icon,
+.nav-pills .nav-link.active .nav-icon i {
+    color: #000 !important;
 }
 
 /* Setinha discreta */

@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Meu Perfil - ' + ${branding.nomeEmpresa}">Perfil</title>
-    
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/fontawesome/css/all.min.css">
-    <link rel="icon" type="image/png" th:href="@{${branding.faviconUrl}}" />
-    
+    <link rel="icon" href="/img/padrao_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/variaveis.css">
     <link rel="stylesheet" href="/css/navegacao.css"> 
     <link rel="stylesheet" href="/css/painel.css">
-    
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/js/inputmask.min.js"></script>
     <script src="/js/sweetalert2.all.min.js"></script>
@@ -44,9 +41,14 @@
                             <div class="nav-icon"><i class="fas fa-lock"></i></div> <span>Segurança</span>
                             <i class="fas fa-chevron-right arrow-indicator"></i>
                         </button>
+
+                        <button class="nav-link" id="v-pills-agendamentos-tab" data-bs-toggle="pill" data-bs-target="#v-pills-agendamentos" type="button">
+                            <div class="nav-icon"><i class="fas fa-list-alt"></i></div> <span>Meus Agendamentos</span>
+                            <i class="fas fa-chevron-right arrow-indicator"></i>
+                        </button>
                         
                         <button class="nav-link" id="v-pills-stats-tab" data-bs-toggle="pill" data-bs-target="#v-pills-stats" type="button">
-                            <div class="nav-icon"><i class="fas fa-chart-line"></i></div> <span>Desempenho</span>
+                            <div class="nav-icon"><i class="fas fa-chart-pie"></i></div> <span>Desempenho</span>
                             <i class="fas fa-chevron-right arrow-indicator"></i>
                         </button>
                     </div>
@@ -71,7 +73,7 @@
                                 <p class="section-subtitle">Mantenha suas informações de contato atualizadas.</p>
                             </div>
                             
-                            <form id="form-perfil" th:action="@{/funcionario-api/salvar-perfil}" method="post">
+                            <form id="form-perfil" th:action="@{/{slug}/funcionario-api/salvar-perfil(slug=${configuracao.slug})}" method="post">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Nome Completo</label>
@@ -94,7 +96,7 @@
                                         <input type="text" class="form-control" th:value="${'@' + usuarioLogado.usuario}" disabled style="cursor: not-allowed; opacity: 0.7; background-color: #e9ecef;">
                                     </div>
                                 </div>
-                                <div class="action-bar">
+                                <div class="action-bar mt-4 text-end">
                                     <button type="button" class="btn btn-outline-secondary" id="btn-cancelar" style="display: none;">Cancelar</button>
                                     <button type="button" class="btn btn-primary" id="btn-editar">Editar Dados</button>
                                     <button type="submit" class="btn btn-success" id="btn-salvar" style="display: none;">Salvar Alterações</button>
@@ -105,10 +107,10 @@
                         <div class="tab-pane fade" id="v-pills-seguranca">
                             <div class="content-header">
                                 <h3 class="section-title">Segurança</h3>
-                                <p class="section-subtitle">Gerencie sua senha e acesso.</p>
+                                <p class="section-subtitle">Sua sessão será encerrada automaticamente após a troca de senha.</p>
                             </div>
                             
-                            <form th:action="@{/funcionario-api/alterar-senha-perfil}" method="post" class="mb-5">
+                            <form th:action="@{/{slug}/funcionario-api/alterar-senha-perfil(slug=${configuracao.slug})}" method="post" class="mb-5">
                                 <h5 class="mb-3 text-primary"><i class="fas fa-key me-2"></i>Alterar Senha</h5>
                                 <div class="row g-3" style="max-width: 700px;">
                                     <div class="col-md-4">
@@ -120,78 +122,137 @@
                                         <input type="password" class="form-control" name="novaSenha" minlength="6" required>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Confirmar</label>
+                                        <label class="form-label">Confirmar Nova Senha</label>
                                         <input type="password" class="form-control" name="confirmaSenha" minlength="6" required>
                                     </div>
                                 </div>
-                                <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary btn-sm">Atualizar Senha</button>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save me-2"></i> Atualizar Senha</button>
                                 </div>
                             </form>
+                        </div>
 
-                            <hr class="my-4">
-
-                            <div class="mb-5" th:if="${configuracao.usarAuth}">
-                                <h5 class="mb-3 text-primary"><i class="fas fa-shield-alt me-2"></i>Verificação em Duas Etapas</h5>
-                                <div class="feature-card">
-                                    <div class="feature-info">
-                                        <h6 class="mb-1">Habilitar 2FA</h6>
-                                        <p class="small text-muted mb-0">Adiciona uma camada extra de segurança pedindo um código por e-mail ao logar.</p>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="toggle2FA">
-                                    </div>
+                        <div class="tab-pane fade" id="v-pills-agendamentos">
+                            <div class="content-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="section-title">Meus Agendamentos</h3>
+                                    <p class="section-subtitle">Serviços atrelados à sua responsabilidade.</p>
                                 </div>
                             </div>
-
-                            <div class="danger-zone">
-                                <h5 class="danger-title"><i class="fas fa-exclamation-triangle me-2"></i>Zona de Perigo</h5>
-                                <p class="small text-muted">A exclusão da sua conta removerá seu acesso ao sistema. Seus registros de agendamento serão mantidos como "Ex-colaborador" para histórico da oficina.</p>
-                                <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDelete1">
-                                    Excluir Minha Conta
-                                </button>
+                            
+                            <div class="table-responsive bg-white rounded shadow-sm border" style="max-height: 600px; overflow-y: auto;">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th>Previsão</th>
+                                            <th>Cliente</th>
+                                            <th>Veículo</th>
+                                            <th>Serviço</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="ag : ${historico}">
+                                            <td th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${ag.cliente.nomeCliente}"></td>
+                                            <td>
+                                                <span class="fw-bold text-dark" th:text="${ag.veiculo.modelo}"></span><br>
+                                                <small class="text-muted" th:text="${ag.veiculo.placa}"></small>
+                                            </td>
+                                            <td th:text="${ag.servico.nomeServico}"></td>
+                                            <td>
+                                                <span class="badge" 
+                                                      th:classappend="${#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') or #strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') ? 'bg-success' : (#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado') ? 'bg-danger' : (#strings.equalsIgnoreCase(ag.statusAgendamento, 'Em Andamento') ? 'bg-warning text-dark' : 'bg-primary'))}"
+                                                      th:text="${ag.statusAgendamento}">
+                                                </span>
+                                            </td>
+                                            <td class="text-center text-nowrap">
+                                                <button class="btn btn-sm btn-info btn-view text-dark" 
+                                                        th:attr="data-id=${ag.idAgendamento},
+                                                                 data-cliente-nome=${ag.cliente.nomeCliente},
+                                                                 data-cliente-email=${ag.cliente.email},
+                                                                 data-cliente-telefone=${ag.cliente.telefone},
+                                                                 data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
+                                                                 data-servico=${ag.servico.nomeServico},
+                                                                 data-previsao=${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')},
+                                                                 data-conclusao=${ag.dataConclusao != null ? #temporals.format(ag.dataConclusao, 'dd/MM/yyyy') : '-'},
+                                                                 data-status=${ag.statusAgendamento},
+                                                                 data-responsavel=${ag.funcionario.nomeFuncionario},
+                                                                 data-obs=${ag.observacao}" 
+                                                        title="Visualizar Detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
+                                                        class="btn btn-sm btn-success btn-concluir-perfil" th:attr="data-id=${ag.idAgendamento}" title="Concluir Rápido">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button th:if="${usuarioLogado.acesso == 'admin'}" class="btn btn-sm btn-danger btn-delete-perfil" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(historico)}">
+                                            <td colspan="6" class="text-center py-5 text-muted">
+                                                <i class="fas fa-clipboard-list fa-2x mb-2 opacity-50"></i><br>
+                                                Nenhum serviço atribuído a você ainda.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
                         <div class="tab-pane fade" id="v-pills-stats">
                             <div class="content-header">
                                 <h3 class="section-title">Meu Desempenho</h3>
-                                <p class="section-subtitle">Histórico de agendamentos gerenciados por você.</p>
+                                <p class="section-subtitle">Métricas e estatísticas do seu trabalho na oficina.</p>
                             </div>
                             
-                            <div class="table-responsive">
-                                <table class="table table-performance">
-                                    <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Cliente</th>
-                                            <th>Veículo</th>
-                                            <th>Serviço</th>
-                                            <th>Status</th>
-                                            <th>Valor</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="agenda : ${historico}" onclick="mostrarDetalhes(this)" 
-                                            th:data-obs="${agenda.observacoes}" th:data-id="${agenda.idAgendamento}">
-                                            <td th:text="${#temporals.format(agenda.dataAgendamento, 'dd/MM/yyyy HH:mm')}"></td>
-                                            <td th:text="${agenda.cliente.nome}"></td>
-                                            <td th:text="${agenda.veiculo.modelo}"></td>
-                                            <td th:text="${agenda.servico.nomeServico}"></td>
-                                            <td>
-                                                <span class="badge-status" 
-                                                      th:classappend="${agenda.status == 'Concluído' ? 'badge-concluido' : (agenda.status == 'Cancelado' ? 'badge-cancelado' : 'badge-andamento')}"
-                                                      th:text="${agenda.status}">
-                                                </span>
-                                            </td>
-                                            <td th:if="${configuracao.usarFinanceiro}" th:text="${'R$ ' + agenda.valorTotal}"></td>
-                                            <td th:unless="${configuracao.usarFinanceiro}">-</td>
-                                        </tr>
-                                        <tr th:if="${#lists.isEmpty(historico)}">
-                                            <td colspan="6" class="text-center py-4 text-muted">Nenhum registro encontrado.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card bg-primary text-white h-100 shadow-sm border-0">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-calendar-check fa-2x mb-2 opacity-75"></i>
+                                            <h3 class="fw-bold mb-0" th:text="${metricaTotal}">0</h3>
+                                            <small>Total Atribuído</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card bg-success text-white h-100 shadow-sm border-0">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-check-double fa-2x mb-2 opacity-75"></i>
+                                            <h3 class="fw-bold mb-0" th:text="${metricaConcluidos}">0</h3>
+                                            <small>Concluídos</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card bg-warning text-dark h-100 shadow-sm border-0">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-tools fa-2x mb-2 opacity-75"></i>
+                                            <h3 class="fw-bold mb-0" th:text="${metricaAndamento}">0</h3>
+                                            <small>Em Andamento</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card bg-danger text-white h-100 shadow-sm border-0">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-ban fa-2x mb-2 opacity-75"></i>
+                                            <h3 class="fw-bold mb-0" th:text="${metricaCancelados}">0</h3>
+                                            <small>Cancelados</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-dark border-secondary d-flex align-items-center">
+                                <i class="fas fa-lightbulb fa-2x text-warning me-3"></i>
+                                <div>
+                                    <strong>Dica:</strong> Continue mantendo os status dos seus agendamentos atualizados para que o sistema possa gerar métricas precisas sobre o seu tempo de conclusão.
+                                </div>
                             </div>
                         </div>
 
@@ -201,69 +262,68 @@
         </div>
     </main>
 
-    <div class="modal fade" id="modalDelete1" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="visualizarAgendamentoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title text-danger">Tem certeza?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-eye text-primary me-2"></i> Detalhes do Serviço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                <div class="col-md-8">
+                    <h4><strong id="modal-cliente-agendamento"></strong></h4>
+                    
+                    <div class="mb-2 text-muted small">
+                    <span class="me-3"><i class="fas fa-phone-alt me-1"></i><span id="modal-cliente-telefone"></span></span>
+                    <span><i class="fas fa-envelope me-1"></i><span id="modal-cliente-email"></span></span>
+                    </div>
+                    
+                    <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+                    <p class="text-muted mb-0" style="font-size: 0.95rem;">
+                        <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
+                    </p>
                 </div>
-                <div class="modal-body text-center">
-                    <p>Você está prestes a excluir sua conta de acesso.</p>
-                    <p class="fw-bold">Essa ação não pode ser desfeita.</p>
+                <div class="col-md-4 text-md-end">
+                    <h5 id="titulo-data-modal">Previsão</h5>
+                    <h4 class="text-success fw-bold" id="modal-previsao-agendamento"></h4>
                 </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete2" data-bs-dismiss="modal">
-                        Sim, quero excluir
-                    </button>
+                <div class="mt-3">
+                    <h6><i class="fas fa-camera me-2"></i>Fotos do Serviço</h6>
+                    <div class="gallery-carousel-wrapper" style="position: relative; display: flex; align-items: center; background: #f8f9fa; border-radius: 8px; padding: 10px 0; border: 1px solid var(--cor-borda);">
+                        <button type="button" class="gallery-nav gallery-prev" id="btn-galeria-prev" style="position: absolute; left: 0; z-index: 10; opacity: 0;"><i class="fas fa-chevron-left"></i></button>
+                        <div id="galeria-visualizacao" class="gallery-track" style="display: flex; gap: 10px; overflow-x: auto; width: 100%; scrollbar-width: none;"></div>
+                        <button type="button" class="gallery-nav gallery-next" id="btn-galeria-next" style="position: absolute; right: 0; z-index: 10; opacity: 0;"><i class="fas fa-chevron-right"></i></button>
+                    </div>
                 </div>
+                </div>
+                <hr>
+                <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
+                <p id="modal-observacao" style="white-space: pre-wrap;"></p>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between">
+                <p class="mb-0" style="font-size: 1.1rem;"><strong>Status: </strong><span id="modal-status"></span></p>
+                <p class="mb-0 text-muted"><i class="fas fa-user-cog me-1"></i> Responsável: <strong id="modal-responsavel"></strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modalDelete2" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">Confirmação de Segurança</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="small text-muted mb-4">Para confirmar a exclusão, preencha os dados abaixo:</p>
-                    
-                    <form id="formDeleteAccount" th:action="@{/funcionario-api/excluir-conta}" method="post">
-                        <div class="mb-3">
-                            <label class="form-label small">Seu E-mail Cadastrado</label>
-                            <input type="email" class="form-control" id="delEmail" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small">Sua Senha</label>
-                            <input type="password" class="form-control" name="senha" id="delSenha" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small">3 Últimos dígitos do seu CPF</label>
-                            <input type="text" class="form-control" id="delCpf" maxlength="3" placeholder="Ex: 880" required>
-                        </div>
-                        
-                        <input type="hidden" id="realEmail" th:value="${usuarioLogado.email}">
-                        <input type="hidden" id="realCpfEnd" th:value="${#strings.substring(usuarioLogado.cpf, usuarioLogado.cpf.length() - 3)}">
-                        
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-danger" id="btnFinalDelete" disabled>
-                                <i class="fas fa-trash-alt me-2"></i>Excluir Definitivamente
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <form id="deleteForm" th:action="@{/{slug}/agendamento-api/apagar(slug=${configuracao.slug})}" method="post" style="display: none;">
+        <input type="hidden" name="idAgendamento" id="deleteId">
+        <input type="hidden" name="origem" value="perfil">
+    </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
-    <script>
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
+            const slugAtual = /*[[${configuracao.slug}]]*/ 'oficina';
+
             // 1. Lógica de Edição do Perfil
             const btnEditar = document.getElementById('btn-editar');
             const btnCancelar = document.getElementById('btn-cancelar');
@@ -272,9 +332,6 @@
 
             if(btnEditar){
                 btnEditar.addEventListener('click', () => {
-                    const inputs = formPerfil.querySelectorAll('input:not([disabled])'); // Pega só os que não estão disabled permanentemente
-                    // Como CPF e Usuario tem style inline disabled, o querySelectorAll pode pegá-los se não filtrar bem.
-                    // Melhor filtrar pelo nome
                     const allowedFields = ['nomeFuncionario', 'email', 'telefone'];
                     
                     formPerfil.querySelectorAll('input').forEach(inp => {
@@ -293,52 +350,128 @@
                 btnCancelar.addEventListener('click', () => location.reload());
             }
 
-            // 2. Validação do Modal de Exclusão
-            const delEmail = document.getElementById('delEmail');
-            const delSenha = document.getElementById('delSenha');
-            const delCpf = document.getElementById('delCpf');
-            const btnFinalDelete = document.getElementById('btnFinalDelete');
-            
-            const realEmail = document.getElementById('realEmail').value;
-            const realCpfEnd = document.getElementById('realCpfEnd').value;
-
-            function checkDeleteValidation() {
-                const emailMatch = delEmail.value.trim() === realEmail;
-                const cpfMatch = delCpf.value.trim() === realCpfEnd;
-                const senhaFilled = delSenha.value.length > 0;
-
-                if (emailMatch && cpfMatch && senhaFilled) {
-                    btnFinalDelete.disabled = false;
-                } else {
-                    btnFinalDelete.disabled = true;
-                }
-            }
-
-            if(delEmail && delCpf && delSenha) {
-                delEmail.addEventListener('input', checkDeleteValidation);
-                delCpf.addEventListener('input', checkDeleteValidation);
-                delSenha.addEventListener('input', checkDeleteValidation);
-            }
-
-            // 3. Máscara Telefone
+            // 2. Máscara Telefone
             if(typeof Inputmask !== 'undefined') {
-                Inputmask("(99) 99999-9999").mask(document.getElementById('telefone'));
+                Inputmask({
+                    mask: ["(99) 9999-9999", "(99) 99999-9999"],
+                    keepStatic: true
+                }).mask(document.getElementById('telefone'));
             }
-        });
 
-        // Função Global para clique na tabela
-        function mostrarDetalhes(row) {
-            const obs = row.getAttribute('data-obs');
-            // Aqui você pode abrir um modal com detalhes
-            // Por enquanto, apenas um alerta simples
-            if(typeof Swal !== 'undefined' && obs) {
-                Swal.fire({
-                    title: 'Observações do Agendamento',
-                    text: obs || 'Sem observações.',
-                    icon: 'info'
+            // 3. Ações da Tabela e Modal de Visualização
+            const modalVisEl = document.getElementById('visualizarAgendamentoModal');
+            let modalVis;
+            if (modalVisEl) {
+                modalVis = new bootstrap.Modal(modalVisEl);
+                const track = document.getElementById('galeria-visualizacao');
+                const btnPrev = document.getElementById('btn-galeria-prev');
+                const btnNext = document.getElementById('btn-galeria-next');
+                
+                function atualizarBotoes() {
+                    if(!track) return;
+                    const precisa = track.scrollWidth > track.clientWidth;
+                    if(!precisa) { btnPrev.style.opacity = '0'; btnPrev.style.pointerEvents = 'none'; btnNext.style.opacity = '0'; btnNext.style.pointerEvents = 'none'; return; }
+                    
+                    if(track.scrollLeft > 5) { btnPrev.style.opacity = '1'; btnPrev.style.pointerEvents = 'auto'; } else { btnPrev.style.opacity = '0'; btnPrev.style.pointerEvents = 'none'; }
+                    if(Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) { btnNext.style.opacity = '0'; btnNext.style.pointerEvents = 'none'; } else { btnNext.style.opacity = '1'; btnNext.style.pointerEvents = 'auto'; }
+                }
+
+                if(btnPrev) {
+                    btnPrev.onclick = () => { track.scrollLeft -= 300; setTimeout(atualizarBotoes, 350); };
+                    btnNext.onclick = () => { track.scrollLeft += 300; setTimeout(atualizarBotoes, 350); };
+                    track.onscroll = atualizarBotoes;
+                }
+                modalVisEl.addEventListener('shown.bs.modal', atualizarBotoes);
+
+                document.querySelectorAll('.btn-view').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const id = this.dataset.id;
+                        
+                        document.getElementById('modal-cliente-agendamento').textContent = this.dataset.clienteNome;
+                        document.getElementById('modal-cliente-email').textContent = this.dataset.clienteEmail || '-';
+                        document.getElementById('modal-cliente-telefone').textContent = this.dataset.clienteTelefone || '-';
+                        document.getElementById('modal-servico-agendamento').textContent = this.dataset.servico;
+                        document.getElementById('modal-veiculo-agendamento').textContent = this.dataset.veiculoInfo || '-';
+                        document.getElementById('modal-observacao').textContent = this.dataset.obs || 'Nenhuma observação.';
+                        document.getElementById('modal-responsavel').textContent = this.dataset.responsavel || '-';
+                        document.getElementById('modal-status').textContent = this.dataset.status;
+                        
+                        const stText = this.dataset.status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                        const lblData = document.getElementById('titulo-data-modal');
+                        const valData = document.getElementById('modal-previsao-agendamento');
+                        
+                        if(stText === 'concluido') {
+                            lblData.textContent = 'Conclusão';
+                            valData.textContent = this.dataset.conclusao;
+                        } else {
+                            lblData.textContent = 'Previsão';
+                            valData.textContent = this.dataset.previsao;
+                        }
+
+                        track.innerHTML = '<p class="text-center py-4 w-100">Carregando fotos...</p>';
+                        track.scrollLeft = 0;
+                        btnPrev.style.opacity = '0'; btnNext.style.opacity = '0';
+
+                        fetch(`/${slugAtual}/fotos-api/listar/${id}`).then(r => r.status===204?[]:r.json()).then(fotos => {
+                            track.innerHTML = "";
+                            if(!fotos.length) { track.innerHTML = '<p class="text-center w-100 text-muted" style="margin-top:10px;">Sem fotos anexadas.</p>'; return; }
+                            
+                            fotos.forEach(f => {
+                                const div = document.createElement('div'); 
+                                div.className = 'gallery-item';
+                                div.style.cssText = 'flex: 0 0 auto; width: 100px; height: 100px; border-radius: 5px; overflow: hidden; cursor: pointer; border: 2px solid transparent;';
+                                const img = document.createElement('img'); 
+                                img.src = `/${slugAtual}/fotos-api/imagem/${f.id}`;
+                                img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                                img.onload = atualizarBotoes;
+                                div.onclick = () => window.open(img.src, '_blank');
+                                div.appendChild(img); track.appendChild(div);
+                            });
+                            setTimeout(atualizarBotoes, 500);
+                        });
+                        modalVis.show();
+                    });
                 });
             }
-        }
+
+            document.querySelectorAll('.btn-concluir-perfil').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const id = this.dataset.id;
+                    Swal.fire({
+                        title: 'Concluir agendamento?',
+                        text: "O status mudará para Concluído.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#198754',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sim, concluir!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/${slugAtual}/agendamento-api/concluir/${id}`, { method: 'POST' })
+                            .then(res => {
+                                if (res.ok) Swal.fire('Sucesso!', 'Finalizado.', 'success').then(() => location.reload());
+                                else throw new Error('Erro');
+                            }).catch(() => Swal.fire('Erro', 'Não foi possível concluir.', 'error'));
+                        }
+                    });
+                });
+            });
+
+            document.querySelectorAll('.btn-delete-perfil').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault(); const id = this.dataset.id;
+                    Swal.fire({ 
+                        title: 'Excluir o agendamento?', text: "Ação irreversível!", icon: 'warning', 
+                        showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d', confirmButtonText: 'Sim, excluir!' 
+                    }).then(r => { 
+                        if(r.isConfirmed) { 
+                            document.getElementById('deleteId').value = id; 
+                            document.getElementById('deleteForm').submit(); 
+                        }
+                    });
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import br.com.autoagenda.autoagenda.model.Agendamento;
+import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
