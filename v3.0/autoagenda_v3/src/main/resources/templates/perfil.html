@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -147,7 +147,7 @@
                                             <th>Previsão</th>
                                             <th>Cliente</th>
                                             <th>Veículo</th>
-                                            <th>Serviço</th>
+                                            <th>Serviços</th>
                                             <th>Status</th>
                                             <th class="text-center">Ações</th>
                                         </tr>
@@ -160,7 +160,23 @@
                                                 <span class="fw-bold text-dark" th:text="${ag.veiculo.modelo}"></span><br>
                                                 <small class="text-muted" th:text="${ag.veiculo.placa}"></small>
                                             </td>
-                                            <td th:text="${ag.servico.nomeServico}"></td>
+                                            
+                                            <td>
+                                                <div class="d-flex align-items-center flex-wrap gap-1">
+                                                    <span class="badge bg-secondary" 
+                                                          th:if="${not #lists.isEmpty(ag.servicos)}" 
+                                                          th:text="${ag.servicos[0].nomeServico}">
+                                                    </span>
+                                                    <span class="text-muted fw-bold ms-1" style="font-size: 0.85em;"
+                                                          th:if="${#lists.size(ag.servicos) > 1}" 
+                                                          th:text="'+' + (${#lists.size(ag.servicos)} - 1)">
+                                                    </span>
+                                                </div>
+                                                <div class="hidden-servicos-data" style="display:none;">
+                                                    <span th:each="s : ${ag.servicos}" th:text="${s.idServico + ':' + s.nomeServico}" class="srv-item"></span>
+                                                </div>
+                                            </td>
+
                                             <td>
                                                 <span class="badge" 
                                                       th:classappend="${#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') or #strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') ? 'bg-success' : (#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado') ? 'bg-danger' : (#strings.equalsIgnoreCase(ag.statusAgendamento, 'Em Andamento') ? 'bg-warning text-dark' : 'bg-primary'))}"
@@ -174,7 +190,6 @@
                                                                  data-cliente-email=${ag.cliente.email},
                                                                  data-cliente-telefone=${ag.cliente.telefone},
                                                                  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
-                                                                 data-servico=${ag.servico.nomeServico},
                                                                  data-previsao=${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')},
                                                                  data-conclusao=${ag.dataConclusao != null ? #temporals.format(ag.dataConclusao, 'dd/MM/yyyy') : '-'},
                                                                  data-status=${ag.statusAgendamento},
@@ -279,7 +294,9 @@
                     <span><i class="fas fa-envelope me-1"></i><span id="modal-cliente-email"></span></span>
                     </div>
                     
-                    <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+                    <p class="text-muted mb-1">Serviços Executados:</p>
+                    <div id="modal-servico-agendamento" class="d-flex flex-wrap gap-1 mb-3"></div>
+                    
                     <p class="text-muted mb-0" style="font-size: 0.95rem;">
                         <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
                     </p>
@@ -390,7 +407,27 @@
                         document.getElementById('modal-cliente-agendamento').textContent = this.dataset.clienteNome;
                         document.getElementById('modal-cliente-email').textContent = this.dataset.clienteEmail || '-';
                         document.getElementById('modal-cliente-telefone').textContent = this.dataset.clienteTelefone || '-';
-                        document.getElementById('modal-servico-agendamento').textContent = this.dataset.servico;
+                        
+                        const modalSrvContainer = document.getElementById('modal-servico-agendamento');
+                        modalSrvContainer.innerHTML = '';
+                        
+                        const row = this.closest('tr');
+                        const srvItems = row.querySelectorAll('.hidden-servicos-data .srv-item');
+                        if(srvItems.length > 0) {
+                            srvItems.forEach(item => {
+                                const parts = item.textContent.split(':');
+                                if(parts.length === 2) {
+                                    const nomeServico = parts[1];
+                                    const srvPill = document.createElement('span');
+                                    srvPill.className = 'badge bg-secondary p-2';
+                                    srvPill.textContent = nomeServico;
+                                    modalSrvContainer.appendChild(srvPill);
+                                }
+                            });
+                        } else {
+                            modalSrvContainer.innerHTML = '<span class="text-muted small">Nenhum serviço</span>';
+                        }
+                        
                         document.getElementById('modal-veiculo-agendamento').textContent = this.dataset.veiculoInfo || '-';
                         document.getElementById('modal-observacao').textContent = this.dataset.obs || 'Nenhuma observação.';
                         document.getElementById('modal-responsavel').textContent = this.dataset.responsavel || '-';
