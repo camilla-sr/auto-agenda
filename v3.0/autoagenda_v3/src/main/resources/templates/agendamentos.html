@@ -29,37 +29,37 @@
         <p>Visualize e gerencie os agendamentos de serviços</p>
       </div>
 
-      <div class="stats-container">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-clock"></i>
+	  <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+              <h3 th:text="${agendaPendente}"></h3>
+              <p>Agendamentos pendentes</p>
+            </div>
           </div>
-          <div class="stat-info">
-            <h3 th:text="${agendaPendente}"></h3>
-            <p>Agendamentos pendentes</p>
-          </div>
-        </div>
 
-        <div class="stat-card warning">
-          <div class="stat-icon">
-            <i class="fas fa-cog"></i>
+          <div class="stat-card warning">
+            <div class="stat-icon">
+              <i class="fas fa-cog"></i>
+            </div>
+            <div class="stat-info">
+              <h3 th:text="${agendaAndamento}"></h3>
+              <p>Em andamento</p>
+            </div>
           </div>
-          <div class="stat-info">
-            <h3 th:text="${agendaAndamento}"></h3>
-            <p>Em andamento</p>
-          </div>
-        </div>
 
-        <div class="stat-card success">
-          <div class="stat-icon">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <div class="stat-info">
-            <h3 th:text="${agendaConcluidoHoje}"></h3>
-            <p>Concluídos hoje</p>
+          <div class="stat-card success">
+            <div class="stat-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3 th:text="${agendaConcluidoHoje}"></h3>
+              <p>Concluídos hoje</p>
+            </div>
           </div>
         </div>
-      </div>
 	  
       <div class="form-container" id="agendamento-form-container" style="display: none;">
         <h3 id="formTitulo"><i class="fas fa-plus-circle"></i> Novo Agendamento</h3>
@@ -104,15 +104,19 @@
 
             <div class="form-col">
               <div class="form-group">
-                <label for="nome-servico">Tipo de Serviço</label>
+                <label for="nome-servico">Serviços Executados</label>
+                
+                <div id="selected-services-pills" class="d-flex flex-wrap gap-2 mb-2"></div>
+                
                 <div class="input-wrapper">
                   <i class="fas fa-tools input-icon"></i>
-                  <select id="nome-servico" name="idServico" required>
-                    <option value="">Selecione um serviço</option>
-                    <option th:each="serv : ${servicos}" th:value="${serv.idServico}" th:text="${serv.nomeServico}">
-                    </option>
+                  <select id="nome-servico" class="form-select" style="padding-left: 35px;">
+                    <option value="">Selecione um ou mais serviços...</option>
+                    <option th:each="serv : ${servicos}" th:value="${serv.idServico}" th:text="${serv.nomeServico}"></option>
                   </select>
                 </div>
+                
+                <div id="hidden-servicos-inputs"></div>
               </div>
             </div>
           </div>
@@ -123,7 +127,7 @@
                 <label for="data-previsao">Agendamento para</label>
                 <div class="input-wrapper">
                   <i class="fas fa-calendar-alt input-icon"></i>
-                  <input type="date" id="data-previsao" name="dataPrevisao">
+                  <input type="date" id="data-previsao" name="dataPrevisao" required>
                 </div>
               </div>
             </div>
@@ -250,7 +254,7 @@
             <thead>
               <tr>
                 <th>Cliente</th>
-                <th>Tipo de Serviço</th>
+                <th>Serviços</th>
                 <th>Previsão</th>
                 <th>Conclusão</th>
                 <th>Status</th>
@@ -260,18 +264,32 @@
             </thead>
             <tbody>
               <tr th:if="${agendamentos == null or agendamentos.empty}">
-                <td colspan="8" style="text-align: center;">Nenhum resultado encontrado</td>
+                <td colspan="7" style="text-align: center;">Nenhum resultado encontrado</td>
               </tr>
               <tr th:each="ag : ${agendamentos}">
                 <td data-label="Cliente" class="ag-cliente" th:attr="data-nome-completo=${ag.cliente.nomeCliente}">
 					<span th:text="${ag.cliente.nomeCliente != null ? #strings.arraySplit(ag.cliente.nomeCliente, ' ')[0] : ''}"></span>
 				</td>
-                <td data-label="Tipo de Serviço" class="ag-servico" th:attr="data-servico-id=${ag.servico.idServico}">
-                  <span class="service-badge" th:if="${ag.servico != null && ag.servico.nomeServico != null}"
-                    th:classappend="' ' + ${#strings.replace(ag.servico.nomeServico.toLowerCase(), ' ', '-')}"
-                    th:text="${ag.servico.nomeServico}"> </span>
-                  <span th:if="${ag.servico == null or ag.servico.nomeServico == null}"></span>
+                
+				<td data-label="Serviços" class="ag-servico">
+                    <div class="d-flex align-items-center flex-wrap gap-1">
+                        <span class="service-badge" 
+                              th:if="${not #lists.isEmpty(ag.servicos)}" 
+                              th:text="${ag.servicos[0].nomeServico}"
+                              th:classappend="' ' + ${#strings.replace(ag.servicos[0].nomeServico.toLowerCase(), ' ', '-')}">
+                        </span>
+                        
+                        <span class="text-muted fw-bold ms-1" style="font-size: 0.85em;"
+                              th:if="${#lists.size(ag.servicos) > 1}" 
+                              th:text="'+' + (${#lists.size(ag.servicos)} - 1)">
+                        </span>
+                    </div>
+                    
+                    <div class="hidden-servicos-data" style="display:none;">
+                        <span th:each="s : ${ag.servicos}" th:text="${s.idServico + ':' + s.nomeServico}" class="srv-item"></span>
+                    </div>
                 </td>
+                
                 <td data-label="Previsão" class="ag-previsao" th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"
                   th:data-date="${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')}">
                 </td>
@@ -298,8 +316,7 @@
                   <button class="btn-icon btn-view" th:attr="data-id=${ag.idAgendamento},
 												  data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
 												  data-cliente-email=${ag.cliente.email},
-												  data-cliente-telefone=${ag.cliente.telefone},
-                                                  data-responsavel=${ag.funcionario != null ? ag.funcionario.nomeFuncionario : 'Não atribuído'}" title="Visualizar">
+												  data-cliente-telefone=${ag.cliente.telefone}" title="Visualizar">
                     <i class="fas fa-eye"></i>
                   </button>
                   <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
@@ -369,7 +386,9 @@
 			        <span><i class="fas fa-envelope me-1"></i><span id="modal-cliente-email"></span></span>
 			      </div>
 				  
-                  <p class="text-muted">Tipo de Serviço: <span id="modal-servico-agendamento"></span></p>
+                  <p class="text-muted mb-1">Serviços Executados:</p>
+                  <div id="modal-servico-agendamento" class="d-flex flex-wrap gap-1 mb-3"></div>
+                  
 				  <p class="text-muted mb-0" style="font-size: 0.95rem;">
 	                  <i class="fas fa-car me-2"></i>Veículo: <span id="modal-veiculo-agendamento" class="text-dark fw-bold"></span>
 	                </p>
@@ -395,9 +414,8 @@
               <h6><i class="fas fa-align-left me-2"></i>Observações</h6>
               <p id="modal-observacao" style="white-space: pre-wrap;"></p>
               <hr>
-              <div class="d-flex align-items-center justify-content-between">
+			  <div class="d-flex align-items-center">
   				<p class="mb-0" style="font-size: 1.1rem;"><strong>Status: </strong><span id="modal-status"></span></p>
-                <p class="mb-0 text-muted"><i class="fas fa-user-cog me-1"></i> Responsável: <strong id="modal-responsavel"></strong></p>
   			 </div>
             </div>
             <div class="modal-footer">
@@ -550,6 +568,53 @@
         let dt = new DataTransfer(); 
         let idsFotosRenderizadas = new Set(); 
 
+        // LÓGICA DE MULTI-SELECT DE SERVIÇOS
+        const selectServico = document.getElementById('nome-servico');
+        const pillsContainer = document.getElementById('selected-services-pills');
+        const hiddenInputsContainer = document.getElementById('hidden-servicos-inputs');
+        let selectedServicos = new Set();
+
+        function adicionarPillServico(id, nome) {
+            if (!id || selectedServicos.has(id)) return;
+            
+            selectedServicos.add(id);
+            
+            const pill = document.createElement('span');
+            pill.className = 'badge bg-secondary d-flex align-items-center p-2 text-white';
+            pill.style.fontSize = '0.85rem';
+            pill.innerHTML = `
+                ${nome} 
+                <i class="fas fa-times ms-2" style="cursor:pointer;" onclick="removerPillServico('${id}', this)"></i>
+            `;
+            pillsContainer.appendChild(pill);
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'idServicos'; // Mapeia para a Lista no Java
+            input.value = id;
+            input.id = 'hidden-srv-' + id;
+            hiddenInputsContainer.appendChild(input);
+            verificarBotaoSalvar();
+        }
+
+        window.removerPillServico = function(id, element) {
+            selectedServicos.delete(id);
+            element.parentElement.remove();
+            const input = document.getElementById('hidden-srv-' + id);
+            if(input) input.remove();
+            verificarBotaoSalvar();
+        }
+
+        if(selectServico) {
+            selectServico.addEventListener('change', function() {
+                const id = this.value;
+                if (!id) return;
+                const nome = this.options[this.selectedIndex].text;
+                adicionarPillServico(id, nome);
+                this.value = ''; // Reset dropdown
+            });
+        }
+
         function checkStatus() {
             if (statusSel && (statusSel.value === 'Concluido' || statusSel.value === 'Concluído')) {
                 divConc.style.display = 'block';
@@ -567,7 +632,8 @@
             const temCliente = inputIdCli && inputIdCli.value !== "";
             const temVeiculo = inputIdVeiculo && inputIdVeiculo.value !== "";
             const temData = inputData && inputData.value !== "";
-            btnSalvarAgendamento.disabled = !(temCliente && temVeiculo && temData);
+            const temServicos = selectedServicos.size > 0;
+            btnSalvarAgendamento.disabled = !(temCliente && temVeiculo && temData && temServicos);
         }
 
         function toggleCamposVeiculo(habilitar) {
@@ -903,6 +969,11 @@
                 inputIdCli.value = "";
                 toggleCamposVeiculo(false);
                 
+                // Limpar Serviços selecionados
+                pillsContainer.innerHTML = '';
+                hiddenInputsContainer.innerHTML = '';
+                selectedServicos.clear();
+                
                 inputToken.value = "";
                 avisoMobile.classList.remove('d-flex');
                 avisoMobile.style.display = 'none';
@@ -1117,7 +1188,18 @@
                     inputVeiculo.classList.remove('is-invalid');
                 }
     
-                document.getElementById('nome-servico').value = row.querySelector('.ag-servico').dataset.servicoId;
+                // RECUPERAR MÚLTIPLOS SERVIÇOS
+                pillsContainer.innerHTML = '';
+                hiddenInputsContainer.innerHTML = '';
+                selectedServicos.clear();
+                
+                const srvItems = row.querySelectorAll('.hidden-servicos-data .srv-item');
+                srvItems.forEach(item => {
+                    const parts = item.textContent.split(':');
+                    if(parts.length === 2) {
+                        adicionarPillServico(parts[0], parts[1]);
+                    }
+                });
 
                 const statusTxt = row.querySelector('.ag-status span').textContent.trim();
                 const limparTexto = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s/g, '');
@@ -1210,7 +1292,7 @@
             }
             modalVisEl.addEventListener('shown.bs.modal', atualizarBotoes);
 
-            document.querySelectorAll('.btn-view').forEach(btn => {
+			document.querySelectorAll('.btn-view').forEach(btn => {
                 btn.addEventListener('click', function () {
                     const row = this.closest('tr');
                     const id = this.dataset.id;
@@ -1219,12 +1301,29 @@
 					document.getElementById('modal-cliente-agendamento').textContent = nomeCompleto;
                     document.getElementById('modal-cliente-email').textContent = this.getAttribute('data-cliente-email') || '-';
                     document.getElementById('modal-cliente-telefone').textContent = this.getAttribute('data-cliente-telefone') || '-';
-                    document.getElementById('modal-servico-agendamento').textContent = row.querySelector('.ag-servico').textContent.trim();
+                    
+                    // PREENCHER SERVIÇOS NO MODAL USANDO A LISTA OCULTA
+                    const modalSrvContainer = document.getElementById('modal-servico-agendamento');
+                    modalSrvContainer.innerHTML = '';
+                    
+                    const srvItems = row.querySelectorAll('.hidden-servicos-data .srv-item');
+                    if(srvItems.length > 0) {
+                        srvItems.forEach(item => {
+                            const parts = item.textContent.split(':');
+                            if(parts.length === 2) {
+                                const nomeServico = parts[1];
+                                const srvPill = document.createElement('span');
+                                srvPill.className = 'badge bg-secondary p-2';
+                                srvPill.textContent = nomeServico;
+                                modalSrvContainer.appendChild(srvPill);
+                            }
+                        });
+                    } else {
+                        modalSrvContainer.innerHTML = '<span class="text-muted small">Nenhum serviço</span>';
+                    }
+                    
                     document.getElementById('modal-veiculo-agendamento').textContent = this.getAttribute('data-veiculo-info') || '-';
                     document.getElementById('modal-observacao').textContent = row.querySelector('.ag-observacao').textContent.trim();
-                    
-                    // ATUALIZADO: Preenchendo o nome do responsável
-                    document.getElementById('modal-responsavel').textContent = this.getAttribute('data-responsavel') || 'Não atribuído';
                     
                     const stText = row.querySelector('.ag-status span').textContent.trim();
                     document.getElementById('modal-status').textContent = stText;
@@ -1257,11 +1356,14 @@
                         });
                         setTimeout(atualizarBotoes, 500);
                     });
+                    
+                    // Comando que faz o modal aparecer na tela
                     modalVis.show();
                 });
             });
-        }
-
+		}
+			
+			
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault(); const id = this.dataset.id;

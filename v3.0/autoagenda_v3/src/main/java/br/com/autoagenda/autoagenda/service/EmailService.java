@@ -1,5 +1,8 @@
 package br.com.autoagenda.autoagenda.service;
 
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -7,6 +10,7 @@ import br.com.autoagenda.autoagenda.client.EmailClient;
 import br.com.autoagenda.autoagenda.dto.EmailDto;
 import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
+import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.model.SuperAdmin;
 
 @Service
@@ -18,11 +22,16 @@ public class EmailService {
     	String emailCliente = agendamento.getCliente().getEmail();
     	String nomeCliente = agendamento.getCliente().getNomeCliente();
     	String assunto = "AutoAgenda: Seu serviço foi concluído!";
+    	
+    	// Extrai os nomes de todos os serviços e junta com vírgula
+    	String nomesServicos = agendamento.getServicos().stream().map(Servico::getNomeServico).collect(Collectors.joining(", "));
+    	String dataFormatada = agendamento.getDataConclusao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
     	String texto = String.format(
-		"Olá, %s!\n\nSeu agendamento para o serviço '%s' foi concluído com sucesso em %s.\n\nObrigado por escolher nossa oficina!",
+		"Olá, %s!\n\nSeu agendamento para os serviços: '%s' foi concluído com sucesso em %s.\n\nObrigado por escolher nossa oficina!",
 		nomeCliente,
-		agendamento.getServico().getNomeServico(),
-		agendamento.getDataConclusao().toString());
+		nomesServicos,
+		dataFormatada);
     	
     	EmailDto email = new EmailDto();
     	email.setDestinatario(emailCliente);

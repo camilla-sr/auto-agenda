@@ -1,11 +1,15 @@
 package br.com.autoagenda.autoagenda.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
+import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
@@ -20,10 +24,13 @@ public class AgendamentoService {
     @Autowired private FotosAgendamentoService fotoService;
     @Autowired private EmailService mailServ;
 
-    public void salvarAgendamento(Agendamento ag, Integer idServico, Integer idCliente, 
+    public void salvarAgendamento(Agendamento ag, List<Integer> idServicos, Integer idCliente, 
                                   Integer idVeiculo, MultipartFile[] fotos, String tokenMobile) {
         
-        ag.setServico(repoServ.findById(idServico).orElseThrow());
+    	List<Servico> servicosSelecionados = new ArrayList<>();
+    	repoServ.findAllById(idServicos).forEach(servicosSelecionados::add);
+        ag.setServicos(servicosSelecionados);
+        
         ag.setCliente(repoCl.findById(idCliente).orElseThrow());
         ag.setVeiculo(repoVe.findById(idVeiculo).orElseThrow());
 
@@ -33,7 +40,7 @@ public class AgendamentoService {
             Agendamento existente = repo.findById(ag.getIdAgendamento()).orElseThrow();
             existente.setCliente(ag.getCliente());
             existente.setVeiculo(ag.getVeiculo());
-            existente.setServico(ag.getServico());
+            existente.setServicos(ag.getServicos());
             existente.setDataPrevisao(ag.getDataPrevisao());
             existente.setStatusAgendamento(ag.getStatusAgendamento());
             existente.setDataConclusao(ag.getDataConclusao());

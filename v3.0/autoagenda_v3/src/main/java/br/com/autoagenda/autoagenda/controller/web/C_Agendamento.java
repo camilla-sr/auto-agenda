@@ -25,7 +25,7 @@ public class C_Agendamento {
     public String salvar(@PathVariable("slug") String slug,
     				@SessionAttribute("oficinaAtual") Oficina oficina,
     				@SessionAttribute("usuarioLogado") Funcionario usuarioLogado,
-    				@Valid Agendamento ag,  @RequestParam("idServico") Integer idServico,
+    				@Valid Agendamento ag,  @RequestParam("idServicos") java.util.List<Integer> idServicos,
     				@RequestParam("idCliente") Integer idCliente, @RequestParam("idVeiculo") Integer idVeiculo,
     				@RequestParam(value = "tokenMobile", required = false) String tokenMobile,
     				@RequestParam(value = "imagens", required = false) MultipartFile[] fotos, BindingResult result) {
@@ -36,7 +36,7 @@ public class C_Agendamento {
             ag.setOficina(oficina);
             ag.setFuncionario(usuarioLogado);
             
-            service.salvarAgendamento(ag, idServico, idCliente, idVeiculo, fotos, tokenMobile);
+            service.salvarAgendamento(ag, idServicos, idCliente, idVeiculo, fotos, tokenMobile);
             
             return isEdicao 
             		? "redirect:/"+ slug +"/agendamentos?editado=true" 

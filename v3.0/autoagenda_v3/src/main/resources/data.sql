@@ -97,13 +97,11 @@ create table if not exists agendamento (
   fk_funcionario		int not null,
   fk_cliente 			int not null,
   fk_veiculo			int not null,
-  fk_servico 			int not null,
   data_cadastro 		date,
   data_previsao 		date,
   data_conclusao 		date,
   status_agendamento 	varchar(20) default 'agendado',
   observacao 			text default null,
-  foreign key (fk_servico) references servico (id_servico),
   foreign key (fk_funcionario) references funcionario (id_funcionario),
   foreign key (fk_cliente) references cliente (id_cliente),
   foreign key (fk_veiculo) references veiculo (id_veiculo),
@@ -117,6 +115,14 @@ create table if not exists fotos_agendamento (
   data_criacao 		datetime default current_timestamp,
   token_temp 		varchar(50) null,
   foreign key (fk_agendamento) references agendamento (id_agendamento)
+);
+
+create table if not exists agendamento_servico(
+	fk_agendamento	int not null,
+	fk_servico		int not null,
+	primary key (fk_agendamento, fk_servico),
+	foreign key (fk_agendamento) references agendamento (id_agendamento) on delete cascade,
+	foreign key (fk_servico) references servico (id_servico) on delete cascade
 );
 
 create table if not exists log_sistema (

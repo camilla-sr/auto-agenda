@@ -1,6 +1,8 @@
 package br.com.autoagenda.autoagenda.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,7 +26,9 @@ public class Agendamento {
 	@ManyToOne @JoinColumn(name = "fk_funcionario") private Funcionario funcionario;
 	@ManyToOne @JoinColumn(name = "fk_cliente") private Cliente cliente;
 	@ManyToOne @JoinColumn(name = "fk_veiculo") private Veiculo veiculo;
-	@ManyToOne @JoinColumn(name = "fk_servico") private Servico servico;
+	@ManyToMany @JoinTable(name = "agendamento_servico", joinColumns = @JoinColumn(name = "fk_agendamento"),
+			inverseJoinColumns = @JoinColumn(name = "fk_servico")) private List<Servico> servicos = new ArrayList<>();
+        
 	@NotNull private LocalDate dataCadastro = LocalDate.now();
 	@NotNull private LocalDate dataPrevisao;
     private LocalDate dataConclusao;
@@ -36,7 +42,6 @@ public class Agendamento {
     	this.cliente = cliente;
     	this.funcionario = funcionario;
     	this.veiculo= veiculo;
-    	this.servico = new Servico();
     	this.dataPrevisao = dataPrevisao;
     	this.dataConclusao = dataConclusao;
     	this.statusAgendamento = statusAgendamento;
@@ -51,8 +56,8 @@ public class Agendamento {
     public void setFuncionario (Funcionario funcionario) { this.funcionario = funcionario; }
     public Veiculo getVeiculo() { return veiculo; }
     public void setVeiculo(Veiculo veiculo) { this.veiculo = veiculo; }
-    public Servico getServico() { return servico; }
-    public void setServico(Servico servico) { this.servico = servico; }
+    public List<Servico> getServicos() { return servicos; }
+    public void setServicos(List<Servico> servicos) { this.servicos = servicos; }
     public LocalDate getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDate dataCadastro) { this.dataCadastro = dataCadastro; }
     public LocalDate getDataPrevisao() { return dataPrevisao; }
