@@ -26,6 +26,7 @@ public class Funcionario {
 	@Column(nullable = true) private String senha;
 	private String acesso = "comum";
 	@Column(nullable = false) boolean primeiroLogin = false;
+	@Column(name = "usar_2fa", columnDefinition = "boolean default false") private boolean usarAuth = false;
 	@Column(nullable = false) boolean ativo = true;
 	
 	public Funcionario() {}
@@ -61,6 +62,8 @@ public class Funcionario {
 	public void setCpf(String cpf) { this.cpf = cpf; }
 	public boolean isPrimeiroLogin() { return primeiroLogin; }
 	public void setPrimeiroLogin(boolean primeiroLogin) { this.primeiroLogin = primeiroLogin; }
+	public boolean isUsarAuth() { return usarAuth; }
+    public void setUsarAuth(boolean usarAuth) { this.usarAuth = usarAuth; }
 	public boolean isAtivo() { return ativo; }
 	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

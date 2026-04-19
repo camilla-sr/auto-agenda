@@ -33,15 +33,49 @@ public class C_Funcionario {
 	
 	@PostMapping(value = "/logar")
     public String logar(@PathVariable("slug") String slug, @RequestParam String usuario,
-    					@RequestParam String senha, HttpSession session) {        
-        Funcionario func = service.autenticar(usuario, senha);
-        
+                        @RequestParam String senha, HttpSession session, RedirectAttributes ra) {        
+        Funcionario func = service.autenticar(usuario, senha);        
         if(func == null) { return "redirect:/"+ slug +"/login?usuarioValido=false"; }
-        
+
+        if (func.isUsarAuth()) {
+            codigoService.solicitarEnvioCodigo(func.getEmail());
+            session.setAttribute("tempEmail2FA", func.getEmail());
+            return "redirect:/" + slug + "/login?precisa2fa=true";
+        }        
         session.setAttribute("primeiroLogin", func.isPrimeiroLogin());          
         session.setAttribute("usuarioLogado", func);
-        
         return "redirect:/" + slug;
+    }
+
+    // processa o código do 2FA na tela de Login
+    @PostMapping("/logar-2fa")
+    public String logar2fa(@PathVariable("slug") String slug, @RequestParam String codigo, HttpSession session, RedirectAttributes ra) {
+        String email = (String) session.getAttribute("tempEmail2FA");
+        if (email == null) return "redirect:/" + slug + "/login";
+        
+        String resultado = codigoService.validarCodigo(email, codigo);
+        if ("OK".equals(resultado)) {
+            Funcionario func = service.buscarPorEmail(email);
+            session.removeAttribute("tempEmail2FA"); // Limpa a sessão provisória
+            session.setAttribute("primeiroLogin", func.isPrimeiroLogin());
+            session.setAttribute("usuarioLogado", func);
+            return "redirect:/" + slug;
+        } else {
+            ra.addFlashAttribute("erroOtp", "Código de segurança inválido ou expirado.");
+            return "redirect:/" + slug + "/login?precisa2fa=true";
+        }
+    }
+
+    @PostMapping("/toggle-2fa") @ResponseBody
+    public ResponseEntity<?> toggle2fa(@PathVariable String slug, @RequestParam boolean usarAuth, HttpSession session) {
+        Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
+        if(logado != null) {
+            service.atualizar2FA(logado, usarAuth);
+            logado.setUsarAuth(usarAuth);
+            session.setAttribute("usuarioLogado", logado);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(403).build();
     }
 	
 	@PostMapping(value = "logar_config")

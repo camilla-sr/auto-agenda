@@ -34,10 +34,10 @@ public class C_Painel {
     public String salvarFeatures(@PathVariable("slug") String slug, @RequestParam Integer idOficina,
                                  @RequestParam(defaultValue = "false") boolean usarProdutos,
                                  @RequestParam(defaultValue = "false") boolean usarFinanceiro,
-                                 @RequestParam(defaultValue = "false") boolean usarAuth,
-                                 RedirectAttributes ra) {
+                                 RedirectAttributes ra, HttpSession session) {
         try {
-            service.atualizarFuncionalidades(idOficina, usarProdutos, usarFinanceiro, usarAuth);
+            service.atualizarFuncionalidades(idOficina, usarProdutos, usarFinanceiro);
+            session.removeAttribute("oficinaAtual");
             ra.addFlashAttribute("msgSucesso", "Funcionalidades atualizadas!");
         } catch (Exception e) {
             ra.addFlashAttribute("msgErro", "Erro: " + e.getMessage());

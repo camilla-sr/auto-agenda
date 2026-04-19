@@ -37,9 +37,6 @@ public class Oficina {
     @Column(name = "usar_financeiro", columnDefinition = "boolean default true")
     private boolean usarFinanceiro = true;
     
-    @Column(name = "usar_auth", columnDefinition = "boolean default false")
-    private boolean usarAuth = false;
-    
     @Column(columnDefinition = "boolean default true")
     private Boolean ativo = true;
 	
@@ -89,6 +86,4 @@ public class Oficina {
 	public void setUsarProdutos(boolean usarProdutos) { this.usarProdutos = usarProdutos; }
 	public boolean isUsarFinanceiro() { return usarFinanceiro; }
 	public void setUsarFinanceiro(boolean usarFinanceiro) { this.usarFinanceiro = usarFinanceiro; }
-	public boolean isUsarAuth() { return usarAuth; }
-	public void setUsarAuth(boolean usarAuth) { this.usarAuth = usarAuth; }
 }

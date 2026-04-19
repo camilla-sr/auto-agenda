@@ -108,6 +108,11 @@ public class FuncionarioService {
         repo.save(atual);
     }
 
+    public void atualizar2FA(Funcionario func, boolean usarAuth) {
+        func.setUsarAuth(usarAuth);
+        repo.save(func);
+    }
+    
     public void excluir(Integer id) {
         if (id != null) repo.deleteById(id);
     }

@@ -18,8 +18,9 @@
 <body>
     <div class="auth-card">
         <img th:src="@{${branding.logoUrl}}" alt="Logo" class="auth-logo">
-        <h4 class="mensagem">Bem-vindo</h4>
-        <form method="post" th:action="@{/{slug}/funcionario-api/logar(slug=${oficinaContexto.slug})}">
+		<h4 class="mensagem" th:text="${param.precisa2fa != null} ? 'Segurança Adicional' : 'Bem-vindo'">Bem-vindo</h4>
+		        
+        <form method="post" th:action="@{/{slug}/funcionario-api/logar(slug=${oficinaContexto.slug})}" th:if="${param.precisa2fa == null}">
             <div class="log-inputs">
                 <div class="mb-3">
                     <label class="form-label">Usuário</label>
@@ -46,6 +47,28 @@
 				        <i class="fa-solid fa-key me-1"></i> Esqueci Minha Senha
 				    </a>
 				</div>
+            </div>
+        </form>
+
+        <form method="post" th:action="@{/{slug}/funcionario-api/logar-2fa(slug=${oficinaContexto.slug})}" th:if="${param.precisa2fa != null}">
+            <div class="log-inputs text-center">
+                <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                <p class="text-muted small mb-4">Enviamos um código de segurança de 6 dígitos para o seu e-mail.</p>
+                
+                <div th:if="${erroOtp}" class="alert alert-danger p-2 small mb-3">
+                    <span th:text="${erroOtp}"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input type="text" name="codigo" class="form-control text-center fw-bold fs-4 mx-auto" 
+                           style="width: 200px; letter-spacing: 5px;" 
+                           placeholder="000000" maxlength="6" required autocomplete="off">
+                </div>
+
+                <div class="botoes">
+                    <button type="submit" class="btnLogin">Verificar</button>
+                    <a th:href="@{/{slug}/login(slug=${oficinaContexto.slug})}" class="btn-voltar mt-2">Voltar</a>
+                </div>
             </div>
         </form>
     </div>

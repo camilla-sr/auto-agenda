@@ -23,9 +23,7 @@ public class SetupService {
     private final String BASE_UPLOAD_DIR = "src/main/resources/static/img";
 
     public Oficina salvarOficinaInicial(Oficina oficina, MultipartFile logo, MultipartFile favicon) {
-        try {
-            System.out.println("--- INICIANDO UPLOAD DE IMAGENS DO SETUP ---");
-            
+        try {           
             String slugLimpo = oficina.getSlug().trim();
             String subPasta = slugLimpo + "/branding";
             
@@ -35,10 +33,9 @@ public class SetupService {
                 
                 salvarArquivo(logo, subPasta, nomeLogo);
                 oficina.setLogotipo(slugLimpo + "/branding/" + nomeLogo); 
-                System.out.println("Logo vinculada no DB: " + oficina.getLogotipo());
             } else {
                 System.out.println("Aviso: Nenhuma LOGO recebida no formulário.");
-            }            
+            }
             return oficinaRepo.save(oficina);
             
         } catch (Exception e) {
@@ -100,13 +97,12 @@ public class SetupService {
         oficinaRepo.save(atual);
     }
 
-    public void atualizarFuncionalidades(Integer idOficina, boolean produto, boolean financeiro, boolean auth) {
+    public void atualizarFuncionalidades(Integer idOficina, boolean produto, boolean financeiro) {
         Oficina atual = oficinaRepo.findById(idOficina)
             .orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada"));
         
         atual.setUsarProdutos(produto);
         atual.setUsarFinanceiro(financeiro);
-        atual.setUsarAuth(auth);
         
         oficinaRepo.save(atual);
     }

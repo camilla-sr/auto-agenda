@@ -31,7 +31,6 @@ create table if not exists oficina(
     logotipo            varchar(255) default '',
 	usar_produtos       boolean default true,
     usar_financeiro     boolean default true,
-    usar_auth           boolean default false,
     data_cadastro       timestamp default current_timestamp
 );
 
@@ -72,6 +71,7 @@ create table if not exists funcionario (
   senha     	    varchar(255) null,
   acesso			varchar(20) default 'comum',
   primeiro_login	boolean default true,
+  usar_2fa          boolean default false,
   ativo				boolean default true,
   foreign key (fk_oficina) references oficina (id_oficina)
 );
