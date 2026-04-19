@@ -3,6 +3,7 @@ package br.com.autoagenda.autoagenda.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ public class Cliente {
     private String email;
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.REMOVE)
     private List<Veiculo> veiculos;
+    @Column(nullable = false) boolean ativo = true;
     
     public Cliente() {}
     
@@ -43,4 +45,6 @@ public class Cliente {
     public void setEmail(String emailCliente) { this.email = emailCliente; }
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
+	public boolean isAtivo() { return ativo; }
+	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

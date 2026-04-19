@@ -210,14 +210,14 @@ public class Rotas {
     	if(!s.verificaAcesso(session, "admin")) return "acesso-negado";
     	
     	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
-    	model.addAttribute("clientes", repoCl.findByOficina(oficinaAtual));
+    	model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
     	return verificaUsuario(session, "clientes", slug);
     }
 	
     @GetMapping("/{slug}/servicos")
     public String servicos(@PathVariable String slug, HttpSession session, Model model) {
     	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
-    	model.addAttribute("servicos", repoServ.findByOficina(oficinaAtual));
+    	model.addAttribute("servicos", repoServ.findByOficinaAndAtivoTrue(oficinaAtual));
     	return verificaUsuario(session, "servicos", slug);
     }
     
@@ -237,10 +237,10 @@ public class Rotas {
     public String agendamentos(@PathVariable String slug, HttpSession session, Model model) {
     	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
     	
-    	model.addAttribute("servicos", repoServ.findByOficina(oficinaAtual));
-    	model.addAttribute("agendamentos", repoAg.findByOficina(oficinaAtual));
-    	model.addAttribute("clientes", repoCl.findByOficina(oficinaAtual));
-    	model.addAttribute("veiculos", repoVe.findByCliente_Oficina(oficinaAtual));
+    	model.addAttribute("servicos", repoServ.findByOficinaAndAtivoTrue(oficinaAtual));
+    	model.addAttribute("agendamentos", repoAg.findByOficinaAndAtivoTrue(oficinaAtual));
+    	model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
+    	model.addAttribute("veiculos", repoVe.findByCliente_OficinaAndAtivoTrue(oficinaAtual));
 		model.addAttribute("agendaPendente", repoAg.countPendentesByOficina(oficinaAtual));
 		model.addAttribute("agendaConcluido", repoAg.countConcluidosbyOficina(oficinaAtual));
 		model.addAttribute("agendaAndamento", repoAg.countAndamentoByOficina(oficinaAtual));

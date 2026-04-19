@@ -51,7 +51,9 @@ public class C_Cliente {
     public ResponseEntity<?> apagarCliente(@PathVariable("slug") String slug, @RequestParam Integer idCliente) {
         if(idCliente == null) { return ResponseEntity.badRequest().body("ID inválido"); }
         try {
-            repo.deleteById(idCliente);
+            Cliente cl = repo.findById(idCliente).orElseThrow();
+            cl.setAtivo(false);
+            repo.save(cl);
             return ResponseEntity.ok().build(); 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

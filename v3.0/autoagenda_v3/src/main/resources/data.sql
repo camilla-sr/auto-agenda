@@ -40,6 +40,7 @@ create table if not exists cliente (
   nome_cliente 		varchar(80) not null,
   telefone			varchar(15) not null,
   email				varchar(255) not null,
+  ativo				boolean default true,
   foreign key (fk_oficina) references oficina (id_oficina)
 );
 
@@ -49,6 +50,7 @@ create table if not exists veiculo(
 	modelo			varchar(35) not null,
 	marca			varchar(20) not null,
 	placa			varchar(7) not null,
+	ativo			boolean default true,
 	foreign key (fk_cliente) references cliente (id_cliente)
 );
 
@@ -57,6 +59,7 @@ create table if not exists servico (
   fk_oficina    	int not null,
   nome_servico		varchar(50) not null,
   desc_servico 		varchar(200),
+  ativo				boolean default true,
   foreign key (fk_oficina) references oficina (id_oficina)
 );
 
@@ -102,6 +105,7 @@ create table if not exists agendamento (
   data_conclusao 		date,
   status_agendamento 	varchar(20) default 'agendado',
   observacao 			text default null,
+  ativo					boolean default true,
   foreign key (fk_funcionario) references funcionario (id_funcionario),
   foreign key (fk_cliente) references cliente (id_cliente),
   foreign key (fk_veiculo) references veiculo (id_veiculo),
@@ -117,7 +121,7 @@ create table if not exists fotos_agendamento (
   foreign key (fk_agendamento) references agendamento (id_agendamento)
 );
 
-create table if not exists agendamento_servico(
+create table if not exists agendamento_servico (
 	fk_agendamento	int not null,
 	fk_servico		int not null,
 	primary key (fk_agendamento, fk_servico),

@@ -34,6 +34,7 @@ public class Agendamento {
     private LocalDate dataConclusao;
 	@NotEmpty private String statusAgendamento;
     @Column(length = 1000) private String observacao;
+    @Column(nullable = false) boolean ativo = true;
 
     public Agendamento() {}
     
@@ -70,4 +71,6 @@ public class Agendamento {
     public void setObservacao(String observacao) { this.observacao = observacao; }
     public Oficina getOficina() { return oficina; }
     public void setOficina(Oficina oficina) { this.oficina = oficina; }
+	public boolean isAtivo() { return ativo; }
+	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

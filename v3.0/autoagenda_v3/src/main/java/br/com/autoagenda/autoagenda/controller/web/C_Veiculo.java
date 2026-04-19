@@ -21,7 +21,7 @@ public class C_Veiculo {
     @ResponseBody
     public ResponseEntity<List<Veiculo>> listarPorCliente(@SessionAttribute("oficinaAtual") Oficina oficina,
     														@PathVariable Integer idCliente) {
-        List<Veiculo> veiculos = repo.findByCliente_Oficina(oficina);
+        List<Veiculo> veiculos = repo.findByCliente_OficinaAndAtivoTrue(oficina);
         return ResponseEntity.ok(veiculos);
     }
 

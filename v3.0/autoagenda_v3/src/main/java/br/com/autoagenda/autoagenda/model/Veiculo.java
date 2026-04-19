@@ -1,5 +1,6 @@
 package br.com.autoagenda.autoagenda.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,7 @@ public class Veiculo {
 	@NotBlank private String modelo;
 	@NotBlank private String marca;
 	@NotBlank private String placa;
+	@Column(nullable = false) boolean ativo = true;	
 	
 	public Veiculo() {}
 	

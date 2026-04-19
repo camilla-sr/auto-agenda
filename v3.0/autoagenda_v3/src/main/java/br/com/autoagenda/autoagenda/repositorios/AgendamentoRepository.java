@@ -11,7 +11,7 @@ import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Oficina;
 
 public interface AgendamentoRepository extends CrudRepository<Agendamento, Integer>{
-	List<Agendamento> findByOficina(Oficina oficina);
+	List<Agendamento> findByOficinaAndAtivoTrue(Oficina oficina);
 	
 	long countByOficina(Oficina oficina);
 	

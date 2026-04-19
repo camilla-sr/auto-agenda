@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
@@ -19,7 +21,9 @@ public class FuncionarioService {
 
     public Funcionario autenticar(String usuario, String senha) {
         Funcionario func = repo.findByUsuario(usuario);
-        if (func != null && func.getSenha().equals(senha)) { return func; }
+        if (func != null && func.getSenha().equals(senha) && func.isAtivo()) { 
+            return func;
+        }
         return null;
     }
 
@@ -114,7 +118,11 @@ public class FuncionarioService {
     }
     
     public void excluir(Integer id) {
-        if (id != null) repo.deleteById(id);
+        if (id!= null) {
+            Funcionario func = repo.findById(id).orElseThrow();
+            func.setAtivo(false);
+            repo.save(func);
+        }
     }
     
     private void tratarUsuarioDuplicado(Funcionario func, Oficina oficina) {
@@ -125,12 +133,9 @@ public class FuncionarioService {
             func.setUsuario(usuarioDigitado);
             return;
         }
-
         String nomeLimpo = Normalizer.normalize(func.getNomeFuncionario().toLowerCase(), Normalizer.Form.NFD)
                                      .replaceAll("[^\\p{ASCII}]", "");
-        
-        List<String> nomes = Arrays.stream(nomeLimpo.split("\\s+"))
-                                   .filter(p -> !p.matches("^(de|do|da|dos|das)$"))
+        List<String> nomes = Arrays.stream(nomeLimpo.split("\\s+")).filter(p -> !p.matches("^(de|do|da|dos|das)$"))
                                    .collect(Collectors.toList());
 
         if (nomes.size() >= 3) { 

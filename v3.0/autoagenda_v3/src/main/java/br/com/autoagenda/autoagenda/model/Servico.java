@@ -18,6 +18,7 @@ public class Servico {
 	@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "fk_oficina") private Oficina oficina;
 	@NotEmpty private String nomeServico;
 	@Column(length = 1000) @NotEmpty private String descServico;
+	@Column(nullable = false) boolean ativo = true;
 	
     public Servico() {}
     
@@ -35,4 +36,6 @@ public class Servico {
     public void setDescServico(String descServico) { this.descServico = descServico; }
     public String getNomeServico() { return nomeServico; }
     public void setNomeServico(String nomeServico) { this.nomeServico = nomeServico; }
+	public boolean isAtivo() { return ativo; }
+	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

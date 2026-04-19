@@ -60,7 +60,8 @@ public class AgendamentoService {
             Agendamento ag = repo.findById(idAgendamento).orElseThrow();
             fotoService.apagarFotosDoAgendamento(ag); 
             
-            repo.delete(ag);
+            ag.setAtivo(false);
+            repo.save(ag);
         }
     }
 

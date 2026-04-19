@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
@@ -48,7 +49,9 @@ public class C_Servico {
 	public ResponseEntity<?> apagar(@RequestParam Integer idServico) {
 		if(idServico == null) { return ResponseEntity.badRequest().body("ID inválido"); }
 		try {
-			repo.deleteById(idServico);
+			Servico serv = repo.findById(idServico).orElseThrow();
+            serv.setAtivo(false);
+            repo.save(serv);
 			return ResponseEntity.ok().build();
 		} catch (DataIntegrityViolationException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)

@@ -7,5 +7,5 @@ import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Veiculo;
 
 public interface VeiculoRepository extends CrudRepository<Veiculo, Integer>{
-	List<Veiculo> findByCliente_Oficina(Oficina oficina);
+	List<Veiculo> findByCliente_OficinaAndAtivoTrue(Oficina oficina);
 }
