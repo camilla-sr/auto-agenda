@@ -188,20 +188,25 @@ public class C_SuperAdmin {
 	}
 	
 	@PostMapping("/funcionario/salvar") @ResponseBody
-    public ResponseEntity<?> salvarFuncionarioPeloAdmin(@RequestParam Integer idOficina, @ModelAttribute Funcionario func) {
+    public ResponseEntity<?> salvarFuncionarioPeloAdmin(@RequestParam Integer idOficina, @ModelAttribute Funcionario func,
+            @RequestParam(required = false) String novaSenha,
+            @RequestParam(required = false, defaultValue = "false") boolean cadastroInicial) {
         try {
-            Oficina oficina = oficinaRepo.findById(idOficina).orElseThrow();
-            boolean cadastroInicial = (func.getIdFuncionario() == null);
-
-            funcService.salvarOuAtualizar(func, null, cadastroInicial, oficina);
-
+            Oficina oficina = oficinaRepo.findById(idOficina)
+                .orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada para o ID: " + idOficina));
+            funcService.salvarOuAtualizar(func, novaSenha, cadastroInicial, oficina);
+            
             return ResponseEntity.ok().build();
+        } catch (jakarta.validation.ConstraintViolationException e) {
+            return ResponseEntity.badRequest().body("O CPF informado é inválido.");
         } catch (IllegalArgumentException e) {
             String msg = e.getMessage().equals("erroCPF") ? "Este CPF já está cadastrado." :
                          e.getMessage().equals("erroUsuario") ? "Este nome de usuário já está em uso." : e.getMessage();
             return ResponseEntity.badRequest().body(msg);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro ao processar os dados.");
+            e.printStackTrace(); 
+            String erroReal = e.getClass().getSimpleName() + ": " + e.getMessage();
+            return ResponseEntity.status(500).body("Erro interno: " + erroReal);
         }
     }
 }
