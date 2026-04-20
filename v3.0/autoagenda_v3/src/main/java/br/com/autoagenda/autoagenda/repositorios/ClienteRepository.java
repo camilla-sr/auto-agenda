@@ -9,4 +9,5 @@ import br.com.autoagenda.autoagenda.model.Oficina;
 public interface ClienteRepository extends CrudRepository<Cliente, Integer>{
 	List<Cliente> findByOficinaAndAtivoTrue(Oficina oficina);
 	Optional<Cliente> findById(Integer id);
+	long countByOficinaAndAtivoTrue(Oficina oficina);
 }

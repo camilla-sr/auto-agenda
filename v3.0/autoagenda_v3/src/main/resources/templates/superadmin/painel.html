@@ -1,38 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QG do Sistema - Superadmin</title>
     <link rel="icon" type="image/png" href="/img/padrao_favicon.ico"/>
-
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/fontawesome/css/all.min.css">
-    
     <link rel="stylesheet" href="/css/variaveis.css">
     <link rel="stylesheet" href="/css/painel_superadmin.css">
-    
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/js/sweetalert2.all.min.js"></script>
-    
-    <style>
-        /* Ajuste do contraste do container de Status Geral da Oficina */
-        .card-status-geral {
-            background-color: #f8d7da !important;
-            border-color: #f5c2c7 !important;
-        }
-        .card-status-geral h6, .card-status-geral p, .card-status-geral i {
-            color: #842029 !important;
-        }
-    </style>
 </head>
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-super navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#">
-                <i class="fa-solid fa-server me-2"></i>Auto<span class="brand-highlight">Agenda</span> | Core
-            </a>
+			<span class="navbar-brand text-white">
+			    <i class="fa-solid fa-server me-2"></i>Auto<span class="brand-highlight">Agenda</span> | Core
+			</span>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -199,28 +184,50 @@
             </div>
         </div>
 
-        <div id="logs-sistema" class="spa-section" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4><i class="fa-solid fa-terminal text-success me-2"></i> Logs de Auditoria</h4>
-                <div>
-                    <button class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-download me-1"></i> Exportar CSV</button>
-                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash-can me-1"></i> Limpar Logs</button>
-                </div>
-            </div>
-            
-            <div class="bg-black p-3 rounded border border-secondary" style="font-family: monospace; height: 500px; overflow-y: auto;">
-                <div class="text-success mb-1">[INFO] Exemplo de log de sistema iniciado.</div>
-                <div class="text-muted text-center mt-4">--- Fim dos registros ---</div>
-            </div>
-        </div>
+		<div id="logs-sistema" class="spa-section" style="display: none;">
+		    <div class="d-flex justify-content-between align-items-center mb-3">
+		        <h4><i class="fa-solid fa-terminal text-success me-2"></i> Logs de Auditoria</h4>
+		        <div class="d-flex gap-2">
+		            <button class="btn btn-sm btn-outline-info" id="btnAlternarVistaLog"><i class="fa-solid fa-table"></i> Alternar Vista</button>
+		            <button class="btn btn-sm btn-outline-secondary" id="btnExportarCSV"><i class="fa-solid fa-download"></i> Exportar CSV</button>
+		            </div>
+		    </div>
+		    <div id="log-view-cards" class="bg-black p-3 rounded border border-secondary" style="font-family: monospace; height: 500px; overflow-y: auto;">
+		        <div class="text-success mb-1">[INFO] Sistema de logs carregado.</div>
+		    </div>
+		    <div id="log-view-table" class="log-table-container p-3" style="display:none;">
+		        <div class="mb-3">
+		            <input type="text" id="filtroGeralLog" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Busca geral nos logs...">
+		        </div>
+		        <div class="table-responsive" style="max-height: 400px;">
+		            <table class="table table-dark table-hover text-sm" id="tabelaPrincipalLogs">
+		                <thead>
+		                    <tr>
+		                        <th>Data <input type="text" class="form-control form-control-xs col-filter" placeholder="Filtrar..."></th>
+		                        <th>Ação <input type="text" class="form-control form-control-xs col-filter" placeholder="Filtrar..."></th>
+		                        <th>Utilizador <input type="text" class="form-control form-control-xs col-filter" placeholder="Filtrar..."></th>
+		                        <th>Descrição</th>
+		                    </tr>
+		                </thead>
+		                <tbody></tbody>
+		            </table>
+		        </div>
+		    </div>
+		</div>
     </div>
 
     <div class="modal fade" id="modalGerenciarOficina" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content border-secondary">
-                <div class="modal-header bg-dark border-secondary">
+				<div class="modal-header bg-dark border-secondary w-100">
                     <h5 class="modal-title"><i class="fa-solid fa-building text-primary me-2"></i> Gerenciar: <span id="modalOficinaNome" class="text-warning fw-bold">Carregando...</span></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    
+                    <div class="ms-auto d-flex align-items-center">
+                        <button type="button" class="btn btn-sm btn-outline-secondary border-0 me-2 text-light" id="btnRefreshModal" title="Recarregar dados do Modal">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                 </div>
                 
                 <div class="modal-body p-0 bg-darker">
@@ -284,7 +291,7 @@
                         <div class="tab-pane fade" id="tab-modulos">
                             <p class="text-muted small mb-4">Habilite ou desabilite as ferramentas do sistema para esta oficina.</p>
                             
-                            <form method="post" action="/superadmin-api/salvar-modulos" id="formModulos">
+							<form method="post" action="/superadmin-api/salvar-modulos" id="formModulos">
                                 <input type="hidden" name="idOficina" id="modalInputModulosId">
                                 
                                 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
@@ -297,23 +304,23 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary opacity-50">
                                     <div>
                                         <strong class="d-block text-light">Módulo Financeiro</strong>
                                         <small class="text-muted">Preços, custos e visualização de faturamento.</small>
                                     </div>
                                     <div class="form-check form-switch custom-switch fs-5">
-                                        <input class="form-check-input check-modulo" type="checkbox" name="usarFinanceiro" id="toggleFin">
+                                        <input class="form-check-input check-modulo" type="checkbox" name="usarFinanceiro" id="toggleFin" disabled>
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+                                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary opacity-50">
                                     <div>
                                         <strong class="d-block text-light">Segurança 2FA</strong>
                                         <small class="text-muted">Obrigar uso de código por e-mail no login.</small>
                                     </div>
                                     <div class="form-check form-switch custom-switch fs-5">
-                                        <input class="form-check-input check-modulo" type="checkbox" name="usarAuth" id="toggleAuth">
+                                        <input class="form-check-input check-modulo" type="checkbox" name="usarAuth" id="toggleAuth" disabled>
                                     </div>
                                 </div>
 
@@ -349,15 +356,19 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small mb-1 text-light">CPF</label>
-                                            <input type="text" name="cpf" id="adminCpf" class="form-control form-control-sm bg-dark text-white border-secondary mask-cpf" required>
+                                            <input type="text" name="cpf" id="adminCpf" class="form-control form-control-sm bg-dark text-white border-secondary mask-cpf" maxlength="14" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small mb-1 text-light">E-mail Oficial</label>
                                             <input type="email" name="email" id="adminEmail" class="form-control form-control-sm bg-dark text-white border-secondary" required>
                                         </div>
-                                        <div class="col-md-6">
+										<div class="col-md-6">
                                             <label class="form-label small mb-1 text-light">Usuário (Login)</label>
                                             <input type="text" name="usuario" id="adminUsuario" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">Telefone/Celular</label>
+                                            <input type="text" name="telefone" id="adminTelefone" class="form-control form-control-sm bg-dark text-white border-secondary mask-telefone" maxlength="15" required>
                                         </div>
                                     </div>
                                     
@@ -413,15 +424,19 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small mb-1 text-light">CPF</label>
-                                            <input type="text" name="cpf" id="funcCpf" class="form-control form-control-sm bg-dark text-white border-secondary mask-cpf" required>
+                                            <input type="text" name="cpf" id="funcCpf" class="form-control form-control-sm bg-dark text-white border-secondary mask-cpf" maxlength="14" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small mb-1 text-light">E-mail Oficial</label>
                                             <input type="email" name="email" id="funcEmail" class="form-control form-control-sm bg-dark text-white border-secondary" required>
                                         </div>
-                                        <div class="col-md-6">
+										<div class="col-md-6">
                                             <label class="form-label small mb-1 text-light">Usuário (Login)</label>
                                             <input type="text" name="usuario" id="funcUsuario" class="form-control form-control-sm bg-dark text-white border-secondary" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small mb-1 text-light">Telefone/Celular</label>
+                                            <input type="text" name="telefone" id="funcTelefone" class="form-control form-control-sm bg-dark text-white border-secondary mask-telefone" maxlength="15" required>
                                         </div>
                                     </div>
 
@@ -541,11 +556,95 @@
             ativarGeradorDeUsuario('adminNome', 'adminUsuario');
             ativarGeradorDeUsuario('funcNome', 'funcUsuario');
 
-            // --- Máscara de CPF Dinâmica ---
-            if(typeof Inputmask !== 'undefined') {
-                document.querySelectorAll('.mask-cpf').forEach(el => {
-                    Inputmask("999.999.999-99").mask(el);
+			// =========================================================
+            // MÁSCARAS NATIVAS (PADRÃO DO SISTEMA)
+            // =========================================================
+            document.querySelectorAll('.mask-cpf').forEach(input => {
+                input.addEventListener('input', function() {
+                    let v = this.value.replace(/\D/g, "");
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                    this.value = v;
                 });
+            });
+
+            document.querySelectorAll('.mask-telefone').forEach(input => {
+                input.addEventListener('input', function() {
+                    let v = this.value.replace(/\D/g, "");
+                    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+                    v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+                    this.value = v;
+                });
+            });
+
+            // =========================================================
+            // VALIDAÇÕES NATIVAS (PADRÃO DO SISTEMA)
+            // =========================================================
+            function isCpfValido(cpf) {
+                const cpfLimpo = cpf.replace(/\D/g, '');
+                if (cpfLimpo.length !== 11 || /^(\d)\1+$/.test(cpfLimpo)) return false;
+                let soma = 0, resto;
+                for (let i = 1; i <= 9; i++) soma += parseInt(cpfLimpo.substring(i - 1, i)) * (11 - i);
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpfLimpo.substring(9, 10))) return false;
+                soma = 0;
+                for (let i = 1; i <= 10; i++) soma += parseInt(cpfLimpo.substring(i - 1, i)) * (12 - i);
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                return resto === parseInt(cpfLimpo.substring(10, 11));
+            }
+
+            function isTelefoneValido(telefone) {
+                const telLimpo = telefone.replace(/\D/g, '');
+                return telLimpo.length === 10 || telLimpo.length === 11;
+            }
+
+            // =========================================================
+            // SALVAR FORMULÁRIOS (INTEGRANDO COM O ENDPOINT EXISTENTE)
+            // =========================================================
+            function submeterFormularioFuncionario(formElement, nivel) {
+                const inputCpf = formElement.querySelector('.mask-cpf');
+                const inputTelefone = formElement.querySelector('.mask-telefone');
+
+                if (inputCpf && !isCpfValido(inputCpf.value)) {
+                    Swal.fire('Atenção', 'Por favor, digite um CPF válido.', 'warning');
+                    inputCpf.focus();
+                    return;
+                }
+                
+                if (inputTelefone && !isTelefoneValido(inputTelefone.value)) {
+                    Swal.fire('Atenção', 'Por favor, digite um Telefone/Celular válido com DDD.', 'warning');
+                    inputTelefone.focus();
+                    return;
+                }
+
+                const formData = new FormData(formElement);
+                if (!formData.get('idFuncionario')) { formData.delete('idFuncionario'); }
+                formData.append('idOficina', oficinaIdContexto); 
+                
+                // Remove a máscara antes de enviar, igual você fez no form da outra tela
+                if (inputCpf) formData.set('cpf', inputCpf.value.replace(/\D/g, ''));
+                if (inputTelefone) formData.set('telefone', inputTelefone.value.replace(/\D/g, ''));
+
+                fetch(`/superadmin-api/funcionario/salvar`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(async res => {
+                    if (res.ok) {
+                        Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Dados salvos com sucesso!', showConfirmButton: false, timer: 2000});
+                        formElement.reset();
+                        formElement.closest('div').style.display = 'none';
+                        
+                        carregarEquipePorNivel(oficinaIdContexto, nivel, nivel === 'admin' ? 'tabela-admins' : 'tabela-funcionarios');
+                        carregarAcessosRapidos(oficinaIdContexto);
+                    } else {
+                        const erroMsg = await res.text();
+                        Swal.fire('Atenção', erroMsg || 'Erro ao salvar funcionário.', 'warning');
+                    }
+                }).catch(() => Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error'));
             }
 
             // --- BOTÃO REFRESH TABELA PRINCIPAL ---
@@ -599,29 +698,77 @@
             // =========================================================
             // API: DESATIVAR/ATIVAR OFICINA
             // =========================================================
-            document.getElementById('btnToggleStatusOficina').addEventListener('click', () => {
+			document.getElementById('btnToggleStatusOficina').addEventListener('click', () => {
+			    Swal.fire({
+			        title: 'Confirmar Alteração de Status',
+			        text: 'Insira a sua senha de SuperAdmin para confirmar:',
+			        input: 'password',
+			        inputAttributes: { autocapitalize: 'off' },
+			        showCancelButton: true,
+			        confirmButtonText: 'Confirmar',
+			        confirmButtonColor: '#d33',
+			        showLoaderOnConfirm: true,
+			        preConfirm: (senha) => {
+			            return fetch(`/superadmin-api/oficina/status/${oficinaIdContexto}?senhaConfirmacao=${senha}`, { method: 'POST' })
+			                .then(response => {
+			                    if (!response.ok) throw new Error('Senha incorreta ou erro no servidor');
+			                    return response;
+			                })
+			                .catch(error => Swal.showValidationMessage(`Erro: ${error.message}`));
+			        }
+			    }).then((result) => {
+			        if (result.isConfirmed) {
+			            Swal.fire('Sucesso!', 'Status da oficina atualizado.', 'success').then(() => location.reload());
+			        }
+			    });
+			});
+			
+			// =========================================================
+            // BOTÃO DE REFRESH DO MODAL
+            // =========================================================
+            document.getElementById('btnRefreshModal').addEventListener('click', function() {
                 if(!oficinaIdContexto) return;
                 
-                Swal.fire({
-                    title: 'Alterar Status da Oficina?',
-                    text: "Ao bloquear, todos os usuários serão deslogados imediatamente e a URL ficará inacessível.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33', 
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Sim, prosseguir'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`/superadmin-api/oficina/status/${oficinaIdContexto}`, { method: 'POST' })
-                        .then(res => {
-                            if(res.ok) {
-                                Swal.fire('Sucesso!', 'Status da oficina atualizado.', 'success')
-                                .then(() => location.reload());
-                            } else {
-                                Swal.fire('Erro', 'Não foi possível alterar o status.', 'error');
-                            }
+                const icone = this.querySelector('i');
+                icone.classList.add('fa-spin'); // Faz o ícone girar
+
+                // Chama todas as funções que recarregam as abas do modal
+                carregarEstatisticasOficina(oficinaIdContexto);
+                carregarModulosOficina(oficinaIdContexto);
+                carregarEquipePorNivel(oficinaIdContexto, 'admin', 'tabela-admins');
+                carregarEquipePorNivel(oficinaIdContexto, 'comum', 'tabela-funcionarios');
+                carregarAcessosRapidos(oficinaIdContexto);
+
+                // Para de girar depois de um tempo
+                setTimeout(() => icone.classList.remove('fa-spin'), 800);
+            });
+
+            // =========================================================
+            // SALVAR MÓDULOS DE FORMA SILENCIOSA (AJAX)
+            // =========================================================
+            document.getElementById('formModulos').addEventListener('submit', function(e) {
+                e.preventDefault(); // Impede a página de recarregar
+                
+                const usarProdutos = document.getElementById('toggleProd').checked;
+                
+                fetch('/superadmin-api/salvar-modulos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `idOficina=${oficinaIdContexto}&usarProdutos=${usarProdutos}`
+                })
+                .then(res => {
+                    if (res.ok) {
+                        Swal.fire({
+                            toast: true, position: 'top-end', icon: 'success', 
+                            title: 'Módulos atualizados!', showConfirmButton: false, timer: 2000
                         });
+                        document.getElementById('btnSalvarModulos').disabled = true;
+                    } else {
+                        throw new Error('Falha no servidor');
                     }
+                })
+                .catch(err => {
+                    Swal.fire('Erro', 'Não foi possível salvar a configuração de módulos.', 'error');
                 });
             });
 
@@ -697,17 +844,14 @@
                         // Guarda o objeto para preencher o formulário
                         tr.dataset.funcionario = JSON.stringify(func);
 
-                        tr.innerHTML = `
+						tr.innerHTML = `
                             <td>
                                 <strong>${func.nomeFuncionario}</strong><br>
-                                <span class="text-muted" style="font-size:0.75rem;">${func.email}</span>
+                                <small class="text-light opacity-75">${func.email}</small>
                             </td>
                             <td><code>${func.usuario}</code></td>
                             <td>${statusBadge}</td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary me-1 btn-forcar-logout" title="Forçar Logout" data-id="${func.idFuncionario}">
-                                    <i class="fa-solid fa-right-from-bracket"></i>
-                                </button>
                                 <button class="btn btn-sm btn-outline-info btn-edit-func me-1" title="Editar Dados" data-nivel="${nivel}">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
@@ -746,6 +890,7 @@
                             document.getElementById('adminCpf').value = func.cpf;
                             document.getElementById('adminEmail').value = func.email;
                             document.getElementById('adminUsuario').value = func.usuario;
+							document.getElementById('adminTelefone').value = func.telefone || '';
                             document.getElementById('formAdminContainer').style.display = 'block';
                         } else {
                             document.getElementById('tituloFormFunc').innerHTML = '<i class="fa-solid fa-user-pen me-2"></i>Editar Funcionário';
@@ -755,6 +900,7 @@
                             document.getElementById('funcCpf').value = func.cpf;
                             document.getElementById('funcEmail').value = func.email;
                             document.getElementById('funcUsuario').value = func.usuario;
+							document.getElementById('funcTelefone').value = func.telefone || '';
                             document.getElementById('formFuncContainer').style.display = 'block';
                         }
                     });
@@ -809,26 +955,42 @@
             // =========================================================
             // SALVAR FORMULÁRIOS (INTEGRANDO COM O ENDPOINT EXISTENTE)
             // =========================================================
-            function submeterFormularioFuncionario(formElement, nivel) {
+			function submeterFormularioFuncionario(formElement, nivel) {
+				const inputCpf = formElement.querySelector('.mask-cpf');
+                const inputTelefone = formElement.querySelector('.mask-telefone');
+
+                if (inputCpf && inputCpf.inputmask && !inputCpf.inputmask.isComplete()) {
+                    Swal.fire('Atenção', 'Por favor, digite o CPF completo.', 'warning');
+                    inputCpf.focus();
+                    return;
+                }
+                if (inputTelefone && inputTelefone.inputmask && !inputTelefone.inputmask.isComplete()) {
+                    Swal.fire('Atenção', 'Por favor, digite um Telefone ou Celular válido.', 'warning');
+                    inputTelefone.focus();
+                    return;
+                }
+				
                 const formData = new FormData(formElement);
-                formData.append('oficina.idOficina', oficinaIdContexto); // Vincula à oficina do modal
+                if (!formData.get('idFuncionario')) { formData.delete('idFuncionario'); }
+                formData.append('idOficina', oficinaIdContexto); 
                 
-                // O endpoint do controller atual de funcionário usa o slug na URL
-                fetch(`/${slugContexto}/funcionario-api/salvar`, {
+                fetch(`/superadmin-api/funcionario/salvar`, {
                     method: 'POST',
                     body: formData
                 })
-                .then(res => {
-                    if(res.redirected && res.url.includes("erro=true")) {
-                         Swal.fire('Atenção', 'Verifique se o usuário/CPF/e-mail já existem.', 'warning');
-                    } else if(res.ok || res.redirected) {
-                        Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Salvo com sucesso!', showConfirmButton: false, timer: 2000});
+                .then(async res => {
+                    if (res.ok) {
+                        Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Dados salvos com sucesso!', showConfirmButton: false, timer: 2000});
                         formElement.reset();
                         formElement.closest('div').style.display = 'none';
+                        
                         carregarEquipePorNivel(oficinaIdContexto, nivel, nivel === 'admin' ? 'tabela-admins' : 'tabela-funcionarios');
                         carregarAcessosRapidos(oficinaIdContexto);
+                    } else {
+                        const erroMsg = await res.text();
+                        Swal.fire('Atenção', erroMsg || 'Erro ao salvar funcionário.', 'warning');
                     }
-                }).catch(e => Swal.fire('Erro', 'Falha na comunicação', 'error'));
+                }).catch(() => Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error'));
             }
 
             document.getElementById('formAdminData').addEventListener('submit', function(e) {

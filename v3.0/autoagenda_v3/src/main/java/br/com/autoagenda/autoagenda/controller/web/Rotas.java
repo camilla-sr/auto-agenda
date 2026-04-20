@@ -52,19 +52,27 @@ public class Rotas {
     }
 	
 	@ModelAttribute
-    public void carregarOficinaAtual(@PathVariable(value = "slug", required = false) String slug, HttpSession session, Model model) {
+	public void carregarOficinaAtual(@PathVariable(value = "slug", required = false) String slug, HttpSession session, Model model) {
         if (slug != null && !slug.isEmpty()) {
             Oficina ofSessao = (Oficina) session.getAttribute("oficinaAtual");
-            
             if (ofSessao == null || !ofSessao.getSlug().equals(slug)) {
                 Optional<Oficina> of = oficinaRepo.findBySlug(slug);
+                
                 if (of.isPresent()) {
+                    if (!of.get().getAtivo()) {
+                        session.removeAttribute("oficinaAtual");
+                        return;
+                    }
                     session.setAttribute("oficinaAtual", of.get());
                     model.addAttribute("oficinaContexto", of.get());
                 } else {
                     session.removeAttribute("oficinaAtual");
                 }
             } else {
+                if (!ofSessao.getAtivo()) {
+                    session.removeAttribute("oficinaAtual");
+                    return;
+                }
                 model.addAttribute("oficinaContexto", ofSessao);
             }
         }

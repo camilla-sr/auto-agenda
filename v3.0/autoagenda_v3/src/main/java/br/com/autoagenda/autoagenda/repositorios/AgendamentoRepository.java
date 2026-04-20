@@ -13,6 +13,7 @@ import br.com.autoagenda.autoagenda.model.Oficina;
 public interface AgendamentoRepository extends CrudRepository<Agendamento, Integer>{
 	List<Agendamento> findByOficinaAndAtivoTrue(Oficina oficina);
 	
+	long countByOficinaAndAtivoTrue(Oficina oficina);
 	long countByOficina(Oficina oficina);
 	
 	@Query("select count(*) from Agendamento a where a.statusAgendamento = 'Agendado' and a.oficina = :oficina")

@@ -138,6 +138,38 @@ body {
 }
 
 /* Mini Cards de Estatísticas dentro do Modal */
+.stat-mini-card h3 {
+    color: #fff !important; /* Força o branco para ser legível */
+    font-weight: 800;
+}
+
+.stat-mini-card .text-muted {
+    color: #ced4da !important; /* Cinza claro para o rótulo */
+}
+
+/* Aba de Módulos - Cores dos textos */
+#tab-modulos strong {
+    color: #f8f9fa !important;
+}
+
+#tab-modulos .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Estilo para a tabela de logs interna (Nova visualização) */
+.log-table-container {
+    background: #1a1d20;
+    border: 1px solid #343a40;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Remover link do nome do sistema na navbar */
+.navbar-super .navbar-brand {
+    cursor: default;
+    pointer-events: none;
+}
+
 .stat-mini-card {
     background-color: #1a1d20;
     border: 1px solid #343a40;

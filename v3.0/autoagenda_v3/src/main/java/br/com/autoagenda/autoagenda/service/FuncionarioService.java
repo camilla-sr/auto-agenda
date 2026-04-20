@@ -74,6 +74,7 @@ public class FuncionarioService {
             funcBanco.setEmail(func.getEmail());
             funcBanco.setUsuario(func.getUsuario());
             funcBanco.setAcesso(func.getAcesso());
+            funcBanco.setTelefone(func.getTelefone());
 
             if (novaSenha != null && !novaSenha.isEmpty()) { funcBanco.setSenha(novaSenha); }
             

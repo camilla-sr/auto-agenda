@@ -117,7 +117,7 @@
           </h5>
         </div>
         <div class="modal-body">
-          <form id="formRedefinirSenha" method="post" action="/funcionario-api/redefinir-senha">
+          <form id="formRedefinirSenha" method="post" th:action="@{/{slug}/funcionario-api/redefinir-senha(slug=${oficinaContexto.slug})}">
             <div class="mb-3">
               <label for="novaSenha" class="form-label">Nova Senha</label>
               <input type="password" class="form-control" id="novaSenha" name="novaSenha" 
