@@ -44,7 +44,8 @@
 								<i class="fas fa-gear"></i>Configurações
 							</a>
 						</li>
-						<li th:if="${acessoUsuarioView != 'admin'}">
+						
+						<li th:if="${superAdminLogado == null}">
 							<a class="dropdown-item" th:href="@{/{slug}/perfil(slug=${oficinaContexto.slug})}">
 								<i class="fas fa-user-gear"></i>Perfil
 							</a>							
