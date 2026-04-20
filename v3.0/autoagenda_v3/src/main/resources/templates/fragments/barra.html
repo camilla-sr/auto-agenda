@@ -20,18 +20,23 @@
 				<div class="nav-item">
 					<a th:href="@{/{slug}/servicos(slug=${oficinaContexto.slug})}" class="nav-link" th:classappend="${currentUri != null and currentUri.contains('/servicos') ? 'active' : ''}"><i class="fas fa-tools"></i>Serviços</a>
 				</div>
-				<div class="nav-item" th:if="${oficinaContexto.usarProdutos}">
-					<a th:href="@{/{slug}/produtos(slug=${oficinaContexto.slug})}" class="nav-link" th:classappend="${currentUri != null and currentUri.contains('/produtos') ? 'active' : ''}"><i class="fas fa-box-open"></i>Produtos</a>
+				<div class="nav-item" th:if="${oficinaContexto.usarProdutos or superAdminLogado != null}">
+					<a th:href="@{/{slug}/produtos(slug=${oficinaContexto.slug})}" 
+					   class="nav-link" 
+					   th:classappend="${(currentUri != null and currentUri.contains('/produtos') ? 'active ' : '') + (!oficinaContexto.usarProdutos ? 'menu-inativo' : '')}">
+					   <i class="fas fa-box-open"></i>Produtos
+					</a>
 				</div>
 				<div class="nav-item">
 					<a th:href="@{/{slug}/clientes(slug=${oficinaContexto.slug})}" class="nav-link" th:classappend="${currentUri != null and currentUri.contains('/clientes') ? 'active' : ''}"><i class="fas fa-users"></i>Clientes</a>
 				</div>
 				<div class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						<i class="fas fa-user"></i>Usuário
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:classappend="${superAdminLogado != null ? 'menu-root' : ''}">
+						<i th:class="${superAdminLogado != null ? 'fas fa-user-shield' : 'fas fa-user'}"></i>
+						<span th:text="${superAdminLogado != null ? 'Root' : 'Usuário'}"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li th:if="${usuarioLogado != null and usuarioLogado.acesso == 'admin'}">
+						<li th:if="${acessoUsuarioView == 'admin'}">
 							<a class="dropdown-item" th:href="@{/{slug}/funcionarios(slug=${oficinaContexto.slug})}">
 								<i class="fas fa-address-card"></i>Funcionários
 							</a>
@@ -39,7 +44,7 @@
 								<i class="fas fa-gear"></i>Configurações
 							</a>
 						</li>
-						<li>
+						<li th:if="${acessoUsuarioView != 'admin'}">
 							<a class="dropdown-item" th:href="@{/{slug}/perfil(slug=${oficinaContexto.slug})}">
 								<i class="fas fa-user-gear"></i>Perfil
 							</a>							

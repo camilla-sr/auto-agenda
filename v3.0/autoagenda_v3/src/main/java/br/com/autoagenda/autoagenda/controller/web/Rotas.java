@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.autoagenda.autoagenda.config.Sessao;
 import br.com.autoagenda.autoagenda.model.Agendamento;
@@ -26,12 +28,16 @@ import br.com.autoagenda.autoagenda.repositorios.OficinaRepository;
 import br.com.autoagenda.autoagenda.repositorios.ProdutoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 import br.com.autoagenda.autoagenda.repositorios.VeiculoRepository;
+import br.com.autoagenda.autoagenda.service.FuncionarioService;
+import br.com.autoagenda.autoagenda.service.SuperAdminService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class Rotas {
 	@Autowired private Sessao s;
+	@Autowired private SuperAdminService superService;
+	@Autowired private FuncionarioService serviceFunc;
 	@Autowired private FuncionarioRepository repoFunc;
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private ProdutoRepository repoProd;
@@ -52,18 +58,18 @@ public class Rotas {
     }
 	
 	@ModelAttribute
-	public void carregarOficinaAtual(@PathVariable(value = "slug", required = false) String slug, HttpSession session, Model model) {
+	public void loadOficina(@PathVariable(value = "slug", required = false) String slug, HttpSession session, Model model) {
 		if (slug != null && !slug.isEmpty()) {
 			SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
 			
-			Optional<Oficina> of = oficinaRepo.findBySlug(slug);
-			if (of.isPresent()) {
-				if (!of.get().getAtivo() && superAdmin == null) {
+			Optional<Oficina> oficina = oficinaRepo.findBySlug(slug);
+			if (oficina.isPresent()) {
+				if (!oficina.get().getAtivo() && superAdmin == null) {
 					session.removeAttribute("oficinaAtual");
 					return; 
 				}
-				session.setAttribute("oficinaAtual", of.get());
-				model.addAttribute("oficinaContexto", of.get());
+				session.setAttribute("oficinaAtual", oficina.get());
+				model.addAttribute("oficinaContexto", oficina.get());
 			} else {
 				session.removeAttribute("oficinaAtual");
 			}
@@ -71,25 +77,36 @@ public class Rotas {
 	}
 	
 	@ModelAttribute
-    public void usuarioGlobal(HttpSession session, Model model) {
-        if (s.loginAtivo(session)) { model.addAttribute("usuarioLogado", (Funcionario) session.getAttribute("usuarioLogado")); }
-    }
+	public void usuarioGlobal(HttpSession session, Model model) {
+	    SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
+	    Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
+
+	    if (superAdmin != null) {
+	        model.addAttribute("superAdminLogado", superAdmin);
+	        model.addAttribute("nomeUsuarioView", superAdmin.getNome() + " (Mestre)");
+	        model.addAttribute("acessoUsuarioView", "admin"); 
+	    } else if (logado != null) {
+	        model.addAttribute("usuarioLogado", logado);
+	        model.addAttribute("nomeUsuarioView", logado.getNomeFuncionario());
+	        model.addAttribute("acessoUsuarioView", logado.getAcesso());
+	    }
+	}
 	
 	//		UTILITÁRIOS
 	private String verificaUsuario(HttpSession session, String page, String slug) {
-        if(!s.loginAtivo(session)) {
-            return "redirect:/" + slug + "/login"; 
-        }
-        Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
-        Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
-        
-        if (oficinaAtual == null) return "redirect:/erro/oficina-nao-encontrada";
-        
-        if (!logado.getOficina().getIdOficina().equals(oficinaAtual.getIdOficina())) {
-             return "redirect:/acesso-negado"; 
-        }
-        return page;
-    }
+	    SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
+	    Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
+
+	    if (superAdmin == null && !s.loginAtivo(session)) return "redirect:/" + slug + "/login";
+
+	    Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+	    if (oficinaAtual == null) return "redirect:/erro/oficina-nao-encontrada";
+	    if (superAdmin != null) return page;
+	    if (!logado.getOficina().getIdOficina().equals(oficinaAtual.getIdOficina())) {
+	         return "redirect:/acesso-negado"; 
+	    }
+	    return page;
+	}
 	
 	private String somaPrecoCusto(Oficina oficina) {
 		Float soma = repoProd.sumTotalPrecoCustoByOficina(oficina);
@@ -122,7 +139,6 @@ public class Rotas {
 	@GetMapping("/autoagenda")
     public String indexAdmin(HttpSession session, Model model) {
         SuperAdmin adminLogado = (SuperAdmin) session.getAttribute("superAdminLogado");
-        
         if(adminLogado == null) return "redirect:/superadmin/login";
         
         model.addAttribute("superadmin", adminLogado);
@@ -144,9 +160,32 @@ public class Rotas {
 	@GetMapping("/{slug}/login")
 	public String logar(@PathVariable String slug, HttpSession session) {
 		if (oficinaRepo.count() == 0) return "redirect:/setup/oficina";
-        if (session.getAttribute("oficinaAtual") == null) return "redirect:/";
+		
+		if (session.getAttribute("superAdminLogado") != null || s.loginAtivo(session)) return "redirect:/" + slug;
+        if (session.getAttribute("oficinaAtual") == null) return "redirect:/superadmin/login";
         
         return "login";
+	}
+	
+	@PostMapping("/{slug}/login")
+	public String processarLogin(@PathVariable String slug, @RequestParam String usuario,
+								@RequestParam String senha, HttpSession session) {
+		SuperAdmin admin = superService.autenticar(usuario, senha);
+		if (admin != null) {
+			session.setAttribute("superAdminLogado", admin);
+			return "redirect:/" + slug;
+		}
+		Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+		Funcionario func = serviceFunc.autenticar(usuario, senha, oficinaAtual.getIdOficina());
+		if (func != null) {
+			if (!func.isAtivo()) return "redirect:/" + slug + "/login?bloqueado=true";
+			
+			session.setAttribute("usuarioLogado", func);
+			session.setAttribute("primerioLogin", func.isPrimeiroLogin());
+			return "redirect:/" + slug;
+		}
+
+		return "redirect:/" + slug + "/login?erro=true";
 	}
 	
 	@GetMapping("/{slug}")
@@ -172,13 +211,17 @@ public class Rotas {
 	
     @GetMapping("/{slug}/funcionarios")
     public String funcionarios(@PathVariable String slug, HttpSession session, Model model) {
-    	if(!s.verificaAcesso(session, "admin")) return "acesso-negado";
+    	SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
+    	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
     	
-    	Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
-    	model.addAttribute("funcionarios", repoFunc.findByOficinaAndIdFuncionarioNot(
-            logado.getOficina(), 
-            logado.getIdFuncionario()
-        ));
+    	if (superAdmin == null && !s.verificaAcesso(session, "admin")) return "acesso-negado";
+    	if(superAdmin != null) {
+    		model.addAttribute("funcionarios", repoFunc.findByOficina(oficinaAtual));
+    	}else{
+    		Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
+    		model.addAttribute("funcionarios", repoFunc.findByOficinaAndIdFuncionarioNot(logado.getOficina(), 
+    				logado.getIdFuncionario() ));
+    	}
     	return verificaUsuario(session, "funcionarios", slug);
     }
     
@@ -207,11 +250,13 @@ public class Rotas {
     
     @GetMapping("/{slug}/clientes")
     public String clientes(@PathVariable String slug, HttpSession session, Model model) {
-    	if(!s.verificaAcesso(session, "admin")) return "acesso-negado";
-    	
-    	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
-    	model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
-    	return verificaUsuario(session, "clientes", slug);
+        SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
+        
+        if (superAdmin == null && !s.verificaAcesso(session, "admin")) return "acesso-negado";
+        
+        Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+        model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
+        return verificaUsuario(session, "clientes", slug);
     }
 	
     @GetMapping("/{slug}/servicos")
@@ -255,15 +300,18 @@ public class Rotas {
     
     @GetMapping("/{slug}/painel")
     public String painel(@PathVariable String slug, HttpSession session, Model model) {
-        if(!s.loginAtivo(session)) return "redirect:/" + slug + "/login";
+    	SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
+        
+        if (superAdmin == null) {
+            if(!s.loginAtivo(session)) return "redirect:/" + slug + "/login";
+            if(!s.verificaAcesso(session, "admin")) return "acesso-negado";
+        }
 
         Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
         if (oficinaAtual == null) return "redirect:/erro/oficina-nao-encontrada";
-        if(!s.verificaAcesso(session, "admin")) return "acesso-negado";
         
         model.addAttribute("oficina", oficinaAtual);
-        model.addAttribute("statusEmail", true); 
-        
+        model.addAttribute("statusEmail", true);
         return verificaUsuario(session, "painel", slug);
     }
     

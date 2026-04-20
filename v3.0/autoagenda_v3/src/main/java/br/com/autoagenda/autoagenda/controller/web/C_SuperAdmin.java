@@ -73,6 +73,19 @@ public class C_SuperAdmin {
         return "redirect:/superadmin/login";
     }
 	
+	@GetMapping("/acessar-oficina/{slug}")
+	public String acessarOficinaDireto(@PathVariable String slug, HttpSession session) {
+	    SuperAdmin admin = (SuperAdmin) session.getAttribute("superAdminLogado");
+	    
+	    Oficina oficina = oficinaRepo.findBySlug(slug).orElse(null);
+	    if (oficina == null) return "redirect:/autoagenda";
+
+	    session.setAttribute("oficinaAtual", oficina);
+	    session.setAttribute("acessoMestre", true); 
+
+	    return "redirect:/" + slug;
+	}
+	
 	@GetMapping("/oficina/estatisticas/{id}") @ResponseBody
 	public Map<String, Long> getStats(@PathVariable Integer id) {
 	    Oficina of = oficinaRepo.findById(id).orElseThrow();

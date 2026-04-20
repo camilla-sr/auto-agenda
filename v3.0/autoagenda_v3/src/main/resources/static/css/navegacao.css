@@ -94,6 +94,33 @@
     transition: all 0.3s ease;
 }
 
+/* Efeito apagado para módulos inativos (Apenas Mestre vê) */
+.nav-link.menu-inativo {
+    opacity: 0.4;
+    filter: grayscale(100%);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.nav-link.menu-inativo:hover {
+    opacity: 0.8;
+}
+
+/* Estilo do botão Root (SuperAdmin) */
+.nav-link.menu-root {
+    color: var(--cor-erro);
+    font-weight: 700;
+}
+
+.nav-link.menu-root i {
+    color: var(--cor-erro);
+}
+
+.nav-link.menu-root:hover,
+.nav-link.menu-root[aria-expanded="true"] {
+    background-color: var(--cor-erro-light);
+    color: var(--cor-erro);
+}
+
 /* ========================================= */
 /* 3. DROPDOWN (Menu Usuário)                */
 /* ========================================= */

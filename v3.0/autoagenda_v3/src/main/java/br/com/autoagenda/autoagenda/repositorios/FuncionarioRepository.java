@@ -7,12 +7,12 @@ import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 
 public interface FuncionarioRepository extends CrudRepository<Funcionario, Integer>{
-	Funcionario findByUsuario(String usuario);
 	Funcionario findByCpf(String cpf);
 	Optional<Funcionario> findByEmail(String email);
-	List<Funcionario> findByOficina(Oficina oficina);	
+	List<Funcionario> findByOficina(Oficina oficina);
 	Optional<Funcionario> findById(Integer id);
 	
+	Funcionario findByUsuarioAndOficina_IdOficina(String usuario, Integer idOficina);
 	boolean existsByUsuarioAndOficina_IdOficina(String usuario, Integer idOficina);
 	List<Funcionario> findByOficinaAndIdFuncionarioNot(Oficina oficina, Integer idExcluido);
 }

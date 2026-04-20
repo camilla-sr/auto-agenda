@@ -33,8 +33,9 @@ public class C_Funcionario {
 	
 	@PostMapping(value = "/logar")
     public String logar(@PathVariable("slug") String slug, @RequestParam String usuario,
-                        @RequestParam String senha, HttpSession session, RedirectAttributes ra) {        
-        Funcionario func = service.autenticar(usuario, senha);        
+                        @RequestParam String senha, HttpSession session, RedirectAttributes ra) {       
+		Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+        Funcionario func = service.autenticar(usuario, senha, oficinaAtual.getIdOficina());
         if(func == null) { return "redirect:/"+ slug +"/login?usuarioValido=false"; }
 
         if (func.isUsarAuth()) {
@@ -47,7 +48,6 @@ public class C_Funcionario {
         return "redirect:/" + slug;
     }
 
-    // processa o código do 2FA na tela de Login
     @PostMapping("/logar-2fa")
     public String logar2fa(@PathVariable("slug") String slug, @RequestParam String codigo, HttpSession session, RedirectAttributes ra) {
         String email = (String) session.getAttribute("tempEmail2FA");
@@ -56,7 +56,7 @@ public class C_Funcionario {
         String resultado = codigoService.validarCodigo(email, codigo);
         if ("OK".equals(resultado)) {
             Funcionario func = service.buscarPorEmail(email);
-            session.removeAttribute("tempEmail2FA"); // Limpa a sessão provisória
+            session.removeAttribute("tempEmail2FA");
             session.setAttribute("primeiroLogin", func.isPrimeiroLogin());
             session.setAttribute("usuarioLogado", func);
             return "redirect:/" + slug;
@@ -81,7 +81,8 @@ public class C_Funcionario {
 	@PostMapping(value = "logar_config")
 	public String configurar(@PathVariable("slug") String slug, @RequestParam String usuario,
 							@RequestParam String senha, HttpSession session) {
-		Funcionario func = service.autenticar(usuario, senha);
+		Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+		Funcionario func = service.autenticar(usuario, senha, oficinaAtual.getIdOficina());
 		if(func == null) { return "redirect:/"+ slug +"/login?usuarioValido=false"; }
 		
 		session.setAttribute("usuarioLogado", func);
@@ -114,9 +115,7 @@ public class C_Funcionario {
         
         if(result.hasErrors()) { return paginaErro + "?erro=true"; }
         boolean edicao = func.getIdFuncionario() != null;
-        
         String usuarioDigitado = func.getUsuario(); 
-        
         try {
             service.salvarOuAtualizar(func, novaSenha, cadastroInicial, oficina);
             if (edicao) {
@@ -136,7 +135,6 @@ public class C_Funcionario {
     public String salvarPerfil(@PathVariable("slug") String slug, Funcionario form, HttpSession session, RedirectAttributes ra) {
         Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
         if (logado == null) return "redirect:/"+ slug +"/login";
-
         try {
             service.atualizarPerfil(form, logado);
             Funcionario atualizado = service.buscarPorEmail(form.getEmail());
@@ -177,8 +175,7 @@ public class C_Funcionario {
         return "redirect:/"+ slug +"/funcionarios?apagar=true";
     }
     
-	@PostMapping("/enviar-codigo-reset")
-	@ResponseBody
+	@PostMapping("/enviar-codigo-reset") @ResponseBody
 	public ResponseEntity<?> enviarCodigoReset(@RequestParam String email) {
 		Funcionario func = service.buscarPorEmail(email); 
 		
@@ -198,8 +195,7 @@ public class C_Funcionario {
 		}
 	}
 
-	@PostMapping("/validar-codigo")
-    @ResponseBody
+	@PostMapping("/validar-codigo") @ResponseBody
     public ResponseEntity<?> validarCodigo(@RequestBody Map<String, String> dados) {
         String email = dados.get("email");
         String codigo = dados.get("codigo");
@@ -216,19 +212,16 @@ public class C_Funcionario {
         }
     }
 
-	@PostMapping("/redefinir-senha-final")
-	@ResponseBody
+	@PostMapping("/redefinir-senha-final") @ResponseBody
 	public ResponseEntity<?> redefinirSenhaFinal(@RequestBody Map<String, String> dados) {
 		String email = dados.get("email");
 		String novaSenha = dados.get("novaSenha");
 		
 		Funcionario func = service.buscarPorEmail(email);
-		
 		if (func != null) {
 			service.atualizarSenha(func, novaSenha);
 			return ResponseEntity.ok("Senha atualizada.");
 		}
-		
 		return ResponseEntity.badRequest().body("Erro ao atualizar senha.");
 	}
 }

@@ -64,7 +64,7 @@ public class SetupService {
         admin.setAcesso("admin");
         admin.setPrimeiroLogin(false);
         
-        if (funcionarioRepo.findByUsuario(admin.getUsuario()) != null) {
+        if (funcionarioRepo.findByUsuarioAndOficina_IdOficina(admin.getUsuario(), oficina.getIdOficina()) != null) {
             throw new IllegalArgumentException("Este usuário já existe.");
         }
         if (funcionarioRepo.findByEmail(admin.getEmail()).isPresent()) {

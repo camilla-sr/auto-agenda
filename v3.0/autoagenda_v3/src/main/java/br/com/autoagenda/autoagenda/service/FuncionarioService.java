@@ -19,8 +19,9 @@ public class FuncionarioService {
 	@Autowired private FuncionarioRepository repo;
     @Autowired private EmailService emailService;
 
-    public Funcionario autenticar(String usuario, String senha) {
-        Funcionario func = repo.findByUsuario(usuario);
+    public Funcionario autenticar(String usuario, String senha, Integer idOficina) {
+        Funcionario func = repo.findByUsuarioAndOficina_IdOficina(usuario, idOficina);
+        
         if (func != null && func.getSenha().equals(senha) && func.isAtivo()) { 
             return func;
         }
@@ -37,11 +38,9 @@ public class FuncionarioService {
         if (!novaSenha.equals(confirmaSenha)) {
             throw new IllegalArgumentException("A nova senha e a confirmação não conferem.");
         }
-
         if (!senhaAtual.equals(usuarioLogado.getSenha())) {
              throw new IllegalArgumentException("A senha atual informada está incorreta.");
         }
-        
         if (senhaAtual.equals(novaSenha)) {
             throw new IllegalArgumentException("A nova senha deve ser diferente da atual.");
         }
@@ -63,7 +62,7 @@ public class FuncionarioService {
         if (func.getIdFuncionario() != null) {
             Funcionario funcBanco = repo.findById(func.getIdFuncionario()).orElseThrow();
             
-            Funcionario existeUser = repo.findByUsuario(func.getUsuario());
+            Funcionario existeUser = repo.findByUsuarioAndOficina_IdOficina(func.getUsuario(), oficina.getIdOficina());
             if (existeUser != null && !existeUser.getIdFuncionario().equals(func.getIdFuncionario())) {
                  throw new IllegalArgumentException("erroUsuario");
             }
