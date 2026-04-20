@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +58,8 @@
         </div>
         <h1>404</h1>
         <p>Estamos trabalhando nisso.</p>
-        <a href="/">Voltar para a página inicial</a>
+        
+        <a th:href="${session.oficinaAtual != null ? '/' + session.oficinaAtual.slug : '/'}">Voltar para o Início</a>
     </div>
 </body>
 </html>
