@@ -182,9 +182,13 @@ public class C_SuperAdmin {
 	
 	@PostMapping("/funcionario/reset-senha/{id}") @ResponseBody
 	public ResponseEntity<?> resetarSenhaFuncionario(@PathVariable Integer id) {
-	    // lógica de gerar senha e o seu EmailService.
-	    // Retornando OK para o fluxo da tela funcionar.
-	    return ResponseEntity.ok().build();
+	    try {
+	        funcService.resetarSenha(id);
+	        return ResponseEntity.ok().build();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(500).body("Erro ao resetar senha: " + e.getMessage());
+	    }
 	}
 	
 	@PostMapping("/funcionario/salvar") @ResponseBody

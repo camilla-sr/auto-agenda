@@ -23,7 +23,6 @@ public class EmailService {
     	String nomeCliente = agendamento.getCliente().getNomeCliente();
     	String assunto = "AutoAgenda: Seu serviço foi concluído!";
     	
-    	// Extrai os nomes de todos os serviços e junta com vírgula
     	String nomesServicos = agendamento.getServicos().stream().map(Servico::getNomeServico).collect(Collectors.joining(", "));
     	String dataFormatada = agendamento.getDataConclusao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 

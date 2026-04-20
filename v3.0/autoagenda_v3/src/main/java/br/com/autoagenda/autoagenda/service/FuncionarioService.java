@@ -125,6 +125,19 @@ public class FuncionarioService {
         }
     }
     
+    public void resetarSenha(Integer id) {
+        Funcionario func = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
+        
+        String inicializaOficina = func.getOficina().getNomeFantasia();
+        String senhaProvisoria = gerarSenhaAleatoria();
+        func.setSenha(senhaProvisoria);
+        
+        func.setPrimeiroLogin(true); 
+        
+        repo.save(func);
+        emailService.redefirSenha(func);
+    }
+    
     private void tratarUsuarioDuplicado(Funcionario func, Oficina oficina) {
         String usuarioDigitado = func.getUsuario().toLowerCase().trim();
         Integer idOficina = oficina.getIdOficina();
