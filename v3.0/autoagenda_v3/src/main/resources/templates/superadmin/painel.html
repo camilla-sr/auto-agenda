@@ -216,7 +216,7 @@
 		</div>
     </div>
 
-    <div class="modal fade" id="modalGerenciarOficina" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="modalGerenciarOficina" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content border-secondary">
 				<div class="modal-header bg-dark border-secondary w-100">
@@ -695,33 +695,59 @@
                 carregarAcessosRapidos(oficinaIdContexto);
             });
 
-            // =========================================================
+			// =========================================================
             // API: DESATIVAR/ATIVAR OFICINA
             // =========================================================
-			document.getElementById('btnToggleStatusOficina').addEventListener('click', () => {
-			    Swal.fire({
-			        title: 'Confirmar Alteração de Status',
-			        text: 'Insira a sua senha de SuperAdmin para confirmar:',
-			        input: 'password',
-			        inputAttributes: { autocapitalize: 'off' },
-			        showCancelButton: true,
-			        confirmButtonText: 'Confirmar',
-			        confirmButtonColor: '#d33',
-			        showLoaderOnConfirm: true,
-			        preConfirm: (senha) => {
-			            return fetch(`/superadmin-api/oficina/status/${oficinaIdContexto}?senhaConfirmacao=${senha}`, { method: 'POST' })
-			                .then(response => {
-			                    if (!response.ok) throw new Error('Senha incorreta ou erro no servidor');
-			                    return response;
-			                })
-			                .catch(error => Swal.showValidationMessage(`Erro: ${error.message}`));
-			        }
-			    }).then((result) => {
-			        if (result.isConfirmed) {
-			            Swal.fire('Sucesso!', 'Status da oficina atualizado.', 'success').then(() => location.reload());
-			        }
-			    });
-			});
+            document.getElementById('btnToggleStatusOficina').addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Confirmar Alteração',
+					target: document.getElementById('modalGerenciarOficina'),
+                    text: 'Insira a sua senha de SuperAdmin para confirmar:',
+                    input: 'password',
+                    inputAttributes: { autocapitalize: 'off', placeholder: 'Sua senha mestre' },
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#ffc107',
+                    cancelButtonColor: '#6c757d',
+                    background: '#1a1e21',
+                    color: '#fff',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (senha) => {
+                        if (!senha) {
+                            Swal.showValidationMessage('A senha é obrigatória!');
+                            return false;
+                        }
+                        const formData = new URLSearchParams();
+                        formData.append('senhaConfirmacao', senha);
+
+                        return fetch(`/superadmin-api/oficina/status/${oficinaIdContexto}`, { 
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: formData
+                        })
+                        .then(async response => {
+                            if (!response.ok) {
+                                const msg = await response.text();
+                                throw new Error(msg || 'Senha incorreta ou erro de servidor');
+                            }
+                            return response;
+                        })
+                        .catch(error => Swal.showValidationMessage(`${error.message}`));
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Sucesso!', 
+                            text: 'Status da oficina atualizado.', 
+                            icon: 'success',
+                            background: '#1a1e21',
+                            color: '#fff',
+                            confirmButtonColor: '#ffc107'
+                        }).then(() => location.reload());
+                    }
+                });
+            });
 			
 			// =========================================================
             // BOTÃO DE REFRESH DO MODAL
