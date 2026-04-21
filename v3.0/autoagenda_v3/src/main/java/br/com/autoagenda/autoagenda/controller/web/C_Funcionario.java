@@ -33,7 +33,10 @@ public class C_Funcionario {
 	
 	@PostMapping(value = "/logar")
     public String logar(@PathVariable("slug") String slug, @RequestParam String usuario,
-                        @RequestParam String senha, HttpSession session, RedirectAttributes ra) {       
+                        @RequestParam String senha, HttpSession session, RedirectAttributes ra) {
+		usuario = usuario != null ? usuario.trim() : "";
+        senha = senha != null ? senha.trim() : "";
+		
 		Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
         Funcionario func = service.autenticar(usuario, senha, oficinaAtual.getIdOficina());
         if(func == null) { return "redirect:/"+ slug +"/login?usuarioValido=false"; }

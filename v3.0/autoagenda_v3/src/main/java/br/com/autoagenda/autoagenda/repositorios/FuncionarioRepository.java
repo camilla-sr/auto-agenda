@@ -12,6 +12,8 @@ public interface FuncionarioRepository extends CrudRepository<Funcionario, Integ
 	List<Funcionario> findByOficina(Oficina oficina);
 	Optional<Funcionario> findById(Integer id);
 	
+	List<Funcionario> findByOficinaAndAtivoTrue(Oficina oficina);
+	List<Funcionario> findByOficinaAndAtivoTrueAndIdFuncionarioNot(Oficina oficina, Integer idExcluido);
 	Funcionario findByUsuarioAndOficina_IdOficina(String usuario, Integer idOficina);
 	boolean existsByUsuarioAndOficina_IdOficina(String usuario, Integer idOficina);
 	List<Funcionario> findByOficinaAndIdFuncionarioNot(Oficina oficina, Integer idExcluido);

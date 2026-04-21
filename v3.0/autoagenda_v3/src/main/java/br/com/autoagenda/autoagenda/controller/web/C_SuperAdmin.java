@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ import br.com.autoagenda.autoagenda.repositorios.SuperAdminRepository;
 import br.com.autoagenda.autoagenda.service.FuncionarioService;
 import br.com.autoagenda.autoagenda.service.SuperAdminService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.ConstraintViolationException;
 
 @Controller
 @RequestMapping("/superadmin-api")
@@ -201,12 +203,10 @@ public class C_SuperAdmin {
             funcService.salvarOuAtualizar(func, novaSenha, cadastroInicial, oficina);
             
             return ResponseEntity.ok().build();
-        } catch (jakarta.validation.ConstraintViolationException e) {
+        } catch (ConstraintViolationException e) {
             return ResponseEntity.badRequest().body("O CPF informado é inválido.");
-        } catch (IllegalArgumentException e) {
-            String msg = e.getMessage().equals("erroCPF") ? "Este CPF já está cadastrado." :
-                         e.getMessage().equals("erroUsuario") ? "Este nome de usuário já está em uso." : e.getMessage();
-            return ResponseEntity.badRequest().body(msg);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("Este e-mail ou nome de usuário já está em uso.");
         } catch (Exception e) {
             e.printStackTrace(); 
             String erroReal = e.getClass().getSimpleName() + ": " + e.getMessage();

@@ -11,10 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "funcionario")
+@Table(name = "funcionario", uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario", "fk_oficina"})})
 public class Funcionario {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer idFuncionario;
 	@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "fk_oficina") private Oficina oficina;

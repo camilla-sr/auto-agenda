@@ -125,10 +125,10 @@
                                     <span th:if="${oficina.ativo}" class="badge-status badge-ativo">Ativo</span>
                                     <span th:unless="${oficina.ativo}" class="badge-status badge-inativo">Bloqueado</span>
                                 </td>
-                                <td class="text-end">
-                                    <a th:href="@{/{slug}/login(slug=${oficina.slug})}" target="_blank" class="btn btn-sm btn-outline-info me-1" title="Acessar tela de login">
-                                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                                    </a>
+								<td class="text-end">
+								    <button type="button" class="btn btn-sm btn-outline-info me-1 btn-acessar-oficina" title="Acessar" th:data-slug="${oficina.slug}">
+								        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+								    </button>
                                     <button type="button" class="btn btn-manage btn-sm" data-bs-toggle="modal" data-bs-target="#modalGerenciarOficina"
                                             th:data-id="${oficina.idOficina}" th:data-nome="${oficina.nomeFantasia}" th:data-ativo="${oficina.ativo}" th:data-slug="${oficina.slug}">
                                         <i class="fa-solid fa-gear me-1"></i> Gerenciar
@@ -624,7 +624,6 @@
                 if (!formData.get('idFuncionario')) { formData.delete('idFuncionario'); }
                 formData.append('idOficina', oficinaIdContexto); 
                 
-                // Remove a máscara antes de enviar, igual você fez no form da outra tela
                 if (inputCpf) formData.set('cpf', inputCpf.value.replace(/\D/g, ''));
                 if (inputTelefone) formData.set('telefone', inputTelefone.value.replace(/\D/g, ''));
 
@@ -657,6 +656,37 @@
                 });
             }
 
+			// =========================================================
+            // ACESSO INTELIGENTE DE OFICINA (SUPERADMIN OU LOGIN)
+            // =========================================================
+			document.querySelectorAll('.btn-acessar-oficina').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const slug = this.getAttribute('data-slug');
+                    Swal.fire({
+                        title: 'Acessar Oficina',
+                        text: 'Como deseja acessar o painel desta oficina?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        showDenyButton: true,
+                        confirmButtonText: '<i class="fa-solid fa-user-shield"></i> Modo Privilegiado',
+                        denyButtonText: '<i class="fa-solid fa-right-to-bracket"></i> Tela de Login',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor: '#ffc107',
+                        denyButtonColor: '#0dcaf0',
+                        background: '#1a1e21',
+                        color: '#fff'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Acesso master: Usa a sessão logada e entra direto
+                            window.open(`/superadmin-api/acessar-oficina/${slug}`, '_blank');
+                        } else if (result.isDenied) {
+                            // Tela de Login: Envia parâmetro para a controller desconsiderar o admin nessa aba
+                            window.open(`/${slug}/login?ignorarAdmin=true`, '_blank');
+                        }
+                    });
+                });
+            });
+			
             // =========================================================
             // LÓGICA DO MODAL DE GERENCIAMENTO DE OFICINA
             // =========================================================
