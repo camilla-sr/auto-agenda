@@ -60,6 +60,7 @@ public class AgendamentoService {
             Agendamento ag = repo.findById(idAgendamento).orElseThrow();
             fotoService.apagarFotosDoAgendamento(ag); 
             
+            ag.setStatusAgendamento("Desativado");
             ag.setAtivo(false);
             repo.save(ag);
         }
@@ -87,8 +88,6 @@ public class AgendamentoService {
                 }
             }
         }
-        if (tokenMobile != null && !tokenMobile.isEmpty()) {
-            fotoService.vincularFotosAoAgendamento(tokenMobile, ag);
-        }
+        if (tokenMobile != null && !tokenMobile.isEmpty()) fotoService.vincularFotosAoAgendamento(tokenMobile, ag);
     }
 }

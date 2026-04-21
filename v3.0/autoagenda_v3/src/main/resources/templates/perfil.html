@@ -167,8 +167,8 @@
                                             <th class="text-center">Ações</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr th:each="ag : ${historico}">
+									<tbody>
+                                        <tr th:each="ag : ${historico}" th:classappend="${!ag.ativo} ? 'opacity-50 bg-light' : ''">
                                             <td th:text="${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')}"></td>
                                             <td th:text="${ag.cliente.nomeCliente}"></td>
                                             <td>
@@ -198,29 +198,45 @@
                                                       th:text="${ag.statusAgendamento}">
                                                 </span>
                                             </td>
-                                            <td class="text-center text-nowrap">
-                                                <button class="btn btn-sm btn-info btn-view text-dark" 
-                                                        th:attr="data-id=${ag.idAgendamento},
-                                                                 data-cliente-nome=${ag.cliente.nomeCliente},
-                                                                 data-cliente-email=${ag.cliente.email},
-                                                                 data-cliente-telefone=${ag.cliente.telefone},
-                                                                 data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
-                                                                 data-previsao=${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')},
-                                                                 data-conclusao=${ag.dataConclusao != null ? #temporals.format(ag.dataConclusao, 'dd/MM/yyyy') : '-'},
-                                                                 data-status=${ag.statusAgendamento},
-                                                                 data-responsavel=${ag.funcionario.nomeFuncionario},
-                                                                 data-obs=${ag.observacao}" 
-                                                        title="Visualizar Detalhes">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                <button th:if="${!#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
-                                                        class="btn btn-sm btn-success btn-concluir-perfil" th:attr="data-id=${ag.idAgendamento}" title="Concluir Rápido">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
-                                                <button th:if="${usuarioLogado.acesso == 'admin'}" class="btn btn-sm btn-danger btn-delete-perfil" th:attr="data-id=${ag.idAgendamento}" title="Excluir">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
+											<td class="text-center text-nowrap">
+											    <button class="btn btn-sm btn-info btn-view text-dark" 
+											            th:attr="data-id=${ag.idAgendamento},
+											                     data-cliente-nome=${ag.cliente.nomeCliente},
+											                     data-cliente-email=${ag.cliente.email},
+											                     data-cliente-telefone=${ag.cliente.telefone},
+											                     data-veiculo-info=${ag.veiculo.marca + ' - ' + ag.veiculo.modelo},
+											                     data-previsao=${#temporals.format(ag.dataPrevisao, 'dd/MM/yyyy')},
+											                     data-conclusao=${ag.dataConclusao != null ? #temporals.format(ag.dataConclusao, 'dd/MM/yyyy') : '-'},
+											                     data-status=${ag.statusAgendamento},
+											                     data-responsavel=${ag.funcionario.nomeFuncionario},
+											                     data-obs=${ag.observacao}" 
+											            title="Visualizar Detalhes">
+											        <i class="fas fa-eye"></i>
+											    </button>
+
+											    <button class="btn btn-sm btn-warning btn-editar-perfil" 
+											            th:attr="data-id=${ag.idAgendamento},
+											                     data-cliente-id=${ag.cliente.idCliente},
+											                     data-veiculo-id=${ag.veiculo.idVeiculo},
+											                     data-veiculo-nome=${ag.veiculo.modelo + ' - ' + ag.veiculo.placa},
+											                     data-previsao=${#temporals.format(ag.dataPrevisao, 'yyyy-MM-dd')},
+											                     data-status=${ag.statusAgendamento},
+											                     data-obs=${ag.observacao}" 
+											            title="Editar Agendamento">
+											        <i class="fas fa-edit"></i>
+											    </button>
+											    
+											    <button th:if="${ag.ativo and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluido') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Concluído') and !#strings.equalsIgnoreCase(ag.statusAgendamento, 'Cancelado')}"
+											            class="btn btn-sm btn-success btn-concluir-perfil" 
+											            th:attr="data-id=${ag.idAgendamento}" title="Concluir Rápido">
+											        <i class="fas fa-check"></i>
+											    </button>
+											    <button th:if="${usuarioLogado.acesso == 'admin'}" 
+											            class="btn btn-sm btn-danger btn-delete-perfil" 
+											            th:attr="data-id=${ag.idAgendamento}" title="Excluir">
+											        <i class="fas fa-trash"></i>
+											    </button>
+											</td>
                                         </tr>
                                         <tr th:if="${#lists.isEmpty(historico)}">
                                             <td colspan="6" class="text-center py-5 text-muted">
@@ -285,7 +301,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -344,6 +359,69 @@
             </div>
         </div>
     </div>
+	
+	<div class="modal fade" id="editarAgendamentoModal" tabindex="-1" aria-hidden="true">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <form id="form-editar-perfil" th:action="@{/{slug}/agendamento-api/salvar(slug=${configuracao.slug})}" method="post">
+	                <input type="hidden" name="idAgendamento" id="edit-id">
+	                <input type="hidden" name="idCliente" id="edit-idCliente">
+	                <input type="hidden" name="idVeiculo" id="edit-idVeiculo">
+	                <input type="hidden" name="origem" value="perfil">
+	                
+	                <div class="modal-header">
+	                    <h5 class="modal-title"><i class="fas fa-edit text-warning me-2"></i> Editar Agendamento</h5>
+	                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	                </div>
+	                <div class="modal-body">
+	                    <div class="row g-3">
+	                        <div class="col-md-6">
+	                            <label class="form-label">Cliente</label>
+	                            <input type="text" class="form-control" id="edit-nome-cliente" list="lista-clientes-perfil" required>
+	                            <datalist id="lista-clientes-perfil"></datalist>
+	                        </div>
+	                        <div class="col-md-6">
+	                            <label class="form-label">Veículo</label>
+	                            <input type="text" class="form-control" id="edit-veiculo" list="lista-veiculos-perfil" required disabled>
+	                            <datalist id="lista-veiculos-perfil"></datalist>
+	                        </div>
+	                        <div class="col-12">
+	                            <label class="form-label">Serviços Executados</label>
+	                            <div id="edit-selected-services-pills" class="d-flex flex-wrap gap-2 mb-2"></div>
+	                            <select id="edit-nome-servico" class="form-select">
+	                                <option value="">Adicionar serviço...</option>
+	                                <option th:each="serv : ${servicos}" th:value="${serv.idServico}" th:text="${serv.nomeServico}"></option>
+	                            </select>
+	                            <div id="edit-hidden-servicos-inputs"></div>
+	                        </div>
+	                        <div class="col-md-6">
+	                            <label class="form-label">Data Previsão</label>
+	                            <input type="date" class="form-control" name="dataPrevisao" id="edit-previsao" required>
+	                        </div>
+	                        <div class="col-md-6">
+	                            <label class="form-label">Status</label>
+	                            <select class="form-select" name="statusAgendamento" id="edit-status">
+	                                <option value="Agendado">Agendado</option>
+	                                <option value="Em Andamento">Em Andamento</option>
+	                                <option value="Concluido">Concluído</option>
+	                                <option value="Cancelado">Cancelado</option>
+									<option value="Desativado">Desativado</option>
+	                            </select>
+	                        </div>
+	                        <div class="col-12">
+	                            <label class="form-label">Observações</label>
+	                            <textarea class="form-control" name="observacao" id="edit-obs" rows="3" maxlength="200"></textarea>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+	                    <button type="submit" class="btn btn-warning" id="btn-save-edit" disabled>Salvar Alterações</button>
+	                </div>
+	            </form>
+	        </div>
+	    </div>
+	</div>
 
     <form id="deleteForm" th:action="@{/{slug}/agendamento-api/apagar(slug=${configuracao.slug})}" method="post" style="display: none;">
         <input type="hidden" name="idAgendamento" id="deleteId">
@@ -520,6 +598,148 @@
                     });
                 });
             });
+			
+			// Lógica para o Modal de Edição
+			// Dados iniciais
+			const todosClientes = /*[[${clientes}]]*/ []; 
+			const todosVeiculos = /*[[${veiculos}]]*/ []; 
+			let dadosOriginais = {};
+			let selectedServicosEdit = new Set();
+
+			const modalEditarEl = document.getElementById('editarAgendamentoModal');
+			const modalEditar = new bootstrap.Modal(modalEditarEl);
+			const btnSaveEdit = document.getElementById('btn-save-edit');
+
+			// Popular Clientes no Datalist
+			const dlCliPerfil = document.getElementById('lista-clientes-perfil');
+			todosClientes.forEach(c => {
+			    const opt = document.createElement('option');
+			    opt.value = c.nomeCliente;
+			    dlCliPerfil.appendChild(opt);
+			});
+
+			// Função de Detecção de Mudanças
+			function verificarAlteracoes() {
+			    const dadosAtuais = {
+			        idCliente: document.getElementById('edit-idCliente').value,
+			        idVeiculo: document.getElementById('edit-idVeiculo').value,
+			        previsao: document.getElementById('edit-previsao').value,
+			        status: document.getElementById('edit-status').value,
+			        obs: document.getElementById('edit-obs').value.trim(),
+			        servicos: Array.from(selectedServicosEdit).sort().join(',')
+			    };
+			    const alterado = JSON.stringify(dadosAtuais) !== JSON.stringify(dadosOriginais);
+			    btnSaveEdit.disabled = !alterado;
+			}
+
+			// Lógica de Veículos dentro do Modal
+			const editInpNome = document.getElementById('edit-nome-cliente');
+			const editInpIdCli = document.getElementById('edit-idCliente');
+			const editInpVeic = document.getElementById('edit-veiculo');
+			const editInpIdVeic = document.getElementById('edit-idVeiculo');
+			const dlVeicPerfil = document.getElementById('lista-veiculos-perfil');
+
+			function filtrarVeiculosModal(idCliente, preSelecionarId = null) {
+			    dlVeicPerfil.innerHTML = "";
+			    editInpVeic.disabled = false;
+			    const filtrados = todosVeiculos.filter(v => v.cliente && v.cliente.idCliente === parseInt(idCliente));
+			    
+			    filtrados.forEach(v => {
+			        const opt = document.createElement('option');
+			        opt.value = v.modelo + " - " + v.placa;
+			        dlVeicPerfil.appendChild(opt);
+			        if(preSelecionarId && v.idVeiculo === parseInt(preSelecionarId)) {
+			            editInpVeic.value = opt.value;
+			            editInpIdVeic.value = v.idVeiculo;
+			        }
+			    });
+			}
+
+			editInpNome.addEventListener('input', function() {
+			    const cliente = todosClientes.find(c => c.nomeCliente === this.value.trim());
+			    if (cliente) {
+			        editInpIdCli.value = cliente.idCliente;
+			        filtrarVeiculosModal(cliente.idCliente);
+			    } else {
+			        editInpIdCli.value = "";
+			        editInpVeic.value = "";
+			        editInpIdVeic.value = "";
+			        editInpVeic.disabled = true;
+			    }
+			    verificarAlteracoes();
+			});
+
+			editInpVeic.addEventListener('input', function() {
+			    const veiculo = todosVeiculos.find(v => (v.modelo + " - " + v.placa) === this.value && v.cliente.idCliente === parseInt(editInpIdCli.value));
+			    editInpIdVeic.value = veiculo ? veiculo.idVeiculo : "";
+			    verificarAlteracoes();
+			});
+			const pillsContEdit = document.getElementById('edit-selected-services-pills');
+			const hiddenContEdit = document.getElementById('edit-hidden-servicos-inputs');
+
+			function adicionarPillEdit(id, nome) {
+			    id = String(id);
+			    if (!id || selectedServicosEdit.has(id)) return;
+			    selectedServicosEdit.add(id);
+			    const pill = document.createElement('span');
+			    pill.className = 'badge bg-secondary d-flex align-items-center p-2';
+			    pill.innerHTML = `${nome} <i class="fas fa-times ms-2" style="cursor:pointer;" onclick="removerPillEdit('${id}', this)"></i>`;
+			    pillsContEdit.appendChild(pill);
+			    const inp = document.createElement('input');
+			    inp.type = 'hidden'; inp.name = 'idServicos'; inp.value = id; inp.id = 'edit-srv-' + id;
+			    hiddenContEdit.appendChild(inp);
+			    verificarAlteracoes();
+			}
+
+			window.removerPillEdit = function(id, el) {
+			    selectedServicosEdit.delete(String(id));
+			    el.parentElement.remove();
+			    const target = document.getElementById('edit-srv-' + id);
+			    if(target) target.remove();
+			    verificarAlteracoes();
+			}
+			document.getElementById('edit-nome-servico').addEventListener('change', function() {
+			    if(this.value) {
+			        adicionarPillEdit(this.value, this.options[this.selectedIndex].text);
+			        this.value = '';
+			    }
+			});
+			document.querySelectorAll('.btn-editar-perfil').forEach(btn => {
+			    btn.addEventListener('click', function() {
+			        const row = this.closest('tr');
+			        selectedServicosEdit.clear();
+			        pillsContEdit.innerHTML = '';
+			        hiddenContEdit.innerHTML = '';
+
+			        document.getElementById('edit-id').value = this.dataset.id;
+			        editInpNome.value = row.querySelector('td:nth-child(2)').textContent.trim();
+			        editInpIdCli.value = this.dataset.clienteId;
+			        
+			        filtrarVeiculosModal(this.dataset.clienteId, this.dataset.veiculoId);
+			        
+			        document.getElementById('edit-previsao').value = this.dataset.previsao;
+			        document.getElementById('edit-status').value = this.dataset.status;
+			        document.getElementById('edit-obs').value = this.dataset.obs;
+
+			        row.querySelectorAll('.hidden-servicos-data .srv-item').forEach(item => {
+			            const parts = item.textContent.split(':');
+			            adicionarPillEdit(parts[0], parts[1]);
+			        });
+			        dadosOriginais = {
+			            idCliente: editInpIdCli.value,
+			            idVeiculo: editInpIdVeic.value,
+			            previsao: document.getElementById('edit-previsao').value,
+			            status: document.getElementById('edit-status').value,
+			            obs: document.getElementById('edit-obs').value.trim(),
+			            servicos: Array.from(selectedServicosEdit).sort().join(',')
+			        };
+			        btnSaveEdit.disabled = true;
+			        modalEditar.show();
+			    });
+			});
+			['edit-previsao', 'edit-status', 'edit-obs'].forEach(id => {
+			    document.getElementById(id).addEventListener('input', verificarAlteracoes);
+			});
 
             // SCRIPT PARA O BOTÃO 2FA
             const toggle2FA = document.getElementById('toggle2FAPerfil');

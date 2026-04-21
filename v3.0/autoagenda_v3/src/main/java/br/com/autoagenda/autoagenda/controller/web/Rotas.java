@@ -242,6 +242,7 @@ public class Rotas {
     @GetMapping("/{slug}/perfil")
     public String perfil(@PathVariable String slug, HttpSession session, Model model) {
         if(!s.loginAtivo(session)) return "redirect:/" + slug + "/login";
+        Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
         
         Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
         Funcionario atual = repoFunc.findById(logado.getIdFuncionario()).get();
@@ -253,6 +254,9 @@ public class Rotas {
         long cancelados = historico.stream().filter(a -> a.getStatusAgendamento().equalsIgnoreCase("Cancelado")).count();
         long andamento = historico.stream().filter(a -> a.getStatusAgendamento().equalsIgnoreCase("Em Andamento")).count();
         
+        model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
+        model.addAttribute("veiculos", repoVe.findByCliente_OficinaAndAtivoTrue(oficinaAtual));
+        model.addAttribute("servicos", repoServ.findByOficinaAndAtivoTrue(oficinaAtual));
         model.addAttribute("historico", historico);
         model.addAttribute("usuarioLogado", atual);
         model.addAttribute("metricaTotal", historico.size());
