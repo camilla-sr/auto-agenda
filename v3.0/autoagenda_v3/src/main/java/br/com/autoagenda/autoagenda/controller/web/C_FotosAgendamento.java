@@ -28,7 +28,6 @@ import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
 @Controller
 @RequestMapping("/{slug}/fotos-api")
 public class C_FotosAgendamento {
-    
     @Value("${app.upload.dir}") private String pastaFotos;
     @Autowired private FotosAgendamentoService service;
     @Autowired private FotosAgendamentoRepository repo;
@@ -43,16 +42,14 @@ public class C_FotosAgendamento {
         }
     }
     
-    @GetMapping("/listar/{idAgendamento}")
-    @ResponseBody
+    @GetMapping("/listar/{idAgendamento}") @ResponseBody
     public ResponseEntity<?> listaFotos (Model model, @PathVariable Integer idAgendamento) {
         List<FotosAgendamento> fotos = service.buscarPorAgendamento(idAgendamento);
         var resposta = fotos.stream().map(f -> Map.of("id", f.getIdFoto(),"nomeArquivo", f.getNomeArquivo())).toList();
         return resposta.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(resposta);
     }
     
-    @GetMapping("/listar-temp/{token}")
-    @ResponseBody
+    @GetMapping("/listar-temp/{token}") @ResponseBody
     public ResponseEntity<?> listarFotosTemporarias(@PathVariable String token) {
         List<FotosAgendamento> fotos = service.buscarPorToken(token);
         var resposta = fotos.stream()
@@ -84,8 +81,7 @@ public class C_FotosAgendamento {
         }
     }
     
-    @DeleteMapping("/apagar/{idFoto}")
-    @ResponseBody
+    @DeleteMapping("/apagar/{idFoto}") @ResponseBody
     public ResponseEntity<?> removerFotoUnica(@PathVariable Integer idFoto) {
         try {
             service.apagarFotoPorId(idFoto);
@@ -94,5 +90,4 @@ public class C_FotosAgendamento {
             return ResponseEntity.badRequest().body("Erro ao excluir");
         }
     }
-
 }

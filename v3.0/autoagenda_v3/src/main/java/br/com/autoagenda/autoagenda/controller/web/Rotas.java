@@ -48,13 +48,12 @@ public class Rotas {
 
 	@GetMapping("/{slug}/logout")
 	public String logoutOficina(@PathVariable String slug, HttpSession session) {
-        // se for um SuperAdmin fechando a janela de Modo Privilegiado, remove apenas o acesso mestre
-        if (session.getAttribute("superAdminLogado") != null && Boolean.TRUE.equals(session.getAttribute("acessoMestre"))) {
+        Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
+        if (session.getAttribute("superAdminLogado") != null && acessoMestre != null && acessoMestre) {
             session.removeAttribute("oficinaAtual");
             session.removeAttribute("acessoMestre");
             return "redirect:/autoagenda"; 
         }
-        // se funcionário comum, destroi a sessão normal
         s.logout(session); 
         return "redirect:/" + slug + "/login";
     }
@@ -72,7 +71,7 @@ public class Rotas {
 			
 			Optional<Oficina> oficina = oficinaRepo.findBySlug(slug);
 			if (oficina.isPresent()) {
-				if (!oficina.get().getAtivo() && (superAdmin == null || !Boolean.TRUE.equals(acessoMestre))) {
+				if (!oficina.get().getAtivo() && (superAdmin == null || acessoMestre == null || !acessoMestre)) {
 					session.removeAttribute("oficinaAtual");
 					return; 
 				}
@@ -90,7 +89,7 @@ public class Rotas {
 	    Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
 	    Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
 
-	    if (superAdmin != null && Boolean.TRUE.equals(acessoMestre)) {
+	    if (superAdmin != null && acessoMestre != null && acessoMestre) {
 	        model.addAttribute("superAdminLogado", superAdmin);
 	        model.addAttribute("nomeUsuarioView", superAdmin.getNome() + " (Mestre)");
 	        model.addAttribute("acessoUsuarioView", "admin"); 
@@ -107,11 +106,11 @@ public class Rotas {
 	    Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
 	    Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
 
-	    if ((superAdmin == null || !Boolean.TRUE.equals(acessoMestre)) && !s.loginAtivo(session)) return "redirect:/" + slug + "/login";
+	    if ((superAdmin == null || acessoMestre == null || !acessoMestre) && !s.loginAtivo(session)) return "redirect:/" + slug + "/login";
 
 	    Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
 	    if (oficinaAtual == null) return "redirect:/erro/oficina-nao-encontrada";
-	    if (superAdmin != null && Boolean.TRUE.equals(acessoMestre)) return page;
+	    if (superAdmin != null && acessoMestre != null && acessoMestre) return page;
 	    if (!logado.getOficina().getIdOficina().equals(oficinaAtual.getIdOficina())) return "redirect:/acesso-negado";
 	    return page;
 	}
@@ -173,7 +172,7 @@ public class Rotas {
 		    session.removeAttribute("acessoMestre");
 		} else {
 		    Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
-		    if ((session.getAttribute("superAdminLogado") != null && Boolean.TRUE.equals(acessoMestre)) || s.loginAtivo(session)) {
+		    if ((session.getAttribute("superAdminLogado") != null && acessoMestre != null && acessoMestre) || s.loginAtivo(session)) {
 		        return "redirect:/" + slug;
 		    }
 		}
@@ -229,9 +228,9 @@ public class Rotas {
     	Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
     	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
     	
-    	if ((superAdmin == null || !Boolean.TRUE.equals(acessoMestre)) && !s.verificaAcesso(session, "admin")) return "acesso-negado";
+    	if ((superAdmin == null || acessoMestre == null || !acessoMestre) && !s.verificaAcesso(session, "admin")) return "acesso-negado";
     	
-    	if(superAdmin != null && Boolean.TRUE.equals(acessoMestre)) {
+    	if(superAdmin != null && acessoMestre != null && acessoMestre) {
     		model.addAttribute("funcionarios", repoFunc.findByOficinaAndAtivoTrue(oficinaAtual));
     	} else {
     		Funcionario logado = (Funcionario) session.getAttribute("usuarioLogado");
@@ -268,7 +267,7 @@ public class Rotas {
         SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
         Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
         
-        if ((superAdmin == null || !Boolean.TRUE.equals(acessoMestre)) && !s.verificaAcesso(session, "admin")) return "acesso-negado";
+        if ((superAdmin == null || acessoMestre == null || !acessoMestre) && !s.verificaAcesso(session, "admin")) return "acesso-negado";
         
         Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
         model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
@@ -319,7 +318,7 @@ public class Rotas {
     	SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
     	Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
         
-        if (superAdmin == null || !Boolean.TRUE.equals(acessoMestre)) {
+        if (superAdmin == null || acessoMestre == null || !acessoMestre) {
             if(!s.loginAtivo(session)) return "redirect:/" + slug + "/login";
             if(!s.verificaAcesso(session, "admin")) return "acesso-negado";
         }

@@ -17,16 +17,14 @@ public class C_Veiculo {
     @Autowired private VeiculoRepository repo;
     @Autowired private ClienteRepository repoCliente;
     
-    @GetMapping("/listar-por-cliente/{idCliente}")
-    @ResponseBody
+    @GetMapping("/listar-por-cliente/{idCliente}") @ResponseBody
     public ResponseEntity<List<Veiculo>> listarPorCliente(@SessionAttribute("oficinaAtual") Oficina oficina,
     														@PathVariable Integer idCliente) {
         List<Veiculo> veiculos = repo.findByCliente_OficinaAndAtivoTrue(oficina);
         return ResponseEntity.ok(veiculos);
     }
 
-    @PostMapping("/salvar")
-    @ResponseBody
+    @PostMapping("/salvar") @ResponseBody
     public ResponseEntity<Veiculo> salvar(@RequestBody Veiculo veiculo) {
         if (veiculo.getCliente() == null || veiculo.getCliente().getIdCliente() == null) {
             return ResponseEntity.badRequest().build();
@@ -54,8 +52,7 @@ public class C_Veiculo {
         return ResponseEntity.ok(veiculoSalvo);
     }
     
-    @PostMapping("/apagar")
-    @ResponseBody
+    @PostMapping("/apagar") @ResponseBody
     public ResponseEntity<?> apagar(@RequestParam Integer idVeiculo) {
         try {
             if(idVeiculo != null) { 

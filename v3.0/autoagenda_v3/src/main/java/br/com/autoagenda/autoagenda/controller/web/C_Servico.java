@@ -13,52 +13,41 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Servico;
-import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
+import br.com.autoagenda.autoagenda.service.ServicoService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/{slug}/servico-api")
 public class C_Servico {
-	@Autowired private ServicoRepository repo;
+    @Autowired private ServicoService service;
 
-	@PostMapping("/salvar")
-	public String salvar(@PathVariable("slug") String slug, @SessionAttribute("oficinaAtual") Oficina oficina,
-			@Valid Servico serv, BindingResult result) {
-		if(result.hasErrors()) { return "redirect:/"+ slug +"/servicos?erroServico=true"; }
-		
-		if(serv.getIdServico() != null) {
-			Servico existe = repo.findById(serv.getIdServico()).orElseThrow();
-			existe.setOficina(oficina);
-			existe.setNomeServico(serv.getNomeServico());
-			existe.setDescServico(serv.getDescServico());
-			
-			repo.save(existe);
-			return "redirect:/"+ slug +"/servicos?editado=true";
-		} else {
-			serv.setOficina(oficina);
-			repo.save(serv);
-		}
-	  return "redirect:/"+ slug +"/servicos?sucesso=true";
-	}
+    @PostMapping("/salvar")
+    public String salvar(@PathVariable("slug") String slug, @SessionAttribute("oficinaAtual") Oficina oficina,
+            @Valid Servico serv, BindingResult result) {
+        if(result.hasErrors()) { return "redirect:/"+ slug +"/servicos?erroServico=true"; }
+        
+        boolean edicao = serv.getIdServico() != null;
+        service.salvarOuAtualizar(serv, oficina);
+        if(edicao) {
+            return "redirect:/"+ slug +"/servicos?editado=true";
+        }
+        return "redirect:/"+ slug +"/servicos?sucesso=true";
+    }
 
-	@PostMapping("/apagar")
-	@ResponseBody
-	public ResponseEntity<?> apagar(@RequestParam Integer idServico) {
-		if(idServico == null) { return ResponseEntity.badRequest().body("ID inválido"); }
-		try {
-			Servico serv = repo.findById(idServico).orElseThrow();
-            serv.setAtivo(false);
-            repo.save(serv);
-			return ResponseEntity.ok().build();
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-				.body("Não é possível excluir: o serviço possui agendamentos vinculados.");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body("Erro ao tentar excluir o serviço.");
-		}
-	}
+    @PostMapping("/apagar") @ResponseBody
+    public ResponseEntity<?> apagar(@RequestParam Integer idServico) {
+        if(idServico == null) { return ResponseEntity.badRequest().body("ID inválido"); }
+        try {
+            service.inativar(idServico);
+            return ResponseEntity.ok().build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Não é possível excluir: o serviço possui agendamentos vinculados.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao tentar excluir o serviço.");
+        }
+    }
 }

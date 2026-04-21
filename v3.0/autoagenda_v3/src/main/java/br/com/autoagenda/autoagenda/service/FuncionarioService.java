@@ -13,11 +13,13 @@ import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
+import br.com.autoagenda.autoagenda.repositorios.OficinaRepository;
 
 @Service
 public class FuncionarioService {
 	@Autowired private FuncionarioRepository repo;
     @Autowired private EmailService emailService;
+    @Autowired private OficinaRepository oficinaRepo;
 
     public Funcionario autenticar(String usuario, String senha, Integer idOficina) {
         Funcionario func = repo.findByUsuarioAndOficina_IdOficina(usuario, idOficina);
@@ -25,6 +27,16 @@ public class FuncionarioService {
         if (func != null && func.getSenha().equals(senha) && func.isAtivo()) { 
             return func;
         }
+        return null;
+    }
+    
+    public Funcionario autenticarMobile(String usuario, String senha, String slug) {
+        Oficina oficina = oficinaRepo.findBySlug(slug).orElse(null);
+        if (oficina == null || !oficina.getAtivo()) throw new IllegalArgumentException("OFICINA_INVALIDA");
+        
+        Funcionario func = repo.findByUsuarioAndOficina_IdOficina(usuario, oficina.getIdOficina());
+        
+        if (func != null && func.getSenha().equals(senha) && func.isAtivo()) return func;
         return null;
     }
 

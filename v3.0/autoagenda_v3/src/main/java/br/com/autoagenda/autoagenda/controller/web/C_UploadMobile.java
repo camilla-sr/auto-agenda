@@ -17,16 +17,15 @@ import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
 @Controller
 @RequestMapping("/{slug}/mobile")
 public class C_UploadMobile {
-	
 	@Autowired private FotosAgendamentoService service;
+	
     @GetMapping("/upload-fotos/{token}")
     public String paginaMobile(@PathVariable("slug") String slug, @PathVariable String token, Model model) {
         model.addAttribute("token", token);
         return "mobile-upload";
     }
 
-    @PostMapping("/enviar/{token}")
-    @ResponseBody
+    @PostMapping("/enviar/{token}") @ResponseBody
     public ResponseEntity<?> receberFotoCelular(@PathVariable String token, @RequestParam("fotos") MultipartFile[] arquivos) {
     	try {
             if (arquivos != null && arquivos.length > 0) {
@@ -42,8 +41,7 @@ public class C_UploadMobile {
         }
     }
     
-    @DeleteMapping("/cancelar/{token}")
-    @ResponseBody
+    @DeleteMapping("/cancelar/{token}") @ResponseBody
     public ResponseEntity<?> cancelarSessao(@PathVariable String token) {
         try {
             service.limparFotosTemporarias(token);
