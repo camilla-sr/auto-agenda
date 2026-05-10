@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.autoagenda.autoagenda.dto.mobile.FuncionarioLoginDto;
+import br.com.autoagenda.autoagenda.dto.mobile.FuncionarioListagemDto;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
@@ -35,13 +38,22 @@ public class C_FuncionarioMobile {
 	        String slug = credenciais.get("slug");
 	        String usuario = credenciais.get("usuario");
 	        String senha = credenciais.get("senha");
-
 	        Funcionario func = serv.autenticarMobile(usuario, senha, slug);
 
 	        if (func == null) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("erro", "Usuário ou senha incorretos."));
 	        }
-	        return ResponseEntity.ok(func);
+	        
+	        FuncionarioLoginDto dto = new FuncionarioLoginDto(
+                func.getIdFuncionario(),
+                func.getNomeFuncionario(),
+                func.getUsuario(),
+                func.getEmail(),
+                func.getAcesso(),
+                new FuncionarioLoginDto.OficinaResumo(func.getOficina().getIdOficina())
+            );
+	        		
+	        return ResponseEntity.ok(dto);
 	    } catch (IllegalArgumentException e) {
 	        if ("OFICINA_INVALIDA".equals(e.getMessage())) {
 	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("erro", "Esta oficina está desativada no sistema."));
@@ -55,7 +67,23 @@ public class C_FuncionarioMobile {
         try {
             Oficina oficina = oficinaRepo.findById(idOficina).orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada."));
             List<Funcionario> lista = repo.findByOficinaAndAtivoTrue(oficina);
-            return ResponseEntity.ok(lista);
+            FuncionarioListagemDto.OficinaResumo resumo = new FuncionarioListagemDto.OficinaResumo(idOficina);
+            
+            List<FuncionarioListagemDto> listaDto = lista.stream()
+            	    .map(func -> new FuncionarioListagemDto(
+            	        func.getIdFuncionario(),
+            	        func.getNomeFuncionario(),
+            	        func.getTelefone(),
+            	        func.getUsuario(),
+            	        func.getEmail(),
+            	        func.getCpf(),
+            	        func.getAcesso(),
+            	        func.isAtivo(),
+            	        resumo
+            	    ))
+            	    .toList();
+
+                return ResponseEntity.ok(listaDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
         }
@@ -78,7 +106,7 @@ public class C_FuncionarioMobile {
             serv.salvarOuAtualizar(func, null, false, oficina);
             
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("mensagem", "Dados salvos com sucesso!"));
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Map.of("erro", "Este e-mail ou usuário já está em uso."));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));

@@ -40,4 +40,6 @@ public class Veiculo {
 	public void setMarca(String marca) { this.marca = marca; }
 	public String getPlaca() { return placa; }
 	public void setPlaca(String placa) { this.placa = placa; }
+	public boolean isAtivo() { return ativo; }
+	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

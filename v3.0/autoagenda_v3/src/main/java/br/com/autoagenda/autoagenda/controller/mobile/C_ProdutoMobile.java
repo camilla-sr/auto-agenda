@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.autoagenda.autoagenda.dto.mobile.ProdutoDto;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Produto;
 import br.com.autoagenda.autoagenda.repositorios.OficinaRepository;
@@ -34,9 +35,18 @@ public class C_ProdutoMobile {
     public ResponseEntity<?> listarProdutos(@RequestHeader("idOficina") Integer idOficina) {
         try {
             Oficina oficina = oficinaRepo.findById(idOficina).orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada."));
-            
             List<Produto> lista = repo.findByOficina(oficina);
-            return ResponseEntity.ok(lista);
+            ProdutoDto.OficinaResumo resumo = new ProdutoDto.OficinaResumo(idOficina);
+            
+            List<ProdutoDto> dto = lista.stream().map(prod -> new ProdutoDto(
+            		prod.getIdProduto(),
+            		resumo, prod.getCodigoProduto(),
+            		prod.getCategoria(), prod.getNomeProduto(), prod.getPrecoCusto(), prod.getPrecoVenda(),
+            		prod.getFornecedor(), prod.getEstoqueAtual(), prod.getEstoqueMinimo(), prod.getDescricao()
+            		))
+            		.toList();
+            
+            return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
         }

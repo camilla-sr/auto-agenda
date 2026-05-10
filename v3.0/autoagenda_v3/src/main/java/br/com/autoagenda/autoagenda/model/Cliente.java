@@ -45,6 +45,8 @@ public class Cliente {
     public void setEmail(String emailCliente) { this.email = emailCliente; }
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
+    public List<Veiculo> getVeiculos() { return veiculos; }
+    public void setVeiculos(List<Veiculo> veiculos) { this.veiculos = veiculos; }
 	public boolean isAtivo() { return ativo; }
 	public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

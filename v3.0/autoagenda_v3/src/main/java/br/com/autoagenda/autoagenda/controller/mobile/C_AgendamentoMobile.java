@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.autoagenda.autoagenda.dto.mobile.AgendamentoDto;
 import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
@@ -36,9 +37,27 @@ public class C_AgendamentoMobile {
     public ResponseEntity<?> listarAgendamentos(@RequestHeader("idOficina") Integer idOficina) {
         try {
             Oficina oficina = oficinaRepo.findById(idOficina).orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada."));
-            
-            List<Agendamento> agendamentos = repo.findByOficinaAndAtivoTrue(oficina);
-            return ResponseEntity.ok(agendamentos);
+            List<Agendamento> agendamentos = repo.findByOficinaAndAtivoTrue(oficina);            
+            AgendamentoDto.OficinaResumo resumoOficina = new AgendamentoDto.OficinaResumo(idOficina);
+
+            List<AgendamentoDto> dto = agendamentos.stream().map(ag -> new AgendamentoDto(
+                    ag.getIdAgendamento(),
+                    resumoOficina,
+                    ag.getCliente() != null ? new AgendamentoDto.ClienteResumo(ag.getCliente().getIdCliente(), ag.getCliente().getNomeCliente(), ag.getCliente().getTelefone()) : null,
+                    ag.getVeiculo() != null ? new AgendamentoDto.VeiculoResumo(ag.getVeiculo().getIdVeiculo(), ag.getVeiculo().getPlaca(), ag.getVeiculo().getModelo()) : null,
+                    ag.getFuncionario() != null ? new AgendamentoDto.FuncionarioResumo(ag.getFuncionario().getIdFuncionario(), ag.getFuncionario().getNomeFuncionario()) : null,
+                    ag.getServicos() == null ? List.of() : ag.getServicos().stream()
+                        .map(s -> new AgendamentoDto.ServicoResumo(s.getIdServico(), s.getDescServico()))
+                        .toList(),
+                    ag.getDataCadastro(),
+                    ag.getDataPrevisao(),
+                    ag.getDataConclusao(),
+                    ag.getStatusAgendamento(),
+                    ag.getObservacao(),
+                    ag.isAtivo()
+            )).toList();
+
+            return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
         }

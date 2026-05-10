@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.autoagenda.autoagenda.dto.mobile.ProdutoDto;
+import br.com.autoagenda.autoagenda.dto.mobile.ServicoDto;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Servico;
 import br.com.autoagenda.autoagenda.repositorios.OficinaRepository;
@@ -35,7 +37,14 @@ public class C_ServicoMobile {
         try {
             Oficina oficina = oficinaRepo.findById(idOficina).orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada."));
             List<Servico> servico = repo.findByOficinaAndAtivoTrue(oficina);
-            return ResponseEntity.ok(servico);
+            ServicoDto.OficinaResumo resumo = new ServicoDto.OficinaResumo(idOficina);
+            
+            List<ServicoDto> dto = servico.stream().map(serv -> new ServicoDto(
+            		serv.getIdServico(), resumo, serv.getNomeServico(), serv.getDescServico(), serv.isAtivo()
+            		))
+            		.toList();
+            
+            return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
         }

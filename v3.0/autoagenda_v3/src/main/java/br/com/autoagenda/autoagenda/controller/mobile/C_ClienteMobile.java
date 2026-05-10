@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.autoagenda.autoagenda.dto.mobile.ClienteDto;
+import br.com.autoagenda.autoagenda.dto.mobile.FuncionarioListagemDto;
 import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
@@ -35,7 +37,19 @@ public class C_ClienteMobile {
         try {
             Oficina oficina = oficinaRepo.findById(idOficina).orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada."));
             List<Cliente> lista = repo.findByOficinaAndAtivoTrue(oficina);
-            return ResponseEntity.ok(lista);
+            ClienteDto.OficinaResumo resumo = new ClienteDto.OficinaResumo(idOficina);
+            
+            List<ClienteDto> dto = lista.stream().map(cli -> new ClienteDto(
+                    cli.getIdCliente(), resumo, cli.getNomeCliente(), cli.getTelefone(),
+                    cli.getEmail(), cli.isAtivo(),
+                    cli.getVeiculos() == null ? List.of() : cli.getVeiculos().stream()
+                        .map(v -> new ClienteDto.VeiculoResumo(
+                                v.getIdVeiculo(), v.getPlaca(), 
+                                v.getModelo(), v.getMarca(), v.isAtivo()
+                        ))
+                        .toList()
+            )).toList();
+            return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
         }
