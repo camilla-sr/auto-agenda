@@ -15,25 +15,29 @@ public class SuperAdminService {
 		return null;
 	}
 	
-	public void salvarOuAtualizar(SuperAdmin admin) {
+	public void salvarOuAtualizar(SuperAdmin admin, String novaSenha, boolean cadastroInicial) {
         SuperAdmin existeUser = repo.findByUsuario(admin.getUsuario());
-        if (existeUser != null) {
-            if (admin.getIdSuperadmin() == null || !existeUser.getIdSuperadmin().equals(admin.getIdSuperadmin())) {
-                if (!existeUser.isAtivo()) {
-                    throw new IllegalArgumentException("Este usuário já está cadastrado, mas encontra-se desativado.");
-                }
-                throw new IllegalArgumentException("O usuário '" + admin.getUsuario() + "' já está em uso.");
-            }
+
+        if (existeUser != null && (admin.getIdSuperadmin() == null || !existeUser.getIdSuperadmin().equals(admin.getIdSuperadmin()))) {
+            if (!existeUser.isAtivo()) throw new IllegalArgumentException("Usuário já cadastrado, mas desativado.");
+            throw new IllegalArgumentException("O usuário '" + admin.getUsuario() + "' já está em uso.");
         }
+
         if (admin.getIdSuperadmin() != null) {
-            SuperAdmin existe = repo.findById(admin.getIdSuperadmin()).orElseThrow();
-            existe.setNome(admin.getNome());
-            existe.setEmail(admin.getEmail());
-            existe.setUsuario(admin.getUsuario());
-            existe.setSenha(admin.getSenha());
+            SuperAdmin banco = repo.findById(admin.getIdSuperadmin()).orElseThrow();
+            banco.setNome(admin.getNome());
+            banco.setEmail(admin.getEmail());
+            banco.setUsuario(admin.getUsuario());
             
-            repo.save(existe);
+            if (novaSenha != null && !novaSenha.isEmpty()) {
+                banco.setSenha(novaSenha);
+            }
+            repo.save(banco);
         } else {
+            if (novaSenha != null && !novaSenha.isEmpty()) {
+                admin.setSenha(novaSenha);
+            }
+            admin.setPrimeiroLogin(cadastroInicial);
             admin.setAtivo(true);
             repo.save(admin);
         }

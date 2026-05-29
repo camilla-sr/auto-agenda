@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.autoagenda.autoagenda.model.Funcionario;
@@ -57,17 +58,35 @@ public class C_SuperAdmin {
         return "redirect:/autoagenda";
     }
 	
-	@PostMapping(value = "/salvar")
-    public String salvar(@ModelAttribute SuperAdmin admin, RedirectAttributes ra) {
+	@PostMapping(value = "/salvar") @ResponseBody
+    public ResponseEntity<?> salvar(@ModelAttribute SuperAdmin admin, @RequestParam(required = false) String novaSenha,
+            						@RequestParam(required = false, defaultValue = "false") boolean cadastroInicial) {
         try {
-            service.salvarOuAtualizar(admin);
-            ra.addFlashAttribute("sucesso", "Conta Mestre criada com sucesso! Faça seu login.");
-            return "redirect:/superadmin/login";
+            service.salvarOuAtualizar(admin, novaSenha, cadastroInicial);
+            return ResponseEntity.ok(Map.of("mensagem", "Dados salvos com sucesso!"));
         } catch (IllegalArgumentException e) {
-            ra.addFlashAttribute("erro", e.getMessage());
-            return "redirect:/superadmin/cadastro";
+            return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("erro", "Erro interno."));
         }
     }
+	
+	@GetMapping("/listar-admins") @ResponseBody
+	public ResponseEntity<Iterable<SuperAdmin>> listarSuperAdmins() {
+	    return ResponseEntity.ok(repo.findAll());
+	}
+
+	@PostMapping("/admin/status/{id}") @ResponseBody
+	public ResponseEntity<?> toggleStatusAdmin(@PathVariable Integer id, HttpSession session) {
+	    SuperAdmin logado = (SuperAdmin) session.getAttribute("superAdminLogado");
+	    if (logado.getIdSuperadmin().equals(id)) {
+	        return ResponseEntity.badRequest().body("Não é possível desativar a própria conta.");
+	    }
+	    SuperAdmin admin = repo.findById(id).orElseThrow();
+	    admin.setAtivo(!admin.isAtivo());
+	    repo.save(admin);
+	    return ResponseEntity.ok().build();
+	}
 	
 	@GetMapping("/logout")
     public String logout(HttpSession session) {
@@ -140,18 +159,6 @@ public class C_SuperAdmin {
 	    }
 	}
 	
-	@GetMapping("/status-servicos")
-	@ResponseBody
-	public Map<String, String> statusServicos() {
-	    Map<String, String> status = new HashMap<>();
-	    try {
-	        oficinaRepo.count();
-	        status.put("database", "Online");
-	    } catch (Exception e) { status.put("database", "Offline"); }
-	    status.put("email", "Online");
-	    return status;
-	}
-	
 	@GetMapping("/oficina/funcionarios/{id}") @ResponseBody
 	public ResponseEntity<List<Funcionario>> listarFuncionariosDaOficina(@PathVariable("id") Integer id, 
 	        @RequestParam(name = "nivel", defaultValue = "todos") String nivel) {
@@ -213,4 +220,24 @@ public class C_SuperAdmin {
             return ResponseEntity.status(500).body("Erro interno: " + erroReal);
         }
     }
+	
+	@GetMapping("/status-servicos") @ResponseBody
+	public Map<String, String> statusServicos() {
+		Map<String, String> status = new HashMap<>();
+	    RestTemplate rest = new RestTemplate();
+	    
+	    status.put("email", checkHealth(rest, "http://localhost:8081/actuator/health"));
+	    status.put("auth", checkHealth(rest, "http://localhost:8082/actuator/health"));
+	    
+	    return status;
+	}
+
+	private String checkHealth(RestTemplate rest, String url) {
+	    try {
+	        ResponseEntity<String> res = rest.getForEntity(url, String.class);
+	        return res.getStatusCode().is2xxSuccessful() ? "Online" : "Offline";
+	    } catch (Exception e) {
+	        return "Offline";
+	    }
+	}
 }

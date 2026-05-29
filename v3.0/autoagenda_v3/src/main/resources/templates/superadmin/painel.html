@@ -33,6 +33,9 @@
                     <li class="nav-item">
                         <a class="nav-link nav-menu-spa text-white px-3" href="#" data-target="logs-sistema"><i class="fa-solid fa-terminal me-1"></i> Logs do Sistema</a>
                     </li>
+					<li class="nav-item">
+					    <a class="nav-link nav-menu-spa text-white px-3" href="#" data-target="gerenciar-superadmins"><i class="fa-solid fa-users-gear me-1"></i> Superadmins</a>
+					</li>
                 </ul>
             </div>
             
@@ -141,48 +144,37 @@
             </div>
         </div>
 
-        <div id="microsservicos" class="spa-section" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4><i class="fa-solid fa-network-wired text-info me-2"></i> Status dos Microsserviços</h4>
-                <button class="btn btn-sm btn-outline-info"><i class="fa-solid fa-rotate me-1"></i> Atualizar Status</button>
-            </div>
-            
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="card bg-dark border-secondary">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <h6 class="card-title text-white mb-0"><i class="fa-solid fa-envelope text-warning me-2"></i>EmailService</h6>
-                                <span class="badge bg-success">Online</span>
-                            </div>
-                            <p class="small text-muted mb-0">Serviço de envio de credenciais e recuperações de senha.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-dark border-secondary">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <h6 class="card-title text-white mb-0"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Auth2FAService</h6>
-                                <span class="badge bg-success">Online</span>
-                            </div>
-                            <p class="small text-muted mb-0">Validação e geração de códigos para login seguro.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-dark border-secondary">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <h6 class="card-title text-white mb-0"><i class="fa-solid fa-image text-info me-2"></i>ImageUploadService</h6>
-                                <span class="badge bg-success">Online</span>
-                            </div>
-                            <p class="small text-muted mb-0">Processamento de logos, favicons e fotos de agendamento via web/mobile.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div id="microsservicos" class="spa-section" style="display: none;">
+		    <div class="d-flex justify-content-between align-items-center mb-4">
+		        <h4><i class="fa-solid fa-network-wired text-info me-2"></i> Status dos Microsserviços</h4>
+		        <button class="btn btn-sm btn-outline-info" id="btnAtualizarStatus"><i class="fa-solid fa-rotate me-1"></i> Atualizar Status</button>
+		    </div>
+		    
+		    <div class="row g-3">
+		        <div class="col-md-4">
+		            <div class="card bg-dark border-secondary">
+		                <div class="card-body">
+		                    <div class="d-flex justify-content-between mb-2">
+		                        <h6 class="card-title text-white mb-0"><i class="fa-solid fa-envelope text-warning me-2"></i>EmailService</h6>
+		                        <span class="badge bg-secondary" id="badge-email">Buscando...</span>
+		                    </div>
+		                    <p class="small text-light opacity-75 mb-0">Serviço de envio de credenciais e recuperações de senha.</p>
+		                </div>
+		            </div>
+		        </div>
+		        <div class="col-md-4">
+		            <div class="card bg-dark border-secondary">
+		                <div class="card-body">
+		                    <div class="d-flex justify-content-between mb-2">
+		                        <h6 class="card-title text-white mb-0"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Auth2FAService</h6>
+		                        <span class="badge bg-secondary" id="badge-auth">Buscando...</span>
+		                    </div>
+		                    <p class="small text-light opacity-75 mb-0">Validação e geração de códigos para login seguro.</p>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 
 		<div id="logs-sistema" class="spa-section" style="display: none;">
 		    <div class="d-flex justify-content-between align-items-center mb-3">
@@ -214,7 +206,111 @@
 		        </div>
 		    </div>
 		</div>
+		
+		<div id="gerenciar-superadmins" class="spa-section" style="display: none;">
+		    <div class="d-flex justify-content-between align-items-center mb-4">
+		        <h4><i class="fa-solid fa-users-gear text-primary me-2"></i> Controle de SuperAdmins</h4>
+		        <button type="button" class="btn btn-sm btn-primary" id="btnNovoSuperAdmin">
+		            <i class="fa-solid fa-plus me-1"></i> Novo SuperAdmin
+		        </button>
+		    </div>
+		    
+		    <div class="table-responsive border border-secondary rounded">
+		        <table class="table table-dark table-hover mb-0 align-middle text-sm" id="tabela-superadmins">
+		            <thead class="table-active">
+		                <tr>
+		                    <th>ID</th>
+		                    <th>Nome</th>
+		                    <th>Login</th>
+		                    <th>Status</th>
+		                    <th class="text-end">Ações</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr><td colspan="5" class="text-center py-3 text-muted">Aguardando dados...</td></tr>
+		            </tbody>
+		        </table>
+		    </div>
+		</div>
     </div>
+	
+    <div class="modal fade" id="modalSuperAdmin" tabindex="-1" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered modal-lg">
+	        <div class="modal-content bg-dark border-secondary text-white">
+	            <div class="modal-header border-secondary">
+	                <h5 class="modal-title" id="tituloModalSuperAdmin">
+	                    <i class="fa-solid fa-user-shield me-2"></i>Novo Superadmin
+	                </h5>
+	                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body p-4">
+	                <form id="formCadastroMestre" novalidate>
+	                    <input type="hidden" name="cadastroInicial" id="cadastroInicial" value="true">
+	                    <input type="hidden" name="idSuperadmin" id="idSuperadminModal">
+
+	                    <div class="row g-3 mb-3">
+	                        <div class="col-md-6">
+	                            <label class="form-label small">Nome Completo</label>
+	                            <div class="input-group">
+	                                <span class="input-group-text bg-dark text-secondary border-secondary"><i class="fa-solid fa-font"></i></span>
+	                                <input type="text" name="nome" id="nomeMestre" class="form-control bg-dark text-white border-secondary" autocomplete="off">
+	                                <div class="invalid-feedback" id="erro-nomeMestre"></div>
+	                            </div>
+	                        </div>
+
+	                        <div class="col-md-6">
+	                            <label class="form-label small">E-mail Oficial</label>
+	                            <div class="input-group">
+	                                <span class="input-group-text bg-dark text-secondary border-secondary"><i class="fa-solid fa-envelope"></i></span>
+	                                <input type="email" name="email" id="emailMestre" class="form-control bg-dark text-white border-secondary" autocomplete="off">
+	                                <div class="invalid-feedback" id="erro-emailMestre"></div>
+	                            </div>
+	                        </div>
+	                    </div>
+
+	                    <div class="mb-3">
+	                        <label class="form-label small">Usuário Mestre (Login)</label>
+	                        <div class="input-group">
+	                            <span class="input-group-text bg-dark text-secondary border-secondary"><i class="fa-solid fa-terminal"></i></span>
+	                            <input type="text" name="usuario" id="usuarioMestre" class="form-control bg-dark text-white border-secondary" maxlength="30" autocomplete="off">
+	                            <div class="invalid-feedback" id="erro-usuarioMestre"></div>
+	                        </div>
+	                    </div>
+
+	                    <div class="alert alert-info py-2 small border-info" style="background: transparent;" id="avisoSenhaEdicao">
+	                        <i class="fa-solid fa-circle-info"></i> Na edição, deixe em branco para manter a senha atual.
+	                    </div>
+
+	                    <div class="row g-3 mb-4">
+	                        <div class="col-md-6">
+	                            <label class="form-label small">Senha</label>
+	                            <div class="input-group">
+	                                <span class="input-group-text bg-dark text-secondary border-secondary"><i class="fa-solid fa-key"></i></span>
+	                                <input type="password" name="novaSenha" id="senhaMestre" class="form-control bg-dark text-white border-secondary">
+	                                <div class="invalid-feedback" id="erro-senhaMestre"></div>
+	                            </div>
+	                        </div>
+	                        <div class="col-md-6">
+	                            <label class="form-label small">Confirmar Senha</label>
+	                            <div class="input-group">
+	                                <span class="input-group-text bg-dark text-secondary border-secondary"><i class="fa-solid fa-check"></i></span>
+	                                <input type="password" id="confirmaSenhaMestre" class="form-control bg-dark text-white border-secondary">
+	                                <div class="invalid-feedback" id="erro-confirmaMestre"></div>
+	                            </div>
+	                        </div>
+	                    </div>
+
+	                    <div class="text-end">
+	                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+	                        <button type="submit" class="btn btn-primary">
+	                            <i class="fa-solid fa-save me-2"></i> Salvar Conta
+	                        </button>
+	                    </div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
     <div class="modal fade" id="modalGerenciarOficina" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -498,7 +594,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
             // =========================================================
             // LÓGICA DE NAVEGAÇÃO SPA (Single Page Application)
             // =========================================================
@@ -515,6 +610,59 @@
                     const alvo = this.getAttribute('data-target');
                     document.getElementById(alvo).style.display = 'block';
                 });
+            });
+			
+			// =========================================================
+            // VERIFICAÇÃO DE STATUS DOS MICROSSERVIÇOS
+            // =========================================================
+            const btnAtualizarStatus = document.getElementById('btnAtualizarStatus');
+            
+            function carregarStatusMicrosservicos() {
+                const badges = ['email', 'auth'];
+                badges.forEach(id => {
+                    const el = document.getElementById('badge-' + id);
+                    if(el) {
+                        el.className = 'badge bg-secondary';
+                        el.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    }
+                });
+
+                if(btnAtualizarStatus) btnAtualizarStatus.disabled = true;
+
+                fetch('/superadmin-api/status-servicos')
+                .then(r => r.json())
+                .then(status => {
+					atualizarBadge('badge-email', status.email);
+					atualizarBadge('badge-auth', status.auth);
+                })
+                .catch(() => {
+                    badges.forEach(id => atualizarBadge('badge-' + id, 'Offline'));
+                })
+                .finally(() => {
+                    if(btnAtualizarStatus) btnAtualizarStatus.disabled = false;
+                });
+            }
+
+            function atualizarBadge(idStr, statusStr) {
+                const el = document.getElementById(idStr);
+                if(!el) return;
+                
+                if(statusStr === 'Online') {
+                    el.className = 'badge bg-success';
+                    el.innerText = 'Online';
+                } else {
+                    el.className = 'badge bg-danger';
+                    el.innerText = 'Offline';
+                }
+            }
+
+            if(btnAtualizarStatus) {
+                btnAtualizarStatus.addEventListener('click', carregarStatusMicrosservicos);
+            }
+
+            // Dispara automaticamente ao clicar na aba
+            document.querySelector('[data-target="microsservicos"]').addEventListener('click', () => {
+                carregarStatusMicrosservicos();
             });
 
             // =========================================================
@@ -555,6 +703,214 @@
 
             ativarGeradorDeUsuario('adminNome', 'adminUsuario');
             ativarGeradorDeUsuario('funcNome', 'funcUsuario');
+            ativarGeradorDeUsuario('nomeMestre', 'usuarioMestre');
+
+			// =========================================================
+	        // GERENCIAMENTO DE SUPERADMINS (SPA COM MODAL)
+	        // =========================================================
+            const tbodySuperAdmins = document.querySelector('#tabela-superadmins tbody');
+	
+	        function carregarSuperAdmins() {
+	            tbodySuperAdmins.innerHTML = '<tr><td colspan="5" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin text-primary"></i> Buscando Administradores...</td></tr>';
+	            fetch('/superadmin-api/listar-admins')
+	            .then(r => r.json())
+	            .then(admins => {
+	                tbodySuperAdmins.innerHTML = '';
+	                if(admins.length === 0) {
+	                    tbodySuperAdmins.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum SuperAdmin encontrado.</td></tr>';
+	                    return;
+	                }
+	                
+	                admins.forEach(ad => {
+	                    const tr = document.createElement('tr');
+	                    const statusBadge = ad.ativo ? `<span class="badge bg-success">Ativo</span>` : `<span class="badge bg-danger">Bloqueado</span>`;
+	                    const btnIcon = ad.ativo ? 'fa-ban' : 'fa-check';
+	                    const btnColor = ad.ativo ? 'btn-outline-danger' : 'btn-outline-success';
+	                    const btnTitle = ad.ativo ? 'Bloquear acesso' : 'Liberar acesso';
+	
+	                    tr.dataset.admin = JSON.stringify(ad);
+	                    tr.innerHTML = `
+	                        <td>${ad.idSuperadmin}</td>
+	                        <td><strong>${ad.nome}</strong></td>
+	                        <td><code>${ad.usuario}</code></td>
+	                        <td>${statusBadge}</td>
+	                        <td class="text-end">
+	                            <button class="btn btn-sm btn-outline-primary btn-edit-superadmin me-1" title="Editar Dados">
+	                                <i class="fa-solid fa-pen"></i>
+	                            </button>
+	                            <button class="btn btn-sm ${btnColor} btn-toggle-superadmin" title="${btnTitle}" data-id="${ad.idSuperadmin}">
+	                                <i class="fa-solid ${btnIcon}"></i>
+	                            </button>
+	                        </td>
+	                    `;
+	                    tbodySuperAdmins.appendChild(tr);
+	                });
+	                configurarEventosTabelaSuperAdmin();
+	            });
+	        }
+	
+	        function configurarEventosTabelaSuperAdmin() {
+	            document.querySelectorAll('.btn-edit-superadmin').forEach(btn => {
+	                btn.addEventListener('click', function() {
+	                    const tr = this.closest('tr');
+	                    const ad = JSON.parse(tr.dataset.admin);
+	                    abrirModalSuperAdmin(ad);
+	                });
+	            });
+	
+	            document.querySelectorAll('.btn-toggle-superadmin').forEach(btn => {
+	                btn.addEventListener('click', function() {
+	                    const id = this.getAttribute('data-id');
+	                    fetch(`/superadmin-api/admin/status/${id}`, { method: 'POST' })
+	                    .then(async res => {
+	                        if(res.ok) {
+	                            carregarSuperAdmins();
+	                        } else {
+	                            const erroMsg = await res.text();
+	                            Swal.fire('Atenção', erroMsg, 'warning');
+	                        }
+	                    });
+	                });
+	            });
+	        }
+
+            // Lógica do Formulário Modal Mestre
+            const formMestre = document.getElementById('formCadastroMestre');
+            const nomeMestre = document.getElementById('nomeMestre');
+            const emailMestre = document.getElementById('emailMestre');
+            const usuarioMestre = document.getElementById('usuarioMestre');
+            const senhaMestre = document.getElementById('senhaMestre');
+            const confirmaSenhaMestre = document.getElementById('confirmaSenhaMestre');
+            const idSuperadminModal = document.getElementById('idSuperadminModal');
+
+            function mostrarErro(input, mensagem) {
+                input.classList.remove('is-valid'); input.classList.add('is-invalid');
+                const feedback = document.getElementById("erro-" + input.id);
+                if (feedback) feedback.innerText = mensagem;
+            }
+            function limparErro(input) { input.classList.remove('is-invalid'); }
+            function marcarValido(input) { input.classList.remove('is-invalid'); input.classList.add('is-valid'); }
+
+            function validarNomeMestre() {
+                const valor = nomeMestre.value.trim();
+                if (valor === "") { mostrarErro(nomeMestre, "O nome não pode ficar em branco."); return false; }
+                const partes = valor.split(/\s+/);
+                if (partes.length < 2 || partes[0].length < 2 || partes[1].length < 2) {
+                    mostrarErro(nomeMestre, "Digite pelo menos nome e sobrenome."); return false;
+                }
+                marcarValido(nomeMestre); return true;
+            }
+
+            function validarEmailMestre() {
+                const valor = emailMestre.value.trim();
+                if (valor === "") { mostrarErro(emailMestre, "O e-mail é obrigatório."); return false; }
+                if (/\s/.test(valor)) { mostrarErro(emailMestre, "O e-mail não pode conter espaços."); return false; }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
+                    mostrarErro(emailMestre, "Formato inválido."); return false;
+                }
+                marcarValido(emailMestre); return true;
+            }
+
+            function validarUsuarioMestre() {
+                if (/\s/.test(usuarioMestre.value)) usuarioMestre.value = usuarioMestre.value.replace(/\s/g, '');
+                if (usuarioMestre.value.trim() === "") { mostrarErro(usuarioMestre, "O usuário é obrigatório."); return false; }
+                marcarValido(usuarioMestre); return true;
+            }
+
+            function verificarSenhasEmTempoRealMestre() {
+                if (confirmaSenhaMestre.value === "") { limparErro(confirmaSenhaMestre); return false; }
+                if (senhaMestre.value !== confirmaSenhaMestre.value) {
+                    mostrarErro(confirmaSenhaMestre, "As senhas não coincidem."); return false;
+                } else {
+                    marcarValido(confirmaSenhaMestre); marcarValido(senhaMestre); return true;
+                }
+            }
+
+            nomeMestre.addEventListener('blur', validarNomeMestre);
+            emailMestre.addEventListener('blur', validarEmailMestre);
+            usuarioMestre.addEventListener('blur', validarUsuarioMestre);
+            
+            nomeMestre.addEventListener('input', () => { limparErro(nomeMestre); nomeMestre.classList.remove('is-valid'); });
+            emailMestre.addEventListener('input', () => { limparErro(emailMestre); emailMestre.classList.remove('is-valid'); });
+            usuarioMestre.addEventListener('input', validarUsuarioMestre);
+            
+            senhaMestre.addEventListener('input', () => {
+                limparErro(senhaMestre); senhaMestre.classList.remove('is-valid');
+                if (confirmaSenhaMestre.value !== "") verificarSenhasEmTempoRealMestre();
+            });
+            confirmaSenhaMestre.addEventListener('input', verificarSenhasEmTempoRealMestre);
+
+            formMestre.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+
+                const isNomeValido = validarNomeMestre();
+                const isEmailValido = validarEmailMestre();
+                const isUsuarioValido = validarUsuarioMestre();
+                const isEdicao = idSuperadminModal.value !== "";
+                
+                let isSenhasValidas = true;
+                if (!isEdicao && senhaMestre.value === "") {
+                    mostrarErro(senhaMestre, "A senha é obrigatória para novos cadastros.");
+                    isSenhasValidas = false;
+                } else if (senhaMestre.value !== "") {
+                    if (confirmaSenhaMestre.value === "") {
+                        mostrarErro(confirmaSenhaMestre, "Confirme a senha.");
+                        isSenhasValidas = false;
+                    } else if (senhaMestre.value !== confirmaSenhaMestre.value) {
+                        mostrarErro(confirmaSenhaMestre, "As senhas não coincidem.");
+                        isSenhasValidas = false;
+                    }
+                }
+
+                if (isNomeValido && isEmailValido && isUsuarioValido && isSenhasValidas) {
+                    const formData = new FormData(formMestre);
+                    if (!isEdicao) formData.delete('idSuperadmin');
+
+                    fetch("/superadmin-api/salvar", {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(async res => {
+                        if (res.ok) {
+                            Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Salvo com sucesso!', showConfirmButton: false, timer: 2000});
+                            bootstrap.Modal.getInstance(document.getElementById('modalSuperAdmin')).hide();
+                            carregarSuperAdmins();
+                        } else {
+                            const json = await res.json();
+                            Swal.fire('Atenção', json.erro || 'Erro ao salvar.', 'warning');
+                        }
+                    }).catch(() => Swal.fire('Erro', 'Falha no servidor.', 'error'));
+                }
+            });
+
+            function abrirModalSuperAdmin(adminData) {
+                formMestre.reset();
+                [nomeMestre, emailMestre, usuarioMestre, senhaMestre, confirmaSenhaMestre].forEach(el => el.classList.remove('is-valid', 'is-invalid'));
+                
+                if (adminData) {
+                    document.getElementById('tituloModalSuperAdmin').innerHTML = '<i class="fa-solid fa-user-pen me-2"></i>Editar Superadmin';
+                    idSuperadminModal.value = adminData.idSuperadmin;
+                    nomeMestre.value = adminData.nome;
+                    emailMestre.value = adminData.email;
+                    usuarioMestre.value = adminData.usuario;
+                    document.getElementById('cadastroInicial').value = "false";
+                    document.getElementById('avisoSenhaEdicao').style.display = 'block';
+                } else {
+                    document.getElementById('tituloModalSuperAdmin').innerHTML = '<i class="fa-solid fa-user-shield me-2"></i>Novo Superadmin';
+                    idSuperadminModal.value = "";
+                    document.getElementById('cadastroInicial').value = "true";
+                    document.getElementById('avisoSenhaEdicao').style.display = 'none';
+                }
+                new bootstrap.Modal(document.getElementById('modalSuperAdmin')).show();
+            }
+
+	        document.getElementById('btnNovoSuperAdmin').addEventListener('click', () => {
+	            abrirModalSuperAdmin(null);
+	        });
+	
+	        document.querySelector('[data-target="gerenciar-superadmins"]').addEventListener('click', () => {
+	            carregarSuperAdmins();
+	        });
 
 			// =========================================================
             // MÁSCARAS NATIVAS (PADRÃO DO SISTEMA)
@@ -602,7 +958,7 @@
             }
 
             // =========================================================
-            // SALVAR FORMULÁRIOS (INTEGRANDO COM O ENDPOINT EXISTENTE)
+            // SALVAR FORMULÁRIOS EQUIPE DA OFICINA
             // =========================================================
             function submeterFormularioFuncionario(formElement, nivel) {
                 const inputCpf = formElement.querySelector('.mask-cpf');
@@ -677,10 +1033,8 @@
                         color: '#fff'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Acesso master: Usa a sessão logada e entra direto
                             window.open(`/superadmin-api/acessar-oficina/${slug}`, '_blank');
                         } else if (result.isDenied) {
-                            // Tela de Login: Envia parâmetro para a controller desconsiderar o admin nessa aba
                             window.open(`/${slug}/login?ignorarAdmin=true`, '_blank');
                         }
                     });
@@ -786,16 +1140,14 @@
                 if(!oficinaIdContexto) return;
                 
                 const icone = this.querySelector('i');
-                icone.classList.add('fa-spin'); // Faz o ícone girar
+                icone.classList.add('fa-spin'); 
 
-                // Chama todas as funções que recarregam as abas do modal
                 carregarEstatisticasOficina(oficinaIdContexto);
                 carregarModulosOficina(oficinaIdContexto);
                 carregarEquipePorNivel(oficinaIdContexto, 'admin', 'tabela-admins');
                 carregarEquipePorNivel(oficinaIdContexto, 'comum', 'tabela-funcionarios');
                 carregarAcessosRapidos(oficinaIdContexto);
 
-                // Para de girar depois de um tempo
                 setTimeout(() => icone.classList.remove('fa-spin'), 800);
             });
 
@@ -803,7 +1155,7 @@
             // SALVAR MÓDULOS DE FORMA SILENCIOSA (AJAX)
             // =========================================================
             document.getElementById('formModulos').addEventListener('submit', function(e) {
-                e.preventDefault(); // Impede a página de recarregar
+                e.preventDefault();
                 
                 const usarProdutos = document.getElementById('toggleProd').checked;
                 
@@ -829,7 +1181,7 @@
             });
 
             // =========================================================
-            // API: CARREGAR ESTATÍSTICAS
+            // API: CARREGAR ESTATÍSTICAS E MÓDULOS
             // =========================================================
             function carregarEstatisticasOficina(idOficina) {
                 const elCli = document.getElementById('stat-clientes');
@@ -851,9 +1203,6 @@
                 });
             }
 
-            // =========================================================
-            // API: CARREGAR MÓDULOS
-            // =========================================================
             function carregarModulosOficina(idOficina) {
                 document.getElementById('modalInputModulosId').value = idOficina;
                 
@@ -897,7 +1246,6 @@
                         const btnBloquearIcone = func.ativo ? 'fa-ban' : 'fa-check';
                         const btnBloquearTitle = func.ativo ? 'Desativar acesso' : 'Reativar acesso';
 
-                        // Guarda o objeto para preencher o formulário
                         tr.dataset.funcionario = JSON.stringify(func);
 
 						tr.innerHTML = `
@@ -931,7 +1279,6 @@
             function configurarEventosTabelaEquipe(idTabela) {
                 const tabela = document.getElementById(idTabela);
                 
-                // EDITAR (PREENCHE O FORMULÁRIO DO RESPECTIVO NÍVEL)
                 tabela.querySelectorAll('.btn-edit-func').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const tr = this.closest('tr');
@@ -962,7 +1309,6 @@
                     });
                 });
 
-                // RESET DE SENHA
                 tabela.querySelectorAll('.btn-reset-senha').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const idUser = this.getAttribute('data-id');
@@ -982,7 +1328,6 @@
                     });
                 });
 
-                // FORÇAR LOGOUT
                 tabela.querySelectorAll('.btn-forcar-logout').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const idUser = this.getAttribute('data-id');
@@ -993,7 +1338,6 @@
                     });
                 });
 
-                // BLOQUEAR/DESBLOQUEAR USUÁRIO
                 tabela.querySelectorAll('.btn-toggle-func').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const idUser = this.getAttribute('data-id');
@@ -1008,47 +1352,6 @@
                 });
             }
 
-            // =========================================================
-            // SALVAR FORMULÁRIOS (INTEGRANDO COM O ENDPOINT EXISTENTE)
-            // =========================================================
-			function submeterFormularioFuncionario(formElement, nivel) {
-				const inputCpf = formElement.querySelector('.mask-cpf');
-                const inputTelefone = formElement.querySelector('.mask-telefone');
-
-                if (inputCpf && inputCpf.inputmask && !inputCpf.inputmask.isComplete()) {
-                    Swal.fire('Atenção', 'Por favor, digite o CPF completo.', 'warning');
-                    inputCpf.focus();
-                    return;
-                }
-                if (inputTelefone && inputTelefone.inputmask && !inputTelefone.inputmask.isComplete()) {
-                    Swal.fire('Atenção', 'Por favor, digite um Telefone ou Celular válido.', 'warning');
-                    inputTelefone.focus();
-                    return;
-                }
-				
-                const formData = new FormData(formElement);
-                if (!formData.get('idFuncionario')) { formData.delete('idFuncionario'); }
-                formData.append('idOficina', oficinaIdContexto); 
-                
-                fetch(`/superadmin-api/funcionario/salvar`, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(async res => {
-                    if (res.ok) {
-                        Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Dados salvos com sucesso!', showConfirmButton: false, timer: 2000});
-                        formElement.reset();
-                        formElement.closest('div').style.display = 'none';
-                        
-                        carregarEquipePorNivel(oficinaIdContexto, nivel, nivel === 'admin' ? 'tabela-admins' : 'tabela-funcionarios');
-                        carregarAcessosRapidos(oficinaIdContexto);
-                    } else {
-                        const erroMsg = await res.text();
-                        Swal.fire('Atenção', erroMsg || 'Erro ao salvar funcionário.', 'warning');
-                    }
-                }).catch(() => Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error'));
-            }
-
             document.getElementById('formAdminData').addEventListener('submit', function(e) {
                 e.preventDefault(); submeterFormularioFuncionario(this, 'admin');
             });
@@ -1056,7 +1359,6 @@
                 e.preventDefault(); submeterFormularioFuncionario(this, 'comum');
             });
 
-            // CONTROLES DE ABERTURA E FECHAMENTO
             document.getElementById('btnNovoAdmin').addEventListener('click', () => {
                 document.getElementById('tituloFormAdmin').innerHTML = '<i class="fa-solid fa-user-tie me-2"></i>Cadastrar Novo Admin';
                 document.getElementById('avisoSenhaNova').style.display = 'block';
@@ -1099,7 +1401,6 @@
                         const isAdm = func.acesso === 'admin';
                         const badgeNivel = isAdm ? `<span class="badge bg-primary text-light">Administrador</span>` : `<span class="badge bg-secondary text-light border border-secondary">Usuário Comum</span>`;
                         
-                        // Select com a opção de troca
                         const selectHtml = `
                             <select class="form-select form-select-sm bg-dark text-white border-secondary select-nivel" data-id="${func.idFuncionario}">
                                 <option value="admin" ${isAdm ? 'selected' : ''}>Admin</option>
@@ -1115,7 +1416,6 @@
                         tbody.appendChild(tr);
                     });
 
-                    // Evento de Troca no Select
                     tbody.querySelectorAll('.select-nivel').forEach(sel => {
                         sel.addEventListener('change', function() {
                             const id = this.dataset.id;
@@ -1128,7 +1428,6 @@
                             }).then(res => {
                                 if(res.ok) {
                                     Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'Nível atualizado!', showConfirmButton: false, timer: 1500});
-                                    // Recarrega as tabelas para refletir as mudanças
                                     carregarEquipePorNivel(oficinaIdContexto, 'admin', 'tabela-admins');
                                     carregarEquipePorNivel(oficinaIdContexto, 'comum', 'tabela-funcionarios');
                                     carregarAcessosRapidos(oficinaIdContexto);
