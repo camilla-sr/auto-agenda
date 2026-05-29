@@ -32,19 +32,15 @@ public class C_FuncionarioMobile {
 	@Autowired private FuncionarioRepository repo;
     @Autowired private OficinaRepository oficinaRepo;
 	
-	@PostMapping("/logar")
-	public ResponseEntity<?> logarMobile(@RequestBody Map<String, String> credenciais) {
-	    try {
-	        String slug = credenciais.get("slug");
-	        String usuario = credenciais.get("usuario");
-	        String senha = credenciais.get("senha");
-	        Funcionario func = serv.autenticarMobile(usuario, senha, slug);
-
-	        if (func == null) {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("erro", "Usuário ou senha incorretos."));
-	        }
-	        
-	        FuncionarioLoginDto dto = new FuncionarioLoginDto(
+    @PostMapping("/logar")
+    public ResponseEntity<?> logarMobile(@RequestBody Map<String, String> credenciais) {
+        try {
+            String slug = credenciais.get("slug");
+            String usuario = credenciais.get("usuario");
+            String senha = credenciais.get("senha");
+            
+            Funcionario func = serv.autenticarMobile(usuario, senha, slug);
+            FuncionarioLoginDto dto = new FuncionarioLoginDto(
                 func.getIdFuncionario(),
                 func.getNomeFuncionario(),
                 func.getUsuario(),
@@ -52,15 +48,14 @@ public class C_FuncionarioMobile {
                 func.getAcesso(),
                 new FuncionarioLoginDto.OficinaResumo(func.getOficina().getIdOficina())
             );
-	        		
-	        return ResponseEntity.ok(dto);
-	    } catch (IllegalArgumentException e) {
-	        if ("OFICINA_INVALIDA".equals(e.getMessage())) {
-	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("erro", "Esta oficina está desativada no sistema."));
-	        }
-	        return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
-	    }
-	}
+            return ResponseEntity.ok(dto);
+        } catch (IllegalArgumentException e) {
+            if ("Oficina não encontrada.".equals(e.getMessage())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("erro", e.getMessage()));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("erro", e.getMessage()));
+        }
+    }
 	
 	@GetMapping
     public ResponseEntity<?> listarFuncionarios(@RequestHeader("idOficina") Integer idOficina) {

@@ -52,12 +52,17 @@ public class C_ServicoMobile {
     
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id, @RequestHeader("idOficina") Integer idOficina) {
-        Optional<Servico> servico = repo.findById(id);
+        Optional<Servico> servOpt = repo.findById(id);
         
-        if (servico.isEmpty() || !servico.get().getOficina().getIdOficina().equals(idOficina)) {
+        if (servOpt.isEmpty() || !servOpt.get().getOficina().getIdOficina().equals(idOficina)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("erro", "Serviço não encontrado."));
         }
-        return ResponseEntity.ok(servico.get());
+        Servico serv = servOpt.get();
+        ServicoDto.OficinaResumo resumo = new ServicoDto.OficinaResumo(idOficina);
+        
+        ServicoDto dto = new ServicoDto(serv.getIdServico(), resumo, serv.getNomeServico(), 
+                					serv.getDescServico(), serv.isAtivo());
+        return ResponseEntity.ok(dto);
     }
     
     @PostMapping

@@ -36,7 +36,9 @@ public class FuncionarioService {
         
         Funcionario func = repo.findByUsuarioAndOficina_IdOficina(usuario, oficina.getIdOficina());
         
-        if (func != null && func.getSenha().equals(senha) && func.isAtivo()) return func;
+        if (func == null || !func.getSenha().equals(senha) || !func.isAtivo()) {
+            throw new IllegalArgumentException("Usuário e/ou senha incorretos.");
+        }
         return null;
     }
 
