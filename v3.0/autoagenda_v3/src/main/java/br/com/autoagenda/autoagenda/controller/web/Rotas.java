@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.autoagenda.autoagenda.config.Sessao;
 import br.com.autoagenda.autoagenda.model.Agendamento;
+import br.com.autoagenda.autoagenda.model.Cliente;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.SuperAdmin;
+import br.com.autoagenda.autoagenda.model.Veiculo;
 import br.com.autoagenda.autoagenda.repositorios.AgendamentoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ClienteRepository;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
@@ -299,17 +302,29 @@ public class Rotas {
     
     @GetMapping("/{slug}/agendamentos")
     public String agendamentos(@PathVariable String slug, HttpSession session, Model model) {
-    	Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
-    	
-    	model.addAttribute("servicos", repoServ.findByOficinaAndAtivoTrue(oficinaAtual));
-    	model.addAttribute("agendamentos", repoAg.findByOficinaAndAtivoTrue(oficinaAtual));
-    	model.addAttribute("clientes", repoCl.findByOficinaAndAtivoTrue(oficinaAtual));
-    	model.addAttribute("veiculos", repoVe.findByCliente_OficinaAndAtivoTrue(oficinaAtual));
-		model.addAttribute("agendaPendente", repoAg.countPendentesByOficina(oficinaAtual));
-		model.addAttribute("agendaConcluido", repoAg.countConcluidosbyOficina(oficinaAtual));
-		model.addAttribute("agendaAndamento", repoAg.countAndamentoByOficina(oficinaAtual));
-		model.addAttribute("agendaConcluidoHoje", repoAg.countConcluidosHojeByOficina(oficinaAtual));
-    	return verificaUsuario(session, "agendamentos", slug);
+        Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+        model.addAttribute("servicos", repoServ.findByOficinaAndAtivoTrue(oficinaAtual));
+        model.addAttribute("agendamentos", repoAg.findByOficinaAndAtivoTrue(oficinaAtual));
+       
+        List<Cliente> clientesBanco = repoCl.findByOficinaAndAtivoTrue(oficinaAtual);
+        List<Veiculo> veiculosBanco = repoVe.findByCliente_OficinaAndAtivoTrue(oficinaAtual);
+
+        List<Map<String, Object>> clientesParaView = clientesBanco.stream()
+    	    .map(c -> Map.<String, Object>of("idCliente", c.getIdCliente(),"nomeCliente", c.getNomeCliente())).toList();
+
+    	List<Map<String, Object>> veiculosParaView = veiculosBanco.stream()
+    	    .map(v -> Map.<String, Object>of(
+    	        "idVeiculo", v.getIdVeiculo(), "modelo", v.getModelo(),"placa", v.getPlaca(),
+    	        "cliente", Map.<String, Object>of("idCliente", v.getCliente().getIdCliente()) )).toList();
+
+        model.addAttribute("clientes", clientesParaView);
+        model.addAttribute("veiculos", veiculosParaView);
+        model.addAttribute("agendaPendente", repoAg.countPendentesByOficina(oficinaAtual));
+        model.addAttribute("agendaConcluido", repoAg.countConcluidosbyOficina(oficinaAtual));
+        model.addAttribute("agendaAndamento", repoAg.countAndamentoByOficina(oficinaAtual));
+        model.addAttribute("agendaConcluidoHoje", repoAg.countConcluidosHojeByOficina(oficinaAtual));
+        
+        return verificaUsuario(session, "agendamentos", slug);
     }
     
     @GetMapping("/configurar_login")
