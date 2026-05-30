@@ -42,6 +42,7 @@ public class AgendamentoService {
             existente.setVeiculo(ag.getVeiculo());
             existente.setServicos(ag.getServicos());
             existente.setDataPrevisao(ag.getDataPrevisao());
+            existente.setHoraPrevisao(ag.getHoraPrevisao());
             existente.setStatusAgendamento(ag.getStatusAgendamento());
             existente.setDataConclusao(ag.getDataConclusao());
             existente.setObservacao(ag.getObservacao());

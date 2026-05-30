@@ -14,21 +14,23 @@ import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.service.AgendamentoService;
+import br.com.autoagenda.autoagenda.service.LogService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/{slug}/agendamento-api")
 public class C_Agendamento {
-	@Autowired private AgendamentoService service;
+    @Autowired private AgendamentoService service;
+    @Autowired private LogService log;
 
     @PostMapping("/salvar")
     public String salvar(@PathVariable("slug") String slug,
-    				@SessionAttribute("oficinaAtual") Oficina oficina,
-    				@SessionAttribute("usuarioLogado") Funcionario usuarioLogado,
-    				@Valid Agendamento ag,  @RequestParam("idServicos") java.util.List<Integer> idServicos,
-    				@RequestParam("idCliente") Integer idCliente, @RequestParam("idVeiculo") Integer idVeiculo,
-    				@RequestParam(value = "tokenMobile", required = false) String tokenMobile,
-    				@RequestParam(value = "imagens", required = false) MultipartFile[] fotos, BindingResult result) {
+                    @SessionAttribute("oficinaAtual") Oficina oficina,
+                    @SessionAttribute("usuarioLogado") Funcionario usuarioLogado,
+                    @Valid Agendamento ag,  @RequestParam("idServicos") java.util.List<Integer> idServicos,
+                    @RequestParam("idCliente") Integer idCliente, @RequestParam("idVeiculo") Integer idVeiculo,
+                    @RequestParam(value = "tokenMobile", required = false) String tokenMobile,
+                    @RequestParam(value = "imagens", required = false) MultipartFile[] fotos, BindingResult result) {
         if (result.hasErrors()) { return "redirect:/"+ slug +"/agendamentos?erro=true"; }
 
         try {
@@ -36,13 +38,13 @@ public class C_Agendamento {
             ag.setOficina(oficina);
             ag.setFuncionario(usuarioLogado);
             
-            service.salvarAgendamento(ag, idServicos, idCliente, idVeiculo, fotos, tokenMobile);
-            
+            service.salvarAgendamento(ag, idServicos, idCliente, idVeiculo, fotos, tokenMobile);            
+            log.registrar(isEdicao ? "Edição" : "Criação", "Agendamento", ag.getIdAgendamento(), "Agendamento do Cliente ID: " + idCliente, false);
             return isEdicao 
-            		? "redirect:/"+ slug +"/agendamentos?editado=true" 
-            		: "redirect:/"+ slug +"/agendamentos?sucesso=true";
+                    ? "redirect:/"+ slug +"/agendamentos?editado=true" 
+                    : "redirect:/"+ slug +"/agendamentos?sucesso=true";
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             return "redirect:/"+ slug +"/agendamentos?erro=true";
         }
     }
@@ -51,6 +53,7 @@ public class C_Agendamento {
     public String atualizarStatus(@PathVariable("slug") String slug, @RequestParam Integer idAgendamento, @RequestParam String status) {
         if (idAgendamento != null) {
             service.atualizarStatus(idAgendamento, status);
+            log.registrar("Atualização", "Agendamento", idAgendamento, "Status alterado para: " + status, false);
             return "redirect:/"+ slug +"/agendamentos?atualizado=true";
         }
         return "redirect:/"+ slug +"/agendamentos?atualizado=false";
@@ -59,12 +62,15 @@ public class C_Agendamento {
     @PostMapping("/apagar")
     public String apagar(@PathVariable("slug") String slug, @RequestParam Integer idAgendamento) {
         service.excluirAgendamento(idAgendamento);
+        log.registrar("Exclusão", "Agendamento", idAgendamento, "Agendamento excluído do sistema", false);
         return "redirect:/"+ slug +"/agendamentos?apagar=true";
     }
 
     @PostMapping("/concluir/{id}")
     @ResponseBody
     public Agendamento concluirAgendamento(@PathVariable("id") Integer id) {
-        return service.concluirAgendamento(id);
+        Agendamento ag = service.concluirAgendamento(id);
+        log.registrar("Atualização", "Agendamento", id, "Agendamento marcado como concluído", false);
+        return ag;
     }
 }

@@ -51,6 +51,7 @@ public class C_AgendamentoMobile {
                         .toList(),
                     ag.getDataCadastro(),
                     ag.getDataPrevisao(),
+                    ag.getHoraPrevisao(),
                     ag.getDataConclusao(),
                     ag.getStatusAgendamento(),
                     ag.getObservacao(),

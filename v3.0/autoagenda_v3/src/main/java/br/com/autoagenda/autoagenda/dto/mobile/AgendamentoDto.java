@@ -1,6 +1,7 @@
 package br.com.autoagenda.autoagenda.dto.mobile;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public record AgendamentoDto(
@@ -12,6 +13,7 @@ public record AgendamentoDto(
         List<ServicoResumo> servicos,
         LocalDate dataCadastro,
         LocalDate dataPrevisao,
+        LocalTime horaPrevisao,
         LocalDate dataConclusao,
         String statusAgendamento,
         String observacao,
@@ -21,6 +23,5 @@ public record AgendamentoDto(
     public record ClienteResumo(Integer idCliente, String nomeCliente, String telefone) {}
     public record VeiculoResumo(Integer idVeiculo, String placa, String modelo) {}
     public record FuncionarioResumo(Integer idFuncionario, String nomeFuncionario) {}
-    
     public record ServicoResumo(Integer idServico, String descricao) {} 
 }

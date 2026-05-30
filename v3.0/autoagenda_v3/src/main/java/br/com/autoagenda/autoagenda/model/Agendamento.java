@@ -1,8 +1,11 @@
 package br.com.autoagenda.autoagenda.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +34,7 @@ public class Agendamento {
         
 	@NotNull private LocalDate dataCadastro = LocalDate.now();
 	@NotNull private LocalDate dataPrevisao;
+	@Column(name = "hora_previsao") @DateTimeFormat(pattern = "HH:mm") private LocalTime horaPrevisao;
     private LocalDate dataConclusao;
 	@NotEmpty private String statusAgendamento;
     @Column(length = 1000) private String observacao;
@@ -38,12 +42,14 @@ public class Agendamento {
 
     public Agendamento() {}
     
-    public Agendamento(Integer idAgendamento, Cliente cliente, Funcionario funcionario, Veiculo veiculo, LocalDate dataCadastro, LocalDate dataPrevisao, LocalDate dataConclusao, String statusAgendamento, String observacao) {
+    public Agendamento(Integer idAgendamento, Cliente cliente, Funcionario funcionario, Veiculo veiculo, LocalDate dataCadastro,
+    				LocalDate dataPrevisao, LocalTime horaPrevisao ,LocalDate dataConclusao, String statusAgendamento, String observacao) {
     	this.idAgendamento = idAgendamento;
     	this.cliente = cliente;
     	this.funcionario = funcionario;
     	this.veiculo= veiculo;
     	this.dataPrevisao = dataPrevisao;
+    	this.horaPrevisao = horaPrevisao;
     	this.dataConclusao = dataConclusao;
     	this.statusAgendamento = statusAgendamento;
     	this.observacao = observacao;
@@ -63,6 +69,8 @@ public class Agendamento {
     public void setDataCadastro(LocalDate dataCadastro) { this.dataCadastro = dataCadastro; }
     public LocalDate getDataPrevisao() { return dataPrevisao; }
     public void setDataPrevisao(LocalDate dataPrevisao) { this.dataPrevisao = dataPrevisao; }
+    public LocalTime getHoraPrevisao() { return horaPrevisao != null ? horaPrevisao : LocalTime.MIDNIGHT; }
+    public void setHoraPrevisao(LocalTime horaPrevisao) { this.horaPrevisao = horaPrevisao; }
     public LocalDate getDataConclusao() { return dataConclusao; }
     public void setDataConclusao(LocalDate dataConclusao) { this.dataConclusao = dataConclusao; }
     public String getStatusAgendamento() { return statusAgendamento; }
