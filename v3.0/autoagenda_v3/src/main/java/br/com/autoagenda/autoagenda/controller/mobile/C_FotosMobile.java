@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.FotosAgendamento;
@@ -25,11 +26,29 @@ import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
 @RequestMapping("/mobile/fotos-api")
 public class C_FotosMobile {
     @Value("${app.upload.dir}") private String pastaFotos;
-
     @Autowired private FotosAgendamentoService service;
     @Autowired private FotosAgendamentoRepository repo;
     @Autowired private AgendamentoRepository agRepo;
 
+    @PostMapping("/upload/{idAgendamento}")
+    public ResponseEntity<?> uploadFotoMobile(@PathVariable Integer idAgendamento, @RequestHeader("idOficina") Integer idOficina,
+    										@RequestParam("foto") MultipartFile file) {
+        
+        Optional<Agendamento> ag = agRepo.findById(idAgendamento);
+        if (ag.isEmpty() || !ag.get().getOficina().getIdOficina().equals(idOficina)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("erro", "Agendamento não encontrado ou acesso negado."));
+        }
+        try {
+            FotosAgendamento foto = service.salvarFoto(ag.get(), file);
+            
+            return ResponseEntity.ok(Map.of("id", foto.getIdFoto(), "nomeArquivo", foto.getNomeArquivo(),
+            						"mensagem", "Foto salva com sucesso."
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("erro", "Erro ao salvar a foto: " + e.getMessage()));
+        }
+    }
+    
     @GetMapping("/listar/{idAgendamento}")
     public ResponseEntity<?> listarFotos(@PathVariable Integer idAgendamento, @RequestHeader("idOficina") Integer idOficina) {
         Optional<Agendamento> ag = agRepo.findById(idAgendamento);
@@ -62,10 +81,7 @@ public class C_FotosMobile {
             String contentType = Files.probeContentType(caminho);
             if (contentType == null) contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
             
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(bytes);
-                    
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(bytes);
         } catch (IOException | SecurityException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -73,13 +89,10 @@ public class C_FotosMobile {
 
     @DeleteMapping("/{idFoto}")
     public ResponseEntity<?> removerFoto(@PathVariable Integer idFoto, @RequestHeader("idOficina") Integer idOficina) {
-        
         Optional<FotosAgendamento> fotoOpt = repo.findById(idFoto);
-        
         if (fotoOpt.isEmpty() || !fotoOpt.get().getAgendamento().getOficina().getIdOficina().equals(idOficina)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("erro", "Foto não encontrada ou não pertence a sua oficina."));
         }
-
         try {
             service.apagarFotoPorId(idFoto);
             return ResponseEntity.ok(Map.of("mensagem", "Foto excluída com sucesso."));
