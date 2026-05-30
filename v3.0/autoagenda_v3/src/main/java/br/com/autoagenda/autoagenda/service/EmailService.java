@@ -46,18 +46,21 @@ public class EmailService {
     
     @Async
     public void redefirSenha(Funcionario func) {
+    	String slug = func.getOficina().getSlug();
     	String emailFuncionario = func.getEmail();
     	String nomeFuncionario = func.getNomeFuncionario();
     	String assunto = String.format("%s: Novo Login!", func.getOficina().getNomeFantasia());
     	
     	String texto = String.format(
 		"Olá, %s!\n\nSeu novo acesso ao sistema foi criado. Use as credenciais abaixo para o primeiro acesso:"
+		+ "\n\t\tCódigo da oficina (para login no aplicativo): %s"
 		+ "\n\t\tUsuário: %s"
 		+ "\n\t\tSenha provisória: %s"
 		+ "\n\n*Importante! Esta é uma senha temporária gerada internamente. Ao efetuar o login, você será instruído"
 		+ " a atualizar a senha com uma própria."
 		+ "\nObrigado por escolher nossa oficina!",
 		nomeFuncionario,
+		slug,
 		func.getUsuario(),
 		func.getSenha());
 
