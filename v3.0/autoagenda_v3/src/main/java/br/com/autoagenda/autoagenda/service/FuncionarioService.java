@@ -39,7 +39,7 @@ public class FuncionarioService {
         if (func == null || !func.getSenha().equals(senha) || !func.isAtivo()) {
             throw new IllegalArgumentException("Usuário e/ou senha incorretos.");
         }
-        return null;
+        return func;
     }
 
     public void atualizarSenha(Funcionario func, String novaSenha) {
