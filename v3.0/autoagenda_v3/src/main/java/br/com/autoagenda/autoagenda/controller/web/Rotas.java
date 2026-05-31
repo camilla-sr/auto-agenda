@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.autoagenda.autoagenda.config.Sessao;
 import br.com.autoagenda.autoagenda.model.Agendamento;
@@ -32,6 +33,7 @@ import br.com.autoagenda.autoagenda.repositorios.ProdutoRepository;
 import br.com.autoagenda.autoagenda.repositorios.ServicoRepository;
 import br.com.autoagenda.autoagenda.repositorios.VeiculoRepository;
 import br.com.autoagenda.autoagenda.service.FuncionarioService;
+import br.com.autoagenda.autoagenda.service.LogService;
 import br.com.autoagenda.autoagenda.service.SuperAdminService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,6 +43,7 @@ public class Rotas {
 	@Autowired private Sessao s;
 	@Autowired private SuperAdminService superService;
 	@Autowired private FuncionarioService serviceFunc;
+	@Autowired private LogService log;
 	@Autowired private FuncionarioRepository repoFunc;
 	@Autowired private ServicoRepository repoServ;
 	@Autowired private ProdutoRepository repoProd;
@@ -51,13 +54,35 @@ public class Rotas {
 
 	@GetMapping("/{slug}/logout")
 	public String logoutOficina(@PathVariable String slug, HttpSession session) {
+        SuperAdmin superAdmin = (SuperAdmin) session.getAttribute("superAdminLogado");
         Boolean acessoMestre = (Boolean) session.getAttribute("acessoMestre");
-        if (session.getAttribute("superAdminLogado") != null && acessoMestre != null && acessoMestre) {
+        Funcionario func = (Funcionario) session.getAttribute("usuarioLogado");
+
+        // Cenário 1: SuperAdmin saindo do modo "Privilegiado"
+        if (superAdmin != null && acessoMestre != null && acessoMestre) {
+            Oficina oficinaAtual = (Oficina) session.getAttribute("oficinaAtual");
+            log.registrar("Logout", "Oficina", oficinaAtual != null ? oficinaAtual.getIdOficina() : null, "Encerrou acesso remoto à oficina", false);
+            
             session.removeAttribute("oficinaAtual");
             session.removeAttribute("acessoMestre");
             return "redirect:/autoagenda"; 
         }
-        s.logout(session); 
+        
+        // Cenário 2: SuperAdmin saindo do modo "Disfarçado" (Logado como funcionário)
+        if (superAdmin != null && func != null) {
+            log.registrar("Logout", "Sistema", null, "Logout realizado por: " + func.getUsuario(), false);
+            
+            session.removeAttribute("usuarioLogado");
+            session.removeAttribute("oficinaAtual");
+            session.removeAttribute("primeiroLogin");
+            return "redirect:/fechar-guia";
+        }
+        
+        // Cenário 3: Funcionário comum saindo
+        if (func != null) {
+            log.registrar("Logout", "Sistema", null, "Logout realizado por: " + func.getUsuario(), false);
+        }
+        s.logout(session);
         return "redirect:/" + slug + "/login";
     }
 	
@@ -199,6 +224,13 @@ public class Rotas {
 			
 			session.setAttribute("usuarioLogado", func);
 			session.setAttribute("primerioLogin", func.isPrimeiroLogin());
+			
+			if (session.getAttribute("superAdminLogado") != null) {
+			    String desc = "Logou na oficina " + oficinaAtual.getNomeFantasia() + " com usuário válido " + func.getUsuario() + ". Acesso de superadmin";
+			    log.registrar("Login", "Oficina", oficinaAtual.getIdOficina(), desc, false);
+			} else {
+			    log.registrar("Login", "Sistema", null, "Login realizado por: " + func.getUsuario(), false);
+			}
 			return "redirect:/" + slug;
 		}
 		return "redirect:/" + slug + "/login?erro=true";
@@ -353,5 +385,10 @@ public class Rotas {
 	public String recuperarSenha(@PathVariable String slug, HttpSession session) { 
 		if(s.loginAtivo(session)) { return "redirect:/"; }
 		return "esqueciasenha"; 
+	}
+	
+	@GetMapping("/fechar-guia") @ResponseBody
+	public String fecharGuia() {
+	    return "<script>window.close();</script>";
 	}
 }

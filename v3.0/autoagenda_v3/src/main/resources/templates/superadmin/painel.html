@@ -177,32 +177,143 @@
 		</div>
 
 		<div id="logs-sistema" class="spa-section" style="display: none;">
-		    <div class="d-flex justify-content-between align-items-center mb-3">
+			<div class="d-flex justify-content-between align-items-center mb-4">
 		        <h4><i class="fa-solid fa-terminal text-success me-2"></i> Logs de Auditoria</h4>
 		        <div class="d-flex gap-2">
-		            <button class="btn btn-sm btn-outline-info" id="btnAlternarVistaLog"><i class="fa-solid fa-table"></i> Alternar Vista</button>
-		            <button class="btn btn-sm btn-outline-secondary" id="btnExportarCSV"><i class="fa-solid fa-download"></i> Exportar CSV</button>
-		            </div>
+	                <button class="btn btn-sm btn-outline-info" id="btnAtualizarLogs" title="Atualizar tabela de logs">
+	                    <i class="fa-solid fa-rotate-right"></i> Atualizar
+	                </button>
+	                <button class="btn btn-sm btn-success fw-bold" id="btnExportarCSV">
+	                    <i class="fa-solid fa-file-csv me-1"></i> Exportar CSV
+	                </button>
+	            </div>
 		    </div>
-		    <div id="log-view-cards" class="bg-black p-3 rounded border border-secondary" style="font-family: monospace; height: 500px; overflow-y: auto;">
-		        <div class="text-success mb-1">[INFO] Sistema de logs carregado.</div>
-		    </div>
-		    <div id="log-view-table" class="log-table-container p-3" style="display:none;">
-		        <div class="mb-3">
-		            <input type="text" id="filtroGeralLog" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Busca geral nos logs...">
+
+			<div class="card bg-dark border-secondary mb-4">
+		        <div class="card-body p-3">
+					<form id="formFiltroLogs" class="row g-2 align-items-end">
+		                <div class="col-md-2">
+		                    <label class="form-label small text-light opacity-75 mb-1">Data Início</label>
+                            <div class="input-group input-group-sm">
+		                        <input type="date" id="logDataInicio" class="form-control bg-dark text-white border-secondary">
+                                <button class="btn btn-outline-secondary border-secondary text-white btn-clear-filtro" type="button" data-target="logDataInicio" style="display: none;" title="Limpar Início"><i class="fa-solid fa-times"></i></button>
+                            </div>
+		                </div>
+		                <div class="col-md-2">
+		                    <label class="form-label small text-light opacity-75 mb-1">Data Fim</label>
+                            <div class="input-group input-group-sm">
+		                        <input type="date" id="logDataFim" class="form-control bg-dark text-white border-secondary">
+                                <button class="btn btn-outline-secondary border-secondary text-white btn-clear-filtro" type="button" data-target="logDataFim" style="display: none;" title="Limpar Fim"><i class="fa-solid fa-times"></i></button>
+                            </div>
+		                </div>
+		                <div class="col-md-3">
+		                    <label class="form-label small text-light opacity-75 mb-1">Tipo de Ação</label>
+                            <div class="input-group input-group-sm">
+		                        <select id="logAcao" class="form-select bg-dark text-white border-secondary">
+		                            <option value="">Todas as Ações</option>
+		                            <option value="Login">Login</option>
+		                            <option value="Criação">Criação</option>
+		                            <option value="Edição">Edição</option>
+		                            <option value="Exclusão">Exclusão</option>
+		                            <option value="Upload">Upload</option>
+		                        </select>
+                                <button class="btn btn-outline-secondary border-secondary text-white btn-clear-filtro" type="button" data-target="logAcao" style="display: none;" title="Limpar Ação"><i class="fa-solid fa-times"></i></button>
+                            </div>
+		                </div>
+                        <div class="col-md-5">
+                            <label class="form-label small text-light opacity-75 mb-1">Origem do Evento</label>
+                            <div class="btn-group btn-group-sm w-100" role="group">
+                                <input type="radio" class="btn-check filtro-origem" name="logOrigem" id="origemTudo" value="" autocomplete="off" checked>
+                                <label class="btn btn-outline-secondary border-secondary text-white" for="origemTudo">Todas</label>
+                                
+                                <input type="radio" class="btn-check filtro-origem" name="logOrigem" id="origemWeb" value="Web" autocomplete="off">
+                                <label class="btn btn-outline-secondary border-secondary text-white" for="origemWeb"><i class="fa-solid fa-desktop me-1"></i> Web</label>
+                                
+                                <input type="radio" class="btn-check filtro-origem" name="logOrigem" id="origemMobile" value="Mobile" autocomplete="off">
+                                <label class="btn btn-outline-secondary border-secondary text-white" for="origemMobile"><i class="fa-solid fa-mobile-screen me-1"></i> Mobile</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mt-3">
+                            <label class="form-label small text-light opacity-75 mb-1">Filtro por Oficina / Sistema</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="logOficinaNome" class="form-control bg-dark text-white border-secondary" list="datalistOficinas" placeholder="Todas as origens..." autocomplete="off">
+                                <button class="btn btn-outline-secondary border-secondary text-white btn-clear-filtro" type="button" data-target="logOficinaNome" style="display: none;" title="Limpar Oficina"><i class="fa-solid fa-times"></i></button>
+                            </div>
+                            <datalist id="datalistOficinas">
+                                <option value="Geral (Sistema)" data-id="0"></option>
+                                <option th:each="of : ${listaOficinas}" th:value="${of.nomeFantasia}" th:data-id="${of.idOficina}"></option>
+                            </datalist>
+                            <input type="hidden" id="logIdOficina" value="">
+                        </div>
+		                <div class="col-md-8 mt-3">
+		                    <label class="form-label small text-light opacity-75 mb-1">Busca Rápida Geral</label>
+                            <div class="input-group input-group-sm">
+		                        <input type="text" id="logBusca" class="form-control bg-dark text-white border-secondary" placeholder="Usuário, Alvo ou Descrição...">
+                                <button class="btn btn-outline-secondary border-secondary text-white btn-clear-filtro" type="button" data-target="logBusca" style="display: none;" title="Limpar Busca"><i class="fa-solid fa-times"></i></button>
+                            </div>
+		                </div>
+						<div class="col-md-1 mt-3">
+						    <button type="button" id="btnLimparFiltros" class="btn btn-sm btn-secondary w-100 fw-bold" title="Limpar Tudo"><i class="fa-solid fa-eraser"></i></button>
+						</div>
+		            </form>
 		        </div>
-		        <div class="table-responsive" style="max-height: 400px;">
-		            <table class="table table-dark table-hover text-sm" id="tabelaPrincipalLogs">
-		                <thead>
-		                    <tr>
-		                        <th>Data <input type="text" class="form-control form-control-xs col-filter" placeholder="Filtrar..."></th>
-		                        <th>Ação <input type="text" class="form-control form-control-xs col-filter" placeholder="Filtrar..."></th>
-		                        <th>Utilizador <input type="text" class="form-control form-control-xs col-filter" placeholder="Filtrar..."></th>
-		                        <th>Descrição</th>
-		                    </tr>
-		                </thead>
-		                <tbody></tbody>
-		            </table>
+		    </div>
+
+			<div class="d-flex justify-content-center align-items-center gap-2 my-2">
+			    <select id="logLimit" class="form-select form-select-sm bg-dark text-white border-secondary" style="width: 60px;">
+			        <option value="10">10</option><option value="20">20</option>
+			        <option value="50">50</option>
+			    </select>
+
+			    <div class="btn-group btn-group-sm">
+			        <button class="btn btn-outline-secondary text-white" id="firstPage">«</button>
+			        <button class="btn btn-outline-secondary text-white" id="prevPage">‹</button>
+			        <input type="number" id="pageJump" class="bg-dark text-white border-secondary text-center" style="width: 40px; border: 1px solid #6c757d;" value="1">
+			        <span class="input-group-text bg-secondary text-white border-0" id="pageInfo" style="padding: 0 10px;">de 1</span>
+			        <button class="btn btn-outline-secondary text-white" id="nextPage">›</button>
+			        <button class="btn btn-outline-secondary text-white" id="lastPage">»</button>
+			    </div>
+			</div>
+		    <div class="table-responsive border border-secondary rounded">
+		        <table class="table table-dark table-hover mb-0 align-middle text-sm" id="tabela-logs">
+		            <thead class="table-active">
+		                <tr>
+		                    <th style="width: 160px;">Data/Hora</th>
+		                    <th>Ação</th>
+							<th>Tipo de Acesso</th>
+		                    <th>Usuário</th>
+		                    <th>Alvo</th>
+		                    <th class="text-end">Visualizar</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr><td colspan="6" class="text-center py-4 text-muted"><i class="fa-solid fa-spinner fa-spin me-2"></i> Carregando logs...</td></tr>
+		            </tbody>
+		        </table>
+		    </div>
+		</div>
+
+		<div class="modal fade" id="modalDetalhesLog" tabindex="-1" aria-hidden="true">
+		    <div class="modal-dialog modal-dialog-centered">
+		        <div class="modal-content bg-dark border-secondary text-white">
+		            <div class="modal-header border-secondary">
+		                <h5 class="modal-title"><i class="fa-solid fa-magnifying-glass text-info me-2"></i> Detalhes do Log</h5>
+		                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+		            </div>
+		            <div class="modal-body p-4 text-start" style="font-family: monospace;">
+		                <p class="mb-2"><span class="text-light opacity-75">ID do Log:</span> <strong id="detalheLogId" class="text-white"></strong></p>
+		                <p class="mb-2"><span class="text-light opacity-75">Data do Evento:</span> <strong id="detalheLogData" class="text-warning"></strong></p>
+		                <p class="mb-2"><span class="text-light opacity-75">Origem/Usuário:</span> <strong id="detalheLogUsuario" class="text-white"></strong> (ID: <span id="detalheLogUsuarioId"></span>)</p>
+		                <p class="mb-2"><span class="text-light opacity-75">Oficina Afetada:</span> <strong id="detalheLogOficina" class="text-white"></strong></p>
+		                <hr class="border-secondary my-3">
+		                <p class="mb-2"><span class="text-light opacity-75">Ação Executada:</span> <strong id="detalheLogAcao" class="badge bg-secondary text-white"></strong></p>
+		                <p class="mb-2"><span class="text-light opacity-75">Tipo de Alvo:</span> <strong id="detalheLogAlvo" class="text-white"></strong> (ID: <span id="detalheLogAlvoId"></span>)</p>
+		                <div class="bg-black p-3 rounded border border-secondary mt-3">
+		                    <span class="text-light opacity-75 d-block small mb-1">Descrição do Evento:</span>
+		                    <span id="detalheLogDescricao" class="text-success"></span>
+		                </div>
+		            </div>
 		        </div>
 		    </div>
 		</div>
@@ -610,6 +721,291 @@
                     const alvo = this.getAttribute('data-target');
                     document.getElementById(alvo).style.display = 'block';
                 });
+            });
+			
+			// =========================================================
+            // LOGS DO SISTEMA
+            // =========================================================		
+            let cacheLogsFiltrados = []; 
+            let currentPage = 1;
+            let currentLimit = 10;
+            let totalPaginasGlobal = 1;
+
+            // Renderização
+            function renderizarTabelaLogs() {
+                const tbody = document.querySelector('#tabela-logs tbody');
+                tbody.innerHTML = '';
+
+                if (cacheLogsFiltrados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-light opacity-75">Nenhum registro encontrado.</td></tr>';
+                } else {
+                    cacheLogsFiltrados.forEach(log => {
+                        const tr = document.createElement('tr');
+                        const dataFormatada = new Date(log.dataEvento).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+                        
+                        let corAcao = 'bg-secondary';
+                        if(log.acao === 'Exclusão') corAcao = 'bg-danger';
+                        else if(log.acao === 'Criação' || log.acao === 'Upload') corAcao = 'bg-success';
+                        else if(log.acao === 'Edição' || log.acao.includes('Atualiza')) corAcao = 'bg-warning text-dark';
+                        else if(log.acao.includes('Login')) corAcao = 'bg-info text-dark';
+						else if(log.acao.includes('Logout')) corAcao = 'bg-primary';
+
+                        tr.dataset.log = JSON.stringify(log);
+                        tr.innerHTML = `
+                            <td class="small">${dataFormatada}</td>
+                            <td><span class="badge ${corAcao}">${log.acao}</span></td>
+                            <td>${log.tipoUsuario}</td>
+                            <td>${log.nomeUsuario || '-'}</td>
+                            <td>${log.tipoAlvo} <span class="text-light opacity-50 small">#${log.alvoId || '-'}</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-info btn-ver-log" title="Ver Detalhes">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                // Adicionando a chamada da função que estava faltando
+                configurarBotoesVerLog();
+            }
+
+            // FUNÇÃO RESTAURADA: Configura o modal de visualizar detalhes
+            function configurarBotoesVerLog() {
+                document.querySelectorAll('.btn-ver-log').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const log = JSON.parse(this.closest('tr').dataset.log);
+                        
+                        document.getElementById('detalheLogId').innerText = log.idLog;
+                        document.getElementById('detalheLogData').innerText = new Date(log.dataEvento).toLocaleString('pt-BR');
+                        document.getElementById('detalheLogUsuario').innerText = log.tipoUsuario;
+                        document.getElementById('detalheLogUsuarioId').innerText = log.idUsuario || 'N/A';
+                        document.getElementById('detalheLogOficina').innerText = log.oficina ? log.oficina.nomeFantasia : 'Geral (Sistema)';
+                        document.getElementById('detalheLogAcao').innerText = log.acao;
+                        document.getElementById('detalheLogAlvo').innerText = log.tipoAlvo;
+                        document.getElementById('detalheLogAlvoId').innerText = log.alvoId || 'N/A';
+                        document.getElementById('detalheLogDescricao').innerText = log.descricao;
+
+                        new bootstrap.Modal(document.getElementById('modalDetalhesLog')).show();
+                    });
+                });
+            }
+
+            // =========================================================
+            // BUSCA (AGORA COM MAPEMENTO CORRETO DO SPRING)
+            // =========================================================
+            function carregarLogsAuditoria() {
+                const tbody = document.querySelector('#tabela-logs tbody');
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-info"><i class="fa-solid fa-spinner fa-spin me-2"></i> Buscando...</td></tr>';
+                
+                const limit = document.getElementById('logLimit').value;
+                const params = new URLSearchParams({
+                    dataInicio: document.getElementById('logDataInicio').value,
+                    dataFim: document.getElementById('logDataFim').value,
+                    acao: document.getElementById('logAcao').value,
+                    busca: document.getElementById('logBusca').value,
+					origem: document.querySelector('.filtro-origem:checked').value,
+					idOficina: document.getElementById('logIdOficina').value,
+                    page: currentPage - 1,
+                    size: limit
+                }).toString();
+
+                fetch(`/superadmin-api/listar-logs?${params}`)
+                .then(r => r.json())
+                .then(data => {
+                    cacheLogsFiltrados = data.content || [];
+                    
+                    // CORREÇÃO AQUI: Lendo o formato VIA_DTO do Spring Boot (data.page.totalPages)
+                    totalPaginasGlobal = (data.page && data.page.totalPages) ? data.page.totalPages : (data.totalPages || 1);
+                    
+                    document.getElementById('pageInfo').textContent = `de ${totalPaginasGlobal}`;
+                    document.getElementById('pageJump').value = currentPage;
+                    document.getElementById('pageJump').max = totalPaginasGlobal;
+
+                    renderizarTabelaLogs();
+                }).catch(err => {
+                    console.error("Erro na busca: ", err);
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-danger">Erro ao carregar logs.</td></tr>';
+                });
+            }
+
+            // =========================================================
+            // EVENTOS DE PAGINAÇÃO
+            // =========================================================
+            document.getElementById('logLimit').addEventListener('change', () => {
+                currentPage = 1;
+                carregarLogsAuditoria();
+            });
+
+            document.getElementById('firstPage').addEventListener('click', () => { 
+                if(currentPage !== 1) { currentPage = 1; carregarLogsAuditoria(); } 
+            });
+            document.getElementById('lastPage').addEventListener('click', () => { 
+                if(currentPage !== totalPaginasGlobal) { currentPage = totalPaginasGlobal; carregarLogsAuditoria(); } 
+            });
+            document.getElementById('prevPage').addEventListener('click', () => { 
+                if(currentPage > 1) { currentPage--; carregarLogsAuditoria(); } 
+            });
+            document.getElementById('nextPage').addEventListener('click', () => { 
+                if(currentPage < totalPaginasGlobal) { currentPage++; carregarLogsAuditoria(); } 
+            });
+            document.getElementById('pageJump').addEventListener('change', (e) => {
+                let p = parseInt(e.target.value);
+                if(isNaN(p) || p < 1) p = 1; 
+                else if(p > totalPaginasGlobal) p = totalPaginasGlobal;
+                
+                if(currentPage !== p) {
+                    currentPage = p;
+                    carregarLogsAuditoria();
+                } else {
+                    e.target.value = currentPage;
+                }
+            });
+			
+			// =========================================================
+            // LÓGICA DE FILTROS DINÂMICOS (TEMPO REAL)
+            let timeoutBusca;
+
+            // Mostra ou esconde o botão "X" de limpar
+            function alternarBotaoLimpar(inputId) {
+                const input = document.getElementById(inputId);
+                const btnLimpar = document.querySelector(`.btn-clear-filtro[data-target="${inputId}"]`);
+                if (btnLimpar) {
+                    btnLimpar.style.display = input.value ? 'block' : 'none';
+                }
+            }
+
+            // Dispara a busca quando altera Data Início, Data Fim ou Tipo de Ação
+            ['logDataInicio', 'logDataFim', 'logAcao'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    alternarBotaoLimpar(this.id);
+                    currentPage = 1;
+                    carregarLogsAuditoria();
+                });
+            });
+			
+			// Dispara a busca quando o usuário clica num botão de Origem (Web/Mobile/Tudo)
+            document.querySelectorAll('.filtro-origem').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    currentPage = 1;
+                    carregarLogsAuditoria();
+                });
+            });
+
+            // Inteligência do campo Oficina com Datalist
+            const inputOficinaNome = document.getElementById('logOficinaNome');
+            const inputOficinaId = document.getElementById('logIdOficina');
+
+            inputOficinaNome.addEventListener('input', function() {
+                alternarBotaoLimpar(this.id);
+                const valorDigitado = this.value;
+                const optionSelecionada = document.querySelector(`#datalistOficinas option[value="${valorDigitado}"]`);
+                
+                if (optionSelecionada) {
+                    inputOficinaId.value = optionSelecionada.getAttribute('data-id');
+                    currentPage = 1;
+                    carregarLogsAuditoria();
+                } else if (valorDigitado === '') {
+                    inputOficinaId.value = '';
+                    currentPage = 1;
+                    carregarLogsAuditoria();
+                } else {
+                    inputOficinaId.value = ''; 
+                }
+            });
+
+            // Dispara a busca Rápida ENQUANTO o usuário digita (Debounce 500ms)
+            document.getElementById('logBusca').addEventListener('input', function() {
+                alternarBotaoLimpar(this.id);
+                clearTimeout(timeoutBusca);
+                timeoutBusca = setTimeout(() => {
+                    currentPage = 1;
+                    carregarLogsAuditoria();
+                }, 500);
+            });
+
+            // Lógica do botão "X" individual de cada campo
+			document.querySelectorAll('.btn-clear-filtro').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).value = '';
+                    if (targetId === 'logOficinaNome') document.getElementById('logIdOficina').value = '';
+                    
+                    this.style.display = 'none';
+                    currentPage = 1;
+                    carregarLogsAuditoria();
+                });
+            });
+
+            // Desativa o Enter padrão do formulário já que não tem botão enviar
+            document.getElementById('formFiltroLogs').addEventListener('submit', e => e.preventDefault());
+
+            // Disparo automático ao clicar na aba
+            document.querySelector('[data-target="logs-sistema"]').addEventListener('click', () => {
+                currentPage = 1;
+                carregarLogsAuditoria();
+            });
+
+			// --- BOTÃO DE LIMPAR TODOS OS FILTROS ---
+			document.getElementById('btnLimparFiltros').addEventListener('click', () => {
+                document.getElementById('formFiltroLogs').reset();
+                document.getElementById('logIdOficina').value = ''; 
+                document.getElementById('origemTudo').checked = true; 
+                document.querySelectorAll('.btn-clear-filtro').forEach(btn => btn.style.display = 'none');
+                currentPage = 1;
+                carregarLogsAuditoria();
+            });
+			
+			// --- BOTÃO DE ATUALIZAR TABELA DE LOGS ---
+            document.getElementById('btnAtualizarLogs').addEventListener('click', function() {
+                const icone = this.querySelector('i');
+                icone.classList.add('fa-spin');
+                
+                carregarLogsAuditoria();
+                setTimeout(() => icone.classList.remove('fa-spin'), 800);
+            });
+
+            // --- EXPORTAR PARA CSV ---
+            document.getElementById('btnExportarCSV').addEventListener('click', () => {
+                if (cacheLogsFiltrados.length === 0) {
+                    Swal.fire('Atenção', 'Não há dados para exportar.', 'warning');
+                    return;
+                }
+
+                let csvContent = "\uFEFFID;Data;Acao;Tipo_Acesso;Usuario;ID_Usuario;Oficina;Alvo;ID_Alvo;Descricao\n";
+                
+                cacheLogsFiltrados.forEach(log => {
+                    let descSegura = log.descricao ? log.descricao.replace(/;/g, ' - ').replace(/\n/g, ' ') : '';
+                    let oficinaSegura = log.oficina ? log.oficina.nomeFantasia.replace(/;/g, '') : 'Geral';
+                    let dataSegura = new Date(log.dataEvento).toLocaleString('pt-BR');
+
+                    let linha = [
+                        log.idLog,
+						`"${dataSegura}"`,
+				        `"${log.acao}"`,
+				        `"${log.tipoUsuario}"`,
+				        `"${log.nomeUsuario || ''}"`,
+                        log.idUsuario || '',
+                        `"${oficinaSegura}"`,
+                        `"${log.tipoAlvo}"`,
+                        log.alvoId || '',
+                        `"${descSegura}"`
+                    ].join(";");
+                    
+                    csvContent += linha + "\n";
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                
+                link.setAttribute("href", url);
+                link.setAttribute("download", `auditoria_autoagenda_${new Date().getTime()}.csv`);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
 			
 			// =========================================================

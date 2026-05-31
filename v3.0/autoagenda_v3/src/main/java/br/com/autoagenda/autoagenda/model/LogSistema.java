@@ -17,6 +17,7 @@ public class LogSistema {
     private LocalDateTime dataEvento = LocalDateTime.now();
     private String tipoUsuario;
     private Integer idUsuario;
+    @Column(name = "nome_usuario") private String nomeUsuario;
     @ManyToOne @JoinColumn(name = "fk_oficina") private Oficina oficina;
     private String acao;
     private String tipoAlvo;
@@ -28,6 +29,8 @@ public class LogSistema {
     public LocalDateTime getDataEvento() { return dataEvento; }
     public void setDataEvento(LocalDateTime dataEvento) { this.dataEvento = dataEvento; }
     public String getTipoUsuario() { return tipoUsuario; }
+    public String getNomeUsuario() { return nomeUsuario; }
+    public void setNomeUsuario(String nomeUsuario) { this.nomeUsuario = nomeUsuario; }
     public void setTipoUsuario(String tipoUsuario) { this.tipoUsuario = tipoUsuario; }
     public Integer getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }

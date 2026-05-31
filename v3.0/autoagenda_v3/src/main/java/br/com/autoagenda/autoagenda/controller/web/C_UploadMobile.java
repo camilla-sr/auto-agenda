@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
+import br.com.autoagenda.autoagenda.service.LogService;
 
 @Controller
 @RequestMapping("/{slug}/mobile")
 public class C_UploadMobile {
-	@Autowired private FotosAgendamentoService service;
-	
+    @Autowired private FotosAgendamentoService service;
+    @Autowired private LogService log;
+    
     @GetMapping("/upload-fotos/{token}")
     public String paginaMobile(@PathVariable("slug") String slug, @PathVariable String token, Model model) {
         model.addAttribute("token", token);
@@ -27,11 +29,12 @@ public class C_UploadMobile {
 
     @PostMapping("/enviar/{token}") @ResponseBody
     public ResponseEntity<?> receberFotoCelular(@PathVariable String token, @RequestParam("fotos") MultipartFile[] arquivos) {
-    	try {
+        try {
             if (arquivos != null && arquivos.length > 0) {
                 for (MultipartFile file : arquivos) {
                     if (!file.isEmpty()) { service.salvarFotoMobile(token, file); }
                 }
+                log.registrar("Upload", "Foto", null, arquivos.length + " foto(s) enviadas via QR Code", true);
                 return ResponseEntity.ok().body("{\"mensagem\": \"Sucesso\", \"qtd\": " + arquivos.length + "}");
             }
             return ResponseEntity.badRequest().body("Nenhum arquivo recebido");
@@ -45,6 +48,7 @@ public class C_UploadMobile {
     public ResponseEntity<?> cancelarSessao(@PathVariable String token) {
         try {
             service.limparFotosTemporarias(token);
+            log.registrar("Limpeza", "Foto", null, "Sessão de upload cancelada e fotos temporárias apagadas", true);
             return ResponseEntity.ok("Sessão limpa");
         } catch (Exception e) {
             return ResponseEntity.ok("Nada a limpar");

@@ -11,22 +11,25 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Produto;
+import br.com.autoagenda.autoagenda.service.LogService;
 import br.com.autoagenda.autoagenda.service.ProdutoService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/{slug}/produto-api")
 public class C_Produto {
+	@Autowired private LogService log;
 	@Autowired private ProdutoService service;
     
     @PostMapping(value = "/salvar")
-    public String salvar(@PathVariable("slug") String slug, @SessionAttribute("oficinaAtual") Oficina oficina, 
-                        @Valid Produto prod, BindingResult result) {
+    public String salvar(@PathVariable("slug") String slug, @SessionAttribute("oficinaAtual") Oficina oficina,
+    					@Valid Produto prod, BindingResult result) {
         if(result.hasErrors()) { return "redirect:/"+ slug +"/produtos?erro=true"; }
         
         boolean edicao = prod.getIdProduto() != null;
         service.salvarOuAtualizar(prod, oficina);
         
+        log.registrar(edicao ? "Edição" : "Criação", "Produto", prod.getIdProduto(), "Produto: " + prod.getNomeProduto(), false );
         if(edicao) {
             return "redirect:/"+ slug +"/produtos?editado=true";
         } else {
@@ -37,6 +40,8 @@ public class C_Produto {
     @PostMapping(value = "/apagar")
     public String apagar(@PathVariable("slug") String slug, @RequestParam Integer idProduto) {
         service.apagar(idProduto);
+        
+        log.registrar("Inativado", "Produto", idProduto, "Produto removido do sistema", false );
         return "redirect:/"+ slug +"/produtos?apagar=true";
     }
 }

@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.model.Servico;
+import br.com.autoagenda.autoagenda.service.LogService;
 import br.com.autoagenda.autoagenda.service.ServicoService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/{slug}/servico-api")
 public class C_Servico {
+	@Autowired private LogService log;
     @Autowired private ServicoService service;
 
     @PostMapping("/salvar")
@@ -30,6 +32,7 @@ public class C_Servico {
         
         boolean edicao = serv.getIdServico() != null;
         service.salvarOuAtualizar(serv, oficina);
+        log.registrar(edicao ? "Edição" : "Criação", "Serviço", serv.getIdServico(), "Serviço: " + serv.getNomeServico(), false );
         if(edicao) {
             return "redirect:/"+ slug +"/servicos?editado=true";
         }
@@ -41,6 +44,8 @@ public class C_Servico {
         if(idServico == null) { return ResponseEntity.badRequest().body("ID inválido"); }
         try {
             service.inativar(idServico);
+            
+            log.registrar("Inativado", "Serviço", idServico, "Serviço inativado", false );
             return ResponseEntity.ok().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Não é possível excluir: o serviço possui agendamentos vinculados.");

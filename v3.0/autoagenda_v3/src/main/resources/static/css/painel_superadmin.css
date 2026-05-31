@@ -206,3 +206,19 @@ body {
 
 .toggle-row strong { display: block; font-size: 0.95rem; }
 .toggle-row small { color: #adb5bd; font-size: 0.8rem; }
+
+/* Customização da barra de rolagem exclusiva para o painel SuperAdmin */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #1a1e21; /* Fundo escuro padrão do seu painel */
+}
+::-webkit-scrollbar-thumb {
+    background: #495057; /* Cinza secundário */
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #0dcaf0; /* Azul 'info' do seu tema ao passar o mouse */
+}

@@ -24,6 +24,7 @@ import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.FotosAgendamento;
 import br.com.autoagenda.autoagenda.repositorios.FotosAgendamentoRepository;
 import br.com.autoagenda.autoagenda.service.FotosAgendamentoService;
+import br.com.autoagenda.autoagenda.service.LogService;
 
 @Controller
 @RequestMapping("/{slug}/fotos-api")
@@ -31,11 +32,14 @@ public class C_FotosAgendamento {
     @Value("${app.upload.dir}") private String pastaFotos;
     @Autowired private FotosAgendamentoService service;
     @Autowired private FotosAgendamentoRepository repo;
+    @Autowired private LogService log;
     
     @PostMapping("/upload/{agendamento}")
-    public ResponseEntity<?> uploadFoto(@PathVariable Agendamento ag, @RequestParam("fotos") MultipartFile file){
+    public ResponseEntity<?> uploadFoto(@PathVariable("agendamento") Agendamento ag, @RequestParam("fotos") MultipartFile file){
         try {
             FotosAgendamento foto = service.salvarFoto(ag,  file);
+            String idAgendamento = (ag != null && ag.getIdAgendamento() != null) ? ag.getIdAgendamento().toString() : "Temporário";
+            log.registrar("Upload", "Foto", foto.getIdFoto(), "Foto anexada. Agendamento: " + idAgendamento + " | Arquivo: " + foto.getNomeArquivo(), false);
             return ResponseEntity.ok(foto);
         }catch(Exception e) {
             return ResponseEntity.badRequest().body("Erro ao salvar: " + e.getMessage());
@@ -84,7 +88,14 @@ public class C_FotosAgendamento {
     @DeleteMapping("/apagar/{idFoto}") @ResponseBody
     public ResponseEntity<?> removerFotoUnica(@PathVariable Integer idFoto) {
         try {
+            FotosAgendamento foto = repo.findById(idFoto).orElseThrow();
+            String nomeArquivo = foto.getNomeArquivo();
+            String idAgendamento = (foto.getAgendamento() != null) ? foto.getAgendamento().getIdAgendamento().toString() : "Temporário";
+            
             service.apagarFotoPorId(idFoto);
+            
+            log.registrar("Exclusão", "Foto", idFoto, "Foto removida. Agendamento: " + idAgendamento + " | Arquivo: " + nomeArquivo, false);
+            
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao excluir");
