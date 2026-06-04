@@ -46,6 +46,7 @@ public class C_FuncionarioMobile {
                 func.getUsuario(),
                 func.getEmail(),
                 func.getAcesso(),
+                func.isPrimeiroLogin(),
                 new FuncionarioLoginDto.OficinaResumo(func.getOficina().getIdOficina())
             );
             return ResponseEntity.ok(dto);
