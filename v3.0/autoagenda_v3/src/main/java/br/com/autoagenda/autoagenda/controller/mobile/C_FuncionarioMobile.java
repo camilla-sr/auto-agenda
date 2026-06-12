@@ -23,15 +23,19 @@ import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
 import br.com.autoagenda.autoagenda.repositorios.OficinaRepository;
+import br.com.autoagenda.autoagenda.service.CodigoService;
 import br.com.autoagenda.autoagenda.service.FuncionarioService;
+import br.com.autoagenda.autoagenda.service.LogService;
 
 @RestController
 @RequestMapping("/mobile/funcionario-api")
 public class C_FuncionarioMobile {
+	@Autowired private LogService log;
 	@Autowired FuncionarioService serv;
 	@Autowired private FuncionarioRepository repo;
     @Autowired private OficinaRepository oficinaRepo;
-	
+    @Autowired private CodigoService codigoService;
+    
     @PostMapping("/logar")
     public ResponseEntity<?> logarMobile(@RequestBody Map<String, String> credenciais) {
         try {
@@ -123,4 +127,56 @@ public class C_FuncionarioMobile {
         return ResponseEntity.ok(Map.of("mensagem", "Status atualizado!", "ativo", func.isAtivo()
         ));
     }
+	
+	@PostMapping("/enviar-codigo-reset")
+	public ResponseEntity<?> enviarCodigoReset(@RequestBody Map<String, String> dados) {
+		String email = dados.get("email");
+		Funcionario func = serv.buscarPorEmail(email); 
+		
+		if (func == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("erro", "E-mail não encontrado."));
+        }
+		String resultado = codigoService.solicitarEnvioCodigo(email);
+		switch (resultado) {
+			case "OK":
+				return ResponseEntity.ok(Map.of("mensagem", "Código enviado."));
+			case "SEM_ENVIO":
+				return ResponseEntity.status(201).body(Map.of("erro", "Serviço de e-mail instável."));
+			case "OFFLINE":
+				return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("erro", "Serviço de autenticação offline."));
+			default:
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("erro", "Erro interno."));
+		}
+	}
+
+	@PostMapping("/validar-codigo")
+    public ResponseEntity<?> validarCodigo(@RequestBody Map<String, String> dados) {
+        String email = dados.get("email");
+        String codigo = dados.get("codigo");
+        String resultado = codigoService.validarCodigo(email, codigo);
+        switch (resultado) {
+            case "OK":
+                return ResponseEntity.ok(Map.of("mensagem", "Código correto."));
+            case "INVALIDO":
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("erro", "Código inválido."));
+            case "OFFLINE":
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("erro", "Serviço de autenticação offline."));
+            default:
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("erro", "Erro na validação."));
+        }
+    }
+
+	@PostMapping("/redefinir-senha-final")
+	public ResponseEntity<?> redefinirSenhaFinal(@RequestBody Map<String, String> dados) {
+		String email = dados.get("email");
+		String novaSenha = dados.get("novaSenha");
+		
+		Funcionario func = serv.buscarPorEmail(email);
+		if (func != null) {
+			serv.atualizarSenha(func, novaSenha);
+			log.registrar("Reset Senha", "Funcionário", func.getIdFuncionario(), "Senha redefinida via recuperação (App Mobile)", true);
+			return ResponseEntity.ok(Map.of("mensagem", "Senha atualizada com sucesso."));
+		}
+		return ResponseEntity.badRequest().body(Map.of("erro", "Erro ao atualizar senha."));
+	}
 }
