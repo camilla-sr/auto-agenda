@@ -7,9 +7,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.autoagenda.autoagenda.model.Agendamento;
 import br.com.autoagenda.autoagenda.model.Funcionario;
 import br.com.autoagenda.autoagenda.model.Oficina;
 import br.com.autoagenda.autoagenda.repositorios.FuncionarioRepository;
@@ -20,11 +20,11 @@ public class FuncionarioService {
 	@Autowired private FuncionarioRepository repo;
     @Autowired private EmailService emailService;
     @Autowired private OficinaRepository oficinaRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     public Funcionario autenticar(String usuario, String senha, Integer idOficina) {
         Funcionario func = repo.findByUsuarioAndOficina_IdOficina(usuario, idOficina);
-        
-        if (func != null && func.getSenha().equals(senha) && func.isAtivo()) { 
+        if (func != null && func.isAtivo() && validarSenha(senha, func)) { 
             return func;
         }
         return null;
@@ -36,7 +36,7 @@ public class FuncionarioService {
         
         Funcionario func = repo.findByUsuarioAndOficina_IdOficina(usuario, oficina.getIdOficina());
         
-        if (func == null || !func.getSenha().equals(senha) || !func.isAtivo()) {
+        if (func == null || !func.isAtivo() || !validarSenha(senha, func)) {
             throw new IllegalArgumentException("Usuário e/ou senha incorretos.");
         }
         return func;
@@ -52,13 +52,14 @@ public class FuncionarioService {
         if (!novaSenha.equals(confirmaSenha)) {
             throw new IllegalArgumentException("A nova senha e a confirmação não conferem.");
         }
-        if (!senhaAtual.equals(usuarioLogado.getSenha())) {
+
+        if (!validarSenha(senhaAtual, usuarioLogado)) {
              throw new IllegalArgumentException("A senha atual informada está incorreta.");
         }
-        if (senhaAtual.equals(novaSenha)) {
+        if (passwordEncoder.matches(novaSenha, usuarioLogado.getSenha())) {
             throw new IllegalArgumentException("A nova senha deve ser diferente da atual.");
         }
-        usuarioLogado.setSenha(novaSenha);
+        usuarioLogado.setSenha(passwordEncoder.encode(novaSenha));
         repo.save(usuarioLogado);
     }
 
@@ -67,10 +68,8 @@ public class FuncionarioService {
         func.setCpf(cpfLimpo);
 
         Funcionario existeCpf = repo.findByCpf(cpfLimpo);
-        if (existeCpf != null) {
-            if (func.getIdFuncionario() == null || !existeCpf.getIdFuncionario().equals(func.getIdFuncionario())) {
-                throw new IllegalArgumentException("erroCPF");
-            }
+        if (existeCpf != null && (func.getIdFuncionario() == null || !existeCpf.getIdFuncionario().equals(func.getIdFuncionario()))) {
+            throw new IllegalArgumentException("erroCPF");
         }
 
         if (func.getIdFuncionario() != null) {
@@ -89,23 +88,28 @@ public class FuncionarioService {
             funcBanco.setAcesso(func.getAcesso());
             funcBanco.setTelefone(func.getTelefone());
 
-            if (novaSenha != null && !novaSenha.isEmpty()) { funcBanco.setSenha(novaSenha); }
-            
+            if (novaSenha != null && !novaSenha.isEmpty()) funcBanco.setSenha(passwordEncoder.encode(novaSenha));
             repo.save(funcBanco);
         } else {
             tratarUsuarioDuplicado(func, oficina);
             
             if (cadastroInicial) {
-                if (novaSenha != null && !novaSenha.isEmpty()) { func.setSenha(novaSenha); }
+                if (novaSenha != null && !novaSenha.isEmpty()) { 
+                    func.setSenha(passwordEncoder.encode(novaSenha)); 
+                }
+                func.setOficina(oficina);
+                repo.save(func);
             } else {
                 func.setPrimeiroLogin(true);
                 String senhaProvisoria = gerarSenhaAleatoria();
-                func.setSenha(senhaProvisoria);
+                func.setSenha(passwordEncoder.encode(senhaProvisoria));
                 
+                func.setOficina(oficina);
+                repo.save(func);
+                
+                func.setSenha(senhaProvisoria);
                 emailService.redefirSenha(func);
             }
-            func.setOficina(oficina);
-            repo.save(func);
         }
     }
     
@@ -122,7 +126,6 @@ public class FuncionarioService {
                  throw new IllegalArgumentException("E-mail já está em uso.");
              }
         }
-
         repo.save(atual);
     }
 
@@ -139,16 +142,29 @@ public class FuncionarioService {
         }
     }
     
+    private boolean validarSenha(String senhaDigitada, Funcionario func) {
+        if (func.getSenha().startsWith("$2a$") || func.getSenha().startsWith("$2b$")) {
+            return passwordEncoder.matches(senhaDigitada, func.getSenha());
+        } else {
+            if (func.getSenha().equals(senhaDigitada)) {
+                func.setSenha(passwordEncoder.encode(senhaDigitada));
+                repo.save(func);
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void resetarSenha(Integer id) {
         Funcionario func = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
         
-        String inicializaOficina = func.getOficina().getNomeFantasia();
         String senhaProvisoria = gerarSenhaAleatoria();
-        func.setSenha(senhaProvisoria);
-        
+        func.setSenha(passwordEncoder.encode(senhaProvisoria));
         func.setPrimeiroLogin(true); 
         
         repo.save(func);
+        
+        func.setSenha(senhaProvisoria);
         emailService.redefirSenha(func);
     }
     
